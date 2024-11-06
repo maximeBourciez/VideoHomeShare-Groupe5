@@ -45,14 +45,20 @@ class MessageDAO{
 
     // Ajouter un message 
     public function ajouterMessage(Message $message): bool{
-        $sql = "INSERT INTO" . DB_PREFIX . "message (valeur, nbLike, nbDislike, date, id_user, id_message_parent) VALUES (:valeur, :nbLike, :nbDislike, :date, :id_user)";
+        // Préparation de la requête
+        $sql = "INSERT INTO" . DB_PREFIX . "message (valeur, nbLike, nbDislike, date, id_user, id_message_parent, id_fil) VALUES (:valeur, :nbLike, :nbDislike, :date, :id_user, :id_message_parent, :id_fil)";
         $stmt = $this->pdo->prepare($sql);
+
+        // BindValues
         $stmt->bindValue(':valeur', $message->getValeur(), PDO::PARAM_STR);
         $stmt->bindValue(':nbLike', $message->getNbLike(), PDO::PARAM_INT);
         $stmt->bindValue(':nbDislike', $message->getNbDislike(), PDO::PARAM_INT);
         $stmt->bindValue(':date', $message->getDate(), PDO::PARAM_STR);
         $stmt->bindValue(':id_user', $message->getIdUser(), PDO::PARAM_INT);
         $stmt->bindValue(':id_message_parent', $message->getIdMessageParent(), PDO::PARAM_INT);
+        $stmt->bindValue(':id_fil', $message->getIdFil(), PDO::PARAM_INT);
+        
+        // Execution de la requête
         return $stmt->execute();
     }
 }

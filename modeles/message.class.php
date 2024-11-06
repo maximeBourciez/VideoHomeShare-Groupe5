@@ -10,6 +10,7 @@ class Message{
     private ?string $date; // Date de publication
     private ?int $id_user; // Identifiant de l'utilisateur ayant posté le message
     private ?int $id_message_parent; // Identifiant du message parent
+    private ?int $id_fil; // Identifiant du fil dans lequel le message est posté
 
     // Constructeur
     public function __construct(?int $id, ?string $valeur, ?int $nbLike, ?int $nbDislike, ?string $date, ?int $id_user){
@@ -52,41 +53,42 @@ class Message{
         return $this->id_message_parent;
     }
 
+    public function getIdFil(): ?int{
+        return $this->id_fil;
+    }
+
+
     // Setters
-    public function setId(int $id): self{
+    public function setId(int $id){
         $this->id = $id;
-        return $this;
     }
 
-    public function setValeur(string $valeur): self{
+    public function setValeur(string $valeur) {
         $this->valeur = $valeur;
-        return $this;
     }
 
-    public function setNbLike(int $nbLike): self{
+    public function setNbLike(int $nbLike) {
         $this->nbLike = $nbLike;
-        return $this;
     }
 
-    public function setNbDislike(int $nbDislike): self{
+    public function setNbDislike(int $nbDislike){
         $this->nbDislike = $nbDislike;
-        return $this;
     }
 
-    public function setDate(string $date): self{
+    public function setDate(string $date){
         $this->date = $date;
-        return $this;
     }
 
-    public function setIdUser(int $id_user): self{
+    public function setIdUser(int $id_user){
         $this->id_user = $id_user;
-        return $this;
     }
 
-    public function setIdMessageParent(int $id_message_parent): self{
+    public function setIdMessageParent(int $id_message_parent){
         $this->id_message_parent = $id_message_parent;
-        return $this;
     }
 
+    public function setIdFil(int $id_fil){
+        $this->id_fil = $id_fil;
+    }
 
 }
