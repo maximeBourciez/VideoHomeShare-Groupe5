@@ -1,5 +1,9 @@
 <?php
 
+class Fil{
+
+}
+
 // Classe Message
 class Message{
     // Attributs 
@@ -10,16 +14,18 @@ class Message{
     private ?string $date; // Date de publication
     private ?int $id_user; // Identifiant de l'utilisateur ayant posté le message
     private ?int $id_message_parent; // Identifiant du message parent
-    private ?int $id_fil; // Identifiant du fil dans lequel le message est posté
+    private ?Fil $fil; // Identifiant du fil dans lequel le message est posté
 
     // Constructeur
-    public function __construct(?int $id, ?string $valeur, ?int $nbLike, ?int $nbDislike, ?string $date, ?int $id_user){
+    public function __construct(?int $id, ?string $valeur, ?int $nbLike, ?int $nbDislike, ?string $date, ?int $id_user, ?int $id_message_parent, ?int $idFil){
         $this->id = $id;
         $this->valeur = $valeur;
         $this->nbLike = $nbLike;
         $this->nbDislike = $nbDislike;
         $this->date = $date;
         $this->id_user = $id_user;
+        $this->id_message_parent = $id_message_parent;
+        $this->fil = new Fil($idFil, "", new DateTime(), "");
     }
 
 
@@ -54,7 +60,7 @@ class Message{
     }
 
     public function getIdFil(): ?int{
-        return $this->id_fil;
+        return $this->fil->getId();
     }
 
 
@@ -88,7 +94,7 @@ class Message{
     }
 
     public function setIdFil(int $id_fil){
-        $this->id_fil = $id_fil;
+        $this->fil->setId($id_fil);
     }
 
 }
