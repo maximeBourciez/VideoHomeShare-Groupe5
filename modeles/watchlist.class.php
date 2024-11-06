@@ -2,7 +2,7 @@
 
 class Watchlist{
     // Attributs 
-
+    
     // Constructeur
 
 
