@@ -7,6 +7,9 @@
 // Required
 @import "../node_modules/bootstrap/scss/functions";
 $primary: #F2AC0F;
+$secondary: #E6640B;
+$tercary: #DE0918;
+
 $light:#FBFADE;
 $dark:#231B33;
 
@@ -27,11 +30,20 @@ $theme-colors: (
 .myprimary {
   color: $primary;
 }
+.bg-myprimary {
+  background-color: $primary;
+}
+.bg-mysecondary {
+  background-color: $secondary;
+}
+.bg-mytercary {
+  background-color: $tercary;
+}
 .bg-mydark {
     background-color: $dark;
   }
-.mylight {
-    color: $light;
+.bg-mylight {
+  background-color: $light;
   }
 .navbar-mydark {
     background-color: $dark;
@@ -41,7 +53,7 @@ $theme-colors: (
     color: black !important;
     border-color: $primary !important;
     display: flex;
-    width: 100px;
+    width: 125px;
     height: 45px;
     padding: 10px 0px;
     justify-content: center;
