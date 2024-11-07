@@ -30,7 +30,7 @@ class Utilisateur{
      * Get the value of id
      * @return int
      */ 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -39,7 +39,7 @@ class Utilisateur{
      * Get the value of pseudo
      * @return string
      */
-    public function getPseudo()
+    public function getPseudo(): ?string
     {
         return $this->pseudo;
     }
@@ -48,7 +48,7 @@ class Utilisateur{
      * Get the value of mail
      * @return string
      */
-    public function getMail()
+    public function getMail(): ?string
     {
         return $this->mail;
     }
@@ -57,7 +57,7 @@ class Utilisateur{
      * Get the value of mdp
      * @return string
      */
-    public function getMdp()
+    public function getMdp(): ?string
     {
         return $this->mdp;
     }
@@ -66,7 +66,7 @@ class Utilisateur{
      * Get the value of role
      * @return string
      */
-    public function getRole()
+    public function getRole(): ?string
     {
         return $this->role;
     }
@@ -75,7 +75,7 @@ class Utilisateur{
      * Get the value of urlImagePofil
      * @return string
      */
-    public function getUrlImagePofil()
+    public function getUrlImagePofil(): ?string
     {
         return $this->urlImagePofil;
     }
@@ -84,7 +84,7 @@ class Utilisateur{
      * Get the value of urlImageBanière
      * @return string
      */
-    public function getUrlImageBanière()
+    public function getUrlImageBanière(): ?string
     {
         return $this->urlImageBanière;
     }
@@ -95,7 +95,7 @@ class Utilisateur{
      * Set the value of id
      * @return void
      */ 
-    public function setId($id)
+    public function setId(?int $id = null): void
     {
         $this->id = $id;
     }
@@ -104,7 +104,7 @@ class Utilisateur{
      * Set the value of pseudo
      * @return void
      */
-    public function setPseudo($pseudo)
+    public function setPseudo(?string $pseudo = null): void
     {
         $this->pseudo = $pseudo;
     }
@@ -113,6 +113,46 @@ class Utilisateur{
      * Set the value of mail
      * @return void
      */
+    public function setMail(?string $mail = null): void
+    {
+        $this->mail = $mail;
+    }
+
+    /**
+     * Set the value of mdp
+     * @return void
+     */
+    public function setMdp(?string $mdp = null): void
+    {
+        $this->mdp = $mdp;
+    }
+
+    /**
+     * Set the value of role
+     * @return void
+     */
+    public function setRole(?string $role = null): void
+    {
+        $this->role = $role;
+    }
+
+    /**
+     * Set the value of urlImagePofil
+     * @return void
+     */
+    public function setUrlImagePofil(?string $urlImagePofil = null): void
+    {
+        $this->urlImagePofil = $urlImagePofil;
+    }
+
+    /**
+     * Set the value of urlImageBanière
+     * @return void
+     */
+    public function setUrlImageBanière(?string $urlImageBanière = null): void
+    {
+        $this->urlImageBanière = $urlImageBanière;
+    }
 
     // Méthodes 
 
