@@ -1,0 +1,73 @@
+// Custom.scss
+// Option A: Include all of Bootstrap
+
+// Include any default variable overrides here (though functions won't be available)
+
+
+// Required
+@import "../node_modules/bootstrap/scss/functions";
+$primary: #F2AC0F;
+$secondary: #E6640B;
+$tercary: #DE0918;
+
+$light:#FBFADE;
+$dark:#231B33;
+
+
+// Required
+@import "../node_modules/bootstrap/scss/variables";
+@import "../node_modules/bootstrap/scss/variables-dark";
+
+$theme-colors: (
+        "primary": $primary,
+
+);
+@import "../node_modules/bootstrap/scss/maps";
+@import "../node_modules/bootstrap/scss/mixins";
+@import "../node_modules/bootstrap/scss/root";
+
+@import "../node_modules/bootstrap/scss/bootstrap";
+.myprimary {
+  color: $primary;
+}
+.bg-myprimary {
+  background-color: $primary;
+}
+.bg-mysecondary {
+  background-color: $secondary;
+}
+.bg-mytercary {
+  background-color: $tercary;
+}
+.bg-mydark {
+    background-color: $dark;
+  }
+.bg-mylight {
+  background-color: $light;
+  }
+.navbar-mydark {
+    background-color: $dark;
+  }
+  .btn-myprimary {
+    background-color: $primary !important;
+    color: black !important;
+    border-color: $primary !important;
+    display: flex;
+    width: 125px;
+    height: 45px;
+    padding: 10px 0px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    font-weight: bold;
+}
+.btn-search {
+    width: 50px;
+}
+.btn-myprimary:hover {
+    background-color: $primary !important;  /* Même couleur que l'état normal */
+    border-color: $primary !important;      /* Même bordure que l'état normal */
+    color: black !important;                /* Couleur de texte inchangée */
+    box-shadow: none !important;            /* Enlever l'ombre au survol */
+}
