@@ -1,0 +1,19 @@
+{% extends 'base_template.html.twig' %}
+
+{% block content %}
+
+<main class=""> <!-- Ajouter la bg Color -->
+    <div class="container">
+        {% fot thread in threads %}
+        <div class="row">
+            <div class="col-12">
+                <h2>{{ thread.title }}</h2>
+                <p>{{ thread.content }}</p>
+                <p>{{ thread.author }}</p>
+                <p>{{ thread.date }}</p>
+            </div>
+        </div>
+        {% endfor %}
+</main>
+
+{% endblock %}
