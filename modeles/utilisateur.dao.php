@@ -1,46 +1,57 @@
 <?php  
 
-class CateforieDAO {
+class UtilisateurDAO {
     private $pdo;
 
     function __construct(?PDO $pdo = null){
         $this->pdo = $pdo;
     }
 
+    function create(Utilisateur $utilisateur): bool{
+        $req = $this->pdo->prepare("INSERT INTO utilisateur (pseudo, mail, mdp, role, urlImageProfil, urlImageBaniere) VALUES (:pseudo, :mail, :mdp, :role, :urlImageProfil, :urlImageBaniere)");
+        $req->bindParam(":pseudo", $utilisateur->getPseudo());
+        $req->bindParam(":mail", $utilisateur->getMail());
+        $req->bindParam(":mdp", $utilisateur->getMdp());
+        $req->bindParam(":role", $utilisateur->getRole());
+        $req->bindParam(":urlImageProfil", $utilisateur->getUrlImageProfil());
+        $req->bindParam(":urlImageBaniere", $utilisateur->getUrlImageBaniere());
+        return $req->execute();
+    }
+
+    function find(int $id): Utilisateur{
+        $req = $this->pdo->prepare("SELECT * FROM utilisateur WHERE id = :id");
+        $req->bindParam(":id", $id);
+        $req->execute();
+        $data = $req->fetch();
+        return new Utilisateur($data["id"], $data["pseudo"], $data["mail"], $data["mdp"], $data["role"], $data["urlImageProfil"], $data["urlImageBaniere"]);
+    }
+
+    function update(Utilisateur $utilisateur): bool{
+        $req = $this->pdo->prepare("UPDATE utilisateur SET pseudo = :pseudo, mail = :mail, mdp = :mdp, role = :role, urlImageProfil = :urlImageProfil, urlImageBaniere = :urlImageBaniere WHERE id = :id");
+        $req->bindParam(":id", $utilisateur->getId());
+        $req->bindParam(":pseudo", $utilisateur->getPseudo());
+        $req->bindParam(":mail", $utilisateur->getMail());
+        $req->bindParam(":mdp", $utilisateur->getMdp());
+        $req->bindParam(":role", $utilisateur->getRole());
+        $req->bindParam(":urlImageProfil", $utilisateur->getUrlImageProfil());
+        $req->bindParam(":urlImageBaniere", $utilisateur->getUrlImageBaniere());
+        return $req->execute();
+    }
+
+    function delete(int $id): bool{
+        $req = $this->pdo->prepare("DELETE FROM utilisateur WHERE id = :id");
+        $req->bindParam(":id", $id);
+        return $req->execute();
+    }
+
     function findAll(): array{
-        $sql = "SELECT * FROM categorie";
-        $stmt = $this->pdo->query($sql);
-        $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $tab = [];
-        foreach($res as $ligne){
-            $tab[] = new Categorie($ligne['id'], $ligne['nom']);
+        $req = $this->pdo->prepare("SELECT * FROM utilisateur");
+        $req->execute();
+        $data = $req->fetchAll();
+        $utilisateurs = [];
+        foreach($data as $d){
+            $utilisateurs[] = new Utilisateur($d["id"], $d["pseudo"], $d["mail"], $d["mdp"], $d["role"], $d["urlImageProfil"], $d["urlImageBaniere"]);
         }
-        return $tab;
-    }
-
-    function find(int $id): Categorie{
-        $sql = "SELECT * FROM categorie WHERE id = ?";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$id]);
-        $res = $stmt->fetch(PDO::FETCH_ASSOC);
-        return new Categorie($res['id'], $res['nom']);
-    }
-
-    function insert(Categorie $c): void{
-        $sql = "INSERT INTO categorie (nom) VALUES (?)";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$c->getNom()]);
-    }
-
-    function update(Categorie $c): void{
-        $sql = "UPDATE categorie SET nom = ? WHERE id = ?";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$c->getNom(), $c->getId()]);
-    }
-
-    function delete(int $id): void{
-        $sql = "DELETE FROM categorie WHERE id = ?";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$id]);
+        return $utilisateurs;
     }
 }
