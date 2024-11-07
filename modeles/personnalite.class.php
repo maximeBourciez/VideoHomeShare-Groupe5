@@ -1,6 +1,6 @@
 <?php
 
-class Personalite{
+class Personnalite{
     // Attributs
     private ?int $id;
     private ?string $nom;
