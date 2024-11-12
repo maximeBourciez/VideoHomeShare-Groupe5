@@ -17,14 +17,15 @@ try  {
         $methode='';
     }
 
-    // Affichage des variables
-    echo 'controllerName : '.$controllerName.'<br>';
-    echo 'methode : '.$methode.'<br>';
+    // // Affichage des variables
+    // echo 'controllerName : '.$controllerName.'<br>';
+    // echo 'methode : '.$methode.'<br>';
 
     //Gestion de la page d'accueil par défaut
     if ($controllerName == '' && $methode ==''){
         $controllerName='fil';
         $methode='listerThreads';
+        
     }
 
     if ($controllerName == '' ){
@@ -38,7 +39,6 @@ try  {
     
 
     $controller = ControllerFactory::getController($controllerName, $loader, $twig);
-  
     $controller->call($methode);
 }catch (Exception $e) {
    die('Erreur : ' . $e->getMessage());

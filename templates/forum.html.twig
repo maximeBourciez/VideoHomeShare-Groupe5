@@ -2,18 +2,25 @@
 
 {% block content %}
 
-<main class=""> <!-- Ajouter la bg Color -->
+<main class=""> 
     <div class="container">
-        {% fot thread in threads %}
-        <div class="row"> <!-- Ajouter la bg Color -->
+        <div class="row">
             <div class="col-12">
-                <h2>{{ thread.title }}</h2>
-                <p>{{ thread.content }}</p>
-                <p>{{ thread.author }}</p>
-                <p>{{ thread.date }}</p>
+                <h1>{{ test }}</h1>
             </div>
         </div>
-        {% endfor %}
+        {% for thread in fils %}
+    <div class="row"> 
+        <div class="col-12">
+            <h2>{{ thread.titre }}</h2>
+            <p>Date de création : {{ thread.dateCreation|date("d-m-Y") }}</p>
+            <p>Description : {{ thread.description }}</p>
+            <p>Premier utilisateur : {{ thread.utilisateur.pseudo }}</p> {# Affichage du pseudo du premier utilisateur #}
+        </div>
+    </div>
+{% endfor %}
+
+    </div>
 </main>
 
 {% endblock %}
