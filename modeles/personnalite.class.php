@@ -8,7 +8,7 @@ class Personnalite{
     private ?string $urlImage;
 
     // Constructeur
-    function __construct(?int $id, ?string $nom, ?string $prenom, ?string $urlImage){
+    function __construct(?int $id = null, ?string $nom = null, ?string $prenom = null, ?string $urlImage = null){
         $this->id = $id;
         $this->nom = $nom;
         $this->prenom = $prenom;

@@ -10,7 +10,7 @@ class Contenu{
     private ?int $durée;
     private ?string $type;
     //constructeur
-    public function __construct(?int $id, ?string $titre, ?DateTime $date, ?string $description, ?string $lienAffiche, ?string $durée, ?string $type){
+    public function __construct(?int $id = null, ?string $titre = null, ?DateTime $date = null, ?string $description = null, ?string $lienAffiche = null, ?string $durée = null, ?string $type = null){
         $this->id = $id;
         $this->titre = $titre;
         $this->date = $date;

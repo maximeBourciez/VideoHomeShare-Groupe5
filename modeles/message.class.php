@@ -31,35 +31,35 @@ class Message{
 
     // Encapsulation
     // Getters
-    public function getId(): ?int{
+    public function getId(): int{
         return $this->id;
     }
 
-    public function getValeur(): ?string{
+    public function getValeur(): string{
         return $this->valeur;
     }
 
-    public function getNbLike(): ?int{
+    public function getNbLike(): int{
         return $this->nbLike;
     }
 
-    public function getNbDislike(): ?int{
+    public function getNbDislike(): int{
         return $this->nbDislike;
     }
 
-    public function getDate(): ?string{
+    public function getDate(): string{
         return $this->date;
     }
 
-    public function getIdUser(): ?int{
+    public function getIdUser(): int{
         return $this->id_user;
     }
 
-    public function getIdMessageParent(): ?int{
+    public function getIdMessageParent(): int{
         return $this->id_message_parent;
     }
 
-    public function getIdFil(): ?int{
+    public function getIdFil(): int{
         return $this->fil->getId();
     }
 
