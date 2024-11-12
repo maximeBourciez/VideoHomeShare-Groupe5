@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="CSS/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
+    <title></title>
+    <style>
+        /* S'assure que le body occupe toute la hauteur */
+        html, body {
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="d-flex flex-column bg-mylight">
+    <header>
+        <nav
+class="navbar navbar-expand-lg navbar-mydark py-2">
+<!-- Logo et le bouton menu -->
+<div class="d-flex flex-row">
+<a class="navbar-brand d-flex align-items-center ms-5" href="#">
+<img src="" height="95" width="155" alt="VHS Logo">
+</a>
+
+<div class="collapse navbar-collapse" id="navbarContent">
+<div
+class="d-flex align-items-center ms-lg-2">
+<!-- Bouton Menu qui ouvre le menu secondaire -->
+<button class="btn btn-myprimary bi bi-list" type="button" data-bs-toggle="collapse" data-bs-target="#submenu" aria-expanded="false" aria-controls="submenu">Menu</button>
+</div>
+</div>
+</div>
+
+<!-- Bar de recherche -->
+<form class="d-flex mx-auto">
+<input class="form-control me-2" style="width: 700px;" type="search" placeholder="Barre de recherche" aria-label="Search">
+<button class="btn btn-myprimary btn-search" type="submit">
+<i class="bi bi-search"></i>
+</button>
+</form>
+
+<!-- Bouton de connexion et de langue -->
+<div class="d-flex flex-row align-items-center">
+<button class="btn btn-myprimary me-4">Connexion</button>
+<a class="navbar-brand d-flex align-items-center text-white" href="#">
+<p class="mb-0 me-2"></p>
+<img src="" height="24" alt="FR">
+</a>
+</div>
+</nav>
+
+<!-- Menu secondaire avec les 5 boutons -->
+<div class="collapse" id="submenu">
+<div class="d-flex flex-row justify-content-center py-4 bg-mydark" style="gap:75px; border-top: 2px solid #F2AC0F; height: 100px;">
+<button class="btn btn-myprimary">Forum</button>
+<button class="btn btn-myprimary">Watch2Gather</button>
+<button class="btn btn-myprimary">WatchList</button>
+<button class="btn btn-myprimary">Quizz</button>
+<button class="btn btn-myprimary">Profil</button>
+</div>
+</div>
+
+    </header>
+    
+    <main class="flex-grow-1">
+        {% block content %}{% endblock %}
+    </main>
+    </body>
+</html>

@@ -8,18 +8,18 @@ class Message{
     private ?int $nbLike; // Nombre de likes
     private ?int $nbDislike; // Nombre de dislikes
     private ?string $date; // Date de publication
-    private ?int $id_user; // Identifiant de l'utilisateur ayant posté le message
+    private ?Utilisateur $createur; // Identifiant de l'utilisateur ayant posté le message
     private ?int $id_message_parent; // Identifiant du message parent
     private ?Fil $fil; // Identifiant du fil dans lequel le message est posté
 
     // Constructeur
-    public function __construct(?int $id, ?string $valeur, ?int $nbLike, ?int $nbDislike, ?string $date, ?int $id_user, ?int $id_message_parent, ?int $idFil){
+    public function __construct(?int $id, ?string $valeur, ?int $nbLike, ?int $nbDislike, ?string $date, ?Utilisateur $user, ?int $id_message_parent, ?int $idFil){
         $this->id = $id;
         $this->valeur = $valeur;
         $this->nbLike = $nbLike;
         $this->nbDislike = $nbDislike;
         $this->date = $date;
-        $this->id_user = $id_user;
+        $this->createur = $user;
         $this->id_message_parent = $id_message_parent;
         $this->fil = new Fil($idFil, "", new DateTime(), "");
     }
@@ -47,8 +47,8 @@ class Message{
         return $this->date;
     }
 
-    public function getIdUser(): ?int{
-        return $this->id_user;
+    public function getUser(): ?Utilisateur{
+        return $this->createur;
     }
 
     public function getIdMessageParent(): ?int{
@@ -81,8 +81,8 @@ class Message{
         $this->date = $date;
     }
 
-    public function setIdUser(int $id_user){
-        $this->id_user = $id_user;
+    public function setCreateur(Utilisateur $user){
+        $this->createur = $user;
     }
 
     public function setIdMessageParent(int $id_message_parent){

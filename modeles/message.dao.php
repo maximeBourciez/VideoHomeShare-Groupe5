@@ -26,18 +26,23 @@ class MessageDAO{
 
     // Méthodes d'hydratation
     public function hydrate(array $row): Message{ 
+        // Récupération de l'utilisateur
+        $user = new Utilisateur();
+        $user->setId($row['idUtilisateur']);
+        $user->setPseudo($row['pseudo']);
+        $user->setUrlImageProfil($row['urlImageProfil']);
+        
         // Récupération des valeurs
         $id = $row['id'];
         $valeur = $row['valeur'];
         $nbLike = $row['nbLike'];
         $nbDislike = $row['nbDislike'];
         $date = $row['date'];
-        $id_user = $row['id_user'];
         $id_message_parent = $row['id_message_parent'];
-        $id_fil = $row['id_fil'];
+        $id_fil = $row['idFil'];
 
         // Retourner le message
-        return new Message($id, $valeur, $nbLike, $nbDislike, $date, $id_user, $id_message_parent, $id_fil);
+        return new Message($id, $valeur, $nbLike, $nbDislike, $date, $user, $id_message_parent, $fil);
     } 
 
     function hydrateAll(array $rows): array{
@@ -69,6 +74,8 @@ class MessageDAO{
         return $this->hydrate($stmt->fetch());
     }
 
+
+    
     // Lister tous les messages d'un utilisateur par son id 
     public function listerMessagesParIdUser(int $id_user): array{
         $sql = "SELECT * FROM" . DB_PREFIX . "message WHERE id_user = :id_user";

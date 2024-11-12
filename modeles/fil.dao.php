@@ -81,4 +81,21 @@ class FilDAO {
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         return $this->hydrate($stmt->fetch());
     }
+
+    // Lister tous les messages d'un fil par son id
+    public function findMessagesByFilId(int $idFil): array {
+        $sql = "
+            SELECT m.*, u.idUtilisateur, u.pseudo, u.urlImageProfil
+            FROM " . DB_PREFIX . "message AS m
+            INNER JOIN " . DB_PREFIX . "utilisateur AS u ON m.idUtilisateur = u.idUtilisateur
+            WHERE m.idFil = :idFil
+            ORDER BY m.dateC ASC
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':idFil', $idFil, PDO::PARAM_INT);
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
+    }
+    
 }

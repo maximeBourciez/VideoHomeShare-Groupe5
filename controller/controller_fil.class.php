@@ -15,4 +15,15 @@ class ControllerFil extends Controller {
             'test' => 'test'
         ]);
     }
+
+    // Méthode d'affichage d'un fil par son id
+    public function afficherFilParId(){
+        $id = $_GET['id'];
+        $filDAO = new FilDAO($this->getPdo());
+        $fil = $filDAO->findMessagesByFilId($id);
+
+        echo $this->getTwig()->render('fil.html.twig', [
+            'fil' => $fil
+        ]);
+    }
 }
