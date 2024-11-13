@@ -1,23 +1,50 @@
 <?php
-
-// Classe FilDAO
-// Classe FilDAO
+/**
+ * @file fil.dao.php
+ * 
+ * @brief Classe FilDAO
+ * 
+ * @details Classe permettant de gérer les accès à la base de données pour les fils de discussion
+ * 
+ * @date 12/11/2024
+ * 
+ * @version 1.0
+ * 
+ * @author Maxime Bourciez <maxime.bourciez@gmail.com>
+ */
 class FilDAO {
     // Attributs
+    /**
+     * @var PDO|null $pdo Connexion à la base de données
+     */
     private ?PDO $pdo;
 
     // Constructeur
+    /**
+     * @brief Constructeur de la classe FilDAO
+     * 
+     * @param PDO|null $pdo Connexion à la base de données
+     */
     public function __construct(?PDO $pdo) {
         $this->pdo = $pdo;
     }
 
     // Encapsulation
-    // Getters
+    // Getter
+    /**
+     * @brief Getter de la connexion à la base de données
+     * @return PDO|null Connexion à la base de données
+     */
     public function getPdo(): ?PDO {
         return $this->pdo;
     }
 
-    // Setters
+    // Setter
+    /**
+     * @brief Setter de la connexion à la base de données
+     * @param PDO $pdo Connexion à la base de données
+     * @return self
+     */
     public function setPdo(PDO $pdo): self {
         $this->pdo = $pdo;
         return $this;
@@ -25,6 +52,12 @@ class FilDAO {
 
     // Méthodes
     // Méthodes d'hydratation
+    /**
+     * @brief Méthode d'hydratation d'un fil
+     * 
+     * @param array $row Ligne de la base de données
+     * @return Fil Objet Fil hydraté
+     */
     public function hydrate(array $row): Fil {
         // Création de l'objet Utilisateur
         $user = new Utilisateur();
@@ -44,6 +77,12 @@ class FilDAO {
         return $fil;
     }
 
+    /**
+     * @brief Méthode d'hydratation de tous les fils
+     * 
+     * @param array $rows Tableau de lignes de la base de données
+     * @return array<Fil> Tableau d'objets Fil hydratés
+     */
     function hydrateAll(array $rows): array {
         $fils = [];
         foreach ($rows as $row) {
@@ -53,7 +92,12 @@ class FilDAO {
     }
 
     // Méthodes de recherche 
-    // Lister tous les fils avec le premier utilisateur ayant posté
+    /**
+     * @brief Méthode pour lister tous les fils avec le premier utilisateur ayant posté
+     * 
+     * @return array<Fil> Tableau d'objets Fil
+     */
+    
     public function findAll(): array {
         $sql = "
             SELECT f.*, u.idUtilisateur, u.pseudo, u.urlImageProfil
@@ -72,7 +116,14 @@ class FilDAO {
         return $this->hydrateAll($stmt->fetchAll());
     }
 
-    // Trouver un fil par son id
+    /**
+     * @brief Méthode pour trouver un fil par son id
+     * 
+     * @details Méthode permettant de trouver un fil par son id - Sert à afficher un fil de discussion et ses messages sous-jacents
+     *
+     * @param integer $id Identifiant du fil
+     * @return Fil|null
+     */
     public function findById(int $id): ?Fil {
         $sql = "SELECT * FROM " . DB_PREFIX . "fil WHERE idFil = :id";  // Correction du nom de colonne
         $stmt = $this->pdo->prepare($sql);
@@ -82,7 +133,13 @@ class FilDAO {
         return $this->hydrate($stmt->fetch());
     }
 
-    // Lister tous les messages d'un fil par son id
+    /**
+     * @brief Méthode pour trouver les messages d'un fil par son id
+     *
+     * @param integer $idFil
+     * @return array
+     * @warning non testée
+     */
     public function findMessagesByFilId(int $idFil): array {
         $sql = "
             SELECT m.*, u.idUtilisateur, u.pseudo, u.urlImageProfil
