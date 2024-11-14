@@ -125,13 +125,26 @@ class FilDAO {
      * @return Fil|null
      */
     public function findById(int $id): ?Fil {
-        $sql = "SELECT * FROM " . DB_PREFIX . "fil WHERE idFil = :id";  // Correction du nom de colonne
+        $sql = "
+            SELECT 
+                f.idFil, f.titre, f.dateC, f.description,
+                u.idUtilisateur, u.pseudo, u.urlImageProfil
+            FROM " . DB_PREFIX . "fil AS f
+            LEFT JOIN " . DB_PREFIX . "message AS m ON f.idFil = m.idFil
+            LEFT JOIN " . DB_PREFIX . "utilisateur AS u ON m.idUtilisateur = u.idUtilisateur
+            WHERE f.idFil = :id
+            ORDER BY m.dateC ASC LIMIT 1
+        ";
+    
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
-        return $this->hydrate($stmt->fetch());
+    
+        $row = $stmt->fetch();
+        return $row ? $this->hydrate($row) : null;
     }
+    
 
     /**
      * @brief Méthode pour trouver les messages d'un fil par son id
@@ -165,7 +178,7 @@ class FilDAO {
      */
     public function findFirstUserByFilId(int $idFil): ?Utilisateur {
         $sql = "
-            SELECT u.idUtilisateur, u.pseudo, u.urlImageProfil
+            SELECT u.*
             FROM " . DB_PREFIX . "message AS m
             INNER JOIN " . DB_PREFIX . "utilisateur AS u ON m.idUtilisateur = u.idUtilisateur
             WHERE m.idFil = :idFil
@@ -176,8 +189,8 @@ class FilDAO {
         $stmt->bindValue(':idFil', $idFil, PDO::PARAM_INT);
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
-        var_dump($stmt->fetch());
-        return $this->hydrate($stmt->fetch());
+        $user = new UtilisateurDAO($this->pdo);
+        return $user->hydrate($stmt->fetch());
     }
     
 }

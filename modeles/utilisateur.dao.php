@@ -18,14 +18,6 @@ class UtilisateurDAO {
         return $req->execute();
     }
 
-    function find(int $id): Utilisateur{
-        $req = $this->pdo->prepare("SELECT * FROM utilisateur WHERE id = :id");
-        $req->bindParam(":id", $id);
-        $req->execute();
-        $data = $req->fetch();
-        return new Utilisateur($data["id"], $data["pseudo"], $data["mail"], $data["mdp"], $data["role"], $data["urlImageProfil"], $data["urlImageBaniere"]);
-    }
-
     function update(Utilisateur $utilisateur): bool{
         $req = $this->pdo->prepare("UPDATE utilisateur SET pseudo = :pseudo, mail = :mail, mdp = :mdp, role = :role, urlImageProfil = :urlImageProfil, urlImageBaniere = :urlImageBaniere WHERE id = :id");
         $req->bindParam(":id", $utilisateur->getId());
@@ -44,14 +36,47 @@ class UtilisateurDAO {
         return $req->execute();
     }
 
-    function findAll(): array{
-        $req = $this->pdo->prepare("SELECT * FROM utilisateur");
-        $req->execute();
-        $data = $req->fetchAll();
+    function hydrate(array $row): Utilisateur{
+        // Récupération des valeurs
+        $id = $row['id'];
+        $pseudo = $row['pseudo'];
+        $mail = $row['mail'];
+        $mdp = $row['mdp'];
+        $role = $row['role'];
+        $urlImageProfil = $row['urlImageProfil'];
+        $urlImageBaniere = $row['urlImageBaniere'];
+
+        // Retourner l'utilisateur
+        return new Utilisateur($id, $pseudo, $mail, $mdp, $role, $urlImageProfil, $urlImageBaniere);
+    }
+
+    function hydrateAll(array $rows): array{
         $utilisateurs = [];
-        foreach($data as $d){
-            $utilisateurs[] = new Utilisateur($d["id"], $d["pseudo"], $d["mail"], $d["mdp"], $d["role"], $d["urlImageProfil"], $d["urlImageBaniere"]);
+        foreach($rows as $row){
+            $utilisateur = $this->hydrate($row);
+            array_push($utilisateurs, $utilisateur);  // Ajout de l'utilisateur au tableau 
         }
         return $utilisateurs;
     }
+
+    function find(int $id): ?Utilisateur{
+        $sql = "SELECT * FROM utilisateur WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $row = $stmt->fetch();
+        if($row){
+            return $this->hydrate($row);
+        }
+        return null;
+    }
+
+    function findAll(): array{
+        $sql = "SELECT * FROM utilisateur";
+        $stmt = $this->pdo->query($sql);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        return $this->hydrateAll($stmt->fetchAll());
+    }
+
 }

@@ -61,7 +61,7 @@ class Message{
      * @param integer|null $id_message_parent Identifiant du message parent
      * @param integer|null $idFil Identifiant du fil dans lequel le message est posté
      */
-    public function __construct(?int $id, ?string $valeur, ?int $nbLike, ?int $nbDislike, ?string $date, ?Utilisateur $user, ?int $id_message_parent, ?int $idFil){
+    public function __construct(?int $id = null, ?string $valeur = null, ?int $nbLike = null, ?int $nbDislike = null, ?string $date = null, ?Utilisateur $user = null, ?int $id_message_parent = null, ?int $idFil = null){
         $this->id = $id;
         $this->valeur = $valeur;
         $this->nbLike = $nbLike;

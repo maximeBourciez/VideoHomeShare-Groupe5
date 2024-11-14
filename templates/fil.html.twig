@@ -3,24 +3,34 @@
 {% block content %}
 	<main class="">
 		<div class="container">
-			<div class = "row">
-				<div class="col-12">
-					<h1>{{ fil.titre }}</h1>
-				</div>
-
 			<div class="row">
 				<div class="col-12">
-					<h1>{{ test }}</h1>
+					<div class="row">
+						<div class="col-12">
+							<h1>{{ fil.titre }}</h1>
+							<p>
+								{{ fil.dateC|date("d-m-Y") }}</p>
+						</div>
+						<div class="col-12">
+							<p>{{ fil.description }}</p>
+						</div>
+					</div>
 				</div>
 			</div>
+
+
 			{% for message in messages %}
-				<div class="message">
-					
-					<h4>{{ message.createur.pseudo }}</h4>
-					<p>{{ message.valeur }}</p>
-					<small>{{ message.dateC|date("d-m-Y") }}</small>
-				</div>
-			{% endfor %}
+    <div class="message">
+        {% if message.createur %}
+            <h1>{{ message.createur.pseudo }}</h1>
+        {% else %}
+            <h1>Utilisateur inconnu</h1>
+        {% endif %}
+        <p>{{ message.valeur }}</p>
+        <small>{{ message.date|date("d-m-Y") }}</small>
+    </div>
+{% endfor %}
+
 
 		</div>
 	{% endblock %}

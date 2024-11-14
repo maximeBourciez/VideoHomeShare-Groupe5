@@ -181,12 +181,30 @@ class MessageDAO{
      * 
      * @return array<Message> Tableau d'objets Message
      */
-    public function listerMessagesParFil(int $id_fil): array{
-        $sql = "SELECT * FROM " . DB_PREFIX . "message WHERE id_fil = :id_fil";
+    public function listerMessagesParFil(int $id_fil): array {
+    
+        // Requête avec jointure pour récupérer les données des messages et des utilisateurs
+        $sql = "
+            SELECT 
+                m.idMessage AS id, 
+                m.valeur, 
+                m.nbLike, 
+                m.nbDislike, 
+                m.dateC AS date, 
+                m.idMessageParent AS id_message_parent, 
+                m.idFil,
+                u.idUtilisateur, 
+                u.pseudo, 
+                u.urlImageProfil
+            FROM " . DB_PREFIX . "message m
+            JOIN " . DB_PREFIX . "utilisateur u ON m.idUtilisateur = u.idUtilisateur
+            WHERE m.idFil = :id_fil
+        ";
+        
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':id_fil', $id_fil, PDO::PARAM_INT);
         $stmt->execute();
-        $stmt->setFetchMode(PDO::FETCH_CLASS, 'Message');
+        $stmt->setFetchMode(PDO::FETCH_ASSOC); 
         return $this->hydrateAll($stmt->fetchAll());
     }
 }

@@ -7,17 +7,17 @@ class Utilisateur{
     private ?string $mail;
     private ?string $mdp;
     private ?string $role;
-    private ?string $urlImagePofil;
+    private ?string $urlImageProfil;
     private ?string $urlImageBanière;
     
     // Constructeur
-    function __construct(?string $id = null, ?string $pseudo = null, ?string $mail = null, ?string $mdp = null, ?string $role = null, ?string $urlImagePofil = null, ?string $urlImageBanière = null){
+    function __construct(?int $id = null, ?string $pseudo = null, ?string $mail = null, ?string $mdp = null, ?string $role = null, ?string $urlImageProfil = null, ?string $urlImageBanière = null){
         $this->id = $id;
         $this->pseudo = $pseudo;
         $this->mail = $mail;
         $this->mdp = $mdp;
         $this->role = $role;
-        $this->urlImagePofil = $urlImagePofil;
+        $this->urlImageProfil = $urlImageProfil;
         $this->urlImageBanière = $urlImageBanière;
     }
 
@@ -77,7 +77,7 @@ class Utilisateur{
      */
     public function getUrlImageProfil(): ?string
     {
-        return $this->urlImagePofil;
+        return $this->urlImageProfil;
     }
 
     /**
@@ -142,7 +142,7 @@ class Utilisateur{
      */
     public function setUrlImageProfil(?string $urlImagePofil = null): void
     {
-        $this->urlImagePofil = $urlImagePofil;
+        $this->urlImageProfil = $urlImagePofil;
     }
 
     /**

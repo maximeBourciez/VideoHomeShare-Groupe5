@@ -58,6 +58,12 @@ class ControllerFil extends Controller {
         $filDAO = new FilDAO($this->getPdo());
         $fil = $filDAO->findById($id);
 
+        foreach ($messages as $message) {
+            // Récupérer l'utilisateur associé au message
+            $createur = $message->getUser();
+            var_dump($createur);  // Vérifiez que l'utilisateur est bien là
+        }
+
         echo $this->getTwig()->render('fil.html.twig', [
             'fil' => $fil,
             'messages' => $messages
