@@ -1,0 +1,22 @@
+{% extends 'base_template.html.twig' %}
+
+
+{% block content %}
+    <main class="content d-flex justify-content-center  ">
+    <div class="text-center">
+        <img src="{{ constant('WEBSITE_LOGO') }}" height="95" width="155" alt="VHS Logo" class="mx-auto my-2">
+        <div class="bg-mydark text-white rounded p-4  mb-5" style="max-width: 600px; width: 100%;">
+            <h3 class="mb-3"> inscription </h3>
+            <form action="index.php?controller=utilisateur&methode=checkInfoInscription">
+                <p class="text-start"> pseudo ou Mail </p>
+                <input type="text" class="form-control mb-2 "> 
+                <p class="text-start"> Mot de passe </p>
+                <input type="password" class="form-control mb-2"> 
+                <input type="submit" class="btn btn-myprimary my-2 mx-auto" value="se connecter"> 
+                <a>Mot de passe oublié ?</a>
+            </form>
+            <a href="index.php?controller=utilisateur&methode=connexion" class="text-white"> Créer le compte </a>
+        </div>
+    </div>
+</main>    
+{% endblock %}
