@@ -1,0 +1,26 @@
+{% extends 'base_template.html.twig' %}
+
+{% block content %}
+
+<main class=""> 
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1>{{ test }}</h1>
+            </div>
+        </div>
+        {% for thread in fils %}
+    <div class="row"> 
+        <div class="col-12">
+            <a class="text-decoration-none" href="index.php?controller=fil&methode=afficherFilParId&id={{ thread.id }}">{{ thread.titre }}</a>
+            <p>Date de création : {{ thread.dateCreation|date("d-m-Y") }}</p>
+            <p>Description : {{ thread.description }}</p>
+            <p>Premier utilisateur : {{ thread.utilisateur.pseudo }}</p> {# Affichage du pseudo du premier utilisateur #}
+        </div>
+    </div>
+{% endfor %}
+
+    </div>
+</main>
+
+{% endblock %}

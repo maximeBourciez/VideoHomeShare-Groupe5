@@ -1,29 +1,73 @@
 <?php
-
-class Fil{
-
-}
-
-// Classe Message
+/**
+ * @file message.class.php
+ * 
+ * @brief Classe Message
+ * 
+ * @details Cette classe permet de gérer les messages postés sur le forum
+ * 
+ * @date 12/11/2024
+ * 
+ * @version 1.0
+ * 
+ * @author Maxime Bourciez <maxime.bourciez@gmail.com>
+ */
 class Message{
     // Attributs 
-    private ?int $id; // Identifiant
-    private ?string $valeur; // Valeur du message
-    private ?int $nbLike; // Nombre de likes
-    private ?int $nbDislike; // Nombre de dislikes
-    private ?string $date; // Date de publication
-    private ?int $id_user; // Identifiant de l'utilisateur ayant posté le message
-    private ?int $id_message_parent; // Identifiant du message parent
-    private ?Fil $fil; // Identifiant du fil dans lequel le message est posté
+    /**
+     * @var integer|null $id Identifiant du message
+     */
+    private ?int $id;
+    /**
+     * @var string|null $valeur Valeur du message
+     */
+    private ?string $valeur;
+    /**
+     * @var integer|null $nbLike Nombre de likes
+     */
+    private ?int $nbLike; 
+    /**
+     * @var integer|null $nbDislike Nombre de dislikes
+     */
+    private ?int $nbDislike;
+    /**
+     * @var string|null $date Date de publication
+     */
+    private ?string $date;
+    /**
+     * @var Utilisateur|null $createur Utilisateur ayant posté le message
+     */
+    private ?Utilisateur $createur;
+    /**
+     * @var integer|null $id_message_parent Identifiant du message parent
+     */
+    private ?int $id_message_parent; 
+    /**
+     * @var Fil|null $fil Identifiant du fil dans lequel le message est posté
+     */
+    private ?Fil $fil;
+    
 
     // Constructeur
-    public function __construct(?int $id, ?string $valeur, ?int $nbLike, ?int $nbDislike, ?string $date, ?int $id_user, ?int $id_message_parent, ?int $idFil){
+    /**
+     * @brief Constructeur de la classe Message
+     * 
+     * @param integer|null $id Identifiant du message
+     * @param string|null $valeur Valeur du message
+     * @param integer|null $nbLike Nombre de likes
+     * @param integer|null $nbDislike Nombre de dislikes
+     * @param string|null $date Date de publication
+     * @param Utilisateur|null $user Utilisateur ayant posté le message
+     * @param integer|null $id_message_parent Identifiant du message parent
+     * @param integer|null $idFil Identifiant du fil dans lequel le message est posté
+     */
+    public function __construct(?int $id = null, ?string $valeur = null, ?int $nbLike = null, ?int $nbDislike = null, ?string $date = null, ?Utilisateur $user = null, ?int $id_message_parent = null, ?int $idFil = null){
         $this->id = $id;
         $this->valeur = $valeur;
         $this->nbLike = $nbLike;
         $this->nbDislike = $nbDislike;
         $this->date = $date;
-        $this->id_user = $id_user;
+        $this->createur = $user;
         $this->id_message_parent = $id_message_parent;
         $this->fil = new Fil($idFil, "", new DateTime(), "");
     }
@@ -31,70 +75,132 @@ class Message{
 
     // Encapsulation
     // Getters
-    public function getId(): int{
+    /**
+     * @brief Getter de l'identifiant du message
+     * @return integer|null Identifiant du message
+     */
+    public function getId(): ?int{
         return $this->id;
     }
 
-    public function getValeur(): string{
+    /**
+     * @brief Getter de la valeur du message
+     * @return string|null Valeur du message
+     */
+    public function getValeur(): ?string{
         return $this->valeur;
     }
 
-    public function getNbLike(): int{
+    /**
+     * @brief Getter du nombre de likes
+     * @return integer|null Nombre de likes
+     */
+    public function getNbLike(): ?int{
         return $this->nbLike;
     }
 
-    public function getNbDislike(): int{
+    /**
+     * @brief Getter du nombre de dislikes
+     * @return integer|null Nombre de dislikes
+     */
+    public function getNbDislike(): ?int{
         return $this->nbDislike;
     }
 
-    public function getDate(): string{
+    /**
+     * @brief Getter de la date de publication
+     * @return string|null Date de publication
+     */
+    public function getDate(): ?string{
         return $this->date;
     }
 
-    public function getIdUser(): int{
-        return $this->id_user;
+    /**
+     * @brief Getter de l'utilisateur ayant posté le message
+     * @return Utilisateur|null Utilisateur ayant posté le message
+     */
+    public function getUser(): ?Utilisateur{
+        return $this->createur;
     }
 
-    public function getIdMessageParent(): int{
+    /**
+     * @brief Getter de l'identifiant du message parent
+     * @return integer|null Identifiant du message parent
+     */
+    public function getIdMessageParent(): ?int{
         return $this->id_message_parent;
     }
 
-    public function getIdFil(): int{
+    /**
+     * @brief Getter de l'identifiant du fil
+     * @return integer|null Identifiant du fil
+     */
+    public function getIdFil(): ?int{
         return $this->fil->getId();
     }
 
-
     // Setters
+    /**
+     * @brief Setter de l'identifiant du message
+     * @param integer $id Identifiant du message
+     */
     public function setId(int $id){
         $this->id = $id;
     }
 
+    /**
+     * @brief Setter de la valeur du message
+     * @param string $valeur Valeur du message
+     */
     public function setValeur(string $valeur) {
         $this->valeur = $valeur;
     }
 
+    /**
+     * @brief Setter du nombre de likes
+     * @param integer $nbLike Nombre de likes
+     */
     public function setNbLike(int $nbLike) {
         $this->nbLike = $nbLike;
     }
 
+    /**
+     * @brief Setter du nombre de dislikes
+     * @param integer $nbDislike Nombre de dislikes
+     */
     public function setNbDislike(int $nbDislike){
         $this->nbDislike = $nbDislike;
     }
 
+    /**
+     * @brief Setter de la date de publication
+     * @param string $date Date de publication
+     */
     public function setDate(string $date){
         $this->date = $date;
     }
 
-    public function setIdUser(int $id_user){
-        $this->id_user = $id_user;
+    /**
+     * @brief Setter de l'utilisateur ayant posté le message
+     * @param Utilisateur $user Utilisateur ayant posté le message
+     */
+    public function setCreateur(Utilisateur $user){
+        $this->createur = $user;
     }
 
+    /**
+     * @brief Setter de l'identifiant du message parent
+     * @param integer $id_message_parent Identifiant du message parent
+     */
     public function setIdMessageParent(int $id_message_parent){
         $this->id_message_parent = $id_message_parent;
     }
 
+    /**
+     * @brief Setter de l'identifiant du fil
+     * @param integer $id_fil Identifiant du fil
+     */
     public function setIdFil(int $id_fil){
         $this->fil->setId($id_fil);
     }
-
 }

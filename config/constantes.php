@@ -1,10 +1,10 @@
 <?php
 
 //Connexion à la base de données
-define('DB_HOST', 'lakartxela.iutbayonne.univ-pau.fr');
+define('DB_HOST', 'localhost');
 define('DB_NAME', 'mbourciez_pro');
-define('DB_USER', 'mbourciez_pro');
-define('DB_PASS', 'mbourciez_pro');
+define('DB_USER', 'root');
+define('DB_PASS', '');
 define('DB_PREFIX', 'vhs_');
 
 // Constante de la partie vue

@@ -2,22 +2,22 @@
 
 class Utilisateur{
     // Attributs
-    private ?int $id;
+    private ?string $id;
     private ?string $pseudo;
     private ?string $mail;
     private ?string $mdp;
     private ?string $role;
-    private ?string $urlImagePofil;
+    private ?string $urlImageProfil;
     private ?string $urlImageBanière;
     
     // Constructeur
-    function __construct(?int $id, ?string $pseudo, ?string $mail, ?string $mdp, ?string $role, ?string $urlImagePofil, ?string $urlImageBanière){
+    function __construct(?int $id = null, ?string $pseudo = null, ?string $mail = null, ?string $mdp = null, ?string $role = null, ?string $urlImageProfil = null, ?string $urlImageBanière = null){
         $this->id = $id;
         $this->pseudo = $pseudo;
         $this->mail = $mail;
         $this->mdp = $mdp;
         $this->role = $role;
-        $this->urlImagePofil = $urlImagePofil;
+        $this->urlImageProfil = $urlImageProfil;
         $this->urlImageBanière = $urlImageBanière;
     }
 
@@ -30,7 +30,7 @@ class Utilisateur{
      * Get the value of id
      * @return int
      */ 
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }
@@ -75,9 +75,9 @@ class Utilisateur{
      * Get the value of urlImagePofil
      * @return string
      */
-    public function getUrlImagePofil(): ?string
+    public function getUrlImageProfil(): ?string
     {
-        return $this->urlImagePofil;
+        return $this->urlImageProfil;
     }
 
     /**
@@ -95,7 +95,7 @@ class Utilisateur{
      * Set the value of id
      * @return void
      */ 
-    public function setId(?int $id = null): void
+    public function setId(?string $id = null): void
     {
         $this->id = $id;
     }
@@ -140,9 +140,9 @@ class Utilisateur{
      * Set the value of urlImagePofil
      * @return void
      */
-    public function setUrlImagePofil(?string $urlImagePofil = null): void
+    public function setUrlImageProfil(?string $urlImagePofil = null): void
     {
-        $this->urlImagePofil = $urlImagePofil;
+        $this->urlImageProfil = $urlImagePofil;
     }
 
     /**

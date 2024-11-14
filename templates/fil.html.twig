@@ -1,0 +1,35 @@
+{% extends 'base_template.html.twig' %}
+
+{% block content %}
+	<main class="">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<div class="row">
+						<div class="col-12">
+							<h1>{{ fil.titre }}</h1>
+							<p>
+								{{ fil.dateC|date("d-m-Y") }}</p>
+						</div>
+						<div class="col-12">
+							<p>{{ fil.description }}</p>
+						</div>
+						<!-- Affiche le créateur du fil -->
+						<div class="col-12">
+							<h2>{{ fil.createur }}</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			{% for message in messages %}
+    {% if message.createur is not null %}
+        <h1>{{ message.createur.pseudo }}</h1>
+    {% else %}
+        <h1>Aucun créateur disponible</h1>
+    {% endif %}
+    <p>{{ message.valeur }}</p>
+{% endfor %}
+
+		</div>
+	{% endblock %}
