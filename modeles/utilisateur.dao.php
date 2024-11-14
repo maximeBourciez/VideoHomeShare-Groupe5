@@ -14,7 +14,7 @@ class UtilisateurDAO {
         $req->bindParam(":mdp", $utilisateur->getMdp());
         $req->bindParam(":role", $utilisateur->getRole());
         $req->bindParam(":urlImageProfil", $utilisateur->getUrlImageProfil());
-        $req->bindParam(":urlImageBaniere", $utilisateur->getUrlImageBaniere());
+        $req->bindParam(":urlImageBaniere", $utilisateur->getUrlImageBanière());
         return $req->execute();
     }
 
@@ -26,7 +26,7 @@ class UtilisateurDAO {
         $req->bindParam(":mdp", $utilisateur->getMdp());
         $req->bindParam(":role", $utilisateur->getRole());
         $req->bindParam(":urlImageProfil", $utilisateur->getUrlImageProfil());
-        $req->bindParam(":urlImageBaniere", $utilisateur->getUrlImageBaniere());
+        $req->bindParam(":urlImageBaniere", $utilisateur->getUrlImageBanière());
         return $req->execute();
     }
 

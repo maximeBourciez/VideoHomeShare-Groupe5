@@ -7,6 +7,7 @@
 				<div class="col-12">
 					<div class="row">
 						<div class="col-12">
+						<pre>{{ dump(fil) }}</pre>
 							<h1>{{ fil.titre }}</h1>
 							<p>
 								{{ fil.dateC|date("d-m-Y") }}</p>
@@ -23,13 +24,14 @@
 			</div>
 
 			{% for message in messages %}
-    {% if message.createur is not null %}
-        <h1>{{ message.createur.pseudo }}</h1>
-    {% else %}
-        <h1>Aucun créateur disponible</h1>
-    {% endif %}
-    <p>{{ message.valeur }}</p>
-{% endfor %}
+			<pre>{{ dump(message) }}</pre>
+				{% if message.createur is not null %}
+					<h1>{{ message.createur.pseudo }}</h1>
+				{% else %}
+					<h1>Aucun créateur disponible</h1>
+				{% endif %}
+				<p>{{ message.valeur }}</p>
+			{% endfor %}
 
 		</div>
 	{% endblock %}

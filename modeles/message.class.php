@@ -33,9 +33,9 @@ class Message{
     /**
      * @var string|null $date Date de publication
      */
-    private ?string $date;
+    private ?DateTime $date;
     /**
-     * @var Utilisateur|null $createur Utilisateur ayant posté le message
+     * @var Utilisateur $createur Utilisateur ayant posté le message
      */
     private ?Utilisateur $createur;
     /**
@@ -61,7 +61,7 @@ class Message{
      * @param integer|null $id_message_parent Identifiant du message parent
      * @param integer|null $idFil Identifiant du fil dans lequel le message est posté
      */
-    public function __construct(?int $id = null, ?string $valeur = null, ?int $nbLike = null, ?int $nbDislike = null, ?string $date = null, ?Utilisateur $user = null, ?int $id_message_parent = null, ?int $idFil = null){
+    public function __construct(?int $id = null, ?string $valeur = null, ?int $nbLike = null, ?int $nbDislike = null, ?DateTime $date = null, ?Utilisateur $user = null, ?int $id_message_parent = null, ?int $idFil = null){
         $this->id = $id;
         $this->valeur = $valeur;
         $this->nbLike = $nbLike;
@@ -109,9 +109,9 @@ class Message{
 
     /**
      * @brief Getter de la date de publication
-     * @return string|null Date de publication
+     * @return DateTime|null Date de publication
      */
-    public function getDate(): ?string{
+    public function getDate(): ?DateTime{
         return $this->date;
     }
 
@@ -174,9 +174,9 @@ class Message{
 
     /**
      * @brief Setter de la date de publication
-     * @param string $date Date de publication
+     * @param DateTime $date Date de publication
      */
-    public function setDate(string $date){
+    public function setDate(DateTime $date){
         $this->date = $date;
     }
 

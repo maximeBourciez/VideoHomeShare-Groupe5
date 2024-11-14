@@ -62,22 +62,26 @@ class MessageDAO{
      */
     public function hydrate(array $row): Message{ 
         // Récupération de l'utilisateur
-        $user = new Utilisateur();
-        $user->setId($row['idUtilisateur']);
-        $user->setPseudo($row['pseudo']);
-        $user->setUrlImageProfil($row['urlImageProfil']);
+        $idUser = $row['idUtilisateur'];
+        $pseudoUser = $row['pseudo'];
+        $mailUser = $row['mail'];
+        $mdpUser = $row['mdp'];
+        $roleUser = $row['role'];
+        $urlImageBaniereUser = $row['urlImageBanniere'];
+        $urlImageProfilUser = $row['urlImageProfil'];
+        $user = new Utilisateur($idUser, $pseudoUser, $mailUser, $mdpUser, $roleUser, $urlImageProfilUser, $urlImageBaniereUser);
         
         // Récupération des valeurs
-        $id = $row['id'];
+        $idMessage = $row['id'];
         $valeur = $row['valeur'];
         $nbLike = $row['nbLike'];
         $nbDislike = $row['nbDislike'];
-        $date = $row['date'];
-        $id_message_parent = $row['id_message_parent'];
-        $id_fil = $row['idFil'];
+        $date = new DateTime($row['date']);
+        $idMessageParent = $row['id_message_parent'];
+        $idFil = $row['idFil'];
 
         // Retourner le message
-        return new Message($id, $valeur, $nbLike, $nbDislike, $date, $user, $id_message_parent, $id_fil);
+        return new Message($idMessage, $valeur, $nbLike, $nbDislike, $date, $user, $idMessageParent, $idFil);
     } 
 
     /**
@@ -193,9 +197,7 @@ class MessageDAO{
                 m.dateC AS date, 
                 m.idMessageParent AS id_message_parent, 
                 m.idFil,
-                u.idUtilisateur, 
-                u.pseudo, 
-                u.urlImageProfil
+                u.*
             FROM " . DB_PREFIX . "message m
             JOIN " . DB_PREFIX . "utilisateur u ON m.idUtilisateur = u.idUtilisateur
             WHERE m.idFil = :id_fil

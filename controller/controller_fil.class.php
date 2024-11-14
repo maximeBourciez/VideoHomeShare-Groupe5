@@ -50,16 +50,17 @@ class ControllerFil extends Controller {
     public function afficherFilParId(){
         $id = $_GET['id'];
 
-        // Récuérer les messages du fil
-        $messageDAO = new MessageDAO($this->getPdo());
-        $messages = $messageDAO->listerMessagesParFil($id);
+        
 
         // Récupérer les infos du fil
         $filDAO = new FilDAO($this->getPdo());
         $fil = $filDAO->findById($id);
 
-        // Afficer le contenu de messages
-        var_dump($fil);
+        // Récuérer les messages du fil
+        $messageDAO = new MessageDAO($this->getPdo());
+        $messages = $messageDAO->listerMessagesParFil($id);
+
+
 
         // Rendre le template avec les infos
         echo $this->getTwig()->render('fil.html.twig', [
