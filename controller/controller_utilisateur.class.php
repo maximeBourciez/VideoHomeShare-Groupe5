@@ -29,14 +29,33 @@ class ControllerUtilisateur extends Controller{
                 
 
     }
+
     public function checkInfoConnecter(){
-
-
-    }
-    public function checkInfoInscription(){
-
         
+        $mail = isset($_POST['mail']) ? $_POST['mail'] : null;
+        $mdp = isset($_POST['pwd']) ? $_POST['pwd'] : null;
+
+        //Récupération des recettes
+        $managerRecette = new UtilisateurDAO($this->getPdo());
+        print("coucou");
+        if ($managerRecette->findByMailandPWD($mail,$mdp) == 1){
+            //Génération de la vue
+            $template = $this->getTwig()->load('index.html.twig');
+            echo $template->render(array(
+                'description' => "Je fais mes tests"
+            ));
+        }else{
+            //Génération de la vue
+            $template = $this->getTwig()->load('connection.html.twig');
+            echo $template->render(array(
+                'description' => "Je fais mes tests"
+            ));
+            
+        }
+
+
     }
+   
 
 
 }

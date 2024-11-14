@@ -22,11 +22,11 @@ try  {
     echo 'methode : '.$methode.'<br>';
 
     //Gestion de la page d'accueil par défaut
-    if ($controllerName == '' && $methode ==''){
-        $controllerName='fil';
-        $methode='listerThreads';
+    // if ($controllerName == '' && $methode ==''){
+    //     $controllerName='fil';
+    //     $methode='listerThreads';
         
-    }
+    // }
 
     if ($controllerName == '' ){
         throw new Exception('Le controleur n\'est pas défini');

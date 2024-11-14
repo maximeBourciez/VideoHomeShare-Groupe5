@@ -7,15 +7,17 @@
         <img src="{{ constant('WEBSITE_LOGO') }}" height="95" width="155" alt="VHS Logo" class="mx-auto my-2">
         <div class="bg-mydark text-white rounded p-4 mb-5" style="max-width: 600px; width: 100%;">
             <h3 class="mb-3"> inscription </h3>
-            <form action="index.php?controller=utilisateur&methode=checkInfoInscription">
-                <p class="text-start"> pseudo </p>
-                <input type="text" class="form-control mb-2 "> 
+            <form action="index.php?controller=utilisateur&methode=checkInfoInscription" methode="POST">
+                <p class="text-start"> Idantifiant </p>
+                <input type="text" name="idantifiant" class="form-control mb-2 "> 
+                <p class="text-start"> Pseudo </p>
+                <input type="text" name="pseudo" class="form-control mb-2 "> 
                 <p class="text-start"> Mail </p>
-                <input type="email" class="form-control mb-2"> 
+                <input type="email" name="mail" class="form-control mb-2"> 
                 <p class="text-start"> Mot de passe </p>
-                <input type="password" class="form-control mb-2"> 
+                <input type="password" name="mdp" class="form-control mb-2"> 
                 <p class="text-start"> Vérification mot de passe </p>
-                <input type="password" class="form-control mb-3">
+                <input type="password" name="vmdp" class="form-control mb-3">
                 <input type="submit" class="btn btn-myprimary my-2 mx-auto" value="Créer le compte"> 
             </form>
             <a href="index.php?controller=utilisateur&methode=connexion" class="text-white"> se connecter </a>

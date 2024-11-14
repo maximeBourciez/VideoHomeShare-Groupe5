@@ -79,4 +79,17 @@ class UtilisateurDAO {
         return $this->hydrateAll($stmt->fetchAll());
     }
 
+
+    public function findByMailandPWD( String  $mail , String $MDP ) : int {
+        $sql = "SELECT count(id) FROM utilisateur WHERE mail = :mail AND mdp = :mdp";
+        $stmt->bindValue(':mail', $mail, PDO::PARAM_STR);
+        $stmt->bindValue(':mdp', $MDP, PDO::PARAM_STR);
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetch();
+
+    }
+    
+
+
 }
