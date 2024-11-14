@@ -1,8 +1,6 @@
 <?php
 
-class Fil{
 
-}
 
 // Classe Message
 class Message{

@@ -2,23 +2,23 @@
 
 class Utilisateur{
     // Attributs
-    private ?int $id;
+    private ?string $id;
     private ?string $pseudo;
     private ?string $mail;
     private ?string $mdp;
     private ?string $role;
     private ?string $urlImagePofil;
-    private ?string $urlImageBanière;
+    private ?string $urlImageBaniere;
     
     // Constructeur
-    function __construct(?int $id, ?string $pseudo, ?string $mail, ?string $mdp, ?string $role, ?string $urlImagePofil, ?string $urlImageBanière){
+    function __construct(?string $id, ?string $pseudo, ?string $mail, ?string $mdp, ?string $role, ?string $urlImagePofil, ?string $urlImageBaniere){
         $this->id = $id;
         $this->pseudo = $pseudo;
         $this->mail = $mail;
         $this->mdp = $mdp;
         $this->role = $role;
         $this->urlImagePofil = $urlImagePofil;
-        $this->urlImageBanière = $urlImageBanière;
+        $this->urlImageBanière = $urlImageBaniere;
     }
 
     // Encapsulation
@@ -28,9 +28,9 @@ class Utilisateur{
 
     /**
      * Get the value of id
-     * @return int
+     * @return string
      */ 
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }
@@ -75,7 +75,7 @@ class Utilisateur{
      * Get the value of urlImagePofil
      * @return string
      */
-    public function getUrlImagePofil(): ?string
+    public function getUrlImageProfil(): ?string
     {
         return $this->urlImagePofil;
     }
@@ -84,7 +84,7 @@ class Utilisateur{
      * Get the value of urlImageBanière
      * @return string
      */
-    public function getUrlImageBanière(): ?string
+    public function getUrlImageBaniere(): ?string
     {
         return $this->urlImageBanière;
     }
@@ -95,7 +95,7 @@ class Utilisateur{
      * Set the value of id
      * @return void
      */ 
-    public function setId(?int $id = null): void
+    public function setId(?string $id = null): void
     {
         $this->id = $id;
     }
