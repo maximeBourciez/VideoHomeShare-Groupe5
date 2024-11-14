@@ -1,0 +1,26 @@
+{% extends 'base_template.html.twig' %}
+
+{% block content %}
+	<main class="">
+		<div class="container">
+			<div class = "row">
+				<div class="col-12">
+					<h1>{{ fil.titre }}</h1>
+				</div>
+
+			<div class="row">
+				<div class="col-12">
+					<h1>{{ test }}</h1>
+				</div>
+			</div>
+			{% for message in messages %}
+				<div class="message">
+					
+					<h4>{{ message.createur.pseudo }}</h4>
+					<p>{{ message.valeur }}</p>
+					<small>{{ message.dateC|date("d-m-Y") }}</small>
+				</div>
+			{% endfor %}
+
+		</div>
+	{% endblock %}

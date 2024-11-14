@@ -164,11 +164,29 @@ class MessageDAO{
         $stmt->bindValue(':nbLike', $message->getNbLike(), PDO::PARAM_INT);
         $stmt->bindValue(':nbDislike', $message->getNbDislike(), PDO::PARAM_INT);
         $stmt->bindValue(':date', $message->getDate(), PDO::PARAM_STR);
-        $stmt->bindValue(':id_user', $message->getIdUser(), PDO::PARAM_INT);
+        $stmt->bindValue(':id_user', $message->g(), PDO::PARAM_INT);
         $stmt->bindValue(':id_message_parent', $message->getIdMessageParent(), PDO::PARAM_INT);
         $stmt->bindValue(':id_fil', $message->getIdFil(), PDO::PARAM_INT);
 
         // Execution de la requête
         return $stmt->execute();
+    }
+
+    /**
+     * @brief Méthode de listing des messages par fil
+     * 
+     * @details Méthode permettant de lister les messages d'un fil de discussion par son id
+     * 
+     * @param integer $id_fil Identifiant du fil
+     * 
+     * @return array<Message> Tableau d'objets Message
+     */
+    public function listerMessagesParFil(int $id_fil): array{
+        $sql = "SELECT * FROM " . DB_PREFIX . "message WHERE id_fil = :id_fil";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':id_fil', $id_fil, PDO::PARAM_INT);
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_CLASS, 'Message');
+        return $this->hydrateAll($stmt->fetchAll());
     }
 }

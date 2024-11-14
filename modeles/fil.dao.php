@@ -63,7 +63,7 @@ class FilDAO {
         $user = new Utilisateur();
         $user->setId($row['idUtilisateur']);
         $user->setPseudo($row['pseudo']);
-        $user->setUrlImageProfil($row['urlImageProfil']);  // Correction de setUrlImageProfil
+        $user->setUrlImageProfil($row['urlImageProfil']);  
 
         // Création de l'objet Fil en incluant l'utilisateur
         $id = $row['idFil'];
@@ -72,7 +72,7 @@ class FilDAO {
         $description = $row['description'];
 
         $fil = new Fil($id, $titre, $dateCreation, $description);
-        $fil->setUtilisateur($user);  // Associer l'utilisateur au fil (en supposant que Fil a cette méthode)
+        $fil->setUtilisateur($user);  // Associer l'utilisateur au fil
 
         return $fil;
     }
@@ -152,7 +152,32 @@ class FilDAO {
         $stmt->bindValue(':idFil', $idFil, PDO::PARAM_INT);
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
-        return $stmt->fetchAll();
+        $messages = new MessageDAO($this->pdo);
+        return $messages->listerMessagesParFil($idFil);
+    }
+
+    /**
+     * @brief Méthode pour récupérer l'utilisateur ayant posté le premier message d'un fil
+     * 
+     * @param integer $idFil Identifiant du fil
+     * 
+     * @return Utilisateur|null
+     */
+    public function findFirstUserByFilId(int $idFil): ?Utilisateur {
+        $sql = "
+            SELECT u.idUtilisateur, u.pseudo, u.urlImageProfil
+            FROM " . DB_PREFIX . "message AS m
+            INNER JOIN " . DB_PREFIX . "utilisateur AS u ON m.idUtilisateur = u.idUtilisateur
+            WHERE m.idFil = :idFil
+            ORDER BY m.dateC ASC
+            LIMIT 1
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':idFil', $idFil, PDO::PARAM_INT);
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        var_dump($stmt->fetch());
+        return $this->hydrate($stmt->fetch());
     }
     
 }
