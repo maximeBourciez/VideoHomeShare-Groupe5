@@ -60,8 +60,6 @@ class ControllerFil extends Controller {
         $messageDAO = new MessageDAO($this->getPdo());
         $messages = $messageDAO->listerMessagesParFil($id);
 
-
-
         // Rendre le template avec les infos
         echo $this->getTwig()->render('fil.html.twig', [
             'messages' => $messages,
