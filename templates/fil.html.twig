@@ -1,18 +1,6 @@
 {% extends 'base_template.html.twig' %}
 
 {% block content %}
-<<<<<<< HEAD
-	<main class="">
-		<div class="container">
-			<div class="row">
-				<div class="col-12">
-					<div class="row">
-						<div class="col-12">
-						<pre>{{ dump(fil) }}</pre>
-							<h1>{{ fil.titre }}</h1>
-							<p>
-								{{ fil.dateC|date("d-m-Y") }}</p>
-=======
 	<div class="container-fluid bg-mydark text-white p-4 shadow mb-5" style="border-top: 5px solid #F2AC0F;">
 		<div class="text-center">
 			<h2 class="mb-3">{{ fil.titre }}</h2>
@@ -32,7 +20,6 @@
 								<span class="mx-2 " style="font-size: 1.2em;">•</span>
 								<small class="">{{ message.datePublication | date('d M Y') }}</small>
 							</div>
->>>>>>> 978a18e4ac01d62464ebabff512cf50be88661b5
 						</div>
 						<p class="mt-3">{{ message.valeur }}</p>
 						<div class="d-flex justify-content-between mt-4">
@@ -59,21 +46,7 @@
 						</div>
 					</div>
 				</div>
-<<<<<<< HEAD
-			</div>
-
-			{% for message in messages %}
-			<pre>{{ dump(message) }}</pre>
-				{% if message.createur is not null %}
-					<h1>{{ message.createur.pseudo }}</h1>
-				{% else %}
-					<h1>Aucun créateur disponible</h1>
-				{% endif %}
-				<p>{{ message.valeur }}</p>
-			{% endfor %}
-=======
 			{% endif %}
->>>>>>> 978a18e4ac01d62464ebabff512cf50be88661b5
 
 			{% if message.reponse %}
 				<div class="card my-4 shadow-sm border-0 rounded-3 ms-5">
@@ -112,7 +85,9 @@
 							</div>
 						</div>
 					</div>
+					</div>
 				{% endif %}
+
 			{% endfor %}
 		</div>
 	{% endblock %}
