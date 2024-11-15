@@ -2,7 +2,7 @@
 
 
 {% block content %}
-    <main class="content row" >
+    <main class="content row flex-grow-1" >
     <form action="index.php?controller=utilisateur&methode=checkInfoInscription" method="POST" class="text-center col-12 w-25 mx-auto" >
         <img src="{{ constant('WEBSITE_LOGO') }}" height="95" width="155" alt="VHS Logo" class="mx-auto my-2">
         <div class="bg-mydark text-white rounded p-4 mb-5" >
@@ -20,7 +20,7 @@
                 <input type="password" name="vmdp" class="form-control mb-3 ">
                 <input type="submit" class="btn btn-myprimary my-2  w-50 mx-auto" value="Créer le compte"> 
             
-            <a href="index.php?controller=utilisateur&methode=connexion" class="text-white"> se connecter </a>
+            <a href="index.php?controller=utilisateur&methode=connexion" class="text-white"> Se connecter </a>
         </div>
     </form>
 </main>    

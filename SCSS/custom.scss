@@ -1,73 +1,176 @@
 // Custom.scss
-// Option A: Include all of Bootstrap
 
-// Include any default variable overrides here (though functions won't be available)
-
-
-// Required
-@import "../node_modules/bootstrap/scss/functions";
+// 1. Variables
 $primary: #F2AC0F;
 $secondary: #E6640B;
 $tercary: #DE0918;
+$light: #FBFADE;
+$dark: #231B33;
 
-$light:#FBFADE;
-$dark:#231B33;
+// 2. Configuration Bootstrap
+@import "../node_modules/bootstrap/scss/functions";
 
+// 3. Theme Colors Map
+$theme-colors: (
+    "primary": $primary,
+    "secondary": $secondary,
+    "tercary": $tercary,
+    "light": $light,
+    "dark": $dark
+);
 
-// Required
+// 4. Bootstrap Required
 @import "../node_modules/bootstrap/scss/variables";
 @import "../node_modules/bootstrap/scss/variables-dark";
-
-$theme-colors: (
-        "primary": $primary,
-
-);
 @import "../node_modules/bootstrap/scss/maps";
 @import "../node_modules/bootstrap/scss/mixins";
 @import "../node_modules/bootstrap/scss/root";
-
 @import "../node_modules/bootstrap/scss/bootstrap";
+
+// 5. Mixins personnalisés
+@mixin button-base {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    
+    &:hover {
+        transform: scale(1.05);
+    }
+}
+
+// 6. Classes personnalisées
+// 6.1 Couleurs de texte
 .myprimary {
-  color: $primary;
+    color: $primary;
 }
-.bg-myprimary {
-  background-color: $primary;
+
+// 6.2 Couleurs de fond
+.border-myprimary {
+    border-color: $primary;
 }
-.bg-mysecondary {
-  background-color: $secondary;
+.bg {
+    &-myprimary {
+        background-color: $primary;
+    }
+    
+    &-mysecondary {
+        background-color: $secondary;
+    }
+    
+    &-mytercary {
+        background-color: $tercary;
+    }
+    
+    &-mydark {
+        background-color: $dark;
+    }
+    
+    &-mylight {
+        background-color: $light;
+    }
 }
-.bg-mytercary {
-  background-color: $tercary;
-}
-.bg-mydark {
-    background-color: $dark;
-  }
-.bg-mylight {
-  background-color: $light;
-  }
+
+// 6.3 Navbar
 .navbar-mydark {
     background-color: $dark;
-  }
-  .btn-myprimary {
+    padding: 1rem;
+    
+    @include media-breakpoint-down(lg) {
+        padding: 0.5rem;
+    }
+
+    // Ajustement du conteneur du logo
+    .navbar-brand {
+        display: flex;
+        align-items: center;
+        height: 60px; // Hauteur fixe pour le conteneur
+        padding: 0;
+        margin: 0;
+    }
+}
+
+// 6.4 Logo
+.website-logo {
+    transition: all 0.3s ease;
+    max-height: 60px; // Taille par défaut pour desktop
+    width: auto;
+    object-fit: contain;
+    
+    @include media-breakpoint-up(xl) {
+        max-height: 60px;
+    }
+    
+    @include media-breakpoint-between(lg, xl) {
+        max-height: 50px;
+    }
+    
+    @include media-breakpoint-down(lg) {
+        display: none;
+    }
+}
+
+// 6.5 Boutons
+.btn-myprimary {
+    @include button-base;
     background-color: $primary !important;
     color: black !important;
     border-color: $primary !important;
-    display: flex;
     width: 125px;
     height: 45px;
     padding: 10px 0px;
-    justify-content: center;
-    align-items: center;
     gap: 10px;
-    flex-shrink: 0;
-    font-weight: bold;
+    
+    &:hover {
+        background-color: $primary !important;
+        border-color: $primary !important;
+        color: black !important;
+        box-shadow: none !important;
+    }
+    
+    // Responsive adjustments
+    @include media-breakpoint-down(lg) {
+        width: 100px;
+        height: 40px;
+        padding: 8px 0px;
+    }
+    
+    @include media-breakpoint-down(md) {
+        width: 90px;
+        height: 35px;
+        padding: 6px 0px;
+    }
 }
+
+// 6.6 Search Button
 .btn-search {
+    @include button-base;
     width: 50px;
+    
+    @include media-breakpoint-down(lg) {
+        width: 40px;
+    }
 }
-.btn-myprimary:hover {
-    background-color: $primary !important;  /* Même couleur que l'état normal */
-    border-color: $primary !important;      /* Même bordure que l'état normal */
-    color: black !important;                /* Couleur de texte inchangée */
-    box-shadow: none !important;            /* Enlever l'ombre au survol */
+
+// 7. Layout et composants
+.search-form {
+    width: 700px;
+    transition: width 0.3s ease;
+    
+    @include media-breakpoint-down(xl) {
+        width: 500px;
+    }
+    
+    @include media-breakpoint-down(lg) {
+        width: 300px;
+    }
+    
+    @include media-breakpoint-down(md) {
+        width: 200px;
+    }
+    
+    @include media-breakpoint-down(sm) {
+        width: 100%;
+    }
 }
