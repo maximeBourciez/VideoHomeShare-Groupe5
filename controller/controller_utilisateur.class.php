@@ -57,7 +57,7 @@ class ControllerUtilisateur extends Controller{
 
     }
     /**
-     * Undocumented function
+     * @brief vérifie les informations saisies lors de l'inscription et crée un utilisateur si les informations sont correctes et renvoie sur la page de connection   sinon renvoie sur la page d'inscription
      *
      * @return void
      */
@@ -89,6 +89,7 @@ class ControllerUtilisateur extends Controller{
                             echo $template->render(array(
                                 'description' => "Je fais mes tests"
                             ));
+                            return;
                         }
                     }
                 }
