@@ -23,13 +23,13 @@
 			</div>
 
 			{% for message in messages %}
-    {% if message.createur is not null %}
-        <h1>{{ message.createur.pseudo }}</h1>
-    {% else %}
-        <h1>Aucun créateur disponible</h1>
-    {% endif %}
-    <p>{{ message.valeur }}</p>
-{% endfor %}
+				{% if message.getUser() is not null %}
+					<h1>{{ message.getUser().getPseudo() }}</h1>
+				{% else %}
+					<h1>Aucun créateur disponible</h1>
+				{% endif %}
+				<p>{{ message.valeur }}</p>
+			{% endfor %}
 
 		</div>
 	{% endblock %}

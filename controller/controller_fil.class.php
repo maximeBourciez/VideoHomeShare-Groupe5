@@ -59,7 +59,7 @@ class ControllerFil extends Controller {
         $fil = $filDAO->findById($id);
 
         // Afficer le contenu de messages
-        var_dump($fil);
+        var_dump($messages);
 
         // Rendre le template avec les infos
         echo $this->getTwig()->render('fil.html.twig', [
