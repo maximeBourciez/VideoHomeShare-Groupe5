@@ -61,23 +61,37 @@ class MessageDAO{
      * @return Message Objet Message hydraté
      */
     public function hydrate(array $row): Message{ 
-        // Récupération de l'utilisateur
+        // Hydratation du message
+        $message = new Message();
+        $message->setIdMessage($row['idMessage']);
+        $message->setValeur($row['valeur']);
+        $message->setDateC(new DateTime($row['dateC']));
+        $message->setIdMessageParent($row['idMessageParent']);
+        
+        // Hydratation de l'utilisateur
         $user = new Utilisateur();
         $user->setId($row['idUtilisateur']);
         $user->setPseudo($row['pseudo']);
         $user->setUrlImageProfil($row['urlImageProfil']);
-        
-        // Récupération des valeurs
-        $id = $row['id'];
-        $valeur = $row['valeur'];
-        $nbLike = $row['nbLike'];
-        $nbDislike = $row['nbDislike'];
-        $date = $row['date'];
-        $id_message_parent = $row['id_message_parent'];
-        $id_fil = $row['idFil'];
+        $message->setUtilisateur($user);
 
-        // Retourner le message
-        return new Message($id, $valeur, $nbLike, $nbDislike, $date, $user, $id_message_parent, $id_fil);
+        // Ajouter une réponse s'il y en a
+        if ($row['reponse_valeur']) {
+            // Hydratation de la réponse
+            $reponse = new Message();
+            $reponse->setValeur($row['reponse_valeur']);
+            $reponse->setDateC(new DateTime($row['reponse_dateC']));  
+           
+            // Hydratation de l'utilisateur de la réponse
+            $reponseUser = new Utilisateur();
+            $reponseUser->setId($row['reponse_utilisateur']);
+            $reponseUser->setPseudo($row['reponse_utilisateur'] ? $this->getUserPseudoById($row['reponse_utilisateur']) : 'Utilisateur inconnu');
+            $reponse->setUtilisateur($reponseUser);
+            
+            // Assigner la réponse au message
+            $message->setReponse($reponse);
+        }
+        return $message;
     } 
 
     /**
@@ -86,11 +100,17 @@ class MessageDAO{
      * @param array $rows Tableau de lignes de la base de données
      * @return array<Message> Tableau d'objets Message hydratés
      */
-    function hydrateAll(array $rows): array{
-        $messages = [];
+    function hydrateAll(array $messages): array{
+        /*$messages = [];
         foreach($rows as $row){
             $message = $this->hydrate($row);
             array_push($messages, $message);  // Ajout du message au tableau 
+        }
+        */
+        $hydratedMessages = [];
+        foreach ($messages as $row) {
+            $message = $this->hydrate($row);    
+            $hydratedMessages[] = $message;
         }
         return $messages;
     }
@@ -178,44 +198,7 @@ class MessageDAO{
         $messages = $stmt->fetchAll();
     
         // Hydrate les messages
-        $hydratedMessages = [];
-        foreach ($messages as $row) {
-            // Hydratation d'un message parent
-            $message = new Message();
-            $message->setIdMessage($row['idMessage']);
-            $message->setValeur($row['valeur']);
-            $message->setNbLike($row['nblike']);
-            $message->setNbDislike($row['nbdislike']);
-            $message->setDateC(new DateTime($row['dateC']));
-            $message->setIdMessageParent($row['idMessageParent']);
-            
-            // Hydratation de l'utilisateur du message parent
-            $user = new Utilisateur();
-            $user->setId($row['idUtilisateur']);
-            $user->setPseudo($row['pseudo']);
-            $user->setUrlImageProfil($row['urlImageProfil']);
-            $message->setUtilisateur($user);
-    
-            // Ajouter une réponse s'il y en a
-            if ($row['reponse_valeur']) {
-                $reponse = new Message();
-                $reponse->setValeur($row['reponse_valeur']);
-                $reponse->setDateC(new DateTime($row['reponse_dateC']));  // Ajouter la date de la réponse
-               
-                // Hydratation de l'utilisateur de la réponse
-                $reponseUser = new Utilisateur();
-                $reponseUser->setId($row['reponse_utilisateur']);
-                $reponseUser->setPseudo($row['reponse_utilisateur'] ? $this->getUserPseudoById($row['reponse_utilisateur']) : 'Utilisateur inconnu');
-                $reponse->setUtilisateur($reponseUser);
-                
-                // Assigner la réponse au message
-                $message->setReponse($reponse);
-            }
-    
-            $hydratedMessages[] = $message;
-        }
-    
-        return $hydratedMessages;
+        return $this->hydrateAll($messages);
     }
     
     // Nouvelle méthode pour récupérer le pseudo de l'utilisateur de la réponse
