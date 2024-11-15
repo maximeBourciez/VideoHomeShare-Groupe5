@@ -181,7 +181,7 @@ class MessageDAO{
      * 
      * @return array<Message> Tableau d'objets Message
      */
-    public function listerMessagesParFil(int $id_fil): array {
+    /*public function listerMessagesParFil(int $id_fil): array {
     
         // Requête avec jointure pour récupérer les données des messages et des utilisateurs
         $sql = "
@@ -206,5 +206,55 @@ class MessageDAO{
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_ASSOC); 
         return $this->hydrateAll($stmt->fetchAll());
+    }*/
+    public function listerMessagesParFil(int $idFil): array {
+        $sql = "
+        SELECT m.*, u.idUtilisateur, u.pseudo, u.urlImageProfil, m2.valeur AS reponse_valeur, m2.idUtilisateur AS reponse_utilisateur
+        FROM " . DB_PREFIX . "message AS m
+        LEFT JOIN " . DB_PREFIX . "message AS m2 ON m.idMessage = m2.idMessageParent
+        INNER JOIN " . DB_PREFIX . "utilisateur AS u ON m.idUtilisateur = u.idUtilisateur
+        WHERE m.idFil = :idFil
+        ORDER BY 
+            m.idMessageParent IS NULL DESC,  -- Les messages parents viennent en premier
+            m.dateC ASC;                    -- Trier par date pour les réponses (ASC)
+    ";
+    
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':idFil', $idFil, PDO::PARAM_INT);
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $messages = $stmt->fetchAll();
+    
+        // Hydrate les messages
+        $hydratedMessages = [];
+        foreach ($messages as $row) {
+            // Hydratation d'un message parent
+            $message = new Message();
+            $message->setIdMessage($row['idMessage']);
+            $message->setValeur($row['valeur']);
+            $message->setNbLike($row['nblike']);
+            $message->setNbDislike($row['nbdislike']);
+            $message->setDateC(new DateTime($row['dateC']));
+            $message->setIdMessageParent($row['idMessageParent']);
+            
+            // Hydratation de l'utilisateur
+            $user = new Utilisateur();
+            $user->setId($row['idUtilisateur']);
+            $user->setPseudo($row['pseudo']);
+            $user->setUrlImageProfil($row['urlImageProfil']);
+            $message->setUtilisateur($user);
+            
+            // Ajouter une réponse s'il y en a
+            if ($row['reponse_valeur']) {
+                $reponse = new Message();
+                $reponse->setValeur($row['reponse_valeur']);
+                $reponse->setUtilisateur($user);  // Réponse par le même utilisateur dans cet exemple, à ajuster si nécessaire
+                $message->setReponse($reponse);
+            }
+    
+            $hydratedMessages[] = $message;
+        }
+    
+        return $hydratedMessages;
     }
 }
