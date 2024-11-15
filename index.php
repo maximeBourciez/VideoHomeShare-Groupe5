@@ -5,7 +5,7 @@ require_once "include.php";
 
 // Créer le contrôleur demandé
 try  {
-    if (isset($_GET['controller'])){
+    if(isset($_GET['controller'])){
         $controllerName=$_GET['controller'];
     }else{
         $controllerName='';

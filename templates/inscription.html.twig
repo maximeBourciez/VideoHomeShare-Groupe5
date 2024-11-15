@@ -1,0 +1,27 @@
+{% extends 'base_template.html.twig' %}
+
+
+{% block content %}
+    <main class="content row" >
+    <form action="index.php?controller=utilisateur&methode=checkInfoInscription" method="POST" class="text-center col-12 w-25 mx-auto" >
+        <img src="{{ constant('WEBSITE_LOGO') }}" height="95" width="155" alt="VHS Logo" class="mx-auto my-2">
+        <div class="bg-mydark text-white rounded p-4 mb-5" >
+            <h3 class="mb-3"> Inscription </h3>
+        
+                <p class="text-start mb-0"> Idantifiant </p>
+                <input type="text" name="idantifiant" class="form-control mb-2 "> 
+                <p class="text-start mb-0"> Pseudo </p>
+                <input type="text" name="pseudo" class="form-control mb-2"> 
+                <p class="text-start mb-0"> Mail </p>
+                <input type="email" name="mail" class="form-control mb-2 "> 
+                <p class="text-start mb-0"> Mot de passe </p>
+                <input type="password " name="mdp" class="form-control mb-2 "> 
+                <p class="text-start mb-0"> Vérification mot de passe </p>
+                <input type="password" name="vmdp" class="form-control mb-3 ">
+                <input type="submit" class="btn btn-myprimary my-2  w-50 mx-auto" value="Créer le compte"> 
+            
+            <a href="index.php?controller=utilisateur&methode=connexion" class="text-white"> se connecter </a>
+        </div>
+    </form>
+</main>    
+{% endblock %}

@@ -8,7 +8,7 @@ class Utilisateur{
     private ?string $mdp;
     private ?string $role;
     private ?string $urlImageProfil;
-    private ?string $urlImageBanière;
+    private ?string $urlImageBaniere;
     
     // Constructeur
     function __construct(?int $id = null, ?string $pseudo = null, ?string $mail = null, ?string $mdp = null, ?string $role = null, ?string $urlImageProfil = null, ?string $urlImageBanière = null){
@@ -18,7 +18,7 @@ class Utilisateur{
         $this->mdp = $mdp;
         $this->role = $role;
         $this->urlImageProfil = $urlImageProfil;
-        $this->urlImageBanière = $urlImageBanière;
+        $this->urlImageBaniere = $urlImageBanière;
     }
 
     // Encapsulation
@@ -28,7 +28,7 @@ class Utilisateur{
 
     /**
      * Get the value of id
-     * @return int
+     * @return string
      */ 
     public function getId(): ?string
     {
@@ -84,9 +84,9 @@ class Utilisateur{
      * Get the value of urlImageBanière
      * @return string
      */
-    public function getUrlImageBanière(): ?string
+    public function getUrlImageBaniere(): ?string
     {
-        return $this->urlImageBanière;
+        return $this->urlImageBaniere;
     }
 
     // Setters
@@ -151,7 +151,7 @@ class Utilisateur{
      */
     public function setUrlImageBanière(?string $urlImageBanière = null): void
     {
-        $this->urlImageBanière = $urlImageBanière;
+        $this->urlImageBaniere = $urlImageBanière;
     }
 
     // Méthodes 
