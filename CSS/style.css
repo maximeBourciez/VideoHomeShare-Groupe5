@@ -11803,8 +11803,7 @@ textarea.form-control-lg {
   border-color: #F2AC0F !important;
   width: 125px;
   height: 45px;
-  padding: 10px 0px;
-  gap: 10px;
+  padding: 10px 0;
 }
 .btn-myprimary:hover {
   transform: scale(1.05);
@@ -11819,14 +11818,14 @@ textarea.form-control-lg {
   .btn-myprimary {
     width: 100px;
     height: 40px;
-    padding: 8px 0px;
+    padding: 8px 0;
   }
 }
 @media (max-width: 767.98px) {
   .btn-myprimary {
     width: 90px;
     height: 35px;
-    padding: 6px 0px;
+    padding: 6px 0;
   }
 }
 
@@ -11870,6 +11869,37 @@ textarea.form-control-lg {
   .search-form {
     width: 100%;
   }
+}
+
+.form-container {
+  width: 25%;
+  margin: 0 auto;
+  max-width: 400px;
+}
+@media (max-width: 991.98px) {
+  .form-container {
+    width: 75%;
+  }
+}
+@media (max-width: 767.98px) {
+  .form-container {
+    width: 90%;
+  }
+}
+@media (max-width: 575.98px) {
+  .form-container {
+    width: 100%;
+  }
+}
+.form-container .form-group {
+  margin-bottom: 1rem;
+}
+.form-container .form-group label {
+  font-size: 1rem;
+  font-weight: normal;
+}
+.form-container .form-group input {
+  font-size: 1rem;
 }
 
 /*# sourceMappingURL=style.css.map */
