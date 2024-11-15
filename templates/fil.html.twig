@@ -9,72 +9,71 @@
 	</div>
 
 	<div class="container">
-    {% for message in messages %}
-        {% if message.idMessageParent is null %}
-            <div class="card my-4 shadow-sm border-0 rounded-3">
-                <div class="card-body p-4 bg-mydark text-white rounded">
-                    <div class="d-flex align-items-center">
-                        <img src="{{ message.getUtilisateur().urlImageProfil }}" alt="Avatar" class="rounded-circle me-3" width="50" height="50">
-                        <div class="d-flex align-items-center">
-                            <h5 class="mb-0 mx-2">{{ message.getUtilisateur() ? message.getUtilisateur().getPseudo() : 'Utilisateur inconnu' }}</h5>
-                            <span class="mx-2 " style="font-size: 1.2em;">•</span>
-                            <small class="">{{ message.datePublication | date('d M Y') }}</small>
-                        </div>
-                    </div>
-                    <p class="mt-3">{{ message.valeur }}</p>
-                    <div class="d-flex justify-content-between mt-4">
-                        <div>
-                            <button class="btn btn-outline-light btn-sm me-2">
-                                <i class="bi bi-hand-thumbs-up"></i>
-                            </button>
-                            <button class="btn btn-outline-light btn-sm me-2">
-                                <i class="bi bi-hand-thumbs-down"></i>
-                            </button>
-                            <button class="btn btn-outline-light btn-sm">
-                                <i class="bi bi-reply"></i>
-                                Répondre</button>
-                        </div>
-                        <button class="btn btn-danger btn-sm">
-                            <i class="bi bi-flag"></i>
-                            Signaler</button>
-                    </div>
+		{% for message in messages %}
+			{% if message.idMessageParent is null %}
+				<div class="card my-4 shadow-sm border-0 rounded-3">
+					<div class="card-body p-4 bg-mydark text-white rounded">
+						<div class="d-flex align-items-center">
+							<img src="{{ message.getUtilisateur().urlImageProfil }}" alt="Avatar" class="rounded-circle me-3" width="50" height="50">
+							<div class="d-flex align-items-center">
+								<h5 class="mb-0 mx-2">{{ message.getUtilisateur() ? message.getUtilisateur().getPseudo() : 'Utilisateur inconnu' }}</h5>
+								<span class="mx-2 " style="font-size: 1.2em;">•</span>
+								<small class="">{{ message.datePublication | date('d M Y') }}</small>
+							</div>
+						</div>
+						<p class="mt-3">{{ message.valeur }}</p>
+						<div class="d-flex justify-content-between mt-4">
+							<div>
+								<div>
+									<button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;">
+										<i class="bi bi-hand-thumbs-up"></i>
+									</button>
+									<button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;">
+										<i class="bi bi-hand-thumbs-down"></i>
+									</button>
+									<button class="btn btn-sm" style="background-color: #F2F2F2; color: #000;">
+										<i class="bi bi-reply"></i>
+										Répondre
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
                 </div>
-            </div>
-        {% endif %}
+			    {% endif %}
 
-        {% if message.reponse %}
-            <div class="card my-4 shadow-sm border-0 rounded-3 ms-5">
-                <div class="card-body p-4 bg-mydark text-white rounded">
-                    <div class="d-flex align-items-center">
-                        <img src="{{ message.reponse.getUtilisateur().urlImageProfil }}" alt="Avatar" class="rounded-circle me-3" width="50" height="50">
-                        <div class="d-flex align-items-center">
-                            <h5 class="mb-0 mx-2">{{ message.reponse.getUtilisateur() ? message.reponse.getUtilisateur().getPseudo() : 'Utilisateur inconnu' }}</h5>
-                            <span class="mx-2 " style="font-size: 1.2em;">•</span>
-                            <small class="">{{ message.reponse.datePublication | date('d M Y') }}</small>
-                            <span class="mx-2 " style="font-size: 1.2em;">•</span>
-                            <small class="">Répond à @{{ message.getUtilisateur() ? message.getUtilisateur().getPseudo() : 'Utilisateur inconnu' }}</small>
-                        </div>
-                    </div>
-                    <p class="mt-3">{{ message.reponse.valeur }}</p>
-                    <div class="d-flex justify-content-between mt-4">
-                        <div>
-                            <button class="btn btn-outline-light btn-sm me-2">
-                                <i class="bi bi-hand-thumbs-up"></i>
-                            </button>
-                            <button class="btn btn-outline-light btn-sm me-2">
-                                <i class="bi bi-hand-thumbs-down"></i>
-                            </button>
-                            <button class="btn btn-outline-light btn-sm">
-                                <i class="bi bi-reply"></i>
-                                Répondre</button>
-                        </div>
-                        <button class="btn btn-danger btn-sm">
-                            <i class="bi bi-flag"></i>
-                            Signaler</button>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-    {% endfor %}
-</div>
-{% endblock %}
+				{% if message.reponse %}
+					<div class="card my-4 shadow-sm border-0 rounded-3 ms-5">
+						<div class="card-body p-4 bg-mydark text-white rounded">
+							<div class="d-flex align-items-center">
+								<img src="{{ message.reponse.getUtilisateur().urlImageProfil }}" alt="Avatar" class="rounded-circle me-3" width="50" height="50">
+								<div class="d-flex align-items-center">
+									<h5 class="mb-0 mx-2">{{ message.reponse.getUtilisateur() ? message.reponse.getUtilisateur().getPseudo() : 'Utilisateur inconnu' }}</h5>
+									<span class="mx-2 " style="font-size: 1.2em;">•</span>
+									<small class="">{{ message.reponse.datePublication | date('d M Y') }}</small>
+									<span class="mx-2 " style="font-size: 1.2em;">•</span>
+									<small class="">Répond à @{{ message.getUtilisateur() ? message.getUtilisateur().getPseudo() : 'Utilisateur inconnu' }}</small>
+								</div>
+							</div>
+							<p class="mt-3">{{ message.reponse.valeur }}</p>
+							<div class="d-flex justify-content-between mt-4">
+								<div>
+									<div>
+										<button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;">
+											<i class="bi bi-hand-thumbs-up"></i>
+										</button>
+										<button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;">
+											<i class="bi bi-hand-thumbs-down"></i>
+										</button>
+										<button class="btn btn-sm" style="background-color: #F2F2F2; color: #000;">
+											<i class="bi bi-reply"></i>
+											Répondre
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+				{% endfor %}
+			</div>
+		{% endblock %}
