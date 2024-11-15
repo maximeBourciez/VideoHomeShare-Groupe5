@@ -32,7 +32,7 @@ $theme-colors: (
     align-items: center;
     font-weight: bold;
     transition: all 0.3s ease;
-    
+
     &:hover {
         transform: scale(1.05);
     }
@@ -49,19 +49,19 @@ $theme-colors: (
     &-myprimary {
         background-color: $primary;
     }
-    
+
     &-mysecondary {
         background-color: $secondary;
     }
-    
+
     &-mytercary {
         background-color: $tercary;
     }
-    
+
     &-mydark {
         background-color: $dark;
     }
-    
+
     &-mylight {
         background-color: $light;
     }
@@ -71,7 +71,7 @@ $theme-colors: (
 .navbar-mydark {
     background-color: $dark;
     padding: 1rem;
-    
+
     @include media-breakpoint-down(lg) {
         padding: 0.5rem;
     }
@@ -79,9 +79,36 @@ $theme-colors: (
     .navbar-brand {
         display: flex;
         align-items: center;
-        height: 60px;
+        height: auto;
         padding: 0;
         margin: 0;
+    }
+
+    .navbar-toggler {
+        margin-right: 1rem;
+    }
+}
+
+.navbar-toggler.bi-list {
+    color: $primary;
+}
+
+/* Cache le logo menu pour grand écran */
+@media (min-width: 992px) {
+    .navbar-toggler {
+        display: none;
+    }
+}
+
+/* Fait apparaitre le logo menu pour petit écran */
+@media (max-width: 991px) {
+    .navbar-toggler {
+        display: block;
+    }
+
+    /* Cache le reste lorsque l'écran et petit */
+    #navbarContent {
+        display: none;
     }
 }
 
@@ -106,97 +133,59 @@ $theme-colors: (
 }
 
 // 6.5 Boutons
-.btn-myprimary {
+.btn.bg-myprimary{
     @include button-base;
     background-color: $primary !important;
     color: black !important;
     border-color: $primary !important;
-    width: 125px;
-    height: 45px;
-    padding: 10px 0;
-    
+
     &:hover {
         background-color: $primary !important;
         border-color: $primary !important;
         color: black !important;
         box-shadow: none !important;
     }
-
-    // Responsive adjustments
-    @include media-breakpoint-down(lg) {
-        width: 100px;
-        height: 40px;
-        padding: 8px 0;
-    }
-    
-    @include media-breakpoint-down(md) {
-        width: 90px;
-        height: 35px;
-        padding: 6px 0;
-    }
 }
-
-// 6.6 Search Button
-.btn-search {
+.btn-myprimary {
     @include button-base;
-    width: 50px;
+    background-color: $primary !important;
+    color: black !important;
+    border-color: $primary !important;
+    width: 125px;
+    height: 38px;
+    padding: 8px 0;
+    @include media-breakpoint-down(md) {
+        width: 100px;
+        padding: 6px 0;
+        font-size: 0.9rem;
+    }
 
-    @include media-breakpoint-down(lg) {
-        width: 40px;
+    &:hover {
+        background-color: $primary !important;
+        border-color: $primary !important;
+        color: black !important;
+        box-shadow: none !important;
     }
 }
 
 // 7. Layout et composants
 .search-form {
-    width: 700px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    width: 200px;
     transition: width 0.3s ease;
 
-    @include media-breakpoint-down(xl) {
-        width: 500px;
-    }
-
-    @include media-breakpoint-down(lg) {
-        width: 300px;
-    }
-
-    @include media-breakpoint-down(md) {
+    @include media-breakpoint-up(md) {
+        font-size: 0.9rem;
         width: 200px;
     }
 
-    @include media-breakpoint-down(sm) {
-        width: 100%;
-    }
-}
-
-// 8. Formulaire et autres composants
-.form-container {
-    // Responsiveness du formulaire
-    width: 25%;
-    margin: 0 auto;
-    max-width: 400px;
-    
-    @include media-breakpoint-down(lg) {
-        width: 75%;
+    @include media-breakpoint-up(lg) {
+        width: 700px;
     }
 
-    @include media-breakpoint-down(md) {
-        width: 90%;
-    }
-
-    @include media-breakpoint-down(sm) {
-        width: 100%;
-    }
-
-    .form-group {
-        margin-bottom: 1rem;
-    }
-    
-    .form-group label {
-        font-size: 1rem;
-        font-weight: normal;
-    }
-
-    .form-group input {
-        font-size: 1rem;
+    @include media-breakpoint-up(xl) {
+        width: 700px;
     }
 }

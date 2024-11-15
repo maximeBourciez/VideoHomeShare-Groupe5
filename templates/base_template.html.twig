@@ -19,16 +19,18 @@
 		<header>
 			<nav
 				class="navbar navbar-expand-lg navbar-mydark px-3">
-				<!-- Logo et bouton menu -->
+				<!-- Logo -->
 				<div class="d-flex align-items-center">
 					<a class="navbar-brand d-none d-lg-flex align-items-center ms-lg-5" href="#">
 						<img src="{{ constant('WEBSITE_LOGO') }}" class="img-fluid website-logo" alt="VHS Logo">
 					</a>
 
-					<button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-						<span class="navbar-toggler-icon"></span>
-					</button>
+					<!-- Menu principal avec bouton "hamburger" (visible sur petits écrans) -->
 
+							<button class="navbar-toggler d-lg-none bi bi-list" type="button" data-bs-toggle="collapse" data-bs-target="#submenu" aria-expanded="false" aria-label="Toggle navigation">
+							</button>
+
+					<!-- Menu secondaire visible sur grands écrans -->
 					<div class="collapse navbar-collapse" id="navbarContent">
 						<div class="d-flex align-items-center ms-lg-2">
 							<button class="btn btn-myprimary bi bi-list" type="button" data-bs-toggle="collapse" data-bs-target="#submenu" aria-expanded="false">
@@ -42,13 +44,13 @@
 				<form class="d-flex mx-auto search-form">
 					<div class="input-group">
 						<input class="form-control" type="search" placeholder="Barre de recherche" aria-label="Search">
-						<button class="btn btn-myprimary" type="submit">
+						<button class="btn bg-myprimary" type="submit">
 							<i class="bi bi-search"></i>
 						</button>
 					</div>
 				</form>
 
-				<!-- Boutons connexion et langue -->
+				<!-- Autres éléments (connexion, langue, etc.) -->
 				<div class="d-flex align-items-center gap-3 me-lg-4">
 					<a href="index.php?controller=utilisateur&methode=connexion">
 						<button class="btn btn-myprimary">Connexion</button>
@@ -68,7 +70,7 @@
 							<button class="btn btn-myprimary">Forum</button>
 						</a>
 						<a href="#">
-							<button class="btn btn-myprimary">Watch2Gather</button>
+							<button class="btn btn-myprimary">Watch2Gether</button>
 						</a>
 						<a href="#">
 							<button class="btn btn-myprimary">WatchList</button>
@@ -83,6 +85,7 @@
 				</div>
 			</div>
 		</header>
+
 
 		{% block content %}{% endblock %}
 

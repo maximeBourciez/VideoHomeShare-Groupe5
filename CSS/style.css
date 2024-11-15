@@ -11765,11 +11765,34 @@ textarea.form-control-lg {
 .navbar-mydark .navbar-brand {
   display: flex;
   align-items: center;
-  height: 60px;
+  height: auto;
   padding: 0;
   margin: 0;
 }
+.navbar-mydark .navbar-toggler {
+  margin-right: 1rem;
+}
 
+.navbar-toggler.bi-list {
+  color: #F2AC0F;
+}
+
+/* Cache le logo menu pour grand écran */
+@media (min-width: 992px) {
+  .navbar-toggler {
+    display: none;
+  }
+}
+/* Fait apparaitre le logo menu pour petit écran */
+@media (max-width: 991px) {
+  .navbar-toggler {
+    display: block;
+  }
+  /* Cache le reste lorsque l'écran et petit */
+  #navbarContent {
+    display: none;
+  }
+}
 .website-logo {
   transition: all 0.3s ease;
   max-height: 60px;
@@ -11792,6 +11815,26 @@ textarea.form-control-lg {
   }
 }
 
+.btn.bg-myprimary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  background-color: #F2AC0F !important;
+  color: black !important;
+  border-color: #F2AC0F !important;
+}
+.btn.bg-myprimary:hover {
+  transform: scale(1.05);
+}
+.btn.bg-myprimary:hover {
+  background-color: #F2AC0F !important;
+  border-color: #F2AC0F !important;
+  color: black !important;
+  box-shadow: none !important;
+}
+
 .btn-myprimary {
   display: flex;
   justify-content: center;
@@ -11802,11 +11845,18 @@ textarea.form-control-lg {
   color: black !important;
   border-color: #F2AC0F !important;
   width: 125px;
-  height: 45px;
-  padding: 10px 0;
+  height: 38px;
+  padding: 8px 0;
 }
 .btn-myprimary:hover {
   transform: scale(1.05);
+}
+@media (max-width: 767.98px) {
+  .btn-myprimary {
+    width: 100px;
+    padding: 6px 0;
+    font-size: 0.9rem;
+  }
 }
 .btn-myprimary:hover {
   background-color: #F2AC0F !important;
@@ -11814,92 +11864,29 @@ textarea.form-control-lg {
   color: black !important;
   box-shadow: none !important;
 }
-@media (max-width: 991.98px) {
-  .btn-myprimary {
-    width: 100px;
-    height: 40px;
-    padding: 8px 0;
-  }
-}
-@media (max-width: 767.98px) {
-  .btn-myprimary {
-    width: 90px;
-    height: 35px;
-    padding: 6px 0;
-  }
-}
-
-.btn-search {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: bold;
-  transition: all 0.3s ease;
-  width: 50px;
-}
-.btn-search:hover {
-  transform: scale(1.05);
-}
-@media (max-width: 991.98px) {
-  .btn-search {
-    width: 40px;
-  }
-}
 
 .search-form {
-  width: 700px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  width: 200px;
   transition: width 0.3s ease;
 }
-@media (max-width: 1199.98px) {
+@media (min-width: 768px) {
   .search-form {
-    width: 500px;
-  }
-}
-@media (max-width: 991.98px) {
-  .search-form {
-    width: 300px;
-  }
-}
-@media (max-width: 767.98px) {
-  .search-form {
+    font-size: 0.9rem;
     width: 200px;
   }
 }
-@media (max-width: 575.98px) {
+@media (min-width: 992px) {
   .search-form {
-    width: 100%;
+    width: 700px;
   }
 }
-
-.form-container {
-  width: 25%;
-  margin: 0 auto;
-  max-width: 400px;
-}
-@media (max-width: 991.98px) {
-  .form-container {
-    width: 75%;
+@media (min-width: 1200px) {
+  .search-form {
+    width: 700px;
   }
-}
-@media (max-width: 767.98px) {
-  .form-container {
-    width: 90%;
-  }
-}
-@media (max-width: 575.98px) {
-  .form-container {
-    width: 100%;
-  }
-}
-.form-container .form-group {
-  margin-bottom: 1rem;
-}
-.form-container .form-group label {
-  font-size: 1rem;
-  font-weight: normal;
-}
-.form-container .form-group input {
-  font-size: 1rem;
 }
 
 /*# sourceMappingURL=style.css.map */
