@@ -1,24 +1,30 @@
 <?php
 
+enum Role {
+    case Normal;
+    case Moderateur;
+    case Administrateur;
+}
+
 class Utilisateur{
     // Attributs
     private ?string $id;
     private ?string $pseudo;
     private ?string $mail;
     private ?string $mdp;
-    private ?string $role;
+    private ?Role $role;
     private ?string $urlImageProfil;
-    private ?string $urlImageBaniere;
+    private ?string $urlImageBanniere;
     
     // Constructeur
-    function __construct(?int $id = null, ?string $pseudo = null, ?string $mail = null, ?string $mdp = null, ?string $role = null, ?string $urlImageProfil = null, ?string $urlImageBanière = null){
+    function __construct(?int $id = null, ?string $pseudo = null, ?string $mail = null, ?string $mdp = null, ?Role $role = null, ?string $urlImageProfil = null, ?string $urlImageBanniere = null){
         $this->id = $id;
         $this->pseudo = $pseudo;
         $this->mail = $mail;
         $this->mdp = $mdp;
         $this->role = $role;
         $this->urlImageProfil = $urlImageProfil;
-        $this->urlImageBaniere = $urlImageBanière;
+        $this->urlImageBanniere = $urlImageBanniere;
     }
 
     // Encapsulation
@@ -64,9 +70,9 @@ class Utilisateur{
 
     /**
      * Get the value of role
-     * @return string
+     * @return Role
      */
-    public function getRole(): ?string
+    public function getRole(): ?Role
     {
         return $this->role;
     }
@@ -81,12 +87,12 @@ class Utilisateur{
     }
 
     /**
-     * Get the value of urlImageBanière
+     * Get the value of urlImageBanniere
      * @return string
      */
-    public function getUrlImageBaniere(): ?string
+    public function getUrlImageBanniere(): ?string
     {
-        return $this->urlImageBaniere;
+        return $this->urlImageBanniere;
     }
 
     // Setters
@@ -131,7 +137,7 @@ class Utilisateur{
      * Set the value of role
      * @return void
      */
-    public function setRole(?string $role = null): void
+    public function setRole(?Role $role = null): void
     {
         $this->role = $role;
     }
@@ -146,12 +152,12 @@ class Utilisateur{
     }
 
     /**
-     * Set the value of urlImageBanière
+     * Set the value of urlImageBanniere
      * @return void
      */
-    public function setUrlImageBanière(?string $urlImageBanière = null): void
+    public function setUrlImageBanniere(?string $urlImageBanniere = null): void
     {
-        $this->urlImageBaniere = $urlImageBanière;
+        $this->urlImageBanniere = $urlImageBanniere;
     }
 
     // Méthodes 

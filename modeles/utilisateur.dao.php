@@ -11,7 +11,7 @@ class UtilisateurDAO {
         // Préparation de la requête
         $pdo = $this->pdo->prepare("INSERT INTO ".DB_PREFIX."utilisateur 
         (idUtilisateur, pseudo, mail, mdp, role, urlImageProfil, urlImageBanniere) 
-        VALUES (:idUtilisateur, :pseudo, :mail, :mdp, :role, :urlImageProfil, :urlImageBaniere)");
+        VALUES (:idUtilisateur, :pseudo, :mail, :mdp, :role, :urlImageProfil, :urlImageBanniere)");
 
 
         // Récupération des valeurs
@@ -21,7 +21,7 @@ class UtilisateurDAO {
         $mdp = $utilisateur->getMdp();
         $role = $utilisateur->getRole();
         $urlImageProfil = $utilisateur->getUrlImageProfil();
-        $urlImageBaniere = $utilisateur->getUrlImageBaniere();
+        $urlImageBanniere = $utilisateur->getUrlImageBanniere();
         
         // passage des paramètres
         $pdo->bindValue(":idUtilisateur", $id);
@@ -30,21 +30,21 @@ class UtilisateurDAO {
         $pdo->bindValue(":mdp", $mdp);
         $pdo->bindValue(":role", $role);
         $pdo->bindValue(":urlImageProfil", $urlImageProfil);
-        $pdo->bindValue(":urlImageBaniere", $urlImageBaniere);
+        $pdo->bindValue(":urlImageBanniere", $urlImageBanniere);
 
         // execution de la requête
         return $pdo->execute();
     }
 
     function update(Utilisateur $utilisateur): bool{
-        $req = $this->pdo->prepare("UPDATE ".DB_PREFIX."utilisateur SET pseudo = :pseudo, mail = :mail, mdp = :mdp, role = :role, urlImageProfil = :urlImageProfil, urlImageBaniere = :urlImageBaniere WHERE id = :id");
+        $req = $this->pdo->prepare("UPDATE ".DB_PREFIX."utilisateur SET pseudo = :pseudo, mail = :mail, mdp = :mdp, role = :role, urlImageProfil = :urlImageProfil, urlImageBanniere = :urlImageBanniere WHERE id = :id");
         $req->bindParam(":id", $utilisateur->getId());
         $req->bindParam(":pseudo", $utilisateur->getPseudo());
         $req->bindParam(":mail", $utilisateur->getMail());
         $req->bindParam(":mdp", $utilisateur->getMdp());
         $req->bindParam(":role", $utilisateur->getRole());
         $req->bindParam(":urlImageProfil", $utilisateur->getUrlImageProfil());
-        $req->bindParam(":urlImageBaniere", $utilisateur->getUrlImageBaniere());
+        $req->bindParam(":urlImageBanniere", $utilisateur->getUrlImageBanniere());
         return $req->execute();
     }
 
@@ -62,10 +62,10 @@ class UtilisateurDAO {
         $mdp = $row['mdp'];
         $role = $row['role'];
         $urlImageProfil = $row['urlImageProfil'];
-        $urlImageBaniere = $row['urlImageBanniere'];
+        $urlImageBanniere = $row['urlImageBanniere'];
 
         // Retourner l'utilisateur
-        return new Utilisateur($id, $pseudo, $mail, $mdp, $role, $urlImageProfil, $urlImageBaniere);
+        return new Utilisateur($id, $pseudo, $mail, $mdp, $role, $urlImageProfil, $urlImageBanniere);
     }
 
     function hydrateAll(array $rows): array{

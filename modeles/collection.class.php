@@ -1,13 +1,18 @@
 <?php
 
+enum TypeCollection{
+    case Saga;
+    case Serie;
+}
+
 class Collection{
     // Attributs 
     private ?int $id; //Identifiant de la collection
-    private ?string $type; //Type de collection
+    private ?TypeCollection $type; //Type de collection
     private ?string $nom; //Nom de la collection
 
     // Constructeur
-    public function __construct(?int $id = null, ?string $type = null, ?string $nom = null){
+    public function __construct(?int $id = null, ?TypeCollection $type = null, ?string $nom = null){
         $this->id = $id;
         $this->type = $type;
         $this->nom = $nom;
@@ -18,7 +23,7 @@ class Collection{
     public function getId(): ?int{
         return $this->id;
     }
-    public function getType(): ?string{
+    public function getType(): ?TypeCollection{
         return $this->type;
     }
     public function getNom(): ?string{
@@ -29,7 +34,7 @@ class Collection{
     public function setId(?int $id) : void{
         $this->id = $id;
     }
-    public function setType(?string $type) : void{
+    public function setType(?TypeCollection $type) : void{
         $this->type = $type;
     }
     public function setNom(?string $nom) : void{
