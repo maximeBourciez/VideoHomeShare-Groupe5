@@ -12,19 +12,19 @@ class Message {
      * @var int $idMessage
      * @brief Identifiant unique du message.
      */
-    private int $idMessage;
+    private ?int $idMessage;
 
     /**
-     * @var string $valeur
+     * @var ?string $valeur
      * @brief Contenu du message.
      */
-    private string $valeur;
+    private ?string $valeur;
 
     /**
      * @var DateTime $dateC
      * @brief Date de création du message.
      */
-    private DateTime $dateC;
+    private ?DateTime $dateC;
 
     /**
      * @var int|null $idMessageParent
@@ -36,7 +36,7 @@ class Message {
      * @var Utilisateur $utilisateur
      * @brief L'utilisateur qui a écrit le message.
      */
-    private Utilisateur $utilisateur;
+    private ?Utilisateur $utilisateur;
 
     /**
      * @var Message|null $reponse
@@ -55,7 +55,7 @@ class Message {
      * @param Utilisateur $utilisateur L'utilisateur qui a écrit le message.
      * @param Message|null $reponse Une réponse à ce message, si elle existe. Null si ce n'est pas une réponse.
      */
-    public function __construct(int $idMessage, string $valeur, DateTime $dateC, ?int $idMessageParent, Utilisateur $utilisateur, ?Message $reponse = null) {
+    public function __construct(?int $idMessage = null, ?string $valeur = null, ?DateTime $dateC = null, ?int $idMessageParent = null, ?Utilisateur $utilisateur = null, ?Message $reponse = null) {
         $this->idMessage = $idMessage;
         $this->valeur = $valeur;
         $this->dateC = $dateC;

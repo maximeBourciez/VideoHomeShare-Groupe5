@@ -75,27 +75,28 @@ class MessageDAO
 
         // Hydratation de l'utilisateur du message parent
         $user = new Utilisateur();
-        $user->setId($row['idUtilisateur']);
-        $user->setPseudo($row['pseudo']);
-        $user->setUrlImageProfil($row['urlImageProfil']);
+        $user->setId($row['auteur_id']);
+        $user->setPseudo($row['auteur_pseudo']);
+        $user->setUrlImageProfil($row['auteur_urlImageProfil']);
         $message->setUtilisateur($user);
 
         // Ajouter une réponse s'il y en a
         if ($row['reponse_valeur']) {
             $reponse = new Message();
             $reponse->setValeur($row['reponse_valeur']);
-            $reponse->setDateC(new DateTime($row['reponse_dateC']));  // Ajouter la date de la réponse
+            $reponse->setDateC(new DateTime($row['reponse_dateC']));
 
             // Hydratation de l'utilisateur de la réponse
             $reponseUser = new Utilisateur();
-            $reponseUser->setId($row['reponse_utilisateur']);
-            $reponseUser->setPseudo($row['reponse_utilisateur'] ? $this->getUserPseudoById($row['reponse_utilisateur']) : 'Utilisateur inconnu');
+            $reponseUser->setId($row['reponse_utilisateur_id']); // Modifié ici
+            $reponseUser->setPseudo($row['reponse_pseudo'] ?? 'Utilisateur inconnu');
+            $reponseUser->setUrlImageProfil($row['reponse_urlImageProfil']);
             $reponse->setUtilisateur($reponseUser);
 
             // Assigner la réponse au message
             $message->setReponse($reponse);
         }
-        // Retourner le message
+
         return $message;
     }
 
@@ -182,28 +183,40 @@ class MessageDAO
      * 
      * @return array<Message> Tableau d'objets Message
      */
-
     public function listerMessagesParFil(int $idFil): array
     {
         $sql = "
-        SELECT m.*, u.idUtilisateur, u.pseudo, u.urlImageProfil, 
-               m2.valeur AS reponse_valeur, m2.idUtilisateur AS reponse_utilisateur, m2.dateC AS reponse_dateC
-        FROM " . DB_PREFIX . "message AS m
-        LEFT JOIN " . DB_PREFIX . "message AS m2 ON m.idMessage = m2.idMessageParent
-        INNER JOIN " . DB_PREFIX . "utilisateur AS u ON m.idUtilisateur = u.idUtilisateur
+    WITH MessageThread AS (
+        SELECT
+            m.*,
+            COALESCE(m.idMessageParent, m.idMessage) as thread_id,
+            u.idUtilisateur as auteur_id,
+            u.pseudo as auteur_pseudo,
+            u.urlImageProfil as auteur_urlImageProfil
+        FROM " . DB_PREFIX . "message m
+        INNER JOIN " . DB_PREFIX . "utilisateur u ON m.idUtilisateur = u.idUtilisateur
         WHERE m.idFil = :idFil
-        ORDER BY 
-            m.idMessageParent IS NULL DESC,  
-            m.dateC ASC;                    
-        ";
-
+        )
+    SELECT
+        m1.*,
+        m1.auteur_id,
+        m1.auteur_pseudo,
+        m1.auteur_urlImageProfil,
+        m2.valeur AS reponse_valeur,
+        m2.dateC AS reponse_dateC,
+        m2.auteur_id AS reponse_utilisateur_id,
+        u2.pseudo AS reponse_pseudo,
+        u2.urlImageProfil AS reponse_urlImageProfil
+    FROM MessageThread m1
+    LEFT JOIN MessageThread m2 ON m1.idMessage = m2.idMessageParent
+    LEFT JOIN " . DB_PREFIX . "utilisateur u2 ON m2.auteur_id = u2.idUtilisateur
+    ORDER BY m1.thread_id ASC, m1.dateC ASC;
+    ";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':idFil', $idFil, PDO::PARAM_INT);
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $messages = $stmt->fetchAll();
-
-        // Hydrate les messages
         return $this->hydrateAll($messages);
     }
 
