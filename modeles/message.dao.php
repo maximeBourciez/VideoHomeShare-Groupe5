@@ -219,15 +219,5 @@ class MessageDAO
         $messages = $stmt->fetchAll();
         return $this->hydrateAll($messages);
     }
-
-    // Nouvelle méthode pour récupérer le pseudo de l'utilisateur de la réponse
-    private function getUserPseudoById(string $userId): string
-    {
-        $sql = "SELECT pseudo FROM " . DB_PREFIX . "utilisateur WHERE idUtilisateur = :idUtilisateur";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':idUtilisateur', $userId, PDO::PARAM_STR);
-        $stmt->execute();
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $user ? $user['pseudo'] : 'Utilisateur inconnu';
-    }
+    
 }
