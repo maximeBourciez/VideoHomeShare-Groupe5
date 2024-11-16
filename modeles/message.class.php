@@ -44,6 +44,28 @@ class Message {
      */
     private ?Message $reponse = null;
 
+
+    // Constructeur
+    /**
+     * @brief Constructeur de la classe Message.
+     * @param int $idMessage Identifiant du message.
+     * @param string $valeur Contenu du message.
+     * @param DateTime $dateC Date de création du message.
+     * @param int|null $idMessageParent Identifiant du message parent. Null si ce message n'est pas une réponse.
+     * @param Utilisateur $utilisateur L'utilisateur qui a écrit le message.
+     * @param Message|null $reponse Une réponse à ce message, si elle existe. Null si ce n'est pas une réponse.
+     */
+    public function __construct(int $idMessage, string $valeur, DateTime $dateC, ?int $idMessageParent, Utilisateur $utilisateur, ?Message $reponse = null) {
+        $this->idMessage = $idMessage;
+        $this->valeur = $valeur;
+        $this->dateC = $dateC;
+        $this->idMessageParent = $idMessageParent;
+        $this->utilisateur = $utilisateur;
+        $this->reponse = $reponse;
+    }
+
+
+    // Encapsulation
     /**
      * @brief Récupère l'identifiant du message.
      * @return int L'identifiant du message.
