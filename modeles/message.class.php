@@ -27,6 +27,18 @@ class Message {
     private ?DateTime $dateC;
 
     /**
+     * @var ?int $nbLikes
+     * @brief Nombre de likes du message.
+     */
+    private ?int $nbLikes;
+
+    /**
+     * @var ?int $nbDislikes
+     * @brief Nombre de dislikes du message.
+     */
+    private ?int $nbDislikes;
+
+    /**
      * @var int|null $idMessageParent
      * @brief Identifiant du message parent. Null si ce message n'est pas une réponse.
      */
@@ -96,6 +108,39 @@ class Message {
      */
     public function setValeur(string $valeur): void {
         $this->valeur = $valeur;
+    }
+
+    /**
+     * @brief Récupère le nombre de likes du message.
+     * @return int Le nombre de likes du message.
+     * 
+     */
+    public function getNbLikes(): int {
+        return $this->nbLikes;
+    }
+
+    /**
+     * @brief Définit le nombre de likes du message.
+     * @param int $nbLikes Le nombre de likes du message.
+     */
+    public function setNbLikes(int $nbLikes): void {
+        $this->nbLikes = $nbLikes;
+    }
+
+    /**
+     * @brief Récupère le nombre de dislikes du message.
+     * @return int Le nombre de dislikes du message.
+     */
+    public function getNbDislikes(): int {
+        return $this->nbDislikes;
+    }
+
+    /**
+     * @brief Définit le nombre de dislikes du message.
+     * @param int $nbDislikes Le nombre de dislikes du message.
+     */
+    public function setNbDislikes(int $nbDislikes): void {
+        $this->nbDislikes = $nbDislikes;
     }
 
     /**
