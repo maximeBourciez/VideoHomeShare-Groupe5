@@ -112,34 +112,34 @@ class Message {
 
     /**
      * @brief Récupère le nombre de likes du message.
-     * @return int Le nombre de likes du message.
+     * @return int|null Le nombre de likes du message.
      * 
      */
-    public function getNbLikes(): int {
+    public function getNbLikes(): ?int {
         return $this->nbLikes;
     }
 
     /**
      * @brief Définit le nombre de likes du message.
-     * @param int $nbLikes Le nombre de likes du message.
+     * @param int|null $nbLikes Le nombre de likes du message.
      */
-    public function setNbLikes(int $nbLikes): void {
+    public function setNbLikes(?int $nbLikes): void {
         $this->nbLikes = $nbLikes;
     }
 
     /**
      * @brief Récupère le nombre de dislikes du message.
-     * @return int Le nombre de dislikes du message.
+     * @return int|null Le nombre de dislikes du message.
      */
-    public function getNbDislikes(): int {
+    public function getNbDislikes(): ?int {
         return $this->nbDislikes;
     }
 
     /**
      * @brief Définit le nombre de dislikes du message.
-     * @param int $nbDislikes Le nombre de dislikes du message.
+     * @param int|null $nbDislikes Le nombre de dislikes du message.
      */
-    public function setNbDislikes(int $nbDislikes): void {
+    public function setNbDislikes(?int $nbDislikes): void {
         $this->nbDislikes = $nbDislikes;
     }
 

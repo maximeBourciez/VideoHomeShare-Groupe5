@@ -70,6 +70,8 @@ class MessageDAO
         $message = new Message();
         $message->setIdMessage($row['idMessage']);
         $message->setValeur($row['valeur']);
+        $message->setNbLikes($row['like_count']);
+        $message->setNbDislikes($row['dislike_count']);
         $message->setDateC(new DateTime($row['dateC']));
         $message->setIdMessageParent($row['idMessageParent']);
 
@@ -84,11 +86,13 @@ class MessageDAO
         if ($row['reponse_valeur']) {
             $reponse = new Message();
             $reponse->setValeur($row['reponse_valeur']);
+            $reponse->setNbLikes($row['reponse_like_count']);
+            $reponse->setNbDislikes($row['reponse_dislike_count']);
             $reponse->setDateC(new DateTime($row['reponse_dateC']));
 
             // Hydratation de l'utilisateur de la réponse
             $reponseUser = new Utilisateur();
-            $reponseUser->setId($row['reponse_utilisateur_id']); // Modifié ici
+            $reponseUser->setId($row['reponse_utilisateur_id']); 
             $reponseUser->setPseudo($row['reponse_pseudo'] ?? 'Utilisateur inconnu');
             $reponseUser->setUrlImageProfil($row['reponse_urlImageProfil']);
             $reponse->setUtilisateur($reponseUser);
@@ -186,32 +190,46 @@ class MessageDAO
     public function listerMessagesParFil(int $idFil): array
     {
         $sql = "
-    WITH MessageThread AS (
-        SELECT
-            m.*,
-            COALESCE(m.idMessageParent, m.idMessage) as thread_id,
-            u.idUtilisateur as auteur_id,
-            u.pseudo as auteur_pseudo,
-            u.urlImageProfil as auteur_urlImageProfil
-        FROM " . DB_PREFIX . "message m
-        INNER JOIN " . DB_PREFIX . "utilisateur u ON m.idUtilisateur = u.idUtilisateur
-        WHERE m.idFil = :idFil
-        )
+WITH MessageThread AS (
     SELECT
-        m1.*,
-        m1.auteur_id,
-        m1.auteur_pseudo,
-        m1.auteur_urlImageProfil,
-        m2.valeur AS reponse_valeur,
-        m2.dateC AS reponse_dateC,
-        m2.auteur_id AS reponse_utilisateur_id,
-        u2.pseudo AS reponse_pseudo,
-        u2.urlImageProfil AS reponse_urlImageProfil
-    FROM MessageThread m1
-    LEFT JOIN MessageThread m2 ON m1.idMessage = m2.idMessageParent
-    LEFT JOIN " . DB_PREFIX . "utilisateur u2 ON m2.auteur_id = u2.idUtilisateur
-    ORDER BY m1.thread_id ASC, m1.dateC ASC;
-    ";
+        m.*,
+        COALESCE(m.idMessageParent, m.idMessage) as thread_id,
+        u.idUtilisateur as auteur_id,
+        u.pseudo as auteur_pseudo,
+        u.urlImageProfil as auteur_urlImageProfil
+    FROM " . DB_PREFIX . "message m
+    INNER JOIN " . DB_PREFIX . "utilisateur u ON m.idUtilisateur = u.idUtilisateur
+    WHERE m.idFil = :idFil
+),
+LikesDislikes AS (
+    SELECT
+        idMessage,
+        SUM(CASE WHEN `reaction` = true THEN 1 ELSE 0 END) AS like_count,
+        SUM(CASE WHEN `reaction` = false THEN 1 ELSE 0 END) AS dislike_count
+    FROM " . DB_PREFIX . "reagir
+    GROUP BY idMessage
+)
+SELECT
+    m1.*,
+    m1.auteur_id,
+    m1.auteur_pseudo,
+    m1.auteur_urlImageProfil,
+    m2.valeur AS reponse_valeur,
+    m2.dateC AS reponse_dateC,
+    m2.auteur_id AS reponse_utilisateur_id,
+    u2.pseudo AS reponse_pseudo,
+    u2.urlImageProfil AS reponse_urlImageProfil,
+    ld1.like_count AS like_count,
+    ld1.dislike_count AS dislike_count,
+    ld2.like_count AS reponse_like_count,
+    ld2.dislike_count AS reponse_dislike_count
+FROM MessageThread m1
+LEFT JOIN MessageThread m2 ON m1.idMessage = m2.idMessageParent
+LEFT JOIN " . DB_PREFIX . "utilisateur u2 ON m2.auteur_id = u2.idUtilisateur
+LEFT JOIN LikesDislikes ld1 ON m1.idMessage = ld1.idMessage
+LEFT JOIN LikesDislikes ld2 ON m2.idMessage = ld2.idMessage
+ORDER BY m1.thread_id ASC, m1.dateC ASC;
+";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':idFil', $idFil, PDO::PARAM_INT);
         $stmt->execute();
@@ -219,5 +237,4 @@ class MessageDAO
         $messages = $stmt->fetchAll();
         return $this->hydrateAll($messages);
     }
-    
 }
