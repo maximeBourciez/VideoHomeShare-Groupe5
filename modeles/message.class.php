@@ -12,31 +12,31 @@ class Message {
      * @var int $idMessage
      * @brief Identifiant unique du message.
      */
-    private int $idMessage;
+    private ?int $idMessage;
 
     /**
-     * @var string $valeur
+     * @var ?string $valeur
      * @brief Contenu du message.
      */
-    private string $valeur;
-
-    /**
-     * @var int $nblike
-     * @brief Nombre de "likes" du message.
-     */
-    private int $nblike;
-
-    /**
-     * @var int $nbdislike
-     * @brief Nombre de "dislikes" du message.
-     */
-    private int $nbdislike;
+    private ?string $valeur;
 
     /**
      * @var DateTime $dateC
      * @brief Date de création du message.
      */
-    private DateTime $dateC;
+    private ?DateTime $dateC;
+
+    /**
+     * @var ?int $nbLikes
+     * @brief Nombre de likes du message.
+     */
+    private ?int $nbLikes;
+
+    /**
+     * @var ?int $nbDislikes
+     * @brief Nombre de dislikes du message.
+     */
+    private ?int $nbDislikes;
 
     /**
      * @var int|null $idMessageParent
@@ -48,7 +48,7 @@ class Message {
      * @var Utilisateur $utilisateur
      * @brief L'utilisateur qui a écrit le message.
      */
-    private Utilisateur $utilisateur;
+    private ?Utilisateur $utilisateur;
 
     /**
      * @var Message|null $reponse
@@ -56,6 +56,28 @@ class Message {
      */
     private ?Message $reponse = null;
 
+
+    // Constructeur
+    /**
+     * @brief Constructeur de la classe Message.
+     * @param int $idMessage Identifiant du message.
+     * @param string $valeur Contenu du message.
+     * @param DateTime $dateC Date de création du message.
+     * @param int|null $idMessageParent Identifiant du message parent. Null si ce message n'est pas une réponse.
+     * @param Utilisateur $utilisateur L'utilisateur qui a écrit le message.
+     * @param Message|null $reponse Une réponse à ce message, si elle existe. Null si ce n'est pas une réponse.
+     */
+    public function __construct(?int $idMessage = null, ?string $valeur = null, ?DateTime $dateC = null, ?int $idMessageParent = null, ?Utilisateur $utilisateur = null, ?Message $reponse = null) {
+        $this->idMessage = $idMessage;
+        $this->valeur = $valeur;
+        $this->dateC = $dateC;
+        $this->idMessageParent = $idMessageParent;
+        $this->utilisateur = $utilisateur;
+        $this->reponse = $reponse;
+    }
+
+
+    // Encapsulation
     /**
      * @brief Récupère l'identifiant du message.
      * @return int L'identifiant du message.
@@ -90,34 +112,35 @@ class Message {
 
     /**
      * @brief Récupère le nombre de likes du message.
-     * @return int Le nombre de likes du message.
+     * @return int|null Le nombre de likes du message.
+     * 
      */
-    public function getNbLike(): int {
-        return $this->nblike;
+    public function getNbLikes(): ?int {
+        return $this->nbLikes;
     }
 
     /**
      * @brief Définit le nombre de likes du message.
-     * @param int $nblike Le nombre de likes du message.
+     * @param int|null $nbLikes Le nombre de likes du message.
      */
-    public function setNbLike(int $nblike): void {
-        $this->nblike = $nblike;
+    public function setNbLikes(?int $nbLikes): void {
+        $this->nbLikes = $nbLikes;
     }
 
     /**
      * @brief Récupère le nombre de dislikes du message.
-     * @return int Le nombre de dislikes du message.
+     * @return int|null Le nombre de dislikes du message.
      */
-    public function getNbDislike(): int {
-        return $this->nbdislike;
+    public function getNbDislikes(): ?int {
+        return $this->nbDislikes;
     }
 
     /**
      * @brief Définit le nombre de dislikes du message.
-     * @param int $nbdislike Le nombre de dislikes du message.
+     * @param int|null $nbDislikes Le nombre de dislikes du message.
      */
-    public function setNbDislike(int $nbdislike): void {
-        $this->nbdislike = $nbdislike;
+    public function setNbDislikes(?int $nbDislikes): void {
+        $this->nbDislikes = $nbDislikes;
     }
 
     /**

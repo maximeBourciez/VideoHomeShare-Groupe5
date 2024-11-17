@@ -27,9 +27,11 @@
 								<div class="me-auto">
 									<button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;">
 										<i class="bi bi-hand-thumbs-up"></i>
+										{{ message.nbLikes }}
 									</button>
 									<button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;">
 										<i class="bi bi-hand-thumbs-down"></i>
+										{{ message.nbDislikes }}
 									</button>
 									<button class="btn btn-sm" style="background-color: #F2F2F2; color: #000;">
 										<i class="bi bi-reply"></i>
@@ -67,9 +69,11 @@
 								<div class="me-auto">
 									<button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;">
 										<i class="bi bi-hand-thumbs-up"></i>
+										{{ message.reponse.nbLikes }}
 									</button>
 									<button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;">
 										<i class="bi bi-hand-thumbs-down"></i>
+										{{ message.reponse.nbDislikes }}
 									</button>
 									<button class="btn btn-sm" style="background-color: #F2F2F2; color: #000;">
 										<i class="bi bi-reply"></i>
@@ -85,7 +89,9 @@
 							</div>
 						</div>
 					</div>
+					</div>
 				{% endif %}
+
 			{% endfor %}
 		</div>
         </div>
