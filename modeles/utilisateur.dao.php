@@ -80,7 +80,7 @@ class UtilisateurDAO {
     function find(string $id): ?Utilisateur{
         $sql = "SELECT * FROM ".DB_PREFIX."utilisateur WHERE idUtilisateur = :id";
         $pdo = $this->pdo->prepare($sql);
-        $pdo->bindValue(':id', $id, PDO::PARAM_INT);
+        $pdo->bindValue(':id', $id, PDO::PARAM_STR);
         $pdo->execute();
         $pdo->setFetchMode(PDO::FETCH_ASSOC);
         $row = $pdo->fetch();

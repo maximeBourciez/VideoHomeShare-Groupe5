@@ -103,5 +103,39 @@ class ControllerUtilisateur extends Controller{
         ));          
     }
 
+    /**
+     * @brief  permet d'afficher la page ou l'utilisateur rensegner son adre mail pour changer le mot de passe
+     * 
+     * @return void
+     */
+    public function afficherpageMDPOulier() : void {
+
+        $template = $this->getTwig()->load('motDePasseOublie.html.twig');
+        echo $template->render(array());  
+        
+    }
+    /**
+     * @brief envoie un mail à l'utilisateur pour qu'il puisse changer son mot de passe
+     * 
+     * @return void
+     */
+    public function envoieMailMDPOublie() : void {
+        $mail = isset($_POST['email']) ? $_POST['email'] : null;
+        $managerutilisateur = new UtilisateurDAO($this->getPdo());
+        $utilisateur = $managerutilisateur->findByMail($mail);
+        if ($utilisateur != null){
+            $id = $utilisateur->getId();
+            $message = "Bonjour, \n\n Vous avez demandé à réinitialiser votre mot de passe. Voici votre mot de passe : ".URL_SITE."index.php?controller=utilisateur&methode=changerMDP&id=".$id." \n\n Cordialement, \n\n L'équipe de la plateforme de vhs";
+            mail($mail, "Réinitialisation de votre mot de passe", $message);
+        }else{
+            //gener un popoup pour dire que le mail n'est pas valide
+
+            $template = $this->getTwig()->load('inscritiopn.html.twig');
+            echo $template->render(array());  
+        }
+    }
+
+
+
     
 }
