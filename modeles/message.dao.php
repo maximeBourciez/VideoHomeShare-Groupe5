@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 /**
  * @file message.dao.php
  * 
@@ -12,7 +13,8 @@
  * 
  * @author Maxime Bourciez <maxime.bourciez@gmail.com>
  */
-class MessageDAO{
+class MessageDAO
+{
     // Attiributs 
     /**
      * @var PDO|null $pdo Connexion à la BD
@@ -25,7 +27,8 @@ class MessageDAO{
      * 
      * @param PDO|null $pdo Connexion à la base de données
      */
-    public function __construct(?PDO $pdo = null){
+    public function __construct(?PDO $pdo = null)
+    {
         $this->pdo = $pdo;
     }
 
@@ -36,7 +39,8 @@ class MessageDAO{
      *
      * @return PDO|null Connexion à la base de données
      */
-    public function getPdo(): ?PDO{
+    public function getPdo(): ?PDO
+    {
         return $this->pdo;
     }
 
@@ -47,7 +51,8 @@ class MessageDAO{
      * @param PDO $pdo Connexion à la base de données
      * @return self
      */
-    public function setPdo(PDO $pdo): self{
+    public function setPdo(PDO $pdo): self
+    {
         $this->pdo = $pdo;
         return $this;
     }
@@ -105,7 +110,7 @@ class MessageDAO{
         /*$messages = [];
         foreach($rows as $row){
             $message = $this->hydrate($row);
-            array_push($messages, $message);  // Ajout du message au tableau 
+            $hydratedMessages[] = $message;
         }
         */
         $hydratedMessages = [];
@@ -124,7 +129,8 @@ class MessageDAO{
      * @return array<Message> Tableau d'objets Message
      * 
      */
-    public function listerMessages(): array{
+    public function listerMessages(): array
+    {
         $sql = "SELECT * FROM" . DB_PREFIX . "message";
         $stmt = $this->pdo->query($sql);
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
@@ -139,7 +145,8 @@ class MessageDAO{
      * @param integer $id
      * @return Message|null
      */
-    public function chercherMessageParId(int $id): ?Message{
+    public function chercherMessageParId(int $id): ?Message
+    {
         $sql = "SELECT * FROM" . DB_PREFIX . "message WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
@@ -149,7 +156,7 @@ class MessageDAO{
     }
 
 
-    
+
     /**
      * @brief Méthode permettant de lister les messages d'un utilisateur par id_user
      *
@@ -158,7 +165,8 @@ class MessageDAO{
      * @param integer $id_user
      * @return array
      */
-    public function listerMessagesParIdUser(int $id_user): array{
+    public function listerMessagesParIdUser(int $id_user): array
+    {
         $sql = "SELECT * FROM" . DB_PREFIX . "message WHERE id_user = :id_user";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':id_user', $id_user, PDO::PARAM_INT);
@@ -167,7 +175,7 @@ class MessageDAO{
         return $stmt->fetchAll();
     }
 
-    
+
 
     /**
      * @brief Méthode de listing des messages par fil
