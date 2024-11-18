@@ -54,7 +54,7 @@ class Message {
      * @var Message|null $reponse
      * @brief Une réponse à ce message, si elle existe. Null si ce n'est pas une réponse.
      */
-    private ?Message $reponse = null;
+    private ?array $reponses = [];
 
 
     // Constructeur
@@ -67,13 +67,15 @@ class Message {
      * @param Utilisateur $utilisateur L'utilisateur qui a écrit le message.
      * @param Message|null $reponse Une réponse à ce message, si elle existe. Null si ce n'est pas une réponse.
      */
-    public function __construct(?int $idMessage = null, ?string $valeur = null, ?DateTime $dateC = null, ?int $idMessageParent = null, ?Utilisateur $utilisateur = null, ?Message $reponse = null) {
+    public function __construct(?int $idMessage = null, ?string $valeur = null, ?DateTime $dateC = null, ?int $nbLikes = null,?int $nbDislikes = null, ?int $idMessageParent = null, ?Utilisateur $utilisateur = null, ?array $reponse = []) {
         $this->idMessage = $idMessage;
         $this->valeur = $valeur;
         $this->dateC = $dateC;
+        $this->nbLikes = $nbLikes;
+        $this->nbDislikes = $nbDislikes;
         $this->idMessageParent = $idMessageParent;
         $this->utilisateur = $utilisateur;
-        $this->reponse = $reponse;
+        $this->reponses = $reponse;
     }
 
 
@@ -82,7 +84,7 @@ class Message {
      * @brief Récupère l'identifiant du message.
      * @return int L'identifiant du message.
      */
-    public function getIdMessage(): int {
+    public function getIdMessage(): ?int {
         return $this->idMessage;
     }
 
@@ -90,7 +92,7 @@ class Message {
      * @brief Définit l'identifiant du message.
      * @param int $idMessage L'identifiant du message.
      */
-    public function setIdMessage(int $idMessage): void {
+    public function setIdMessage(?int $idMessage): void {
         $this->idMessage = $idMessage;
     }
 
@@ -98,7 +100,7 @@ class Message {
      * @brief Récupère le contenu du message.
      * @return string Le contenu du message.
      */
-    public function getValeur(): string {
+    public function getValeur(): ?string {
         return $this->valeur;
     }
 
@@ -106,7 +108,7 @@ class Message {
      * @brief Définit le contenu du message.
      * @param string $valeur Le contenu du message.
      */
-    public function setValeur(string $valeur): void {
+    public function setValeur(?string $valeur): void {
         $this->valeur = $valeur;
     }
 
@@ -147,7 +149,7 @@ class Message {
      * @brief Récupère la date de création du message.
      * @return DateTime La date de création du message.
      */
-    public function getDateC(): DateTime {
+    public function getDateC(): ?DateTime {
         return $this->dateC;
     }
 
@@ -155,7 +157,7 @@ class Message {
      * @brief Définit la date de création du message.
      * @param DateTime $dateC La date de création du message.
      */
-    public function setDateC(DateTime $dateC): void {
+    public function setDateC(?DateTime $dateC): void {
         $this->dateC = $dateC;
     }
 
@@ -195,17 +197,25 @@ class Message {
 
     /**
      * @brief Récupère la réponse à ce message, si elle existe.
-     * @return Message|null La réponse à ce message ou null si ce n'est pas une réponse.
+     * @return array<Message>|null La réponse à ce message ou null si ce n'est pas une réponse.
      */
-    public function getReponse(): ?Message {
-        return $this->reponse;
+    public function getReponses(): ?array {
+        return $this->reponses;
     }
 
     /**
      * @brief Définit la réponse à ce message.
-     * @param Message|null $reponse La réponse à ce message ou null si ce n'est pas une réponse.
+     * @param array<Message>|null $reponse La réponse à ce message ou null si ce n'est pas une réponse.
      */
-    public function setReponse(?Message $reponse): void {
-        $this->reponse = $reponse;
+    public function setReponse(?array $reponses): void {
+        $this->reponses = $reponses;
+    }
+
+    /**
+     * @brief Ajoute une réponse à ce message.
+     * @param Message $reponse La réponse à ajouter.
+     */
+    public function addReponse(Message $reponse): void {
+        $this->reponses[] = $reponse;
     }
 }

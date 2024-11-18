@@ -65,14 +65,15 @@ class MessageDAO
      * @param array $row Ligne de la base de données
      * @return Message Objet Message hydraté
      */
-    public function hydrate(array $row): Message{ 
+    public function hydrate(array $row): Message
+    {
         // Hydratation du message
         $message = new Message();
         $message->setIdMessage($row['idMessage']);
         $message->setValeur($row['valeur']);
         $message->setDateC(new DateTime($row['dateC']));
         $message->setIdMessageParent($row['idMessageParent']);
-        
+
         // Hydratation de l'utilisateur
         $user = new Utilisateur();
         $user->setId($row['auteur_id']);
@@ -85,40 +86,59 @@ class MessageDAO
             // Hydratation de la réponse
             $reponse = new Message();
             $reponse->setValeur($row['reponse_valeur']);
-            $reponse->setDateC(new DateTime($row['reponse_dateC']));  
-           
+            $reponse->setDateC(new DateTime($row['reponse_dateC']));
+
             // Hydratation de l'utilisateur de la réponse
             $reponseUser = new Utilisateur();
             $reponseUser->setId($row['reponse_utilisateur_id']);
             $reponseUser->setPseudo($row['reponse_pseudo']);
             $reponseUser->setUrlImageProfil($row['reponse_urlImageProfil']);
             $reponse->setUtilisateur($reponseUser);
-            
+
             // Assigner la réponse au message
-            $message->setReponse($reponse);
+            $message->addReponse($reponse);
         }
         return $message;
-    } 
+    }
 
     /**
-     * @brief Méthode d'hydratation de tous les messages
-     * 
-     * @param array $rows Tableau de lignes de la base de données
-     * @return array<Message> Tableau d'objets Message hydratés
+     * @brief Méthode d'hydratation de tous les messages avec gestion des réponses
+     *
+     * @param array $rows Tableau de lignes récupérées de la base de données
+     * @return array<Message> Tableau d'objets Message hydratés, avec réponses associées
      */
-    function hydrateAll(array $messages): array{
-        /*$messages = [];
-        foreach($rows as $row){
-            $message = $this->hydrate($row);
-            $hydratedMessages[] = $message;
+    function hydrateAll(array $rows): array
+    {
+        $messages = []; // Tableau final pour stocker les messages parent avec leurs réponses
+
+        foreach ($rows as $row) {
+            $idMessage = $row['idMessage'];
+
+            // Si le message parent n'est pas encore hydraté, on l'hydrate
+            if (!isset($messages[$idMessage])) {
+                $messages[$idMessage] = $this->hydrate($row); // Appel à hydrate pour créer un message parent
+            }
+
+            // Si une réponse est présente, on l'ajoute au message parent
+            if (!empty($row['reponse_valeur'])) {
+                $reponse = new Message();
+                $reponse->setValeur($row['reponse_valeur']);
+                $reponse->setDateC(new DateTime($row['reponse_dateC']));
+
+                // Hydratation de l'utilisateur de la réponse
+                $reponseUser = new Utilisateur();
+                $reponseUser->setId($row['reponse_utilisateur_id']);
+                $reponseUser->setPseudo($row['reponse_pseudo']);
+                $reponseUser->setUrlImageProfil($row['reponse_urlImageProfil']);
+                $reponse->setUtilisateur($reponseUser);
+
+                // Ajouter la réponse au tableau des réponses du message parent
+                $messages[$idMessage]->addReponse($reponse);
+            }
         }
-        */
-        $hydratedMessages = [];
-        foreach ($messages as $row) {
-            $message = $this->hydrate($row);    
-            $hydratedMessages[] = $message;
-        }
-        return $messages;
+
+        // Retourner un tableau d'objets Message (parents uniquement, avec leurs réponses)
+        return array_values($messages);
     }
 
 
@@ -186,9 +206,10 @@ class MessageDAO
      * 
      * @return array<Message> Tableau d'objets Message
      */
-    
-     public function listerMessagesParFil(int $idFil): array {
-        $sql ="SELECT
+
+    public function listerMessagesParFil(int $idFil): array
+    {
+        $sql = "SELECT
                 m1.*,
                 COALESCE(m1.idMessageParent, m1.idMessage) AS thread_id,
                 u1.idUtilisateur AS auteur_id,
@@ -231,19 +252,20 @@ class MessageDAO
             ) AS ld2 ON m2.idMessage = ld2.idMessage
             ORDER BY m1.thread_id ASC, m1.dateC ASC;";
 
-    
+
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':idFil', $idFil, PDO::PARAM_INT);
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $messages = $stmt->fetchAll();
-    
+
         // Hydrate les messages
         return $this->hydrateAll($messages);
     }
-    
+
     // Nouvelle méthode pour récupérer le pseudo de l'utilisateur de la réponse
-    private function getUserPseudoById(string $userId): string {
+    private function getUserPseudoById(string $userId): string
+    {
         $sql = "SELECT pseudo FROM " . DB_PREFIX . "utilisateur WHERE idUtilisateur = :idUtilisateur";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':idUtilisateur', $userId, PDO::PARAM_STR);
@@ -251,5 +273,4 @@ class MessageDAO
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         return $user ? $user['pseudo'] : 'Utilisateur inconnu';
     }
-    
 }
