@@ -37,7 +37,7 @@ class ControllerUtilisateur extends Controller{
 
         
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
-        //print("coucou");
+    
         if ($managerutilisateur->findByMailandPWD($mail,$mdp) == 1){
             //Génération de la vue
             $template = $this->getTwig()->load('index.html.twig');
@@ -81,7 +81,9 @@ class ControllerUtilisateur extends Controller{
                     // verifier si le mail n'est pas déjà utilisé
                     if ($managerutilisateur->findByMail($mail) == null){
                         // verifier si les deux mots de passe sont identiques
-                        if ($mdp == $vmdp){ 
+                        if ($mdp == $vmdp){  
+                            //cripter le mot de passe a faire
+
                             //création de l'utilisateur
                             $newUtilisateur = new Utilisateur ($id,$pseudo , $nom ,$mail,$mdp,"Utilisateur",NULL,NULL);
                             $managerutilisateur->create($newUtilisateur);
@@ -125,11 +127,10 @@ class ControllerUtilisateur extends Controller{
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
         $utilisateur = $managerutilisateur->findByMail($mail);
         if ($utilisateur != null){
+            // cripter le id a faire
             $id = $utilisateur->getId();
-            var_dump($mail);
-            $message = "Bonjour, \n\n Vous avez demandé à réinitialiser votre mot de passe. Voici votre mot de passe : ".URL_SITE."index.php?controller=utilisateur&methode=changerMDP&id=".$id." \n\n Cordialement, \n\n L'équipe de la plateforme de vhs";
+            $message = "Bonjour, \n\n Vous avez demandé à réinitialiser votre mot de passe. Voici votre mot de passe : ".URL_SITE."index.php?controller=utilisateur&methode=afficherchangerMDP&id=".$id." \n\n Cordialement, \n\n L'équipe de la plateforme de vhs";
             $test = mail($mail, "Réinitialisation de votre mot de passe", $message);
-            print($test);
             $template = $this->getTwig()->load('connection.html.twig');
             echo $template->render(array());
         }else{
@@ -139,6 +140,59 @@ class ControllerUtilisateur extends Controller{
             echo $template->render(array());  
         }
     }
+
+    /**
+     * @brief permet de changer le mot de passe de l'utilisateur
+     * 
+     * @return void
+     */
+    public function afficherchangerMDP() : void {
+        $id = isset($_GET['id']) ? $_GET['id'] : null;
+        $managerutilisateur = new UtilisateurDAO($this->getPdo());
+        $utilisateur = $managerutilisateur->find($id);
+        if ($utilisateur != null){
+            
+
+            $template = $this->getTwig()->load('changerMDP.html.twig');
+            echo $template->render(array('id' => $id));
+
+        }
+    }
+
+    /**
+     * @brief permet de changer le mot de passe de l'utilisateur
+     * 
+     * @return void
+     */
+    public function changerMDP() : void {
+        
+        $id = isset($_POST['id']) ? $_POST['id'] : null;
+    
+        $mdp = isset($_POST['mdp']) ? $_POST['mdp'] : null;
+        $vmdp = isset($_POST['vmdp']) ? $_POST['vmdp'] : null;
+        $managerutilisateur = new UtilisateurDAO($this->getPdo());
+        $utilisateur = $managerutilisateur->find($id);
+        if ($utilisateur != null){
+            if ( strlen($mdp) <= 30 && strlen($vmdp) <= 30){
+               
+            
+                if ($mdp == $vmdp){
+                    //cripter le mot de passe a faire
+
+                    $utilisateur->setMdp($mdp);
+                    var_dump($utilisateur->getRole());
+                    $managerutilisateur->update($utilisateur);
+                    $template = $this->getTwig()->load('connection.html.twig');
+                    echo $template->render(array());
+                }else{
+                    $template = $this->getTwig()->load('changerMDP.html.twig');
+                    echo $template->render(array('id' => $id));
+                }
+            }
+        }
+        print("erreur");
+    }
+        
 
 
 
