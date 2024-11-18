@@ -7,7 +7,11 @@ class ControllerUtilisateur extends Controller{
     }
 
 
-    
+    /**
+     * @bref permet d'afficher la page de connection
+     *
+     * @return void
+     */
     public function connexion() : void{
     
         //Génération de la vue
@@ -19,6 +23,11 @@ class ControllerUtilisateur extends Controller{
 
     }
 
+    /**
+     * @brief permet d'afficher la page d'inscription
+     *
+     * @return void
+     */
     public function inscription() : void{
     
         //Génération de la vue
@@ -30,6 +39,11 @@ class ControllerUtilisateur extends Controller{
 
     }
 
+    /**
+     * @brief vérifie les informations saisies lors de la connection et connecte l'utilisateur et revoit sur la page d'acceuil si les informations sont correctes  sinon renvoie sur la page de connection
+     *
+     * @return void
+     */
     public function checkInfoConnecter(){
         
         $mail = isset($_POST['mail']) ? $_POST['mail'] : null;
@@ -37,20 +51,17 @@ class ControllerUtilisateur extends Controller{
 
         
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
+
+        $utilisateur = $managerutilisateur->findByMail($mail);
     
-        if ($managerutilisateur->findByMailandPWD($mail,$mdp) == 1){
+        if ($utilisateur != null && password_verify($mdp, $utilisateur->getMdp())){
             //Génération de la vue
             $template = $this->getTwig()->load('index.html.twig');
-            echo $template->render(array(
-                'description' => "Je fais mes tests"
-            ));
-            print ("vous êtes connecté");
+            echo $template->render(array());
         }else{
             //Génération de la vue
             $template = $this->getTwig()->load('connection.html.twig');
-            echo $template->render(array(
-                'description' => "Je fais mes tests"
-            ));
+            echo $template->render(array());
             
         }
 
@@ -73,7 +84,7 @@ class ControllerUtilisateur extends Controller{
 
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
 
-        if ( strlen($pseudo) <= 50 && strlen($id) <= 20 && strlen($mail) <= 320 && strlen($mdp) <= 30 && strlen($vmdp) <= 30 && strlen($nom) <= 50){ 
+        if ( strlen($pseudo) <= 50 && strlen($id) <= 20 && strlen($mail) <= 320 && strlen($mdp) <= 100 && strlen($vmdp) <= 100 && strlen($nom) <= 50){ 
             // verifier si l'id n'est pas déjà utilisé
             if ( $managerutilisateur->find($id) == null){
                 // verifier si le mail est valide 
@@ -82,7 +93,9 @@ class ControllerUtilisateur extends Controller{
                     if ($managerutilisateur->findByMail($mail) == null){
                         // verifier si les deux mots de passe sont identiques
                         if ($mdp == $vmdp){  
-                            //cripter le mot de passe a faire
+                            //cripter le mot de passe
+                            $mdp = password_hash($mdp, PASSWORD_DEFAULT);
+                        
 
                             //création de l'utilisateur
                             $newUtilisateur = new Utilisateur ($id,$pseudo , $nom ,$mail,$mdp,"Utilisateur",NULL,NULL);
@@ -107,7 +120,7 @@ class ControllerUtilisateur extends Controller{
     }
 
     /**
-     * @brief  permet d'afficher la page ou l'utilisateur rensegner son adre mail pour changer le mot de passe
+     * @brief afficher la page ou l'utilisateur rensegner son adre mail pour changer le mot de passe
      * 
      * @return void
      */
@@ -142,7 +155,7 @@ class ControllerUtilisateur extends Controller{
     }
 
     /**
-     * @brief permet de changer le mot de passe de l'utilisateur
+     * @brief affiche la page ou l'utilisateur peut changer son mot de passe
      * 
      * @return void
      */
@@ -160,7 +173,7 @@ class ControllerUtilisateur extends Controller{
     }
 
     /**
-     * @brief permet de changer le mot de passe de l'utilisateur
+     * @brief permet de changer le mot de passe de l'utilisateur et met à jour la base de données
      * 
      * @return void
      */
@@ -173,14 +186,13 @@ class ControllerUtilisateur extends Controller{
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
         $utilisateur = $managerutilisateur->find($id);
         if ($utilisateur != null){
-            if ( strlen($mdp) <= 30 && strlen($vmdp) <= 30){
+            if ( strlen($mdp) <= 100 && strlen($vmdp) <= 100){
                
             
                 if ($mdp == $vmdp){
                     //cripter le mot de passe a faire
-
+                    $mdp = password_hash($mdp, PASSWORD_DEFAULT);
                     $utilisateur->setMdp($mdp);
-                    var_dump($utilisateur->getRole());
                     $managerutilisateur->update($utilisateur);
                     $template = $this->getTwig()->load('connection.html.twig');
                     echo $template->render(array());
@@ -190,7 +202,6 @@ class ControllerUtilisateur extends Controller{
                 }
             }
         }
-        print("erreur");
     }
         
 
