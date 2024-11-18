@@ -70,9 +70,9 @@ class MessageDAO{
         
         // Hydratation de l'utilisateur
         $user = new Utilisateur();
-        $user->setId($row['idUtilisateur']);
-        $user->setPseudo($row['pseudo']);
-        $user->setUrlImageProfil($row['urlImageProfil']);
+        $user->setId($row['auteur_id']);
+        $user->setPseudo($row['auteur_pseudo']);
+        $user->setUrlImageProfil($row['auteur_urlImageProfil']);
         $message->setUtilisateur($user);
 
         // Ajouter une réponse s'il y en a
@@ -84,8 +84,9 @@ class MessageDAO{
            
             // Hydratation de l'utilisateur de la réponse
             $reponseUser = new Utilisateur();
-            $reponseUser->setId($row['reponse_utilisateur']);
-            $reponseUser->setPseudo($row['reponse_utilisateur'] ? $this->getUserPseudoById($row['reponse_utilisateur']) : 'Utilisateur inconnu');
+            $reponseUser->setId($row['reponse_utilisateur_id']);
+            $reponseUser->setPseudo($row['reponse_pseudo']);
+            $reponseUser->setUrlImageProfil($row['reponse_urlImageProfil']);
             $reponse->setUtilisateur($reponseUser);
             
             // Assigner la réponse au message
@@ -179,17 +180,49 @@ class MessageDAO{
      */
     
      public function listerMessagesParFil(int $idFil): array {
-        $sql = "
-        SELECT m.*, u.idUtilisateur, u.pseudo, u.urlImageProfil, 
-               m2.valeur AS reponse_valeur, m2.idUtilisateur AS reponse_utilisateur, m2.dateC AS reponse_dateC
-        FROM " . DB_PREFIX . "message AS m
-        LEFT JOIN " . DB_PREFIX . "message AS m2 ON m.idMessage = m2.idMessageParent
-        INNER JOIN " . DB_PREFIX . "utilisateur AS u ON m.idUtilisateur = u.idUtilisateur
-        WHERE m.idFil = :idFil
-        ORDER BY 
-            m.idMessageParent IS NULL DESC,  
-            m.dateC ASC;                    
-        ";
+        $sql ="SELECT
+                m1.*,
+                COALESCE(m1.idMessageParent, m1.idMessage) AS thread_id,
+                u1.idUtilisateur AS auteur_id,
+                u1.pseudo AS auteur_pseudo,
+                u1.urlImageProfil AS auteur_urlImageProfil,
+                m2.valeur AS reponse_valeur,
+                m2.dateC AS reponse_dateC,
+                m2.idUtilisateur AS reponse_utilisateur_id,
+                u2.pseudo AS reponse_pseudo,
+                u2.urlImageProfil AS reponse_urlImageProfil,
+                ld1.like_count AS like_count,
+                ld1.dislike_count AS dislike_count,
+                ld2.like_count AS reponse_like_count,
+                ld2.dislike_count AS reponse_dislike_count
+            FROM (
+                SELECT
+                    m.*,
+                    COALESCE(m.idMessageParent, m.idMessage) AS thread_id
+                FROM " . DB_PREFIX . "message m
+                WHERE m.idFil = :idFil
+            ) AS m1
+            INNER JOIN " . DB_PREFIX . "utilisateur u1 ON m1.idUtilisateur = u1.idUtilisateur
+            LEFT JOIN " . DB_PREFIX . "message m2 ON m1.idMessage = m2.idMessageParent
+            LEFT JOIN " . DB_PREFIX . "utilisateur u2 ON m2.idUtilisateur = u2.idUtilisateur
+            LEFT JOIN (
+                SELECT
+                    idMessage,
+                    SUM(CASE WHEN `reaction` = true THEN 1 ELSE 0 END) AS like_count,
+                    SUM(CASE WHEN `reaction` = false THEN 1 ELSE 0 END) AS dislike_count
+                FROM " . DB_PREFIX . "reagir
+                GROUP BY idMessage
+            ) AS ld1 ON m1.idMessage = ld1.idMessage
+            LEFT JOIN (
+                SELECT
+                    idMessage,
+                    SUM(CASE WHEN `reaction` = true THEN 1 ELSE 0 END) AS like_count,
+                    SUM(CASE WHEN `reaction` = false THEN 1 ELSE 0 END) AS dislike_count
+                FROM " . DB_PREFIX . "reagir
+                GROUP BY idMessage
+            ) AS ld2 ON m2.idMessage = ld2.idMessage
+            ORDER BY m1.thread_id ASC, m1.dateC ASC;";
+
     
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':idFil', $idFil, PDO::PARAM_INT);
