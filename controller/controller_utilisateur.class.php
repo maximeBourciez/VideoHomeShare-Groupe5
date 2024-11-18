@@ -69,10 +69,11 @@ class ControllerUtilisateur extends Controller{
         $mail = isset($_POST['mail']) ? $_POST['mail'] : null;
         $mdp = isset($_POST['mdp']) ? $_POST['mdp'] : null;
         $vmdp = isset($_POST['vmdp']) ? $_POST['vmdp'] : null;
+        $nom = isset($_POST['nom']) ? $_POST['nom'] : null;
 
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
 
-        if ( strlen($pseudo) <= 50 && strlen($id) <= 20 && strlen($mail) <= 320 && strlen($mdp) <= 30 && strlen($vmdp) <= 30){ 
+        if ( strlen($pseudo) <= 50 && strlen($id) <= 20 && strlen($mail) <= 320 && strlen($mdp) <= 30 && strlen($vmdp) <= 30 && strlen($nom) <= 50){ 
             // verifier si l'id n'est pas déjà utilisé
             if ( $managerutilisateur->find($id) == null){
                 // verifier si le mail est valide 
@@ -82,7 +83,7 @@ class ControllerUtilisateur extends Controller{
                         // verifier si les deux mots de passe sont identiques
                         if ($mdp == $vmdp){ 
                             //création de l'utilisateur
-                            $newUtilisateur = new Utilisateur ($id,$pseudo,$mail,$mdp,"Utilisateur",NULL,NULL);
+                            $newUtilisateur = new Utilisateur ($id,$pseudo , $nom ,$mail,$mdp,"Utilisateur",NULL,NULL);
                             $managerutilisateur->create($newUtilisateur);
                             //Génération de la vue
                             $template = $this->getTwig()->load('connection.html.twig');
@@ -125,12 +126,16 @@ class ControllerUtilisateur extends Controller{
         $utilisateur = $managerutilisateur->findByMail($mail);
         if ($utilisateur != null){
             $id = $utilisateur->getId();
+            var_dump($mail);
             $message = "Bonjour, \n\n Vous avez demandé à réinitialiser votre mot de passe. Voici votre mot de passe : ".URL_SITE."index.php?controller=utilisateur&methode=changerMDP&id=".$id." \n\n Cordialement, \n\n L'équipe de la plateforme de vhs";
-            mail($mail, "Réinitialisation de votre mot de passe", $message);
+            $test = mail($mail, "Réinitialisation de votre mot de passe", $message);
+            print($test);
+            $template = $this->getTwig()->load('connection.html.twig');
+            echo $template->render(array());
         }else{
             //gener un popoup pour dire que le mail n'est pas valide
 
-            $template = $this->getTwig()->load('inscritiopn.html.twig');
+            $template = $this->getTwig()->load('inscription.html.twig');
             echo $template->render(array());  
         }
     }

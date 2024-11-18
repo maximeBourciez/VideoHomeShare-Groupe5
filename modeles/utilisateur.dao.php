@@ -10,22 +10,25 @@ class UtilisateurDAO {
     function create(Utilisateur $utilisateur): bool{
         // Préparation de la requête
         $pdo = $this->pdo->prepare("INSERT INTO ".DB_PREFIX."utilisateur 
-        (idUtilisateur, pseudo, mail, mdp, role, urlImageProfil, urlImageBanniere) 
-        VALUES (:idUtilisateur, :pseudo, :mail, :mdp, :role, :urlImageProfil, :urlImageBaniere)");
+        (idUtilisateur, pseudo, vraiNom, mail, mdp, role, urlImageProfil, urlImageBanniere) 
+        VALUES (:idUtilisateur, :pseudo, :nom , :mail, :mdp, :role, :urlImageProfil, :urlImageBaniere)");
 
 
         // Récupération des valeurs
         $id = $utilisateur->getId();
         $pseudo = $utilisateur->getPseudo();
+        $nom = $utilisateur->getNom();
         $mail = $utilisateur->getMail();  
         $mdp = $utilisateur->getMdp();
         $role = $utilisateur->getRole();
         $urlImageProfil = $utilisateur->getUrlImageProfil();
         $urlImageBaniere = $utilisateur->getUrlImageBaniere();
+
         
         // passage des paramètres
         $pdo->bindValue(":idUtilisateur", $id);
         $pdo->bindValue(":pseudo", $pseudo);
+        $pdo->bindValue(":nom", $nom);
         $pdo->bindValue(":mail", $mail);
         $pdo->bindValue(":mdp", $mdp);
         $pdo->bindValue(":role", $role);
