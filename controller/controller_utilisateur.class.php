@@ -48,7 +48,8 @@ class ControllerUtilisateur extends Controller{
         
         $mail = isset($_POST['mail']) ? $_POST['mail'] : null;
         $mdp = isset($_POST['pwd']) ? $_POST['pwd'] : null;
-
+        
+        $mail = str_replace(' ', '', $mail);
         
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
 
@@ -69,7 +70,7 @@ class ControllerUtilisateur extends Controller{
     }
     /**
      * @brief vérifie les informations saisies lors de l'inscription et crée un utilisateur si les informations sont correctes et renvoie sur la page de connection   sinon renvoie sur la page d'inscription
-     *
+     * 
      * @return void
      */
     public function checkInfoInscription(){
@@ -81,6 +82,10 @@ class ControllerUtilisateur extends Controller{
         $mdp = isset($_POST['mdp']) ? $_POST['mdp'] : null;
         $vmdp = isset($_POST['vmdp']) ? $_POST['vmdp'] : null;
         $nom = isset($_POST['nom']) ? $_POST['nom'] : null;
+        //supprimer les espaces
+        
+        $id = str_replace(' ', '', $id);
+        $mail = str_replace(' ', '', $mail);
 
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
 
@@ -114,9 +119,7 @@ class ControllerUtilisateur extends Controller{
         //erreur de saisie
         //Génération de la vue
         $template = $this->getTwig()->load('inscription.html.twig');
-        echo $template->render(array(
-            'description' => "Je fais mes tests"
-        ));          
+        echo $template->render(array());          
     }
 
     /**
@@ -132,18 +135,19 @@ class ControllerUtilisateur extends Controller{
     }
     /**
      * @brief envoie un mail à l'utilisateur pour qu'il puisse changer son mot de passe
-     * 
+     * @todo cryptage de id dans le lien du mail
      * @return void
      */
     public function envoieMailMDPOublie() : void {
         $mail = isset($_POST['email']) ? $_POST['email'] : null;
+        $mail = str_replace(' ', '', $mail);
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
         $utilisateur = $managerutilisateur->findByMail($mail);
         if ($utilisateur != null){
-            // cripter le id a faire
+            // crypter le id
             $id = $utilisateur->getId();
             $message = "Bonjour, \n\n Vous avez demandé à réinitialiser votre mot de passe. Voici votre mot de passe : ".URL_SITE."index.php?controller=utilisateur&methode=afficherchangerMDP&id=".$id." \n\n Cordialement, \n\n L'équipe de la plateforme de vhs";
-            $test = mail($mail, "Réinitialisation de votre mot de passe", $message);
+            mail($mail, "Réinitialisation de votre mot de passe", $message);
             $template = $this->getTwig()->load('connection.html.twig');
             echo $template->render(array());
         }else{
@@ -156,19 +160,23 @@ class ControllerUtilisateur extends Controller{
 
     /**
      * @brief affiche la page ou l'utilisateur peut changer son mot de passe
-     * 
+     * @todo decryptage de id dans get
      * @return void
      */
     public function afficherchangerMDP() : void {
         $id = isset($_GET['id']) ? $_GET['id'] : null;
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
-        $utilisateur = $managerutilisateur->find($id);
-        if ($utilisateur != null){
+        if ($id != null) {
             
+        
+            $utilisateur = $managerutilisateur->find($id);
+            if ($utilisateur != null){
+                
 
-            $template = $this->getTwig()->load('changerMDP.html.twig');
-            echo $template->render(array('id' => $id));
+                $template = $this->getTwig()->load('changerMDP.html.twig');
+                echo $template->render(array('id' => $id));
 
+            }
         }
     }
 
@@ -202,6 +210,11 @@ class ControllerUtilisateur extends Controller{
                 }
             }
         }
+    }
+
+
+    public function show() : void {
+        // Récupère id_utlisateur dans $_GET et affiche la page du profil de l'utilisateur
     }
         
 

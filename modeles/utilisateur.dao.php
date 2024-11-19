@@ -48,7 +48,6 @@ class UtilisateurDAO {
         $mail = $utilisateur->getMail();
         $mdp = $utilisateur->getMdp();
         $role = $utilisateur->getRole();
-        var_dump($role);
         $urlImageProfil = $utilisateur->getUrlImageProfil();
         $urlImageBaniere = $utilisateur->getUrlImageBaniere();
         $pdo->bindParam(":id", $id);
