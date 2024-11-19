@@ -127,7 +127,7 @@ class ControllerUtilisateur extends Controller{
      * 
      * @return void
      */
-    public function afficherpageMDPOulier() : void {
+    public function afficherpageMDPOublier() : void {
 
         $template = $this->getTwig()->load('motDePasseOublie.html.twig');
         echo $template->render(array());  
@@ -146,12 +146,12 @@ class ControllerUtilisateur extends Controller{
         if ($utilisateur != null){
             // crypter le id
             $id = $utilisateur->getId();
-            $message = "Bonjour, \n\n Vous avez demandé à réinitialiser votre mot de passe. Voici votre mot de passe : ".URL_SITE."index.php?controller=utilisateur&methode=afficherchangerMDP&id=".$id." \n\n Cordialement, \n\n L'équipe de la plateforme de vhs";
+            $message = "Bonjour, \n\n Vous avez demandé à réinitialiser votre mot de passe. Voici votre lien pour changer de mot de passe : ".URL_SITE."index.php?controller=utilisateur&methode=afficherchangerMDP&id=".$id." \n\n Cordialement, \n\n L'équipe de la plateforme de vhs";
             mail($mail, "Réinitialisation de votre mot de passe", $message);
             $template = $this->getTwig()->load('connection.html.twig');
             echo $template->render(array());
         }else{
-            //gener un popoup pour dire que le mail n'est pas valide
+            //générer une popup pour dire que le mail n'est pas valide
 
             $template = $this->getTwig()->load('inscription.html.twig');
             echo $template->render(array());  
