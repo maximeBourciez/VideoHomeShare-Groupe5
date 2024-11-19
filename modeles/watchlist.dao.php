@@ -55,7 +55,7 @@ class WatchlistDAO{
     //But : Trouve toutes les watchlists
 
     public function findAllAssoc(){
-        $sql="SELECT * FROM ".DB_PREFIX."categorie";
+        $sql="SELECT * FROM ".DB_PREFIX."watchlist";
         $pdoStatement = $this->pdo->prepare($sql);
         $pdoStatement->execute();
         $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
