@@ -48,7 +48,7 @@ class ControllerFil extends Controller {
      * @return void
      */
     public function afficherFilParId(){
-        $id = $_GET['id'];
+        $id = $_GET['id_fil'];
 
         
 

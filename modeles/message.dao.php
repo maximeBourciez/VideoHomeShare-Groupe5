@@ -70,56 +70,45 @@ class MessageDAO
         $message = new Message();
         $message->setIdMessage($row['idMessage']);
         $message->setValeur($row['valeur']);
-        $message->setNbLikes($row['like_count']);
-        $message->setNbDislikes($row['dislike_count']);
         $message->setDateC(new DateTime($row['dateC']));
         $message->setIdMessageParent($row['idMessageParent']);
 
-        // Hydratation de l'utilisateur du message parent
+        // Hydratation de l'utilisateur associé
         $user = new Utilisateur();
         $user->setId($row['auteur_id']);
         $user->setPseudo($row['auteur_pseudo']);
         $user->setUrlImageProfil($row['auteur_urlImageProfil']);
         $message->setUtilisateur($user);
 
-        // Ajouter une réponse s'il y en a
-        if ($row['reponse_valeur']) {
-            $reponse = new Message();
-            $reponse->setValeur($row['reponse_valeur']);
-            $reponse->setNbLikes($row['reponse_like_count']);
-            $reponse->setNbDislikes($row['reponse_dislike_count']);
-            $reponse->setDateC(new DateTime($row['reponse_dateC']));
-
-            // Hydratation de l'utilisateur de la réponse
-            $reponseUser = new Utilisateur();
-            $reponseUser->setId($row['reponse_utilisateur_id']); 
-            $reponseUser->setPseudo($row['reponse_pseudo'] ?? 'Utilisateur inconnu');
-            $reponseUser->setUrlImageProfil($row['reponse_urlImageProfil']);
-            $reponse->setUtilisateur($reponseUser);
-
-            // Assigner la réponse au message
-            $message->setReponse($reponse);
-        }
-
         return $message;
     }
-
     /**
-     * @brief Méthode d'hydratation de tous les messages
-     * 
-     * @param array $rows Tableau de lignes de la base de données
-     * @return array<Message> Tableau d'objets Message hydratés
+     * @brief Méthode d'hydratation de tous les messages avec gestion des réponses
+     *
+     * @param array $rows Tableau de lignes récupérées de la base de données
+     * @return array<Message> Tableau d'objets Message hydratés, avec réponses associées
      */
-    function hydrateAll(array $rows): array
+    public function hydrateAll(array $rows): array
     {
-        $hydratedMessages = [];
+        $messages = []; // Tableau pour stocker les messages (parents et réponses)
+
         foreach ($rows as $row) {
-            // Hydratation d'un message parent
             $message = $this->hydrate($row);
-            $hydratedMessages[] = $message;
+
+            // Si le message a un parent, on l'ajoute à la liste des réponses du parent
+            if ($message->getIdMessageParent()) {
+                $idParent = $message->getIdMessageParent();
+                if (isset($messages[$idParent])) {
+                    $messages[$idParent]->addReponse($message);
+                }
+            } else {
+                // Sinon, c'est un message parent
+                $messages[$message->getIdMessage()] = $message;
+            }
         }
 
-        return $hydratedMessages;
+        // Retourner uniquement les messages parents (avec réponses associées)
+        return array_values($messages);
     }
 
 
@@ -187,54 +176,72 @@ class MessageDAO
      * 
      * @return array<Message> Tableau d'objets Message
      */
+
     public function listerMessagesParFil(int $idFil): array
     {
-        $sql = "
-WITH MessageThread AS (
-    SELECT
-        m.*,
-        COALESCE(m.idMessageParent, m.idMessage) as thread_id,
-        u.idUtilisateur as auteur_id,
-        u.pseudo as auteur_pseudo,
-        u.urlImageProfil as auteur_urlImageProfil
-    FROM " . DB_PREFIX . "message m
-    INNER JOIN " . DB_PREFIX . "utilisateur u ON m.idUtilisateur = u.idUtilisateur
-    WHERE m.idFil = :idFil
-),
-LikesDislikes AS (
-    SELECT
-        idMessage,
-        SUM(CASE WHEN `reaction` = true THEN 1 ELSE 0 END) AS like_count,
-        SUM(CASE WHEN `reaction` = false THEN 1 ELSE 0 END) AS dislike_count
-    FROM " . DB_PREFIX . "reagir
-    GROUP BY idMessage
-)
-SELECT
-    m1.*,
-    m1.auteur_id,
-    m1.auteur_pseudo,
-    m1.auteur_urlImageProfil,
-    m2.valeur AS reponse_valeur,
-    m2.dateC AS reponse_dateC,
-    m2.auteur_id AS reponse_utilisateur_id,
-    u2.pseudo AS reponse_pseudo,
-    u2.urlImageProfil AS reponse_urlImageProfil,
-    ld1.like_count AS like_count,
-    ld1.dislike_count AS dislike_count,
-    ld2.like_count AS reponse_like_count,
-    ld2.dislike_count AS reponse_dislike_count
-FROM MessageThread m1
-LEFT JOIN MessageThread m2 ON m1.idMessage = m2.idMessageParent
-LEFT JOIN " . DB_PREFIX . "utilisateur u2 ON m2.auteur_id = u2.idUtilisateur
-LEFT JOIN LikesDislikes ld1 ON m1.idMessage = ld1.idMessage
-LEFT JOIN LikesDislikes ld2 ON m2.idMessage = ld2.idMessage
-ORDER BY m1.thread_id ASC, m1.dateC ASC;
-";
+        $sql = "SELECT
+                m1.*,
+                COALESCE(m1.idMessageParent, m1.idMessage) AS thread_id,
+                u1.idUtilisateur AS auteur_id,
+                u1.pseudo AS auteur_pseudo,
+                u1.urlImageProfil AS auteur_urlImageProfil,
+                m2.idMessage AS reponse_id,
+                m2.valeur AS reponse_valeur,
+                m2.dateC AS reponse_dateC,
+                m2.idUtilisateur AS reponse_utilisateur_id,
+                u2.pseudo AS reponse_pseudo,
+                u2.urlImageProfil AS reponse_urlImageProfil,
+                ld1.like_count AS like_count,
+                ld1.dislike_count AS dislike_count,
+                ld2.like_count AS reponse_like_count,
+                ld2.dislike_count AS reponse_dislike_count
+            FROM (
+                SELECT
+                    m.*,
+                    COALESCE(m.idMessageParent, m.idMessage) AS thread_id
+                FROM " . DB_PREFIX . "message m
+                WHERE m.idFil = :idFil
+            ) AS m1
+            INNER JOIN " . DB_PREFIX . "utilisateur u1 ON m1.idUtilisateur = u1.idUtilisateur
+            LEFT JOIN " . DB_PREFIX . "message m2 ON m1.idMessage = m2.idMessageParent
+            LEFT JOIN " . DB_PREFIX . "utilisateur u2 ON m2.idUtilisateur = u2.idUtilisateur
+            LEFT JOIN (
+                SELECT
+                    idMessage,
+                    SUM(CASE WHEN `reaction` = true THEN 1 ELSE 0 END) AS like_count,
+                    SUM(CASE WHEN `reaction` = false THEN 1 ELSE 0 END) AS dislike_count
+                FROM " . DB_PREFIX . "reagir
+                GROUP BY idMessage
+            ) AS ld1 ON m1.idMessage = ld1.idMessage
+            LEFT JOIN (
+                SELECT
+                    idMessage,
+                    SUM(CASE WHEN `reaction` = true THEN 1 ELSE 0 END) AS like_count,
+                    SUM(CASE WHEN `reaction` = false THEN 1 ELSE 0 END) AS dislike_count
+                FROM " . DB_PREFIX . "reagir
+                GROUP BY idMessage
+            ) AS ld2 ON m2.idMessage = ld2.idMessage
+            ORDER BY m1.thread_id ASC, m1.dateC ASC;";
+
+
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':idFil', $idFil, PDO::PARAM_INT);
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $messages = $stmt->fetchAll();
+
+        // Hydrate les messages
         return $this->hydrateAll($messages);
+    }
+
+    // Nouvelle méthode pour récupérer le pseudo de l'utilisateur de la réponse
+    private function getUserPseudoById(string $userId): string
+    {
+        $sql = "SELECT pseudo FROM " . DB_PREFIX . "utilisateur WHERE idUtilisateur = :idUtilisateur";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':idUtilisateur', $userId, PDO::PARAM_STR);
+        $stmt->execute();
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $user ? $user['pseudo'] : 'Utilisateur inconnu';
     }
 }
