@@ -11403,4 +11403,8 @@ textarea.form-control-lg {
   box-shadow: none !important; /* Enlever l'ombre au survol */
 }
 
+.username-link {
+  color: white !important;
+}
+
 /*# sourceMappingURL=style.css.map */
