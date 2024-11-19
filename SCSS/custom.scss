@@ -1,20 +1,20 @@
 // 1. Variables
-$primary: #F2AC0F;
-$secondary: #E6640B;
-$tercary: #DE0918;
-$light: #FBFADE;
-$dark: #231B33;
+$primary: #f2ac0f;
+$secondary: #e6640b;
+$tercary: #de0918;
+$light: #fbfade;
+$dark: #231b33;
 
 // 2. Configuration Bootstrap
 @import "../node_modules/bootstrap/scss/functions";
 
 // 3. Theme Colors Map
 $theme-colors: (
-    "primary": $primary,
-    "secondary": $secondary,
-    "tercary": $tercary,
-    "light": $light,
-    "dark": $dark
+  "primary": $primary,
+  "secondary": $secondary,
+  "tercary": $tercary,
+  "light": $light,
+  "dark": $dark,
 );
 
 // 4. Bootstrap Required
@@ -27,165 +27,164 @@ $theme-colors: (
 
 // 5. Mixins personnalisés
 @mixin button-base {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    transition: all 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  transition: all 0.3s ease;
 
-    &:hover {
-        transform: scale(1.05);
-    }
+  &:hover {
+    transform: scale(1.05);
+  }
 }
 
 // 6. Classes personnalisées
 // 6.1 Couleurs de texte
 .myprimary {
-    color: $primary;
+  color: $primary;
 }
 
 // 6.2 Couleurs de fond
 .bg {
-    &-myprimary {
-        background-color: $primary;
-    }
+  &-myprimary {
+    background-color: $primary;
+  }
 
-    &-mysecondary {
-        background-color: $secondary;
-    }
+  &-mysecondary {
+    background-color: $secondary;
+  }
 
-    &-mytercary {
-        background-color: $tercary;
-    }
+  &-mytercary {
+    background-color: $tercary;
+  }
 
-    &-mydark {
-        background-color: $dark;
-    }
+  &-mydark {
+    background-color: $dark;
+  }
 
-    &-mylight {
-        background-color: $light;
-    }
+  &-mylight {
+    background-color: $light;
+  }
 }
 
 // 6.3 Navbar
 .navbar-mydark {
-    background-color: $dark;
-    padding: 1rem;
+  background-color: $dark;
+  padding: 1rem;
 
-    @include media-breakpoint-down(lg) {
-        padding: 0.5rem;
-    }
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+    height: auto;
+    padding: 0;
+    margin: 0;
+  }
 
-    .navbar-brand {
-        display: flex;
-        align-items: center;
-        height: auto;
-        padding: 0;
-        margin: 0;
-    }
+  .navbar-toggler {
+    margin-right: 1rem;
+  }
+}
 
-    .navbar-toggler {
-        margin-right: 1rem;
-    }
+.navbar-brand img {
+  @media (max-width: 400px) {
+    height: 20px; // Réduire légèrement la taille du drapeau
+  }
 }
 
 .navbar-toggler.bi-list {
-    color: $primary;
+  color: $primary;
 }
 
 /* Cache le logo menu pour grand écran */
-@media (min-width: 992px) {
-    .navbar-toggler {
-        display: none;
-    }
+@media (min-width: 1002px) {
+  .navbar-toggler {
+    display: none;
+  }
 }
 
 /* Fait apparaitre le logo menu pour petit écran */
-@media (max-width: 991px) {
-    .navbar-toggler {
-        display: block;
-    }
+@media (max-width: 1001px) {
+  .navbar-toggler {
+    display: block;
+  }
 
-    /* Cache le reste lorsque l'écran et petit */
-    #navbarContent {
-        display: none;
-    }
+  /* Cache le reste lorsque l'écran et petit */
+  #navbarContent {
+    display: none;
+  }
 }
 
 // 6.4 Logo
 .website-logo {
-    transition: all 0.3s ease;
-    max-height: 60px;
-    width: auto;
-    object-fit: contain;
+  transition: all 0.3s ease;
+  max-height: 60px;
+  width: auto;
+  object-fit: contain;
 
-    @include media-breakpoint-up(xl) {
-        max-height: 60px;
-    }
-
-    @include media-breakpoint-between(lg, xl) {
-        max-height: 50px;
-    }
-
-    @include media-breakpoint-down(lg) {
-        display: none; // Cache le logo sur les petits écrans
-    }
+  @include media-breakpoint-down(lg) {
+    display: none; // Cache le logo sur les petits écrans
+  }
 }
 
 // 6.5 Boutons
-.btn.bg-myprimary{
-    @include button-base;
-    background-color: $primary !important;
-    color: black !important;
-    border-color: $primary !important;
+.btn.bg-myprimary {
+  @include button-base;
+  background-color: $primary !important;
+  color: black !important;
+  border-color: $primary !important;
 
-    &:hover {
-        background-color: $primary !important;
-        border-color: $primary !important;
-        color: black !important;
-        box-shadow: none !important;
-    }
+  &:hover {
+    background-color: $primary !important;
+    border-color: $primary !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
 }
-.btn-myprimary {
-    @include button-base;
-    background-color: $primary !important;
-    color: black !important;
-    border-color: $primary !important;
-    width: 125px;
-    height: 38px;
-    padding: 8px 0;
-    @include media-breakpoint-down(md) {
-        width: 100px;
-        padding: 6px 0;
-        font-size: 0.9rem;
-    }
 
-    &:hover {
-        background-color: $primary !important;
-        border-color: $primary !important;
-        color: black !important;
-        box-shadow: none !important;
-    }
+.btn-myprimary {
+  @include button-base;
+  background-color: $primary !important;
+  color: black !important;
+  border-color: $primary !important;
+  width: 125px;
+  height: 38px;
+  padding: 8px 0;
+
+  @include media-breakpoint-down(md) {
+    width: 75px;
+    padding: 8px 0;
+    font-size: 0.6rem;
+  }
+
+  &:hover {
+    background-color: $primary !important;
+    border-color: $primary !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
 }
 
 // 7. Layout et composants
-.search-form {
-    height: 38px;
-    display: flex;
-    align-items: center;
-    width: 200px;
-    transition: width 0.3s ease;
+.search-form-container {
+  max-width: 700px;
+  min-width: 100px;
+  margin-left: auto;
+  margin-right: auto;
 
-    @include media-breakpoint-up(md) {
-        font-size: 0.9rem;
-        width: 200px;
-    }
+  @media (max-width: 1300px) {
+    margin-left: 1rem !important;
+    margin-right: 1rem !important;
+  }
 
-    @include media-breakpoint-up(lg) {
-        width: 700px;
-    }
+  @include media-breakpoint-down(lg) {
+    max-width: 400px;
+  }
 
-    @include media-breakpoint-up(xl) {
-        width: 700px;
-    }
+  @include media-breakpoint-down(md) {
+    max-width: 200px;
+  }
+
+  @include media-breakpoint-down(sm) {
+    max-width: 100px;
+  }
 }

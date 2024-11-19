@@ -11757,11 +11757,6 @@ textarea.form-control-lg {
   background-color: #231B33;
   padding: 1rem;
 }
-@media (max-width: 991.98px) {
-  .navbar-mydark {
-    padding: 0.5rem;
-  }
-}
 .navbar-mydark .navbar-brand {
   display: flex;
   align-items: center;
@@ -11773,18 +11768,24 @@ textarea.form-control-lg {
   margin-right: 1rem;
 }
 
+@media (max-width: 400px) {
+  .navbar-brand img {
+    height: 20px;
+  }
+}
+
 .navbar-toggler.bi-list {
   color: #F2AC0F;
 }
 
 /* Cache le logo menu pour grand écran */
-@media (min-width: 992px) {
+@media (min-width: 1002px) {
   .navbar-toggler {
     display: none;
   }
 }
 /* Fait apparaitre le logo menu pour petit écran */
-@media (max-width: 991px) {
+@media (max-width: 1001px) {
   .navbar-toggler {
     display: block;
   }
@@ -11798,16 +11799,6 @@ textarea.form-control-lg {
   max-height: 60px;
   width: auto;
   object-fit: contain;
-}
-@media (min-width: 1200px) {
-  .website-logo {
-    max-height: 60px;
-  }
-}
-@media (min-width: 992px) and (max-width: 1199.98px) {
-  .website-logo {
-    max-height: 50px;
-  }
 }
 @media (max-width: 991.98px) {
   .website-logo {
@@ -11853,9 +11844,9 @@ textarea.form-control-lg {
 }
 @media (max-width: 767.98px) {
   .btn-myprimary {
-    width: 100px;
-    padding: 6px 0;
-    font-size: 0.9rem;
+    width: 75px;
+    padding: 8px 0;
+    font-size: 0.6rem;
   }
 }
 .btn-myprimary:hover {
@@ -11865,27 +11856,32 @@ textarea.form-control-lg {
   box-shadow: none !important;
 }
 
-.search-form {
-  height: 38px;
-  display: flex;
-  align-items: center;
-  width: 200px;
-  transition: width 0.3s ease;
+.search-form-container {
+  max-width: 700px;
+  min-width: 100px;
+  margin-left: auto;
+  margin-right: auto;
 }
-@media (min-width: 768px) {
-  .search-form {
-    font-size: 0.9rem;
-    width: 200px;
+@media (max-width: 1300px) {
+  .search-form-container {
+    margin-left: 1rem !important;
+    margin-right: 1rem !important;
   }
 }
-@media (min-width: 992px) {
-  .search-form {
-    width: 700px;
+@media (max-width: 991.98px) {
+  .search-form-container {
+    max-width: 400px;
   }
 }
-@media (min-width: 1200px) {
-  .search-form {
-    width: 700px;
+@media (max-width: 767.98px) {
+  .search-form-container {
+    max-width: 200px;
+  }
+}
+@media (max-width: 575.98px) {
+  .search-form-container {
+    max-width: 100px;
+    font-size: 0.3rem;
   }
 }
 
