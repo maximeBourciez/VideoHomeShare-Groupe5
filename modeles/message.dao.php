@@ -67,77 +67,47 @@ class MessageDAO
      */
     public function hydrate(array $row): Message
     {
-        // Hydratation du message
         $message = new Message();
         $message->setIdMessage($row['idMessage']);
         $message->setValeur($row['valeur']);
         $message->setDateC(new DateTime($row['dateC']));
         $message->setIdMessageParent($row['idMessageParent']);
 
-        // Hydratation de l'utilisateur
+        // Hydratation de l'utilisateur associé
         $user = new Utilisateur();
         $user->setId($row['auteur_id']);
         $user->setPseudo($row['auteur_pseudo']);
         $user->setUrlImageProfil($row['auteur_urlImageProfil']);
         $message->setUtilisateur($user);
 
-        // Ajouter une réponse s'il y en a
-        if ($row['reponse_valeur']) {
-            // Hydratation de la réponse
-            $reponse = new Message();
-            $reponse->setValeur($row['reponse_valeur']);
-            $reponse->setDateC(new DateTime($row['reponse_dateC']));
-
-            // Hydratation de l'utilisateur de la réponse
-            $reponseUser = new Utilisateur();
-            $reponseUser->setId($row['reponse_utilisateur_id']);
-            $reponseUser->setPseudo($row['reponse_pseudo']);
-            $reponseUser->setUrlImageProfil($row['reponse_urlImageProfil']);
-            $reponse->setUtilisateur($reponseUser);
-
-            // Assigner la réponse au message
-            $message->addReponse($reponse);
-        }
         return $message;
     }
-
     /**
      * @brief Méthode d'hydratation de tous les messages avec gestion des réponses
      *
      * @param array $rows Tableau de lignes récupérées de la base de données
      * @return array<Message> Tableau d'objets Message hydratés, avec réponses associées
      */
-    function hydrateAll(array $rows): array
+    public function hydrateAll(array $rows): array
     {
-        $messages = []; // Tableau final pour stocker les messages parent avec leurs réponses
+        $messages = []; // Tableau pour stocker les messages (parents et réponses)
 
         foreach ($rows as $row) {
-            $idMessage = $row['idMessage'];
+            $message = $this->hydrate($row);
 
-            // Si le message parent n'est pas encore hydraté, on l'hydrate
-            if (!isset($messages[$idMessage])) {
-                $messages[$idMessage] = $this->hydrate($row); // Appel à hydrate pour créer un message parent
-            }
-
-            // Si une réponse est présente, on l'ajoute au message parent
-            if (!empty($row['reponse_valeur'])) {
-                $reponse = new Message();
-                $reponse->setValeur($row['reponse_valeur']);
-                $reponse->setDateC(new DateTime($row['reponse_dateC']));
-
-                // Hydratation de l'utilisateur de la réponse
-                $reponseUser = new Utilisateur();
-                $reponseUser->setId($row['reponse_utilisateur_id']);
-                $reponseUser->setPseudo($row['reponse_pseudo']);
-                $reponseUser->setUrlImageProfil($row['reponse_urlImageProfil']);
-                $reponse->setUtilisateur($reponseUser);
-
-                // Ajouter la réponse au tableau des réponses du message parent
-                $messages[$idMessage]->addReponse($reponse);
+            // Si le message a un parent, on l'ajoute à la liste des réponses du parent
+            if ($message->getIdMessageParent()) {
+                $idParent = $message->getIdMessageParent();
+                if (isset($messages[$idParent])) {
+                    $messages[$idParent]->addReponse($message);
+                }
+            } else {
+                // Sinon, c'est un message parent
+                $messages[$message->getIdMessage()] = $message;
             }
         }
 
-        // Retourner un tableau d'objets Message (parents uniquement, avec leurs réponses)
+        // Retourner uniquement les messages parents (avec réponses associées)
         return array_values($messages);
     }
 
@@ -215,6 +185,7 @@ class MessageDAO
                 u1.idUtilisateur AS auteur_id,
                 u1.pseudo AS auteur_pseudo,
                 u1.urlImageProfil AS auteur_urlImageProfil,
+                m2.idMessage AS reponse_id,
                 m2.valeur AS reponse_valeur,
                 m2.dateC AS reponse_dateC,
                 m2.idUtilisateur AS reponse_utilisateur_id,

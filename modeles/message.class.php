@@ -218,4 +218,17 @@ class Message {
     public function addReponse(Message $reponse): void {
         $this->reponses[] = $reponse;
     }
+
+    /** 
+     * @brief Vérifie si la réponse existe dans ce message.
+     * @param Message $reponse La réponse à vérifier.
+     */
+    public function hasReponse(Message $reponse): bool {
+        foreach ($this->reponses as $reponse) {
+            if ($reponse->getIdMessage() === $reponse->getIdMessage()) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
