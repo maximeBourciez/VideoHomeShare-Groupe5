@@ -1,0 +1,20 @@
+{% extends 'base_template.html.twig' %}
+
+
+{% block content %}
+    <main class="content row" >
+    <form action="index.php?controller=utilisateur&methode=envoieMailMDPOublie" method="POST" class="text-center col-12 w-25 mx-auto" >
+        <img src="{{ constant('WEBSITE_LOGO') }}" height="95" width="155" alt="VHS Logo" class="mx-auto my-2">
+        <div class="bg-mydark text-white rounded p-4 mb-5" >
+            <h3 class="mb-3"> Renseigner votre mail </h3>
+        
+                <p class="text-start mb-0">Quelle est votre adresse mail </p>
+                <input type="email" name="email" class="form-control mb-2 "> 
+                
+                <input type="submit" class="btn btn-myprimary my-2  w-50 mx-auto" value="valider"> 
+            
+            <a href="index.php?controller=utilisateur&methode=connexion" class="text-white"> se connecter </a>
+        </div>
+    </form>
+</main>    
+{% endblock %}
