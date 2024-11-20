@@ -6,7 +6,7 @@ require 'vendor/autoload.php';
 
 // Chargement du fichier YAML
 try{
-    $config = Yaml::parseFile('config/constantes.yaml');
+    $config = Yaml::parseFile('config/template_constantes.yaml');
 }
 catch(Exception $e)
 {
@@ -29,4 +29,5 @@ define('WEBSITE_TITLE_LONG', $config['website']['title_long']);
 define('WEBSITE_LANGUAGE', $config['website']['language']);
 define('WEBSITE_LOGO', $config['website']['logo']);
 define('WEBSITE_LOGO_FLAG', $config['website']['logo_flag']);
+define('WEBSITE_LINK', $config['website']['website_link']);
 ?>
