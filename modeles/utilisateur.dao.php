@@ -10,22 +10,25 @@ class UtilisateurDAO {
     function create(Utilisateur $utilisateur): bool{
         // Préparation de la requête
         $pdo = $this->pdo->prepare("INSERT INTO ".DB_PREFIX."utilisateur 
-        (idUtilisateur, pseudo, mail, mdp, role, urlImageProfil, urlImageBanniere) 
-        VALUES (:idUtilisateur, :pseudo, :mail, :mdp, :role, :urlImageProfil, :urlImageBaniere)");
+        (idUtilisateur, pseudo, vraiNom, mail, mdp, role, urlImageProfil, urlImageBanniere) 
+        VALUES (:idUtilisateur, :pseudo, :nom , :mail, :mdp, :role, :urlImageProfil, :urlImageBaniere)");
 
 
         // Récupération des valeurs
         $id = $utilisateur->getId();
         $pseudo = $utilisateur->getPseudo();
+        $nom = $utilisateur->getNom();
         $mail = $utilisateur->getMail();  
         $mdp = $utilisateur->getMdp();
         $role = $utilisateur->getRole();
         $urlImageProfil = $utilisateur->getUrlImageProfil();
         $urlImageBaniere = $utilisateur->getUrlImageBaniere();
+
         
         // passage des paramètres
         $pdo->bindValue(":idUtilisateur", $id);
         $pdo->bindValue(":pseudo", $pseudo);
+        $pdo->bindValue(":nom", $nom);
         $pdo->bindValue(":mail", $mail);
         $pdo->bindValue(":mdp", $mdp);
         $pdo->bindValue(":role", $role);
@@ -37,15 +40,25 @@ class UtilisateurDAO {
     }
 
     function update(Utilisateur $utilisateur): bool{
-        $req = $this->pdo->prepare("UPDATE ".DB_PREFIX."utilisateur SET pseudo = :pseudo, mail = :mail, mdp = :mdp, role = :role, urlImageProfil = :urlImageProfil, urlImageBaniere = :urlImageBaniere WHERE id = :id");
-        $req->bindParam(":id", $utilisateur->getId());
-        $req->bindParam(":pseudo", $utilisateur->getPseudo());
-        $req->bindParam(":mail", $utilisateur->getMail());
-        $req->bindParam(":mdp", $utilisateur->getMdp());
-        $req->bindParam(":role", $utilisateur->getRole());
-        $req->bindParam(":urlImageProfil", $utilisateur->getUrlImageProfil());
-        $req->bindParam(":urlImageBaniere", $utilisateur->getUrlImageBanière());
-        return $req->execute();
+        $pdo = $this->pdo->prepare("UPDATE ".DB_PREFIX."utilisateur SET  pseudo = :pseudo, vraiNom = :nom, mail = :mail, mdp = :mdp, role = :role, urlImageProfil = :urlImageProfil, urlImageBanniere = :urlImageBaniere WHERE idUtilisateur = :id");
+        
+        $id = $utilisateur->getId();
+        $pseudo = $utilisateur->getPseudo();
+        $nom = $utilisateur->getNom();
+        $mail = $utilisateur->getMail();
+        $mdp = $utilisateur->getMdp();
+        $role = $utilisateur->getRole();
+        $urlImageProfil = $utilisateur->getUrlImageProfil();
+        $urlImageBaniere = $utilisateur->getUrlImageBaniere();
+        $pdo->bindParam(":id", $id);
+        $pdo->bindParam(":pseudo", $pseudo);
+        $pdo->bindParam(":nom", $nom);
+        $pdo->bindParam(":mail", $mail);
+        $pdo->bindParam(":mdp", $mdp);
+        $pdo->bindParam(":role", $role);
+        $pdo->bindParam(":urlImageProfil", $urlImageProfil);
+        $pdo->bindParam(":urlImageBaniere", $urlImageBaniere);
+        return $pdo->execute();
     }
 
     function delete(int $id): bool{
@@ -58,6 +71,7 @@ class UtilisateurDAO {
         // Récupération des valeurs
         $id = $row['idUtilisateur'];
         $pseudo = $row['pseudo'];
+        $nom = $row['vraiNom'];
         $mail = $row['mail'];
         $mdp = $row['mdp'];
         $role = $row['role'];
@@ -65,7 +79,7 @@ class UtilisateurDAO {
         $urlImageBaniere = $row['urlImageBanniere'];
 
         // Retourner l'utilisateur
-        return new Utilisateur($id, $pseudo, $mail, $mdp, $role, $urlImageProfil, $urlImageBaniere);
+        return new Utilisateur($id, $pseudo,$nom, $mail, $mdp, $role, $urlImageProfil, $urlImageBaniere);
     }
 
     function hydrateAll(array $rows): array{
@@ -80,7 +94,7 @@ class UtilisateurDAO {
     function find(string $id): ?Utilisateur{
         $sql = "SELECT * FROM ".DB_PREFIX."utilisateur WHERE idUtilisateur = :id";
         $pdo = $this->pdo->prepare($sql);
-        $pdo->bindValue(':id', $id, PDO::PARAM_INT);
+        $pdo->bindValue(':id', $id, PDO::PARAM_STR);
         $pdo->execute();
         $pdo->setFetchMode(PDO::FETCH_ASSOC);
         $row = $pdo->fetch();

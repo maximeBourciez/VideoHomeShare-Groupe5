@@ -15,7 +15,6 @@ catch(Exception $e)
 // Utilisation des constantes
 
 //Connexion à la base de données
-
 define('DB_HOST', $config['database']['host']);
 define('DB_NAME', $config['database']['name']);
 define('DB_USER', $config['database']['user']);
