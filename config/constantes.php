@@ -6,7 +6,7 @@ require 'vendor/autoload.php';
 
 // Chargement du fichier YAML
 try{
-    $config = Yaml::parseFile('config/template_constantes.yaml');
+    $config = Yaml::parseFile('config/constantes.yaml');
 }
 catch(Exception $e)
 {
