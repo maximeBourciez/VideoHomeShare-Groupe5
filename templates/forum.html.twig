@@ -1,5 +1,10 @@
 {% extends 'base_template.html.twig' %}
 
+{% block title %}
+	VHS | Forum
+{% endblock %}
+
+
 {% block content %}
 
 	<main class="">
@@ -8,16 +13,23 @@
 				<div class="card my-4 shadow-sm border-0 rounded-3 ms-5">
 					<div class="card-body p-4 bg-mydark text-white rounded">
 						<div class="d-flex align-items-center">
-							<h3>{{ thread.getTitre() }}</h3>
+							<h3>
+								<a href="index.php?controller=fil&methode=afficherFilParId&id_fil={{ thread.getId() }}" style="color:white" class="text-decoration-none">
+									{{ thread.getTitre() }}
+								</a>
+							</h3>
 							<span class="mx-2" style="font-size: 1.2em;">•</span>
-							<p class="mt-3">Créé le {{ thread.getDateCreation() | date('d M Y') }}</p>
+							<p class="mt-3">Créé le
+								{{ thread.getDateCreation() | date('d M Y') }}</p>
 						</div>
 
 						<p class="mt-3">{{ thread.getDescription() }}</p>
 						<div class="d-flex flex-row justify-content-between">
-							<p class="mt-3">Créé par <a href="index.php?controller=utilisateur&methode=show&id_utilisateur={{thread.getUtilisateur().getId() }}" style="color:white">
-						{{ thread.getUtilisateur() ? thread.getUtilisateur().getPseudo() : 'Utilisateur inconnu' }}
-					</a></p>
+							<p class="mt-3">Créé par
+								<a href="index.php?controller=utilisateur&methode=show&id_utilisateur={{thread.getUtilisateur().getId() }}" style="color:white">
+									{{ thread.getUtilisateur() ? thread.getUtilisateur().getPseudo() : 'Utilisateur inconnu' }}
+								</a>
+							</p>
 							<a href="index.php?controller=fil&methode=afficherFilParId&id_fil={{ thread.getId() }}" class="btn btn-myprimary">Voir le fil</a>
 						</div>
 					</div>
@@ -29,4 +41,3 @@
 
 
 {% endblock %}
-
