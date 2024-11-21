@@ -29,7 +29,7 @@ SQL
 <br>
 
 ## Sécurité
-OpenSSL
+OpenSSL <br>
 OAUTH2
 <br>
 <br>
@@ -50,9 +50,6 @@ HTML, CSS, SCSS, PHP, JSON, YAML, TWIG, BOOTSTRAP
 <br>
 
 ## Instructions pour l'installation et l'utilisation
-<br>
-<br>
-
 ### Installer
 <br>
 <br>
