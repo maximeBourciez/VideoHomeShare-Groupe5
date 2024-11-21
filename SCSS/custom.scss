@@ -124,6 +124,29 @@ $theme-colors: (
   @include media-breakpoint-down(lg) {
     display: none; // Cache le logo sur les petits écrans
   }
+
+  // Animation au hover
+  &:hover {
+    animation: shakeY 0.5s ease-in-out;
+  }
+}
+
+@keyframes shakeY {
+  0% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-5px);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+  75% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 // 6.5 Boutons
