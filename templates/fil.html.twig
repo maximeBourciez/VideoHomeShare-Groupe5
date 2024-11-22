@@ -1,12 +1,12 @@
-{% macro afficherReponses(reponses) %}
+{% macro afficherReponses(reponses, idAuteur, pseudoAuteur) %}
 	{% for reponse in reponses %}
 		<div class="card my-4 shadow-sm border-0 rounded-3 ms-5">
 			<div class="card-body p-4 bg-mydark text-white rounded">
 				<div class="d-flex align-items-center">
-					<img src="{{ reponse.getUtilisateur().getUrlImageProfil() }}" alt="Avatar" class="rounded-circle me-3" width="50" height="50">
+					<img src="{{ reponse.getUtilisateur() ? reponse.getUtilisateur().getUrlImageProfil() : 'default_avatar.jpg' }}" alt="Avatar" class="rounded-circle me-3" width="50" height="50">
 					<div class="d-flex align-items-center">
 						<h5 class="mb-0 mx-2 username-link">
-							<a href="index.php?controller=utilisateur&methode=show&id_utilisateur={{ reponse.getUtilisateur().getId() }}" style="color:white;" class="text-decoration-none">
+							<a href="index.php?controller=utilisateur&methode=show&id_utilisateur={{ reponse.getUtilisateur() ? reponse.getUtilisateur().getId() : 0 }}" style="color:white;" class="text-decoration-none">
 								{{ reponse.getUtilisateur() ? reponse.getUtilisateur().getPseudo() : 'Utilisateur inconnu' }}
 							</a>
 						</h5>
@@ -14,7 +14,10 @@
 						<small>{{ reponse.datePublication | date('d M Y') }}</small>
 						<span class="mx-2" style="font-size: 1.2em;">•</span>
 						<small>
-							Répond à @{{ reponse.messageParent.getUtilisateur() ? reponse.messageParent.getUtilisateur().getPseudo() : 'Utilisateur inconnu' }}
+							Répond à 
+							<a href="index.php?controller=utilisateur&methode=show&id_utilisateur={{ idAuteur }}">	
+								@{{ pseudoAuteur ? pseudoAuteur : 'Utilisateur inconnu' }}
+							</a>
 						</small>
 					</div>
 				</div>
@@ -46,10 +49,11 @@
 			</div>
 		</div>
 		{% if reponse.reponses is not empty %}
-			{{ _self.afficherReponses(reponse.reponses) }}
+			{{ _self.afficherReponses(reponse.reponses, reponse.getUtilisateur() ? reponse.getUtilisateur().getId() : 0, reponse.getUtilisateur() ? reponse.getUtilisateur().getPseudo() : 'Utilisateur inconnu') }}
 		{% endif %}
 	{% endfor %}
 {% endmacro %}
+
 
 {% import _self as macros %}
 {% extends 'base_template.html.twig' %}
@@ -90,8 +94,9 @@
 			</div>
 
 			{% if message.reponses is not empty %}
-				{{ macros.afficherReponses(message.reponses) }}
-			{% endif %}
+	{{ macros.afficherReponses(message.reponses, message.getUtilisateur().getId(), message.getUtilisateur().getPseudo()) }}
+{% endif %}
+
 		{% endif %}
 	{% endfor %}
 </div>
