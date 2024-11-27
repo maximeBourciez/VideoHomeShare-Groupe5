@@ -238,6 +238,32 @@
                 counter.textContent = `${length} / 1000`;
             });
         });
+
+
+		// Sélectionne tous les boutons "Répondre"
+		const repondreButtons = document.querySelectorAll(".btn[data-bs-target='#repondreModal']");
+		
+		// Modale cible
+		const repondreModal = document.getElementById("repondreModal");
+		const modalTextarea = repondreModal.querySelector("textarea");
+		const messageOriginal = repondreModal.querySelector(".message-original p");
+		const auteurOriginal = repondreModal.querySelector(".message-original strong");
+		const compteur = repondreModal.querySelector(".modal-body span");
+
+		repondreButtons.forEach(button => {
+			button.addEventListener("click", function () {
+				// Récupérer les données associées au bouton "Répondre"
+				const parentMessage = this.closest(".card-body");
+				const messageText = parentMessage.querySelector("p").textContent;
+				const pseudoAuteur = parentMessage.querySelector(".username-link").textContent;
+
+				// Mettre à jour le contenu de la modale
+				messageOriginal.textContent = messageText.trim();
+				auteurOriginal.textContent = pseudoAuteur.trim();
+				modalTextarea.value = ""; // Vide la zone de texte
+				compteur.textContent = "0 / 1000"; // Réinitialise le compteur
+			});
+		});
     });
 </script>
 
