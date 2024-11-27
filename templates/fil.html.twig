@@ -33,7 +33,7 @@
 								<i class="bi bi-hand-thumbs-down"></i>
 								{{ reponse.nbDislikes }}
 							</button>
-							<button class="btn btn-sm" style="background-color: #F2F2F2; color: #000;">
+							<button class="btn btn-sm" style="background-color: #F2F2F2; color: #000;" onclick="ouvrirPopup()">
 								<i class="bi bi-reply"></i>
 								Répondre
 							</button>
@@ -87,8 +87,29 @@
 						</div>
 					</div>
 					<p class="mt-3">{{ message.valeur }}</p>
-					<div
-						class="d-flex justify-content-between mt-4"><!-- Boutons d'interaction -->
+					<div class="d-flex justify-content-between mt-4">
+						<div class="d-flex w-100 mt-4">
+							<div class="me-auto">
+								<button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;">
+									<i class="bi bi-hand-thumbs-up"></i>
+									{{ reponse.nbLikes }}
+								</button>
+								<button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;">
+									<i class="bi bi-hand-thumbs-down"></i>
+									{{ reponse.nbDislikes }}
+								</button>
+								<button class="btn btn-sm" style="background-color: #F2F2F2; color: #000;" onclick="ouvrirPopup()">
+									<i class="bi bi-reply"></i>
+									Répondre
+								</button>
+							</div>
+							<div class="d-flex justify-content-end" style="flex-grow: 1;">
+								<button class="btn btn-sm" style="background-color: #dc3545; color: white;">
+									<i class="bi bi-flag"></i>
+									Signaler
+								</button>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -100,4 +121,40 @@
 		{% endif %}
 	{% endfor %}
 </div>
+
+<!-- Bouton flottant -->
+<a href="index.php?controller=message&methode=create" class="btn btn-primary btn-floating position-fixed shadow"
+   style="bottom: 70px; right: 40px; background-color: #F2AC0F; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 1000;">
+    <i class="bi bi-pencil" style="font-size: 1.5rem;"></i>
+</a>
+
+<!-- Pop-up Répondre -->
+<div id="popupRepondre" class="popup d-none">
+    <div class="popup-content p-4">
+        <button class="close-popup btn btn-sm text-white position-absolute top-0 end-0 m-3" onclick="fermerPopup()">
+            <i class="bi bi-x-lg"></i>
+        </button>
+        <div class="mb-3">
+            <h5>D4rK_545uk3_du_93</h5>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean commodo ligula eget dolor. 
+                Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes...
+            </p>
+        </div>
+        <textarea class="form-control mb-3" rows="4" maxlength="1000" placeholder="Répondre à D4rK_545uk3_du_93..."></textarea>
+        <button class="btn btn-primary w-100" style="border-radius: 10px;">
+            <i class="bi bi-send"></i> Envoyer
+        </button>
+    </div>
+</div>
+
+<script>
+	function ouvrirPopup() {
+		document.getElementById("popupRepondre").classList.remove("d-none");
+	}
+
+	function fermerPopup() {
+		document.getElementById("popupRepondre").classList.add("d-none");
+	}
+</script>
 {% endblock %}
