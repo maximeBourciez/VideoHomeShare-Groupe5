@@ -77,3 +77,33 @@ $theme-colors: (
 .username-link {
   color: white !important;
 }
+
+
+
+#popUpRepondre{
+  border: 2px solid $primary; /* Ajout de la bordure */
+  border-radius: 10px; /* Coins arrondis */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Légère ombre pour un effet visuel */
+}
+
+
+.message-original {
+  border-radius: 10px;
+}
+
+/* Bouton "Envoyer" avec icône */
+.btn-myprimary {
+  background-color: $primary !important;
+  color: black !important;
+  border-color: $primary !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* Espacement entre le texte et l'icône */
+  font-weight: bold;
+}
+
+.btn-myprimary i {
+  font-size: 1.2rem; /* Taille de l'icône */
+}
+
