@@ -11904,4 +11904,17 @@ textarea.form-control-lg {
   }
 }
 
+.logo {
+  transition: all 0.8s ease;
+}
+.logo-facebook:hover {
+  filter: invert(59%) sepia(29%) saturate(676%) hue-rotate(183deg) brightness(91%) contrast(87%);
+}
+.logo-instagram:hover {
+  filter: invert(32%) sepia(84%) saturate(3302%) hue-rotate(326deg) brightness(90%) contrast(97%);
+}
+.logo-twitter:hover {
+  filter: invert(64%) sepia(86%) saturate(2472%) hue-rotate(194deg) brightness(92%) contrast(90%);
+}
+
 /*# sourceMappingURL=style.css.map */
