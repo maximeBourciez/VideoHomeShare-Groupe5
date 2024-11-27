@@ -160,7 +160,7 @@
 									<p>{{ message.valeur }}</p>
 								</div>
 								<!-- Zone de texte -->
-<textarea class="form-control mt-3 bg-mylight text-black p-3" rows="4" placeholder="Répondre à {{ message.getUtilisateur().getPseudo() }}" maxlength="1000" oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'" ></textarea>
+								<textarea class="form-control mt-3 bg-mylight text-black p-3" rows="4" placeholder="Répondre à {{ message.getUtilisateur().getPseudo() }}" maxlength="1000" oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"></textarea>
 								<div class="text-end mt-2">
 									<span>0 / 1000</span>
 								</div>
@@ -185,21 +185,61 @@
 	</div>
 
 	<!-- Bouton flottant -->
-	<a href="index.php?controller=message&methode=create" class="btn btn-primary btn-floating position-fixed shadow" style="bottom: 70px; right: 40px; background-color: #F2AC0F; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 1000;">
+	<button class="btn btn-myprimary rounded-circle position-fixed bottom-0 end-0 me-4 mb-4" style="width: 50px; height: 50px;" data-bs-toggle="modal" data-bs-target="#nouveauMessage">
 		<i class="bi bi-pencil" style="font-size: 1.5rem;"></i>
-	</a>
+	</button>
+
+
+	<!-- Modal de nouveau message -->
+	<div class="modal fade" id="nouveauMessage" tabindex="-1" aria-labelledby="nouveauMessageLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-lg" style="height: 80vh;">
+			<div class="modal-content popup-content bg-mydark" id="popUpNouveauMessage">
+				<div class="modal-header text-white text-center">
+					<h5 class="modal-title w-100" id="nouveauMessageLabel">Nouveau message</h5>
+					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+				</div>
+				<div class="modal-body text-white">
+					<div class="d-flex justify-content-between mt-2">
+						<p>Votre message :</p>
+						<span>0 / 1000</span>
+					</div>
+					<textarea class="form-control mt-1 bg-mylight text-black p-3" rows="4" placeholder="Exprimez-vous..." maxlength="1000"></textarea>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-xs btn-myprimary">
+						<i class="bi bi-send"></i>
+						Envoyer
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 
 	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-const textarea = document.querySelector("#repondreModal textarea");
-const counter = document.querySelector("#repondreModal .modal-body span");
+    document.addEventListener("DOMContentLoaded", function () {
+        // Sélectionne toutes les textareas dans les modals
+        const textareas = document.querySelectorAll(".modal textarea");
 
-textarea.addEventListener("input", () => {
-const length = textarea.value.length;
-counter.textContent = `${length} / 1000`;
-});
-});
-	</script>
+		// Vider la textarea à chaque ouverture du modal & reset le compteur
+		document.querySelectorAll(".modal").forEach(modal => {
+			modal.addEventListener("show.bs.modal", () => {
+				modal.querySelector("textarea").value = "";
+				modal.querySelector("span").textContent = "0 / 1000";
+			});
+		});
+        
+        textareas.forEach(textarea => {
+            // Trouve le compteur associé dans le même modal
+            const counter = textarea.closest(".modal").querySelector(".modal-body span");
+
+            textarea.addEventListener("input", () => {
+                const length = textarea.value.length;
+                counter.textContent = `${length} / 1000`;
+            });
+        });
+    });
+</script>
 
 
 {% endblock %}
