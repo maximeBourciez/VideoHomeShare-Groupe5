@@ -38,3 +38,4 @@ require_once 'controller/controller.class.php';
 require_once 'controller/controller_factory.class.php';
 require_once 'controller/controller_fil.class.php';
 require_once 'controller/controller_utilisateur.class.php';
+require_once 'controller/controller_contenu.class.php';

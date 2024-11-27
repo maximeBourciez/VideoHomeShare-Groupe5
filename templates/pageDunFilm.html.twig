@@ -1,0 +1,17 @@
+{% extends 'base_template.html.twig' %}
+
+{% block content %}
+ <main class="content row flex-grow-1">
+    <div class="d-flex">
+        <!-- Left side with poster -->
+        <div class="col-6 pe-3">
+            <img src="images/{{contenu.lienAffiche}}" alt="{{contenu.titre}}" class="img-fluid m-5 rounded" style="width: 525px; height: 750px; object-fit: cover;">
+        </div>
+        
+        <!-- Right side with title -->
+        <div class="col-6 d-flex align-items-start">
+            <h1 class="mt-0">{{contenu.titre}}</h1>
+        </div>
+    </div>  
+</main>
+{% endblock %}
