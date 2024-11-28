@@ -1,4 +1,5 @@
 @charset "UTF-8";
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css");
 :root,
 [data-bs-theme=light] {
   --bs-blue: #0d6efd;
@@ -11925,20 +11926,25 @@ textarea.form-control-lg {
   display: inline-block;
 }
 
+/* Inclure Font Awesome si nécessaire (à ajouter dans le fichier HTML ou SCSS) */
+/* Conteneur global de notation */
 .star-rating {
-  font-size: 24px;
-  color: #ddd;
+  font-size: 48px; /* Taille des étoiles */
+  color: #ddd; /* Couleur des étoiles vides */
   position: relative;
   display: inline-block;
   margin-left: 10px;
 }
 
+/* Style pour les étoiles remplies */
 .star-rating .stars-fill {
-  position: absolute;
-  top: 0;
-  left: 0;
-  overflow: hidden;
-  color: #ffd700;
+  color: #ffd700; /* Couleur des étoiles pleines */
+}
+
+/* Style des étoiles individuelles */
+.star-rating .fa-star {
+  margin-right: 2px;
+  cursor: pointer;
 }
 
 /*# sourceMappingURL=style.css.map */

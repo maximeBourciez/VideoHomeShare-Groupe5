@@ -11,16 +11,15 @@ function generateStarRating(note, maxNote = 5) {
 
   // Conteneur des étoiles
   const starContainer = document.createElement("div");
-  starContainer.style.display = "flex";
-  starContainer.style.alignItems = "center";
+  starContainer.classList.add("star-rating"); // Ajout de la classe CSS pour le conteneur des étoiles
 
   // Génération des étoiles
   for (let i = 0; i < maxNote; i++) {
-    const star = document.createElement("span");
-    star.textContent = "★";
-    star.style.fontSize = "24px";
-    star.style.color = i < Math.round(note) ? "#FFD700" : "#ddd";
-    star.style.marginRight = "2px";
+    const star = document.createElement("i");
+    star.classList.add("fa", "fa-star"); // Utilisation des icônes Font Awesome
+    if (i < Math.round(note)) {
+      star.classList.add("stars-fill"); // Classe pour les étoiles remplies
+    }
     starContainer.appendChild(star);
   }
 

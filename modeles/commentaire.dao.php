@@ -34,4 +34,15 @@ class commentaireDAO{
         return 0;
     }
 
+    public function hydrate(array $tableauAssaus): Commentaire{
+        return new Commentaire($tableauAssaus['idUtilisateur'], $tableauAssaus['titre'], $tableauAssaus['note'], $tableauAssaus['avis'],$tableauAssaus['estPositif']);
+    }
+
+    public function hydrateAll(array $tableauAssaus): ?array{
+        $commentaires = [];
+        foreach ($tableauAssaus as $row){
+            $commentaires[] = $this->hydrate($row);
+        }
+        return $commentaires;
+    }
 }
