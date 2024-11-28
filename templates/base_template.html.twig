@@ -19,44 +19,44 @@
 	</head>
 	<body class="d-flex flex-column min-vh-100 bg-mylight">
 		<header>
-    <nav class="navbar navbar-expand-lg navbar-mydark justify-content-center">
-        <!-- Section gauche -->
-        <div class="navbar-start d-flex align-items-center">
-            <a class="navbar-brand d-none d-lg-flex align-items-center ms-lg-5" href="index.php">
-                <img src="{{ constant('WEBSITE_LOGO') }}" class="img-fluid website-logo" alt="VHS Logo">
-            </a>
-            <button class="navbar-toggler bi bi-list" type="button" data-bs-toggle="collapse" data-bs-target="#submenu" aria-expanded="false" aria-label="Toggle navigation">
-            </button>
-            <div class="collapse navbar-collapse" id="navbarContent">
-                <div class="d-flex align-items-center ms-lg-2">
-                    <button class="btn btn-myprimary bi bi-list" type="button" data-bs-toggle="collapse" data-bs-target="#submenu" aria-expanded="false">
-                        Menu
-                    </button>
-                </div>
-            </div>
-        </div>
+			<nav
+				class="navbar navbar-expand-lg navbar-mydark justify-content-center">
+				<!-- Section gauche -->
+				<div class="navbar-start d-flex align-items-center">
+					<a class="navbar-brand d-none d-lg-flex align-items-center ms-lg-5" href="index.php">
+						<img src="{{ constant('WEBSITE_LOGO') }}" class="img-fluid website-logo" alt="VHS Logo">
+					</a>
+					<button class="navbar-toggler bi bi-list" type="button" data-bs-toggle="collapse" data-bs-target="#submenu" aria-expanded="false" aria-label="Toggle navigation"></button>
+					<div class="collapse navbar-collapse" id="navbarContent">
+						<div class="d-flex align-items-center ms-lg-2">
+							<button class="btn btn-myprimary bi bi-list" type="button" data-bs-toggle="collapse" data-bs-target="#submenu" aria-expanded="false">
+								Menu
+							</button>
+						</div>
+					</div>
+				</div>
 
-        <!-- Section centrale (barre de recherche) -->
-        <form class="search-form-container flex-grow-1">
-            <div class="input-group">
-                <input class="form-control fw-light" type="search" placeholder="Barre de recherche" aria-label="Search">
-                <button class="btn bg-myprimary" type="submit">
-                    <i class="bi bi-search"></i>
-                </button>
-            </div>
-        </form>
+				<!-- Section centrale (barre de recherche) -->
+				<form class="search-form-container flex-grow-1">
+					<div class="input-group">
+						<input class="form-control fw-light" type="search" placeholder="Barre de recherche" aria-label="Search">
+						<button class="btn bg-myprimary" type="submit">
+							<i class="bi bi-search"></i>
+						</button>
+					</div>
+				</form>
 
-        <!-- Section droite -->
-        <div class="navbar-end d-flex align-items-center gap-3 me-lg-4">
-            <a href="index.php?controller=utilisateur&methode=connexion">
-                <button class="btn btn-myprimary">Connexion</button>
-            </a>
-            <a class="navbar-brand d-flex align-items-center text-white mb-0" href="#">
-                <p class="mb-0 me-2 d-none d-lg-block">{{ constant('WEBSITE_LANGUAGE')}}</p>
-                <img src="{{ constant('WEBSITE_LOGO_FLAG')}}" height="24" alt="FR">
-            </a>
-        </div>
-    </nav>
+				<!-- Section droite -->
+				<div class="navbar-end d-flex align-items-center gap-3 me-lg-4">
+					<a href="index.php?controller=utilisateur&methode=connexion">
+						<button class="btn btn-myprimary">Connexion</button>
+					</a>
+					<a class="navbar-brand d-flex align-items-center text-white mb-0" href="#">
+						<p class="mb-0 me-2 d-none d-lg-block">{{ constant('WEBSITE_LANGUAGE')}}</p>
+						<img src="{{ constant('WEBSITE_LOGO_FLAG')}}" height="24" alt="FR">
+					</a>
+				</div>
+			</nav>
 
 			<!-- Menu secondaire -->
 			<div class="collapse" id="submenu">
@@ -122,5 +122,6 @@
 		</footer>
 
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+		<script src="JS/notation.js" defer></script>
 	</body>
 </html>

@@ -28,10 +28,14 @@
 
         $themeDAO = new ThemeDAO($this->getPdo());
         $themes = $themeDAO->findThemesByContenuId($id);
+        
+        $noteDao = new CommentaireDAO($this->getPdo());
+        $moyenne = $noteDao->getMoyenneNoteContenu($id);
 
         echo $this->getTwig()->render('pageDunFilm.html.twig', [
             'contenu' => $contenu,
-            'themes' => $themes
+            'themes' => $themes,
+            'moyenne' => $moyenne
         ]);
     }
 }

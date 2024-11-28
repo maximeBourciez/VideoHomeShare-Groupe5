@@ -246,3 +246,20 @@ $theme-colors: (
   padding: 5px 10px;
   display: inline-block;
 }
+
+// 9 Notation/étoile
+
+.star-rating {
+  font-size: 24px;
+  color: #ddd;
+  position: relative;
+  display: inline-block;
+  margin-left: 10px;
+}
+.star-rating .stars-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  color: #ffd700;
+}
