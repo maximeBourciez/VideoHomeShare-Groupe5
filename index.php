@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 // Inclure tous les modèles & contrôleurs
 require_once "include.php";
 

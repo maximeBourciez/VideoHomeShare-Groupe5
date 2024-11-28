@@ -54,6 +54,7 @@ class ControllerUtilisateur extends Controller{
         $utilisateur = $managerutilisateur->findByMail($mail);
     
         if ($utilisateur != null && password_verify($mdp, $utilisateur->getMdp())){
+            $_SESSION['connecter'] = serialize($utilisateur) ;
             //Génération de la vue
             $template = $this->getTwig()->load('index.html.twig');
             echo $template->render(array());
@@ -216,12 +217,16 @@ class ControllerUtilisateur extends Controller{
     public function show() : void {
         // Récupère id_utlisateur dans $_GET et affiche la page du profil de l'utilisateur
         $id = isset($_GET['id_utilisateur']) ? $_GET['id_utilisateur'] : null;
+        $personneConnect = unserialize($_SESSION['connecter']);
+                
+        $peronneconnect = new Utilisateur();
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
         $managermesage = new MessageDAO($this->getPdo());
         $utilisateur = $managerutilisateur->find($id);
         $messages = $managermesage->listerMessagesParIdUser($id);
         $template = $this->getTwig()->load('profilUtilisateur.html.twig');
-        echo $template->render(array('utilisateur' => $utilisateur , 'messages' => $messages ));
+        
+        echo $template->render(array('utilisateur' => $utilisateur , 'messages' => $messages , 'utilisateurConnecter' => $personneConnect)); 
 
 
 
