@@ -75,9 +75,9 @@ class MessageDAO
 
         // Hydratation de l'utilisateur associé
         $user = new Utilisateur();
-        $user->setId($row['auteur_id']);
-        $user->setPseudo($row['auteur_pseudo']);
-        $user->setUrlImageProfil($row['auteur_urlImageProfil']);
+        $user->setId($row['idUtilisateur']);
+        $user->setPseudo($row['pseudo']);
+        $user->setUrlImageProfil($row['urlImageProfil']);
         $message->setUtilisateur($user);
 
         return $message;
@@ -90,26 +90,33 @@ class MessageDAO
      */
     public function hydrateAll(array $rows): array
     {
-        $messages = []; // Tableau pour stocker les messages (parents et réponses)
-
+        $messages = []; // Tous les messages indexés par leur ID
+        $messagesParents = []; // Tableau pour stocker uniquement les messages principaux
+    
+        // Hydrater tous les messages et les indexer par ID
         foreach ($rows as $row) {
             $message = $this->hydrate($row);
-
-            // Si le message a un parent, on l'ajoute à la liste des réponses du parent
-            if ($message->getIdMessageParent()) {
-                $idParent = $message->getIdMessageParent();
-                if (isset($messages[$idParent])) {
-                    $messages[$idParent]->addReponse($message);
-                }
+            $messages[$message->getIdMessage()] = $message;
+        }
+    
+        // Lier les réponses à leurs parents
+        foreach ($messages as $message) {
+            if ($message->getIdMessageParent() === null) {
+                // Message sans parent -> c'est un message principal
+                $messagesParents[] = $message;
             } else {
-                // Sinon, c'est un message parent
-                $messages[$message->getIdMessage()] = $message;
+                // Message avec parent -> ajouter comme réponse
+                $parentId = $message->getIdMessageParent();
+                if (isset($messages[$parentId])) {
+                    $messages[$parentId]->addReponse($message);
+                }
             }
         }
-
-        // Retourner uniquement les messages parents (avec réponses associées)
-        return array_values($messages);
+    
+        // Retourner uniquement les messages principaux (avec les réponses déjà attachées)
+        return $messagesParents;
     }
+    
 
 
     // Méthodes de recherche
@@ -137,13 +144,14 @@ class MessageDAO
      */
     public function chercherMessageParId(int $id): ?Message
     {
-        $sql = "SELECT * FROM" . DB_PREFIX . "message WHERE id = :id";
+        $sql = "SELECT * FROM" . DB_PREFIX . "message  WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         return $this->hydrate($stmt->fetch());
     }
+
 
 
 
@@ -155,14 +163,16 @@ class MessageDAO
      * @param integer $id_user
      * @return array
      */
-    public function listerMessagesParIdUser(int $id_user): array
+    public function listerMessagesParIdUser(string $id_user): array
     {
-        $sql = "SELECT * FROM" . DB_PREFIX . "message WHERE id_user = :id_user";
+        $sql = "SELECT * FROM " . DB_PREFIX . "message M join " . DB_PREFIX . "utilisateur U ON  M.idUtilisateur=U.idUtilisateur WHERE M.idUtilisateur = :id_user ORDER BY dateC DESC";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':id_user', $id_user, PDO::PARAM_INT);
+        $stmt->bindValue(':id_user', $id_user, PDO::PARAM_STR);
         $stmt->execute();
-        $stmt->setFetchMode(PDO::FETCH_CLASS, 'Message');
-        return $stmt->fetchAll();
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $messages = $stmt->fetchAll();
+
+        return ($this->hydrateAll($messages));
     }
 
 

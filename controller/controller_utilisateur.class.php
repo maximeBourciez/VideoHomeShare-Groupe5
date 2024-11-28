@@ -16,9 +16,7 @@ class ControllerUtilisateur extends Controller{
     
         //Génération de la vue
         $template = $this->getTwig()->load('connection.html.twig');
-        echo $template->render(array(
-            'description' => "Je fais mes tests"
-        ));
+        echo $template->render(array());
                 
 
     }
@@ -212,9 +210,22 @@ class ControllerUtilisateur extends Controller{
         }
     }
 
-
+    /**
+     *  @brief permet d'afficher lapage d'un utilisateur 
+     */
     public function show() : void {
         // Récupère id_utlisateur dans $_GET et affiche la page du profil de l'utilisateur
+        $id = isset($_GET['id_utilisateur']) ? $_GET['id_utilisateur'] : null;
+        $managerutilisateur = new UtilisateurDAO($this->getPdo());
+        $managermesage = new MessageDAO($this->getPdo());
+        $utilisateur = $managerutilisateur->find($id);
+        $messages = $managermesage->listerMessagesParIdUser($id);
+        $template = $this->getTwig()->load('profilUtilisateur.html.twig');
+        echo $template->render(array('utilisateur' => $utilisateur , 'messages' => $messages ));
+
+
+
+
     }
         
 
