@@ -1,37 +1,39 @@
 {% extends 'base_template.html.twig' %}
 {% block content %}
-<main class="content row flex-grow-1">
+<main class="container d-flex flex-column justify-content-center align-items-center flex-grow-1">
     <div class="d-flex">
-        <div>
+        <div class="me-5">
             <img src="{{ contenu.lienAffiche }}" alt="{{ contenu.titre }}" class="shadow img-fluid m-5 rounded" style="width: 525px; height: 750px; object-fit: cover;">
         </div>
         <div class="col-6 d-flex flex-column justify-content-between">
-            <h1 class="mt-5 fw-bolder">{{ contenu.titre }}</h1>
+            <h1 class="mt-5 fw-bolder text-center">{{ contenu.titre }}</h1>
             <!-- Date/Durée -->
             <div class="d-flex justify-content-between fs-5 fw-bolder">
                 <p>Date : {{ contenu.date|date("d/m/Y") }}</p>
                 <p>Durée : {{ contenu.duree }} min</p>
             </div>
             <!-- Description -->
-            <div class="fst-italic fs-5">
+            <div class="shadow fst-italic fs-5 bg-dark text-white p-3 rounded">
                 <p>{{ contenu.description }}</p>
             </div>
 
             <!-- Genre -->
-             <div class="d-flex justify-content-left align-items-center">
+            <div class="d-flex justify-content-left align-items-center">
                 <p class="mb-0">Genre :</p>
-            {% for theme in themes %}
-                <span class="theme-tag ms-3">{{ theme.nom }}</span>
-            {% endfor %}
-                </div>
+                {% for theme in themes %}
+                    <span class="theme-tag ms-3">{{ theme.nom }}</span>
+                {% endfor %}
+            </div>
+
             <!-- Note -->
-            <div class="d-flex justify-content-between">
-                <p>Note</p>
+            <div class="d-flex justify-content-center">
+                <p>Note :</p>
+                <div class="rating" data-rating="{{ contenu.note }}"></div>
             </div>
 
             <!-- Bouton du bas -->
             <div class="mr-5">
-                <div class="d-flex justify-content-end mb-5">
+                <div class="d-flex justify-content-center mb-5">
                     <button class="btn btn-myprimary fw-normal me-4">Laisser un avis</button>
                     <button class="btn btn-myprimary fw-normal me-4 bi bi-plus">WatchList</button>
                     <button class="btn btn-myprimary fw-normal ">Noter</button>
