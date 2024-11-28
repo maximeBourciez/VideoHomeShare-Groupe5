@@ -35,8 +35,7 @@ class ControllerFil extends Controller {
         $threads = $filDAO->findAll();
 
         echo $this->getTwig()->render('forum.html.twig', [
-            'fils' => $threads,
-            'test' => 'test'
+            'fils' => $threads
         ]);
     }
 

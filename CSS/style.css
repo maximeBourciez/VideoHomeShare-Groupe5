@@ -11917,4 +11917,30 @@ textarea.form-control-lg {
   filter: invert(64%) sepia(86%) saturate(2472%) hue-rotate(194deg) brightness(92%) contrast(90%);
 }
 
+#popUpRepondre {
+  border: 2px solid #F2AC0F; /* Ajout de la bordure */
+  border-radius: 10px; /* Coins arrondis */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Légère ombre pour un effet visuel */
+}
+
+.message-original {
+  border-radius: 10px;
+}
+
+/* Bouton "Envoyer" avec icône */
+.btn-myprimary {
+  background-color: #F2AC0F !important;
+  color: black !important;
+  border-color: #F2AC0F !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* Espacement entre le texte et l'icône */
+  font-weight: bold;
+}
+
+.btn-myprimary i {
+  font-size: 1.2rem; /* Taille de l'icône */
+}
+
 /*# sourceMappingURL=style.css.map */
