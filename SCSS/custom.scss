@@ -236,3 +236,13 @@ $theme-colors: (
     }
   }
 }
+
+//8. Theme
+
+.theme-tag {
+  text-align: center;
+  background-color: $secondary;
+  border-radius: 20px;
+  padding: 5px 10px;
+  display: inline-block;
+}

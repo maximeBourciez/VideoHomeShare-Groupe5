@@ -11917,4 +11917,12 @@ textarea.form-control-lg {
   filter: invert(64%) sepia(86%) saturate(2472%) hue-rotate(194deg) brightness(92%) contrast(90%);
 }
 
+.theme-tag {
+  text-align: center;
+  background-color: #e6640b;
+  border-radius: 20px;
+  padding: 5px 10px;
+  display: inline-block;
+}
+
 /*# sourceMappingURL=style.css.map */

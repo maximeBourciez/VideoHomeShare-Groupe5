@@ -27,11 +27,11 @@
         $contenu = $contenuDAO->findById($id);
 
         $themeDAO = new ThemeDAO($this->getPdo());
-        $theme = $themeDAO->findThemesByContenuId($id);
+        $themes = $themeDAO->findThemesByContenuId($id);
 
         echo $this->getTwig()->render('pageDunFilm.html.twig', [
             'contenu' => $contenu,
-            'theme' => $theme
+            'themes' => $themes
         ]);
     }
 }

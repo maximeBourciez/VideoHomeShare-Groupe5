@@ -3,14 +3,14 @@
 <main class="content row flex-grow-1">
     <div class="d-flex">
         <div>
-            <img src=" images/{{ contenu.lienAffiche }}" alt="{{ contenu.titre }}" class="img-fluid m-5 rounded" style="width: 525px; height: 750px; object-fit: cover;">
+            <img src="{{ contenu.lienAffiche }}" alt="{{ contenu.titre }}" class="shadow img-fluid m-5 rounded" style="width: 525px; height: 750px; object-fit: cover;">
         </div>
         <div class="col-6 d-flex flex-column justify-content-between">
             <h1 class="mt-5 fw-bolder">{{ contenu.titre }}</h1>
             <!-- Date/Durée -->
             <div class="d-flex justify-content-between fs-5 fw-bolder">
                 <p>Date : {{ contenu.date|date("d/m/Y") }}</p>
-                <p>Durée : {{ contenu.duree }}</p>
+                <p>Durée : {{ contenu.duree }} min</p>
             </div>
             <!-- Description -->
             <div class="fst-italic fs-5">
@@ -18,10 +18,12 @@
             </div>
 
             <!-- Genre -->
-            <div class="d-flex justify-content-between">
-                <p>Genre : {{ theme.nom }}</p>
-            </div>
-
+             <div class="d-flex justify-content-left align-items-center">
+                <p class="mb-0">Genre :</p>
+            {% for theme in themes %}
+                <span class="theme-tag ms-3">{{ theme.nom }}</span>
+            {% endfor %}
+                </div>
             <!-- Note -->
             <div class="d-flex justify-content-between">
                 <p>Note</p>

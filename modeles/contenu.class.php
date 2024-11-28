@@ -65,12 +65,12 @@ class Contenu{
         $this->lienAffiche = $lienAffiche;
     }
     //get durée
-    public function getDurée(): ?string{
+    public function getDuree(): ?string{
         return $this->duree;
     }
     // set durée
-    public function setDurée(?string $durée): void{
-        $this->duree = $durée;
+    public function setDuree(?string $duree): void{
+        $this->duree = $duree;
     }
     //get type
     public function getType(): ?string{
