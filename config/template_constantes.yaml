@@ -2,16 +2,17 @@
 
 # Connexion à la base de données
 database:
-  host: 
-  name: 
-  user: 
-  password: 
-  prefix: 
+  host:
+  name:
+  user:
+  password:
+  prefix:
 
 # Constantes de la vue
 website:
-  title: 
-  title_long: 
-  language: 
-  logo: 
-  logo_flag: 
+  title:
+  title_long:
+  language:
+  logo:
+  logo_flag:
+  website_link:

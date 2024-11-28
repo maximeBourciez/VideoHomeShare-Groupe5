@@ -4,6 +4,7 @@ class Utilisateur{
     // Attributs
     private ?string $id;
     private ?string $pseudo;
+    private ?string $nom;
     private ?string $mail;
     private ?string $mdp;
     private ?string $role;
@@ -11,9 +12,10 @@ class Utilisateur{
     private ?string $urlImageBaniere;
     
     // Constructeur
-    function __construct(?string $id = null, ?string $pseudo = null, ?string $mail = null, ?string $mdp = null, ?string $role = null, ?string $urlImageProfil = null, ?string $urlImageBanière = null){
+    function __construct(?string $id = null, ?string $pseudo = null, ?string $nom = null, ?string $mail = null, ?string $mdp = null, ?string $role = null, ?string $urlImageProfil = null, ?string $urlImageBanière = null){
         $this->id = $id;
         $this->pseudo = $pseudo;
+        $this->nom = $nom;
         $this->mail = $mail;
         $this->mdp = $mdp;
         $this->role = $role;
@@ -42,6 +44,14 @@ class Utilisateur{
     public function getPseudo(): ?string
     {
         return $this->pseudo;
+    }
+
+    /**
+     * Get the value of nom
+     * @return string
+     */
+    public function getNom(): ?string {
+        return $this->nom;
     }
 
     /**
@@ -107,6 +117,14 @@ class Utilisateur{
     public function setPseudo(?string $pseudo = null): void
     {
         $this->pseudo = $pseudo;
+    }
+    /**
+     * Set the value of nom
+     * @return void
+     */
+    public function setNom(?string $nom = null): void
+    {
+        $this->nom = $nom;
     }
 
     /**
