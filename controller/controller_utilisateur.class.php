@@ -217,20 +217,65 @@ class ControllerUtilisateur extends Controller{
     public function show() : void {
         // Récupère id_utlisateur dans $_GET et affiche la page du profil de l'utilisateur
         $id = isset($_GET['id_utilisateur']) ? $_GET['id_utilisateur'] : null;
-        $personneConnect = unserialize($_SESSION['connecter']);
-                
-        $peronneconnect = new Utilisateur();
+
+
+        
+        // recuper que si l'utilisateur est connecter
+        if(isset($_SESSION['connecter'])){
+            //recuperer l'utilisateur connecter if
+            $personneConnect = unserialize($_SESSION['connecter']);
+            if ($id == null){
+                $id = $personneConnect->getId();
+            }
+        }else {
+            $personneConnect = null;
+        }
+
+        // instanciation des managers de base de données
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
         $managermesage = new MessageDAO($this->getPdo());
+
+        //récupération de l'utilisateur à partir de id dans l'url
         $utilisateur = $managerutilisateur->find($id);
+
+        //récupération des messages de l'utilisateur
         $messages = $managermesage->listerMessagesParIdUser($id);
+
         $template = $this->getTwig()->load('profilUtilisateur.html.twig');
-        
         echo $template->render(array('utilisateur' => $utilisateur , 'messages' => $messages , 'utilisateurConnecter' => $personneConnect)); 
+    }
+
+    /**
+     * @brief permet de modifier les informations de l'utilisateur
+     */
+    public function edit() : void {
+        if(isset($_SESSION['connecter'])){
+            //recuperer l'utilisateur connecter if
+            $utilisateur = unserialize($_SESSION['connecter']);
+        }else {
+            $utilisateur = null;
+        }
+
+        if( $utilisateur != null){
+            //Génération de la vue
+            $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
+            echo $template->render(array( 'utilisateur' => $utilisateur));
+        }else{
+            //Génération de la vue
+            $template = $this->getTwig()->load('index.html.twig');
+            echo $template->render(array());
+        }
+        
+    }
 
 
 
-
+    /**
+     * @brief permet de verifier modifier les informations de l'utilisateur dans la base de données et renvoie sur la page de edition
+     */
+    public function modificationprofil() : void {
+        
+        
     }
         
 
