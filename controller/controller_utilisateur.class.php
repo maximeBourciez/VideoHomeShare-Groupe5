@@ -167,7 +167,7 @@ class ControllerUtilisateur extends Controller
 
     /**
      * @brief affiche la page ou l'utilisateur peut changer son mot de passe
-     * @todo decryptage de id dans get
+     * @todo decryptage de id dans GET
      * @return void
      */
     public function afficherchangerMDP(): void
@@ -195,7 +195,7 @@ class ControllerUtilisateur extends Controller
      */
     public function changerMDP(): void
     {
-
+        // récupération des données du formulaire
         $id = isset($_POST['id']) ? $_POST['id'] : null;
 
         $mdp = isset($_POST['mdp']) ? $_POST['mdp'] : null;
@@ -207,9 +207,11 @@ class ControllerUtilisateur extends Controller
 
 
                 if ($mdp == $vmdp) {
-                    //cripter le mot de passe a faire
+                    //crypter le mot de passe
                     $mdp = password_hash($mdp, PASSWORD_DEFAULT);
                     $utilisateur->setMdp($mdp);
+
+                    // modifier le mot de passe dans la base de données
                     $managerutilisateur->update($utilisateur);
                     $template = $this->getTwig()->load('connection.html.twig');
                     echo $template->render(array());
@@ -351,7 +353,7 @@ class ControllerUtilisateur extends Controller
                         $utilisateur->setUrlImageBaniere($urlImageBaniere['name']);
                     }
                 }
-
+                // mettre à jour l'utilisateur dans la base de données
                 $managerutilisateur->update($utilisateur);
                 $_SESSION['connecter'] = serialize($utilisateur);
                 //Génération de la vue
@@ -363,35 +365,45 @@ class ControllerUtilisateur extends Controller
 
     }
 
-
+    /**
+    * @brief permet de changer le mail de l'utilisateur
+    */
     public function changerMail(): void
     {
+        // récupération des données du formulaire
         $mail = isset($_POST['mail']) ? $_POST['mail'] : null;
         $mailconf = isset($_POST['mailconf']) ? $_POST['mailconf'] : null;
         
+        //supprimer les espaces
         $mail = str_replace(' ', '', $mail);
         $mailconf = str_replace(' ', '', $mailconf);
+        // vérifier si les deux mails sont identiques
         if ($mail == $mailconf) {
-            
+            // vérifier si le mail est valide
             if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
             
                 $utilisateur = unserialize($_SESSION['connecter']);
                 $managerutilisateur = new UtilisateurDAO($this->getPdo());
+                // vérifier si le mail n'est pas déjà utilisé
                 if ($managerutilisateur->findByMail($mail) == null) {
+                    // mettre à jour le mail de l'utilisateur
                     $utilisateur->setMail($mail);
-                    
                     $managerutilisateur->update($utilisateur);
                     $_SESSION['connecter'] = serialize($utilisateur);
 
                 }
             }
         }
+        //Génération de la vue
         $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
         echo $template->render(array('utilisateur' => $utilisateur));
 
 
     }
-
+    /**
+     * @bref affiche le notification de l'utilisateur
+     * @return void
+     */
     public function notification(): void
     {
         
