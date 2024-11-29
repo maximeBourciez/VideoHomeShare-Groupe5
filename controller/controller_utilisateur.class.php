@@ -316,36 +316,38 @@ class ControllerUtilisateur extends Controller
                 $utilisateur->setId($id);
                 $utilisateur->setPseudo($pseudo);
                 $utilisateur->setNom($nom);
-                // récupérer les fichiers images 
+                // récupérer les fichiers images  de profil
                 if (isset(($_FILES['urlImageProfil']))) {
 
                     if ($_FILES['urlImageProfil']['name'] != '') {
-
+                        //supprimer l'ancienne image
                         if (file_exists($utilisateur->getUrlImageProfil())) {
                             unlink($utilisateur->getUrlImageProfil());
                         }
+                        //récupérer le fichier image
                         $urlImageProfil = isset($_FILES['urlImageProfil']) ? $_FILES['urlImageProfil'] : null;
-
+                        // donne le bon nom à l'image
                         $urlImageProfil['name'] = "images/imageProfil_" . $utilisateur->getId() . "." . pathinfo($urlImageProfil['name'], PATHINFO_EXTENSION);
-
+                        //telecharger l'image
                         move_uploaded_file($urlImageProfil["tmp_name"], $urlImageProfil['name']);
-
+                        // mettre à jour l'url de l'image dans l'ojet utilisateur
                         $utilisateur->setUrlImageProfil($urlImageProfil['name']);
 
                     }
                 }
                 if (isset(($_FILES['urlImageBaniere']))) {
                     if ($_FILES['urlImageBaniere']['name'] != '') {
-
+                        //supprimer l'ancienne image
                         if (file_exists($utilisateur->getUrlImageBaniere())) {
                             unlink($utilisateur->getUrlImageBaniere());
                         }
+                        //récupérer le fichier image
                         $urlImageBaniere = isset($_FILES['urlImageBaniere']) ? $_FILES['urlImageBaniere'] : null;
-
+                        // donne le bon nom à l'image
                         $urlImageBaniere['name'] = "images/imageBaniere_" . $utilisateur->getId() . "." . pathinfo($urlImageBaniere['name'], PATHINFO_EXTENSION);
-
+                        //telecharger l'image
                         move_uploaded_file($urlImageBaniere["tmp_name"], $urlImageBaniere['name']);
-
+                        // mettre à jour l'url de l'image dans l'ojet utilisateur
                         $utilisateur->setUrlImageBaniere($urlImageBaniere['name']);
                     }
                 }
@@ -359,20 +361,36 @@ class ControllerUtilisateur extends Controller
             }
         }
 
-        var_dump($_FILES['urlImageBaniere']);
-
-
-
-
-
-
-
-
-
     }
 
 
+    public function changerMail(): void
+    {
+        $mail = isset($_POST['mail']) ? $_POST['mail'] : null;
+        $mailconf = isset($_POST['mailconf']) ? $_POST['mailconf'] : null;
+        
+        $mail = str_replace(' ', '', $mail);
+        $mailconf = str_replace(' ', '', $mailconf);
+        if ($mail == $mailconf) {
+            
+            if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
+            
+                $utilisateur = unserialize($_SESSION['connecter']);
+                $managerutilisateur = new UtilisateurDAO($this->getPdo());
+                if ($managerutilisateur->findByMail($mail) == null) {
+                    $utilisateur->setMail($mail);
+                    
+                    $managerutilisateur->update($utilisateur);
+                    $_SESSION['connecter'] = serialize($utilisateur);
 
+                }
+            }
+        }
+        $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
+        echo $template->render(array('utilisateur' => $utilisateur));
+
+
+    }
 
 
 }
