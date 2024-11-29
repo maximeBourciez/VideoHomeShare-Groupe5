@@ -163,7 +163,7 @@ class MessageDAO
      * @param integer $id_user
      * @return array
      */
-    public function listerMessagesParIdUser(string $id_user): array
+    public function listerMessagesParIdUser( ?string $id_user): array
     {
         $sql = "SELECT * FROM " . DB_PREFIX . "message M join " . DB_PREFIX . "utilisateur U ON  M.idUtilisateur=U.idUtilisateur WHERE M.idUtilisateur = :id_user ORDER BY dateC DESC";
         $stmt = $this->pdo->prepare($sql);

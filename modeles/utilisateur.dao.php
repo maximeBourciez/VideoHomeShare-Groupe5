@@ -91,7 +91,7 @@ class UtilisateurDAO {
         return $utilisateurs;
     }
 
-    function find(string $id): ?Utilisateur{
+    function find( ?string $id): ?Utilisateur{
         $sql = "SELECT * FROM ".DB_PREFIX."utilisateur WHERE idUtilisateur = :id";
         $pdo = $this->pdo->prepare($sql);
         $pdo->bindValue(':id', $id, PDO::PARAM_STR);

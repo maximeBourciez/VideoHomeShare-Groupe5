@@ -1,8 +1,10 @@
 <?php
 
 
-class ControllerUtilisateur extends Controller{
-    public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader) {
+class ControllerUtilisateur extends Controller
+{
+    public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader)
+    {
         parent::__construct($twig, $loader);
     }
 
@@ -12,12 +14,13 @@ class ControllerUtilisateur extends Controller{
      *
      * @return void
      */
-    public function connexion() : void{
-    
+    public function connexion(): void
+    {
+
         //Génération de la vue
         $template = $this->getTwig()->load('connection.html.twig');
         echo $template->render(array());
-                
+
 
     }
 
@@ -26,14 +29,15 @@ class ControllerUtilisateur extends Controller{
      *
      * @return void
      */
-    public function inscription() : void{
-    
+    public function inscription(): void
+    {
+
         //Génération de la vue
         $template = $this->getTwig()->load('inscription.html.twig');
         echo $template->render(array(
             'description' => "Je fais mes tests"
         ));
-                
+
 
     }
 
@@ -42,27 +46,28 @@ class ControllerUtilisateur extends Controller{
      *
      * @return void
      */
-    public function checkInfoConnecter(){
-        
+    public function checkInfoConnecter()
+    {
+
         $mail = isset($_POST['mail']) ? $_POST['mail'] : null;
         $mdp = isset($_POST['pwd']) ? $_POST['pwd'] : null;
-        
+
         $mail = str_replace(' ', '', $mail);
-        
+
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
 
         $utilisateur = $managerutilisateur->findByMail($mail);
-    
-        if ($utilisateur != null && password_verify($mdp, $utilisateur->getMdp())){
-            $_SESSION['connecter'] = serialize($utilisateur) ;
+
+        if ($utilisateur != null && password_verify($mdp, $utilisateur->getMdp())) {
+            $_SESSION['connecter'] = serialize($utilisateur);
             //Génération de la vue
             $template = $this->getTwig()->load('index.html.twig');
             echo $template->render(array());
-        }else{
+        } else {
             //Génération de la vue
             $template = $this->getTwig()->load('connection.html.twig');
             echo $template->render(array());
-            
+
         }
 
 
@@ -72,7 +77,8 @@ class ControllerUtilisateur extends Controller{
      * 
      * @return void
      */
-    public function checkInfoInscription(){
+    public function checkInfoInscription()
+    {
 
         //réccupération des données du formulaire
         $id = isset($_POST['idantifiant']) ? $_POST['idantifiant'] : null;
@@ -82,27 +88,27 @@ class ControllerUtilisateur extends Controller{
         $vmdp = isset($_POST['vmdp']) ? $_POST['vmdp'] : null;
         $nom = isset($_POST['nom']) ? $_POST['nom'] : null;
         //supprimer les espaces
-        
+
         $id = str_replace(' ', '', $id);
         $mail = str_replace(' ', '', $mail);
 
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
 
-        if ( strlen($pseudo) <= 50 && strlen($id) <= 20 && strlen($mail) <= 320 && strlen($mdp) <= 100 && strlen($vmdp) <= 100 && strlen($nom) <= 50){ 
+        if (strlen($pseudo) <= 50 && strlen($id) <= 20 && strlen($mail) <= 320 && strlen($mdp) <= 100 && strlen($vmdp) <= 100 && strlen($nom) <= 50) {
             // verifier si l'id n'est pas déjà utilisé
-            if ( $managerutilisateur->find($id) == null){
+            if ($managerutilisateur->find($id) == null) {
                 // verifier si le mail est valide 
                 if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
                     // verifier si le mail n'est pas déjà utilisé
-                    if ($managerutilisateur->findByMail($mail) == null){
+                    if ($managerutilisateur->findByMail($mail) == null) {
                         // verifier si les deux mots de passe sont identiques
-                        if ($mdp == $vmdp){  
+                        if ($mdp == $vmdp) {
                             //cripter le mot de passe
                             $mdp = password_hash($mdp, PASSWORD_DEFAULT);
-                        
+
 
                             //création de l'utilisateur
-                            $newUtilisateur = new Utilisateur ($id,$pseudo , $nom ,$mail,$mdp,"Utilisateur",NULL,NULL);
+                            $newUtilisateur = new Utilisateur($id, $pseudo, $nom, $mail, $mdp, "Utilisateur", NULL, NULL);
                             $managerutilisateur->create($newUtilisateur);
                             //Génération de la vue
                             $template = $this->getTwig()->load('connection.html.twig');
@@ -118,7 +124,7 @@ class ControllerUtilisateur extends Controller{
         //erreur de saisie
         //Génération de la vue
         $template = $this->getTwig()->load('inscription.html.twig');
-        echo $template->render(array());          
+        echo $template->render(array());
     }
 
     /**
@@ -126,34 +132,36 @@ class ControllerUtilisateur extends Controller{
      * 
      * @return void
      */
-    public function afficherpageMDPOublier() : void {
+    public function afficherpageMDPOublier(): void
+    {
 
         $template = $this->getTwig()->load('motDePasseOublie.html.twig');
-        echo $template->render(array());  
-        
+        echo $template->render(array());
+
     }
     /**
      * @brief envoie un mail à l'utilisateur pour qu'il puisse changer son mot de passe
      * @todo cryptage de id dans le lien du mail
      * @return void
      */
-    public function envoieMailMDPOublie() : void {
+    public function envoieMailMDPOublie(): void
+    {
         $mail = isset($_POST['email']) ? $_POST['email'] : null;
         $mail = str_replace(' ', '', $mail);
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
         $utilisateur = $managerutilisateur->findByMail($mail);
-        if ($utilisateur != null){
+        if ($utilisateur != null) {
             // crypter le id
             $id = $utilisateur->getId();
-            $message = "Bonjour, \n\n Vous avez demandé à réinitialiser votre mot de passe. Voici votre lien pour changer de mot de passe : ".WEBSITE_LINK."index.php?controller=utilisateur&methode=afficherchangerMDP&id=".$id." \n\n Cordialement, \n\n L'équipe de la plateforme de vhs";
+            $message = "Bonjour, \n\n Vous avez demandé à réinitialiser votre mot de passe. Voici votre lien pour changer de mot de passe : " . WEBSITE_LINK . "index.php?controller=utilisateur&methode=afficherchangerMDP&id=" . $id . " \n\n Cordialement, \n\n L'équipe de la plateforme de vhs";
             mail($mail, "Réinitialisation de votre mot de passe", $message);
             $template = $this->getTwig()->load('connection.html.twig');
             echo $template->render(array());
-        }else{
+        } else {
             //générer une popup pour dire que le mail n'est pas valide
 
             $template = $this->getTwig()->load('inscription.html.twig');
-            echo $template->render(array());  
+            echo $template->render(array());
         }
     }
 
@@ -162,15 +170,16 @@ class ControllerUtilisateur extends Controller{
      * @todo decryptage de id dans get
      * @return void
      */
-    public function afficherchangerMDP() : void {
+    public function afficherchangerMDP(): void
+    {
         $id = isset($_GET['id']) ? $_GET['id'] : null;
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
         if ($id != null) {
-            
-        
+
+
             $utilisateur = $managerutilisateur->find($id);
-            if ($utilisateur != null){
-                
+            if ($utilisateur != null) {
+
 
                 $template = $this->getTwig()->load('changerMDP.html.twig');
                 echo $template->render(array('id' => $id));
@@ -184,26 +193,27 @@ class ControllerUtilisateur extends Controller{
      * 
      * @return void
      */
-    public function changerMDP() : void {
-        
+    public function changerMDP(): void
+    {
+
         $id = isset($_POST['id']) ? $_POST['id'] : null;
-    
+
         $mdp = isset($_POST['mdp']) ? $_POST['mdp'] : null;
         $vmdp = isset($_POST['vmdp']) ? $_POST['vmdp'] : null;
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
         $utilisateur = $managerutilisateur->find($id);
-        if ($utilisateur != null){
-            if ( strlen($mdp) <= 100 && strlen($vmdp) <= 100){
-               
-            
-                if ($mdp == $vmdp){
+        if ($utilisateur != null) {
+            if (strlen($mdp) <= 100 && strlen($vmdp) <= 100) {
+
+
+                if ($mdp == $vmdp) {
                     //cripter le mot de passe a faire
                     $mdp = password_hash($mdp, PASSWORD_DEFAULT);
                     $utilisateur->setMdp($mdp);
                     $managerutilisateur->update($utilisateur);
                     $template = $this->getTwig()->load('connection.html.twig');
                     echo $template->render(array());
-                }else{
+                } else {
                     $template = $this->getTwig()->load('changerMDP.html.twig');
                     echo $template->render(array('id' => $id));
                 }
@@ -214,20 +224,21 @@ class ControllerUtilisateur extends Controller{
     /**
      *  @brief permet d'afficher lapage d'un utilisateur 
      */
-    public function show() : void {
+    public function show(): void
+    {
         // Récupère id_utlisateur dans $_GET et affiche la page du profil de l'utilisateur
         $id = isset($_GET['id_utilisateur']) ? $_GET['id_utilisateur'] : null;
 
 
-        
+
         // recuper que si l'utilisateur est connecter
-        if(isset($_SESSION['connecter'])){
+        if (isset($_SESSION['connecter'])) {
             //recuperer l'utilisateur connecter if
             $personneConnect = unserialize($_SESSION['connecter']);
-            if ($id == null){
+            if ($id == null) {
                 $id = $personneConnect->getId();
             }
-        }else {
+        } else {
             $personneConnect = null;
         }
 
@@ -240,32 +251,40 @@ class ControllerUtilisateur extends Controller{
 
         //récupération des messages de l'utilisateur
         $messages = $managermesage->listerMessagesParIdUser($id);
+        if ($utilisateur != null) {
+            $template = $this->getTwig()->load('profilUtilisateur.html.twig');
+            echo $template->render(array('utilisateur' => $utilisateur, 'messages' => $messages, 'utilisateurConnecter' => $personneConnect));
+            return;
+        }
 
-        $template = $this->getTwig()->load('profilUtilisateur.html.twig');
-        echo $template->render(array('utilisateur' => $utilisateur , 'messages' => $messages , 'utilisateurConnecter' => $personneConnect)); 
+        //Génération de la vue
+        $template = $this->getTwig()->load('connection.html.twig');
+        echo $template->render(array());
+
     }
 
     /**
      * @brief permet de modifier les informations de l'utilisateur
      */
-    public function edit() : void {
-        if(isset($_SESSION['connecter'])){
+    public function edit(): void
+    {
+        if (isset($_SESSION['connecter'])) {
             //recuperer l'utilisateur connecter if
             $utilisateur = unserialize($_SESSION['connecter']);
-        }else {
+        } else {
             $utilisateur = null;
         }
 
-        if( $utilisateur != null){
+        if ($utilisateur != null) {
             //Génération de la vue
             $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
-            echo $template->render(array( 'utilisateur' => $utilisateur));
-        }else{
+            echo $template->render(array('utilisateur' => $utilisateur));
+        } else {
             //Génération de la vue
             $template = $this->getTwig()->load('index.html.twig');
             echo $template->render(array());
         }
-        
+
     }
 
 
@@ -273,13 +292,87 @@ class ControllerUtilisateur extends Controller{
     /**
      * @brief permet de verifier modifier les informations de l'utilisateur dans la base de données et renvoie sur la page de edition
      */
-    public function modificationprofil() : void {
-        
-        
+    public function modificationprofil(): void
+    {
+        // récupération des données du formulaire
+        $id = isset($_POST['id']) ? $_POST['id'] : null;
+        $pseudo = isset($_POST['pseudo']) ? $_POST['pseudo'] : null;
+        $nom = isset($_POST['nom']) ? $_POST['nom'] : null;
+
+
+        $utilisateur = unserialize($_SESSION['connecter']);
+
+        //supprimer les espaces
+        $id = str_replace(' ', '', $id);
+        $pseudo = str_replace(' ', '', $pseudo);
+
+
+        $managerutilisateur = new UtilisateurDAO($this->getPdo());
+
+        if (strlen($pseudo) <= 50 && strlen($id) <= 20 && strlen($nom) <= 50) {
+            // verifier si l'id n'est pas déjà utilisé
+            if ($managerutilisateur->find($id) == null || $id == $utilisateur->getId()) {
+                //création de l'utilisateur
+                $utilisateur->setId($id);
+                $utilisateur->setPseudo($pseudo);
+                $utilisateur->setNom($nom);
+                // récupérer les fichiers images 
+                if (isset(($_FILES['urlImageProfil']))) {
+
+                    if ($_FILES['urlImageProfil']['name'] != '') {
+
+                        if (file_exists($utilisateur->getUrlImageProfil())) {
+                            unlink($utilisateur->getUrlImageProfil());
+                        }
+                        $urlImageProfil = isset($_FILES['urlImageProfil']) ? $_FILES['urlImageProfil'] : null;
+
+                        $urlImageProfil['name'] = "images/imageProfil_" . $utilisateur->getId() . "." . pathinfo($urlImageProfil['name'], PATHINFO_EXTENSION);
+
+                        move_uploaded_file($urlImageProfil["tmp_name"], $urlImageProfil['name']);
+
+                        $utilisateur->setUrlImageProfil($urlImageProfil['name']);
+
+                    }
+                }
+                if (isset(($_FILES['urlImageBaniere']))) {
+                    if ($_FILES['urlImageBaniere']['name'] != '') {
+
+                        if (file_exists($utilisateur->getUrlImageBaniere())) {
+                            unlink($utilisateur->getUrlImageBaniere());
+                        }
+                        $urlImageBaniere = isset($_FILES['urlImageBaniere']) ? $_FILES['urlImageBaniere'] : null;
+
+                        $urlImageBaniere['name'] = "images/imageBaniere_" . $utilisateur->getId() . "." . pathinfo($urlImageBaniere['name'], PATHINFO_EXTENSION);
+
+                        move_uploaded_file($urlImageBaniere["tmp_name"], $urlImageBaniere['name']);
+
+                        $utilisateur->setUrlImageBaniere($urlImageBaniere['name']);
+                    }
+                }
+
+                $managerutilisateur->update($utilisateur);
+                $_SESSION['connecter'] = serialize($utilisateur);
+                //Génération de la vue
+                $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
+                echo $template->render(array('utilisateur' => $utilisateur));
+                return;
+            }
+        }
+
+        var_dump($_FILES['urlImageBaniere']);
+
+
+
+
+
+
+
+
+
     }
-        
 
 
 
-    
+
+
 }
