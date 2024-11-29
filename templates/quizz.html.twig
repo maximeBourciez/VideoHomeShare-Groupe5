@@ -9,15 +9,11 @@
 
 	<main class="">
 		<div class="container">
-			{% for thread in fils %}
-				<div class="card my-4 shadow-sm border-0 rounded-3 ms-5">
-					<div class="card-body p-4 bg-mydark text-white rounded">
-						<div class="d-flex align-items-center">
-						</div>
-					</div>
-				</div>
-			{% endfor %}
-
+            <img src="{{ constant('WEBSITE_LOGO') }}" height="95" width="155" alt="VHS Logo" class="mx-auto my-2">
+            <button class="btn btn-myprimary my-2 mx-auto">Créer un quizz</button>
+            <button class="btn btn-myprimary my-2 mx-auto">Gérer mes quizz</button>
+            <p> Les quizz : </p>
+            
 		</div>
 	</main>
 
