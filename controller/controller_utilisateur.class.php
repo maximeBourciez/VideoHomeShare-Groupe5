@@ -26,7 +26,7 @@ class ControllerUtilisateur extends Controller
 
     /**
      * @brief permet d'afficher la page d'inscription
-     *
+     * @todo rajouter un date de naisance et metre le ninimal à quatorzan
      * @return void
      */
     public function inscription(): void
@@ -108,7 +108,7 @@ class ControllerUtilisateur extends Controller
 
 
                             //création de l'utilisateur
-                            $newUtilisateur = new Utilisateur($id, $pseudo, $nom, $mail, $mdp, "Utilisateur", NULL, NULL);
+                            $newUtilisateur = new Utilisateur($id, $pseudo, $nom, $mail, $mdp, "Utilisateur", "images/image_de_profil_de_base.svg", "images/Baniere_de_base.png");
                             $managerutilisateur->create($newUtilisateur);
                             //Génération de la vue
                             $template = $this->getTwig()->load('connection.html.twig');
@@ -323,7 +323,7 @@ class ControllerUtilisateur extends Controller
 
                     if ($_FILES['urlImageProfil']['name'] != '') {
                         //supprimer l'ancienne image
-                        if (file_exists($utilisateur->getUrlImageProfil())) {
+                        if (file_exists($utilisateur->getUrlImageProfil()) && $utilisateur->getUrlImageProfil() != "images/image_de_profil_de_base.svg") {
                             unlink($utilisateur->getUrlImageProfil());
                         }
                         //récupérer le fichier image
@@ -340,7 +340,7 @@ class ControllerUtilisateur extends Controller
                 if (isset(($_FILES['urlImageBaniere']))) {
                     if ($_FILES['urlImageBaniere']['name'] != '') {
                         //supprimer l'ancienne image
-                        if (file_exists($utilisateur->getUrlImageBaniere())) {
+                        if (file_exists($utilisateur->getUrlImageBaniere()) && $utilisateur->getUrlImageProfil() != "images/Baniere_de_base.png") {
                             unlink($utilisateur->getUrlImageBaniere());
                         }
                         //récupérer le fichier image
