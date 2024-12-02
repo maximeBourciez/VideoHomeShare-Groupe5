@@ -17,23 +17,30 @@ class commentaireDAO{
         $this->pdo = $pdo;
     }
 
-    public function getMoyenneNoteContenu(string $idContenu): int {
-        // SQL pour calculer la moyenne des notes
-        $sql = 'SELECT AVG(note) AS moyenne FROM vhs_commenterContenu WHERE idContenu = :idContenu';
+public function getMoyenneEtTotalNotesContenu(string $idContenu): array {
+    // SQL pour calculer la moyenne et le total des notes
+    $sql = 'SELECT AVG(note) AS moyenne, COUNT(note) AS total 
+            FROM vhs_commenterContenu 
+            WHERE idContenu = :idContenu';
 
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->bindParam(':idContenu', $idContenu, PDO::PARAM_STR);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':idContenu', $idContenu, PDO::PARAM_STR);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($result && isset($result['moyenne'])) {
-            return (int) round($result['moyenne']);
-        }
-
-        return 0;
+    if ($result) {
+        return [
+            'moyenne' => isset($result['moyenne']) ? (int) round($result['moyenne']) : 0,
+            'total' => isset($result['total']) ? (int) $result['total'] : 0,
+        ];
     }
 
+    // Si aucun résultat n'est trouvé, retourner des valeurs par défaut
+    return [
+        'moyenne' => 0,
+        'total' => 0,
+        ];
+    }
     public function hydrate(array $tableauAssaus): Commentaire{
         return new Commentaire($tableauAssaus['idUtilisateur'], $tableauAssaus['titre'], $tableauAssaus['note'], $tableauAssaus['avis'],$tableauAssaus['estPositif']);
     }

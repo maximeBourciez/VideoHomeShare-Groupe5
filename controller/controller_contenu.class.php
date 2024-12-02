@@ -22,20 +22,21 @@
 
     public function afficherFilm(){
         $id = $_GET['id_film'];
-
+    
         $contenuDAO = new ContenuDAO($this->getPdo());
         $contenu = $contenuDAO->findById($id);
-
+    
         $themeDAO = new ThemeDAO($this->getPdo());
         $themes = $themeDAO->findThemesByContenuId($id);
         
-        $noteDao = new CommentaireDAO($this->getPdo());
-        $moyenne = $noteDao->getMoyenneNoteContenu($id);
-
+        $commentaireDAO = new CommentaireDAO($this->getPdo());
+        $notes = $commentaireDAO->getMoyenneEtTotalNotesContenu($id); // Retourne un tableau avec 'moyenne' et 'total'
+    
         echo $this->getTwig()->render('pageDunFilm.html.twig', [
             'contenu' => $contenu,
             'themes' => $themes,
-            'moyenne' => $moyenne
+            'moyenne' => $notes['moyenne'],
+            'total' => $notes['total']
         ]);
     }
-}
+ }

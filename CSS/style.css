@@ -1,5 +1,4 @@
 @charset "UTF-8";
-@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css");
 :root,
 [data-bs-theme=light] {
   --bs-blue: #0d6efd;
@@ -11926,25 +11925,48 @@ textarea.form-control-lg {
   display: inline-block;
 }
 
-/* Inclure Font Awesome si nécessaire (à ajouter dans le fichier HTML ou SCSS) */
 /* Conteneur global de notation */
 .star-rating {
-  font-size: 48px; /* Taille des étoiles */
-  color: #ddd; /* Couleur des étoiles vides */
+  font-size: 48px;
+  color: #ddd;
   position: relative;
   display: inline-block;
   margin-left: 10px;
 }
 
-/* Style pour les étoiles remplies */
-.star-rating .stars-fill {
-  color: #ffd700; /* Couleur des étoiles pleines */
+.star-rating .star-wrapper {
+  position: relative;
+  display: inline-block;
 }
 
-/* Style des étoiles individuelles */
-.star-rating .fa-star {
+.star-rating .star-full,
+.star-rating .star-half {
   margin-right: 2px;
   cursor: pointer;
+  vertical-align: middle; /* Align stars vertically in the middle */
+}
+
+.star-rating .star-half {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-28%); /* Center the half star vertically */
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  color: #ffd700;
+}
+
+.star-rating .stars-fill .star-full {
+  color: #ffd700;
+}
+
+.star-rating .stars-half .star-full {
+  color: #ddd;
+}
+
+.star-rating .stars-half .star-half {
+  color: #ffd700;
 }
 
 /*# sourceMappingURL=style.css.map */

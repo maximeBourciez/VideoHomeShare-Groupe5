@@ -1,31 +1,42 @@
 function generateStarRating(note, maxNote = 5) {
   const ratingContainer = document.getElementById("rating");
-
   if (!ratingContainer) {
     console.error("Conteneur #rating non trouvé");
     return;
   }
-
-  // Nettoyage du conteneur
+  
   ratingContainer.innerHTML = "";
-
-  // Conteneur des étoiles
+  
   const starContainer = document.createElement("div");
-  starContainer.classList.add("star-rating"); // Ajout de la classe CSS pour le conteneur des étoiles
-
-  // Génération des étoiles
+  starContainer.classList.add("star-rating");
+  
   for (let i = 0; i < maxNote; i++) {
-    const star = document.createElement("i");
-    star.classList.add("fa", "fa-star"); // Utilisation des icônes Font Awesome
-    if (i < Math.round(note)) {
-      star.classList.add("stars-fill"); // Classe pour les étoiles remplies
+    const starWrapper = document.createElement("span");
+    starWrapper.classList.add("star-wrapper");
+    
+    const starFull = document.createElement("i");
+    starFull.classList.add("fa", "fa-star", "star-full");
+    
+    if (i < Math.floor(note)) {
+      // Étoiles pleines
+      starWrapper.classList.add("stars-fill");
+      starWrapper.appendChild(starFull);
+    } else if (i === Math.floor(note) && note % 1 >= 0.5) {
+      // Demi-étoile
+      const starHalf = document.createElement("i");
+      starHalf.classList.add("fa", "fa-star-half-o", "star-half");
+      
+      starWrapper.classList.add("stars-half");
+      starWrapper.appendChild(starFull);
+      starWrapper.appendChild(starHalf);
+    } else {
+      // Étoiles vides
+      starFull.classList.add("star-empty");
+      starWrapper.appendChild(starFull);
     }
-    starContainer.appendChild(star);
+    
+    starContainer.appendChild(starWrapper);
   }
-
-  // Ajout au DOM
+  
   ratingContainer.appendChild(starContainer);
 }
-
-// Debug global
-console.log("Script de notation chargé");
