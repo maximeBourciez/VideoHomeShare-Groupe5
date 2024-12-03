@@ -167,7 +167,7 @@ class Utilisateur{
      * Set the value of urlImageBanière
      * @return void
      */
-    public function setUrlImageBanière(?string $urlImageBanière = null): void
+    public function setUrlImageBaniere(?string $urlImageBanière = null): void
     {
         $this->urlImageBaniere = $urlImageBanière;
     }

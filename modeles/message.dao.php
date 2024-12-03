@@ -144,13 +144,14 @@ class MessageDAO
      */
     public function chercherMessageParId(int $id): ?Message
     {
-        $sql = "SELECT * FROM" . DB_PREFIX . "message WHERE id = :id";
+        $sql = "SELECT * FROM" . DB_PREFIX . "message  WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         return $this->hydrate($stmt->fetch());
     }
+
 
 
 
@@ -162,14 +163,16 @@ class MessageDAO
      * @param integer $id_user
      * @return array
      */
-    public function listerMessagesParIdUser(int $id_user): array
+    public function listerMessagesParIdUser( ?string $id_user): array
     {
-        $sql = "SELECT * FROM" . DB_PREFIX . "message WHERE id_user = :id_user";
+        $sql = "SELECT * FROM " . DB_PREFIX . "message M join " . DB_PREFIX . "utilisateur U ON  M.idUtilisateur=U.idUtilisateur WHERE M.idUtilisateur = :id_user ORDER BY dateC DESC";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':id_user', $id_user, PDO::PARAM_INT);
+        $stmt->bindValue(':id_user', $id_user, PDO::PARAM_STR);
         $stmt->execute();
-        $stmt->setFetchMode(PDO::FETCH_CLASS, 'Message');
-        return $stmt->fetchAll();
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $messages = $stmt->fetchAll();
+
+        return ($this->hydrateAll($messages));
     }
 
 
