@@ -11733,6 +11733,13 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+html,
+body {
+  overflow-x: hidden; /* Empêche le scroll horizontal */
+  margin: 0; /* Retirer toute marge par défaut */
+  font-family: "Montserrat", sans-serif;
+}
+
 .myprimary {
   color: #f2ac0f;
 }
@@ -11954,11 +11961,11 @@ textarea.form-control-lg {
   width: 50%;
   height: 100%;
   overflow: hidden;
-  color: #ffd700;
+  color: #231b33;
 }
 
 .star-rating .stars-fill .star-full {
-  color: #ffd700;
+  color: #f2ac0f;
 }
 
 .star-rating .stars-half .star-full {
@@ -11966,7 +11973,7 @@ textarea.form-control-lg {
 }
 
 .star-rating .stars-half .star-half {
-  color: #ffd700;
+  color: #f2ac0f;
 }
 
 /*# sourceMappingURL=style.css.map */

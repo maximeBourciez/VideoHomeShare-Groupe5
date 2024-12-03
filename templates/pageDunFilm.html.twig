@@ -31,28 +31,54 @@
 				<!-- Note -->
 				<div>
 					<div class="d-flex text-center align-items-center">
-						<p class="m-0">Note : {{ moyenne }}/10
+						<p class="m-0">Note :
+							{{ moyenne }}/10
 						</p>
 						<div id="rating" class="ms-5"></div>
 					</div>
 					<div>
-						<p class="mb-5 mx-3 small fw-light">{{ total }} avis</p>
+						<p class="mb-5 mx-3 small fw-light">{{ total }}
+							avis</p>
 					</div>
 				</div>
 				<script>
 					document.addEventListener('DOMContentLoaded', function () {
-						generateStarRating({{ moyenne }}/2, 5);});
-				</script>
-					<!-- Bouton du bas -->
-					<div class="mr-5">
-						<div class="d-flex justify-content-center mb-5">
-							<button class="btn btn-myprimary fw-normal me-4">Laisser un avis</button>
-							<button class="btn btn-myprimary fw-normal me-4 bi bi-plus">WatchList</button>
-							<button class="btn btn-myprimary fw-normal ">Noter</button>
+generateStarRating({{ moyenne }}/2, 5);});</script>
+						<!-- Bouton du bas -->
+						<div class="mr-5">
+							<div class="d-flex justify-content-right mb-5">
+								<button class="btn btn-myprimary fw-normal me-4">Laisser un avis</button>
+								<button class="btn btn-myprimary fw-normal me-4 bi bi-plus">WatchList</button>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	</main>
-{% endblock %}
+				</div>
+
+				{% set synopsis = contenu.DescriptionLongue %}
+				{% set max_length = 1000 %}
+
+				<div class="d-flex flex-column align-items-center">
+					<h2 class="my-3 fw-bolder">Synopsis</h2>
+					<div class="shadow fst-italic fs-6 bg-dark text-white p-3 rounded">
+						{% if synopsis|length > max_length %}
+							<p>
+								{{ synopsis|slice(0, max_length) ~ '...' }}
+								<a href="#" onclick="document.getElementById('full-synopsis').style.display = 'block'; this.style.display = 'none'; return false;" class="text-primary">
+									Voir plus
+								</a>
+							</p>
+							<p id="full-synopsis" style="display:none;">
+								{{ synopsis }}
+								<a href="#" onclick="document.getElementById('full-synopsis').style.display = 'none'; this.parentElement.previousElementSibling.querySelector('a').style.display = 'inline'; return false;" class="text-primary">
+									Réduire
+								</a>
+							</p>
+						{% else %}
+							<p>{{ synopsis }}</p>
+						{% endif %}
+					</div>
+				</div>
+			</main>
+		{% endblock %}
