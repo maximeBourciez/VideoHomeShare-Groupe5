@@ -37,5 +37,6 @@ require_once 'modeles/question.class.php';
 // Ajout des contrôleurs
 require_once 'controller/controller.class.php';
 require_once 'controller/controller_factory.class.php';
+require_once 'controller/controller_quizz.class.php';
 require_once 'controller/controller_fil.class.php';
 require_once 'controller/controller_utilisateur.class.php';

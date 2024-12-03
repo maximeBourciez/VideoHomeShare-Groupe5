@@ -69,4 +69,11 @@ class QuizzDAO{
         }
         return $this->hydrate($row);
     }
+
+    function findAll(): array{
+        $sql = "SELECT * FROM " . DB_PREFIX . "quizz";
+        $stmt = $this->pdo->query($sql);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        return $this->hydrateAll($stmt->fetchAll());
+    }
 }
