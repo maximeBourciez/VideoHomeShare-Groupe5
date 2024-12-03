@@ -46,9 +46,10 @@ class PersonnaliteDAO
         $nom = $row['nom'];
         $prenom = $row['prenom'];
         $urlImage = $row['urlImage'];
+        $role = $row['role'];
 
         // Retourner la Personnalite
-        return new Personnalite($id, $nom, $prenom, $urlImage);
+        return new Personnalite($id, $nom, $prenom, $urlImage, $role);
     }
 
     function hydrateAll(array $rows): array

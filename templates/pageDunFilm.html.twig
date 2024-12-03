@@ -55,37 +55,81 @@ generateStarRating({{ moyenne }}/2, 5);});</script>
 				</div>
 			</div>
 				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
-				{% set synopsis = contenu.DescriptionLongue %}
-				{% set max_length = 1000 %}
+{% set synopsis = contenu.DescriptionLongue %}
+{% set max_length = 1000 %}
 
-				<div class="d-flex flex-column align-items-center">
-					<h2 class="my-3 fw-bolder">Synopsis</h2>
-					<div class="shadow fst-italic fs-6 bg-dark text-white p-3 rounded">
-						{% if synopsis|length > max_length %}
-							<p>
-								{{ synopsis|slice(0, max_length) ~ '...' }}
-								<a href="#" onclick="document.getElementById('full-synopsis').style.display = 'block'; this.style.display = 'none'; return false;" class="text-primary">
-									Voir plus
-								</a>
-							</p>
-							<p id="full-synopsis" style="display:none;">
-								{{ synopsis }}
-								<a href="#" onclick="document.getElementById('full-synopsis').style.display = 'none'; this.parentElement.previousElementSibling.querySelector('a').style.display = 'inline'; return false;" class="text-primary">
-									Réduire
-								</a>
-							</p>
-						{% else %}
-							<p>{{ synopsis }}</p>
-						{% endif %}
+<div class="d-flex flex-column align-items-center">
+	<h2 class="my-3 fw-bolder">Synopsis</h2>
+	<div class="shadow fst-italic fs-6 bg-dark text-white p-3 rounded">
+		{% if synopsis|length > max_length %}
+			<p>
+				{{ synopsis|slice(0, max_length) ~ '...' }}
+				<a href="#" onclick="document.getElementById('full-synopsis').style.display = 'block'; this.style.display = 'none'; return false;" class="text-primary">
+					Voir plus
+				</a>
+			</p>
+			<p id="full-synopsis" style="display:none;">
+				{{ synopsis }}
+				<a href="#" onclick="document.getElementById('full-synopsis').style.display = 'none'; this.parentElement.previousElementSibling.querySelector('a').style.display = 'inline'; return false;" class="text-primary">
+					Réduire
+				</a>
+			</p>
+		{% else %}
+			<p>{{ synopsis }}</p>
+		{% endif %}
+	</div>
+</div>
+<div class="bg-mydark my-5 text-white w-100 rounded shadow">
+	<h2>Personnalités :</h2>
+
+	{% if personnalite|length > 6 %}
+		<div id="personnalitesCarousel" class="carousel slide" data-bs-ride="carousel">
+			<div class="carousel-inner">
+				{% set chunks = personnalite|batch(6) %}
+				{% for chunk in chunks %}
+					<div class="carousel-item {{ loop.first ? 'active' : '' }}">
+						<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 justify-content-center">
+							{% for personne in chunk %}
+								<div class="card bg-mylight mx-3 mb-3" style="width: 10rem;">
+									<img src="{{ personne.urlImage }}" alt="{{ personne.nom }}" class="shadow img-fluid my-1 rounded" style="width: 100%; height: 150px; object-fit: cover;">
+									<div class="card-body">
+										<p class="card-text mb-0">{{ personne.nom }}</p>
+										<p class="card-text mt-0">{{ personne.prenom }}</p>
+										<p class="card-text">{{ personne.role }}</p>
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+
+			<button class="carousel-control-prev" type="button" data-bs-target="#personnalitesCarousel" data-bs-slide="prev">
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Précédent</span>
+			</button>
+			<button class="carousel-control-next" type="button" data-bs-target="#personnalitesCarousel" data-bs-slide="next">
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Suivant</span>
+			</button>
+		</div>
+	{% else %}
+		<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+			{% for personne in personnalite %}
+				<div class="card bg-mylight mx-3 mb-3" style="width: 10rem;">
+					<img src="{{ personne.urlImage }}" alt="{{ personne.nom }}" class="shadow img-fluid my-1 rounded" style="width: 100%; height: 150px; object-fit: cover;">
+					<div class="card-body">
+						<p class="card-text mb-0">{{ personne.nom }}</p>
+						<p class="card-text mt-0">{{ personne.prenom }}</p>
+						<p class="card-text">{{ personne.role }}</p>
 					</div>
 				</div>
-
-
-				<div class="bg-mydark my-5 text-white">
-					<h2> Personnalité : </h2>
-					<h4> {{personnalite[0].nom}} </h4>
-
-				</div>
-			</main>
-		{% endblock %}
+			{% endfor %}
+		</div>
+	{% endif %}
+</div></main>{% endblock %}
