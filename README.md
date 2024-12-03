@@ -1,5 +1,4 @@
 # SAE3.01 - Video Home Share (VHS)
-<br>
 
 ## A propos du projet
 Video Home Share est une application web responsive autour des films et séries.
@@ -24,12 +23,12 @@ PHP
 ### Base de données
 SQL
 ### API
-?
 <br>
 <br>
 
 ## Sécurité
-OpenSSL <br>
+OpenSSL
+<br>
 OAUTH2
 <br>
 <br>
