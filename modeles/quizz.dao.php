@@ -13,21 +13,25 @@ class QuizzDAO{
     // Méthodes
 
     function create(Quizz $quizz): bool{
-        $req = $this->pdo->prepare("INSERT INTO Quizz (titre, description, difficulte, date) VALUES (:titre, :description, :difficulte, :date)");
+        $req = $this->pdo->prepare("INSERT INTO Quizz (titre, description, difficulte, dateC, idUtilisateur) VALUES (:titre, :description, :difficulte, :date, :idUtilisateur)");
         $req->bindParam(":titre", $quizz->getTitre());
         $req->bindParam(":description", $quizz->getDescription());
         $req->bindParam(":difficulte", $quizz->getDifficulte());
-        $req->bindParam(":date", $quizz->getDate());
+        $req->bindParam(":dateC", $quizz->getDateC());
+        $req->bindParam(":idUtilisateur", $quizz->getIdUtilisateur());
+
         return $req->execute();
     }
 
     function update(Quizz $quizz): bool{
-        $req = $this->pdo->prepare("UPDATE Quizz SET titre = :titre, description = :description, difficulte = :difficulte, date = :date WHERE id = :id");
+        $req = $this->pdo->prepare("UPDATE Quizz SET titre = :titre, description = :description, difficulte = :difficulte, dateC = :date WHERE id = :id, idUtilisateur = :idUtilisateur");
         $req->bindParam(":id", $quizz->getId());
         $req->bindParam(":titre", $quizz->getTitre());
         $req->bindParam(":description", $quizz->getDescription());
         $req->bindParam(":difficulte", $quizz->getDifficulte());
-        $req->bindParam(":date", $quizz->getDate());
+        $req->bindParam(":dateC", $quizz->getDateC());
+        $req->bindParam(":idUtilisateur", $quizz->getIdUtilisateur());
+
         return $req->execute();
     }
 
@@ -43,10 +47,11 @@ class QuizzDAO{
         $titre = $row['titre'];
         $description = $row['description'];
         $difficulte = $row['difficulte'];
-        $date = $row['dateC'];
+        $dateC = $row['dateC'];
+        $pseudo = $row['pseudo'];
 
         // Retourner le Quizz
-        return new Quizz($id, $titre, $description, $difficulte, $date);
+        return new Quizz($id, $titre, $description, $difficulte, $dateC, $pseudo);
     }
 
     function hydrateAll(array $rows): array{
@@ -59,7 +64,7 @@ class QuizzDAO{
     }
 
     function find(int $id): ?Quizz{
-        $sql = "SELECT * FROM Quizz WHERE idQuizz = :id";
+        $sql = "SELECT Q.*, U.pseudo FROM Quizz Q JOIN Utilisateur U ON Q.idUtilisateur = U.idUtilisateur WHERE idQuizz = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -71,7 +76,7 @@ class QuizzDAO{
     }
 
     function findAll(): array{
-        $sql = "SELECT * FROM " . DB_PREFIX . "quizz";
+        $sql = "SELECT Q.idQuizz, Q.titre, Q.description, Q.difficulte, Q.dateC, U.pseudo FROM " .DB_PREFIX. "quizz Q JOIN " .DB_PREFIX. "utilisateur U ON Q.idUtilisateur = U.idUtilisateur";
         $stmt = $this->pdo->query($sql);
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         return $this->hydrateAll($stmt->fetchAll());

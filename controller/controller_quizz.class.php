@@ -52,7 +52,7 @@ class ControllerQuizz extends Controller {
         // Récupérer les infos du quizz
         $quizzDAO = new QuizzDAO($this->getPdo());
         $quizz = $quizzDAO->findById($id);
-
+        
         // Rendre le template avec les infos
         echo $this->getTwig()->render('quizz.html.twig', [
             'quizz' => $quizz

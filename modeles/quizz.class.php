@@ -7,15 +7,17 @@ class Quizz {
     private ?string $titre;
     private ?string $description;
     private ?string $difficulte;
-    private ?string $date;
+    private ?string $dateC;
+    private ?string $idUtilisateur;
 
     // Constructeur
-    function __construct(?int $id = null, ?string $titre = null, ?string $description = null, ?string $difficulte = null, ?string $date = null){
+    function __construct(?int $id = null, ?string $titre = null, ?string $description = null, ?string $difficulte = null, ?string $dateC = null, ?string $idUtilisateur = null){
         $this->id = $id;
         $this->titre = $titre;
         $this->description = $description;
         $this->difficulte = $difficulte;
-        $this->date = $date;
+        $this->dateC = $dateC;
+        $this->idUtilisateur = $idUtilisateur;
     }
 
     // Encapsulation
@@ -62,10 +64,19 @@ class Quizz {
      * Get the value of date
      * @return string
      */
-    public function getDate(): ?string
+    public function getDateC(): ?string
     {
-        return $this->date;
+        return $this->dateC;
     }
+
+    /**
+     * Get the value of idUtilisateur
+     * @return string
+     */
+    public function getIdUtilisateur(): ?string
+    {
+        return $this->idUtilisateur;
+    }    
 
     // Setters
 
@@ -114,10 +125,20 @@ class Quizz {
      * @param string $date
      * @return void
      */
-    public function setDate(string $date): void
+    public function setDateC(string $dateC): void
     {
-        $this->date = $date;
+        $this->dateC = $dateC;
     }
+
+    /**
+     * Get the value of idUtilisateur
+     * @param string $idUtilisateur
+     * @return void
+     */
+    public function setIdUtilisateur(string $idUtilisateur): void
+    {
+        $this->idUtilisateur = $idUtilisateur;
+    } 
 
     // Méthodes
 
