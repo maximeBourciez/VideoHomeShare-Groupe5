@@ -160,5 +160,26 @@
                 </div>
             {% endif %}
         </div>
+        <div class="bg-mydark rounded text-white p-3 mb-5">
+    <h1 class="mx-5">Commentaires :</h1>
+    {% for com in commentaire %}
+    <div class="d-flex align-items-center">
+        <h4 class="m-3 mb-0">{{ com.titre }}</h4>
+        <p class="m-3 mb-0">.</p>
+        <p class="m-3 mb-0">
+            {% if com.estPositif == 1 %}
+                {{ com.note }}/10
+                <i class="bi bi-star-fill"></i> <!-- Étoile remplie -->
+            {% else %}
+                {{ com.note }}/10
+                <i class="bi bi-star"></i> <!-- Étoile vide -->
+            {% endif %}
+        </p>
+    </div>
+    <p class="m-3">{{ com.avis }}</p>
+    <hr>
+    {% endfor %}
+</div>
+
     </main>
 {% endblock %}

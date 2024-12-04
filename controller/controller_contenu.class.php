@@ -29,8 +29,11 @@
         $managerTheme = new ThemeDAO($this->getPdo());
         $themes = $managerTheme->findThemesByContenuId($id);
         
+        $managerCommentaireMoy = new CommentaireDAO($this->getPdo());
+        $notes = $managerCommentaireMoy->getMoyenneEtTotalNotesContenu($id); // Retourne un tableau avec 'moyenne' et 'total'
+
         $managerCommentaire = new CommentaireDAO($this->getPdo());
-        $notes = $managerCommentaire->getMoyenneEtTotalNotesContenu($id); // Retourne un tableau avec 'moyenne' et 'total'
+        $commentaire = $managerCommentaire->getCommentairesContenu($id);
 
         $managerPersonnalite = new PersonnaliteDAO($this->getPdo());
         $personnalite = $managerPersonnalite->findAllParContenuId($id); 
@@ -40,7 +43,8 @@
             'themes' => $themes,
             'moyenne' => $notes['moyenne'],
             'total' => $notes['total'],
-            'personnalite' => $personnalite
+            'personnalite' => $personnalite,
+            'commentaire' => $commentaire
         ]);
     }
  }

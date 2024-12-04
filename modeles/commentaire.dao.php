@@ -41,6 +41,28 @@ public function getMoyenneEtTotalNotesContenu(string $idContenu): array {
         'total' => 0,
         ];
     }
+
+    public function getCommentairesContenu(string $idContenu): array {
+        // SQL pour récupérer les commentaires
+        $sql = 'SELECT idUtilisateur, titre, note, avis, estPositif
+        FROM vhs_commenterContenu
+        WHERE idContenu = :idContenu
+        ORDER BY dateCommentaire DESC
+        LIMIT 6';
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':idContenu', $idContenu, PDO::PARAM_STR);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            return $result;
+        }
+
+        // Si aucun résultat n'est trouvé, retourner un tableau vide
+        return [];
+    }
+
     public function hydrate(array $tableauAssaus): Commentaire{
         return new Commentaire($tableauAssaus['idUtilisateur'], $tableauAssaus['titre'], $tableauAssaus['note'], $tableauAssaus['avis'],$tableauAssaus['estPositif']);
     }
