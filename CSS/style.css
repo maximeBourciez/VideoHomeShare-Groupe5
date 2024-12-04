@@ -11976,4 +11976,32 @@ body {
   color: #f2ac0f;
 }
 
+.custom-carousel-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  z-index: 10;
+  margin: 0 15px; /* Espace entre les flèches et les cartes */
+}
+
+.carousel-control-prev {
+  left: 0;
+}
+
+.carousel-control-next {
+  right: 0;
+}
+
+@media (max-width: 768px) {
+  .custom-carousel-control {
+    width: 40px;
+    height: 40px;
+    margin: 0 10px;
+  }
+}
+
 /*# sourceMappingURL=style.css.map */

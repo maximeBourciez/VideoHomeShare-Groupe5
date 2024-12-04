@@ -1,135 +1,164 @@
 {% extends 'base_template.html.twig' %}
+
 {% block content %}
-	<main class="container d-flex flex-column justify-content-center align-items-center flex-grow-1">
-		<div class="d-flex">
-			<div class="me-5">
-				<img src="{{ contenu.lienAffiche }}" alt="{{ contenu.titre }}" class="shadow img-fluid m-5 rounded" style="width: 525px; height: 750px; object-fit: cover;git co">
-			</div>
-			<div class="col-6 d-flex flex-column justify-content-between">
-				<h1 class="mt-5 fw-bolder text-center">{{ contenu.titre }}</h1>
-				<!-- Date/Durée -->
-				<div class="d-flex justify-content-between fs-5 fw-bolder">
-					<p>Date :
-						{{ contenu.date|date("d/m/Y") }}</p>
-					<p>Durée :
-						{{ contenu.duree }}
-						min</p>
-				</div>
-				<!-- Description -->
-				<div class="shadow fst-italic fs-5 bg-dark text-white p-3 rounded">
-					<p>{{ contenu.description }}</p>
-				</div>
+    <main class="container d-flex flex-column justify-content-center align-items-center flex-grow-1">
+        <div class="d-flex">
+            <!-- Section Affiche -->
+            <div class="me-5">
+                <img 
+                    src="{{ contenu.lienAffiche }}" 
+                    alt="{{ contenu.titre }}" 
+                    class="shadow img-fluid m-5 rounded" 
+                    style="width: 525px; height: 750px; object-fit: cover;"
+                >
+            </div>
 
-				<!-- Genre -->
-				<div class="d-flex justify-content-left align-items-center">
-					<p class="mb-0">Genre :</p>
-					{% for theme in themes %}
-						<span class="theme-tag ms-3">{{ theme.nom }}</span>
-					{% endfor %}
-				</div>
+            <!-- Section Informations -->
+            <div class="col-6 d-flex flex-column justify-content-between">
+                <!-- Titre -->
+                <h1 class="mt-5 fw-bolder text-center">{{ contenu.titre }}</h1>
 
-				<!-- Note -->
-				<div>
-					<div class="d-flex text-center align-items-center">
-						<p class="m-0">Note :
-							{{ moyenne }}/10
-						</p>
-						<div id="rating" class="ms-5"></div>
-					</div>
-					<div>
-						<p class="mb-5 mx-3 small fw-light">{{ total }}
-							avis</p>
-					</div>
-				</div>
-				<script>
-					document.addEventListener('DOMContentLoaded', function () {
-generateStarRating({{ moyenne }}/2, 5);});</script>
-						<!-- Bouton du bas -->
-						<div class="mr-5">
-							<div class="d-flex justify-content-right mb-5">
-								<button class="btn btn-myprimary fw-normal me-4">Laisser un avis</button>
-								<button class="btn btn-myprimary fw-normal me-4 bi bi-plus">WatchList</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+                <!-- Date et Durée -->
+                <div class="d-flex justify-content-between fs-5 fw-bolder">
+                    <p>Date : {{ contenu.date|date("d/m/Y") }}</p>
+                    <p>Durée : {{ contenu.duree }} min</p>
+                </div>
 
-{% set synopsis = contenu.DescriptionLongue %}
-{% set max_length = 1000 %}
+                <!-- Description -->
+                <div class="shadow fst-italic fs-5 bg-dark text-white p-3 rounded">
+                    <p>{{ contenu.description }}</p>
+                </div>
 
-<div class="d-flex flex-column align-items-center">
-	<h2 class="my-3 fw-bolder">Synopsis</h2>
-	<div class="shadow fst-italic fs-6 bg-dark text-white p-3 rounded">
-		{% if synopsis|length > max_length %}
-			<p>
-				{{ synopsis|slice(0, max_length) ~ '...' }}
-				<a href="#" onclick="document.getElementById('full-synopsis').style.display = 'block'; this.style.display = 'none'; return false;" class="text-primary">
-					Voir plus
-				</a>
-			</p>
-			<p id="full-synopsis" style="display:none;">
-				{{ synopsis }}
-				<a href="#" onclick="document.getElementById('full-synopsis').style.display = 'none'; this.parentElement.previousElementSibling.querySelector('a').style.display = 'inline'; return false;" class="text-primary">
-					Réduire
-				</a>
-			</p>
-		{% else %}
-			<p>{{ synopsis }}</p>
-		{% endif %}
-	</div>
-</div>
-<div class="bg-mydark my-5 text-white w-100 rounded shadow">
-	<h2>Personnalités :</h2>
+                <!-- Genres -->
+                <div class="d-flex justify-content-left align-items-center">
+                    <p class="mb-0">Genre :</p>
+                    {% for theme in themes %}
+                        <span class="theme-tag ms-3">{{ theme.nom }}</span>
+                    {% endfor %}
+                </div>
 
-	{% if personnalite|length > 6 %}
-		<div id="personnalitesCarousel" class="carousel slide" data-bs-ride="carousel">
-			<div class="carousel-inner">
-				{% set chunks = personnalite|batch(6) %}
-				{% for chunk in chunks %}
-					<div class="carousel-item {{ loop.first ? 'active' : '' }}">
-						<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 justify-content-center">
-							{% for personne in chunk %}
-								<div class="card bg-mylight mx-3 mb-3" style="width: 10rem;">
-									<img src="{{ personne.urlImage }}" alt="{{ personne.nom }}" class="shadow img-fluid my-1 rounded" style="width: 100%; height: 150px; object-fit: cover;">
-									<div class="card-body">
-										<p class="card-text mb-0">{{ personne.nom }}</p>
-										<p class="card-text mt-0">{{ personne.prenom }}</p>
-										<p class="card-text">{{ personne.role }}</p>
-									</div>
-								</div>
-							{% endfor %}
-						</div>
-					</div>
-				{% endfor %}
-			</div>
+                <!-- Note et Avis -->
+                <div>
+                    <div class="d-flex text-center align-items-center">
+                        <p class="m-0">Note : {{ moyenne }}/10</p>
+                        <div id="rating" class="ms-5"></div>
+                    </div>
+                    <div>
+                        <p class="mb-5 mx-3 small fw-light">{{ total }} avis</p>
+                    </div>
+                </div>
 
-			<button class="carousel-control-prev" type="button" data-bs-target="#personnalitesCarousel" data-bs-slide="prev">
-				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-				<span class="visually-hidden">Précédent</span>
-			</button>
-			<button class="carousel-control-next" type="button" data-bs-target="#personnalitesCarousel" data-bs-slide="next">
-				<span class="carousel-control-next-icon" aria-hidden="true"></span>
-				<span class="visually-hidden">Suivant</span>
-			</button>
-		</div>
-	{% else %}
-		<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-			{% for personne in personnalite %}
-				<div class="card bg-mylight mx-3 mb-3" style="width: 10rem;">
-					<img src="{{ personne.urlImage }}" alt="{{ personne.nom }}" class="shadow img-fluid my-1 rounded" style="width: 100%; height: 150px; object-fit: cover;">
-					<div class="card-body">
-						<p class="card-text mb-0">{{ personne.nom }}</p>
-						<p class="card-text mt-0">{{ personne.prenom }}</p>
-						<p class="card-text">{{ personne.role }}</p>
-					</div>
-				</div>
-			{% endfor %}
-		</div>
-	{% endif %}
-</div></main>{% endblock %}
+                <!-- Script de génération des étoiles -->
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        generateStarRating({{ moyenne }}/2, 5);
+                    });
+                </script>
+
+                <!-- Boutons d'action -->
+                <div class="mr-5">
+                    <div class="d-flex justify-content-right mb-5">
+                        <button class="btn btn-myprimary fw-normal me-4">Laisser un avis</button>
+                        <button class="btn btn-myprimary fw-normal me-4 bi bi-plus">WatchList</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Synopsis -->
+        {% set synopsis = contenu.DescriptionLongue %}
+        {% set max_length = 1000 %}
+        <div class="d-flex flex-column align-items-center">
+            <h2 class="my-3 fw-bolder">Synopsis</h2>
+            <div class="shadow fst-italic fs-6 bg-dark text-white p-3 rounded">
+                {% if synopsis|length > max_length %}
+                    <p>
+                        {{ synopsis|slice(0, max_length) ~ '...' }}
+                        <a href="#" onclick="document.getElementById('full-synopsis').style.display = 'block'; this.style.display = 'none'; return false;" class="text-primary">
+                            Voir plus
+                        </a>
+                    </p>
+                    <p id="full-synopsis" style="display:none;">
+                        {{ synopsis }}
+                        <a href="#" onclick="document.getElementById('full-synopsis').style.display = 'none'; this.parentElement.previousElementSibling.querySelector('a').style.display = 'inline'; return false;" class="text-primary">
+                            Réduire
+                        </a>
+                    </p>
+                {% else %}
+                    <p>{{ synopsis }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Personnalités -->
+        <div class="bg-mydark my-5 text-white w-100 rounded shadow position-relative">
+            <h2 class="m-3">Personnalités :</h2>
+
+            {% if personnalite|length > 6 %}
+                <div id="personnalitesCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        {% set chunks = personnalite|batch(6) %}
+                        {% for chunk in chunks %}
+                            <div class="carousel-item {{ loop.first ? 'active' : '' }}">
+                                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 justify-content-center">
+                                    {% for personne in chunk %}
+                                        <div class="card bg-mylight mx-3 mb-3" style="width: 10rem;">
+                                            <img 
+                                                src="{{ personne.urlImage }}" 
+                                                alt="{{ personne.nom }}" 
+                                                class="shadow img-fluid my-1 rounded" 
+                                                style="width: 100%; height: 150px; object-fit: cover;"
+                                            >
+                                            <div class="card-body">
+                                                <p class="card-text mb-0">{{ personne.nom }}</p>
+                                                <p class="card-text mt-0">{{ personne.prenom }}</p>
+                                                <p class="card-text">{{ personne.role }}</p>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <button 
+                        class="carousel-control-prev custom-carousel-control" 
+                        type="button" 
+                        data-bs-target="#personnalitesCarousel" 
+                        data-bs-slide="prev"
+                    >
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Précédent</span>
+                    </button>
+                    <button 
+                        class="carousel-control-next custom-carousel-control" 
+                        type="button" 
+                        data-bs-target="#personnalitesCarousel" 
+                        data-bs-slide="next"
+                    >
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Suivant</span>
+                    </button>
+                </div>
+            {% else %}
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+                    {% for personne in personnalite %}
+                        <div class="card bg-mylight mx-3 mb-3" style="width: 10rem;">
+                            <img 
+                                src="{{ personne.urlImage }}" 
+                                alt="{{ personne.nom }}" 
+                                class="shadow img-fluid my-1 rounded" 
+                                style="width: 100%; height: 150px; object-fit: cover;"
+                            >
+                            <div class="card-body">
+                                <p class="card-text mb-0">{{ personne.nom }}</p>
+                                <p class="card-text mt-0">{{ personne.prenom }}</p>
+                                <p class="card-text">{{ personne.role }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </main>
+{% endblock %}
