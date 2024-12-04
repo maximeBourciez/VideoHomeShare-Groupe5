@@ -51,7 +51,7 @@ class Message {
     private ?Utilisateur $utilisateur;
 
     /**
-     * @var Message|null $reponse
+     * @var array<Message>|null $reponse
      * @brief Une réponse à ce message, si elle existe. Null si ce n'est pas une réponse.
      */
     private ?array $reponses = [];
@@ -207,7 +207,7 @@ class Message {
      * @brief Définit la réponse à ce message.
      * @param array<Message>|null $reponse La réponse à ce message ou null si ce n'est pas une réponse.
      */
-    public function setReponse(?array $reponses): void {
+    public function setReponses(?array $reponses): void {
         $this->reponses = $reponses;
     }
 

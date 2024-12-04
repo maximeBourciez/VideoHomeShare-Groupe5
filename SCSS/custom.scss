@@ -124,6 +124,29 @@ $theme-colors: (
   @include media-breakpoint-down(lg) {
     display: none; // Cache le logo sur les petits écrans
   }
+
+  // Animation au hover
+  &:hover {
+    animation: shakeY 0.5s ease-in-out;
+  }
+}
+
+@keyframes shakeY {
+  0% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-5px);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+  75% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 // 6.5 Boutons
@@ -187,4 +210,62 @@ $theme-colors: (
   @include media-breakpoint-down(sm) {
     max-width: 100px;
   }
+}
+
+.logo {
+  transition: all 0.8s ease;
+
+  &-facebook {
+    &:hover {
+      filter: invert(59%) sepia(29%) saturate(676%) hue-rotate(183deg)
+        brightness(91%) contrast(87%);
+    }
+  }
+
+  &-instagram {
+    &:hover {
+      filter: invert(32%) sepia(84%) saturate(3302%) hue-rotate(326deg)
+        brightness(90%) contrast(97%);
+    }
+  }
+   
+  &-twitter {
+    &:hover {
+      filter: invert(64%) sepia(86%) saturate(2472%) hue-rotate(194deg)
+        brightness(92%) contrast(90%);
+    }
+  }
+}
+
+.username-link {
+  color: white !important;
+}
+
+
+
+#popUpRepondre{
+  border: 2px solid $primary; /* Ajout de la bordure */
+  border-radius: 10px; /* Coins arrondis */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Légère ombre pour un effet visuel */
+}
+
+
+.message-original {
+  border-radius: 10px;
+}
+
+/* Bouton "Envoyer" avec icône */
+.btn-myprimary {
+  background-color: $primary !important;
+  color: black !important;
+  border-color: $primary !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* Espacement entre le texte et l'icône */
+  font-weight: bold;
+}
+
+.btn-myprimary i {
+  font-size: 1.2rem; /* Taille de l'icône */
 }

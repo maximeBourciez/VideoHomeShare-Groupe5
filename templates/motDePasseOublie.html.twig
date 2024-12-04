@@ -2,18 +2,24 @@
 
 
 {% block content %}
+    <main class="content row flex-grow-1" >
+    <form action="index.php?controller=utilisateur&methode=envoieMailMDPOublie" method="POST" class="text-center col-12 col-md-6 col-lg-4 mx-auto my-auto p-4 text-white rounded" >
     <main class="content row flex-grow-1 " >
     <form action="index.php?controller=utilisateur&methode=envoieMailMDPOublie" method="POST" class="text-center col-12 col-md-6 col-lg-4 mx-auto p-4 text-white rounded my-auto" >
         <img src="{{ constant('WEBSITE_LOGO') }}" height="95" width="155" alt="VHS Logo" class="mx-auto my-2">
         <div class="bg-mydark text-white rounded p-4 mb-5" >
-            <h3 class="mb-3"> Renseigner votre mail </h3>
-        
-                <p class="text-start mb-0">Quelle est votre adresse mail </p>
-                <input type="email" name="email" class="form-control mb-2 " required> 
-                
-                <input type="submit" class="btn btn-myprimary my-2  w-50 mx-auto" value="valider"> 
+
+            <h3 class="mb-4"> Renseigner votre mail </h3>
+
+                    <!-- Champ Email -->
+            <div class="form-group mb-3 ">
+                <label for="email" class="d-block text-start mb-2 fw-light">Quelle est votre adresse mail ?</label>
+                <input type="email" name="email" id="email" class="form-control  mb-4" required>
+            </div>
             
-            <a href="index.php?controller=utilisateur&methode=connexion" class="text-white"> se connecter </a>
+                <input type="submit" class="btn btn-myprimary mx-auto mb-2" value="Valider"> 
+            
+            <a href="index.php?controller=utilisateur&methode=connexion" class="text-white"> Se connecter </a>
         </div>
     </form>
 </main>    
