@@ -11,23 +11,29 @@
 		<div class="container">
             <img src="{{ constant('WEBSITE_LOGO') }}" height="95" width="155" alt="VHS Logo" class="mx-auto my-2">
 			<br>
-			<div class="d-inline-flex p-2">
-				<button class="btn btn-myprimary my-2 mx-auto">Créer un quizz</button>
-				<button class="btn btn-myprimary my-2 mx-auto">Gérer mes quizz</button>
-            </div>
-			<p> Les quizz : </p>
-			<div class="card mb-3" style="max-width: 540px;">
-				<div class="col-md-8">
-				<div class="card-body">
-					<h5 class="card-title">{{ quizz.titre }}</h5>
-					<p class="card-text">{{ quizz.description }}</p>
-					<p class="card-text">{{ quizz.difficulte }}</p>
-					<p class="card-text"><small class="text-body-secondary">Fait le {{ quizz.dateC }}</small></p>
-					<p class="card-text"><small class="text-body-secondary">Par {{ quizz.idUtilisateur }}</small></p>
-					<a href="#" class="btn btn-myprimary">Jouer</a>
+			<div class="d-inline-flex p-2 row">
+				<div class="col">
+					<button class="btn btn-myprimary my-2 mx-auto">Créer un quizz</button>
 				</div>
+				<div class="col">
+					<button class="btn btn-myprimary my-2 mx-auto">Gérer mes quizz</button>
 				</div>
 			</div>
+			<p> Les quizz : </p>
+				{% for quizz in quizzs %}
+					<div class="card mb-3" style="max-width: 540px;">
+						<div class="col-md-8">
+							<div class="card-body">
+								<h5 class="card-title">{{ quizz.titre }}</h5>
+								<p class="card-text">{{ quizz.description }}</p>
+								<p class="card-text">Difficulté : {{ quizz.difficulte }}</p>
+								<p class="card-text"><small class="text-body-secondary">Fait le {{ quizz.dateC }}</small></p>
+								<p class="card-text"><small class="text-body-secondary">Par {{ quizz.idUtilisateur }}</small></p>
+								<a href="#" class="btn btn-myprimary">Jouer</a>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
 			</div>
 		</div>
 	</main>

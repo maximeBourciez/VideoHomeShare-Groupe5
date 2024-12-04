@@ -30,7 +30,7 @@ class ControllerQuizz extends Controller {
      * 
      * @return void
      */
-    public function afficherPage(){
+    public function listerQuizz(){
         $quizzDAO = new QuizzDAO($this->getPdo());
         $quizz = $quizzDAO->findAll();
 
@@ -47,9 +47,7 @@ class ControllerQuizz extends Controller {
      * @return void
      */
     public function afficherQuizzParId(){
-        $id = $_GET['id_quizz'];
-
-        
+        $id = $_GET['idQuizz'];
 
         // Récupérer les infos du quizz
         $quizzDAO = new QuizzDAO($this->getPdo());

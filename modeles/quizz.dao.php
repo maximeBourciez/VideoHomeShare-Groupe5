@@ -39,11 +39,11 @@ class QuizzDAO{
 
     function hydrate(array $row): Quizz{
         // Récupération des valeurs
-        $id = $row['id'];
+        $id = $row['idQuizz'];
         $titre = $row['titre'];
         $description = $row['description'];
         $difficulte = $row['difficulte'];
-        $date = $row['date'];
+        $date = $row['dateC'];
 
         // Retourner le Quizz
         return new Quizz($id, $titre, $description, $difficulte, $date);
@@ -59,7 +59,7 @@ class QuizzDAO{
     }
 
     function find(int $id): ?Quizz{
-        $sql = "SELECT * FROM Quizz WHERE id = :id";
+        $sql = "SELECT * FROM Quizz WHERE idQuizz = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
