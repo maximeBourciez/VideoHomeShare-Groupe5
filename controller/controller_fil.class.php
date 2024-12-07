@@ -92,7 +92,7 @@ class ControllerFil extends Controller
             // Récupérer les infos du message
             $idFil = intval($_POST['id_fil']);
             $idMessageParent = intval($_POST['id_message_parent']);
-            $message = $_POST['message'];
+            $message = htmlspecialchars($_POST['message']);
             if (isset($_SESSION['connecter'])) {
                 //recuperer l'utilisateur connecter if
                 $personneConnect = unserialize($_SESSION['connecter']);
@@ -106,11 +106,7 @@ class ControllerFil extends Controller
 
             // Créer le message
             $managerMessage = new MessageDAO($this->getPdo());
-            $managerMessage->ajouterReponse($idFil, $idMessageParent, $message);
-
-            // Appel au DAO pour enregistrer la réponse
-            $messageDAO = new MessageDAO();
-            $messageDAO->ajouterReponse($idFil, $idMessageParent, $message);
+            $managerMessage->ajouterMessage($idFil, $idMessageParent, $message);
 
             // Rediriger vers le fil
             $this->afficherFilParId($idFil);
@@ -118,5 +114,25 @@ class ControllerFil extends Controller
         } else {
             die("Méthode non autorisée.");
         }
+    }
+
+    /**
+     * @brief Méthode d'ajout d'un message dans un fil de discussion
+     * 
+     * @details Permet la création d'un message sans message parent au sein d'un fil déjà existant
+     * 
+     * @return void
+     */
+    public function ajouterMessage(){
+        // Récupérer les infos du message
+        $idFil = intval($_POST['id_fil']);
+        $message = htmlspecialchars($_POST['message']);
+
+        // Ajouter le message
+        $managerMessage = new MessageDAO($this->getPdo());
+        $managerMessage->ajouterMessage($idFil, null, $message);
+
+        // Rediriger vers le fil
+        $this->afficherFilParId($idFil);
     }
 }

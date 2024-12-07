@@ -222,18 +222,11 @@ class MessageDAO
      * 
      * @return void
      */
-    public function ajouterReponse(?int $idFil, ?int $idMessageParent, ?string $message): void{
+    public function ajouterMessage(?int $idFil, ?int $idMessageParent, ?string $message): void{
         // Récupérer l'id de luilisateur dans la session
-        $idUtilisateur = trim(unserialize($_SESSION['connecter'])->getId());
+        $idUtilisateur = trim(unserialize($_SESSION['connecter'])->getId());    
 
-        
-
-        // Afficher les donnée
-        echo "idFil: " . htmlspecialchars($idFil) . "<br>";
-        echo "idMessageParent: " . htmlspecialchars($idMessageParent) . "<br>";
-        echo "message: " . htmlspecialchars($message) . "<br>";
-        echo "idUtilisateur: " . htmlspecialchars($idUtilisateur) . "<br>";
-
+        // Requête d'insertion
         $sql = "INSERT INTO " . DB_PREFIX . "message ( valeur, dateC, idMessageParent, idFil, idUtilisateur) VALUES ( :valeur, NOW(), :idMessageParent, :idFil, :idUtilisateur)";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':idFil', $idFil, PDO::PARAM_INT);

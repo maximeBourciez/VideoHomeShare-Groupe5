@@ -213,28 +213,36 @@
 
 	<!-- Modal de nouveau message -->
 	<div class="modal fade" id="nouveauMessage" tabindex="-1" aria-labelledby="nouveauMessageLabel" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered modal-lg" style="height: 80vh;">
-			<div class="modal-content popup-content bg-mydark" id="popUpNouveauMessage">
-				<div class="modal-header text-white text-center">
-					<h5 class="modal-title w-100" id="nouveauMessageLabel">Nouveau message</h5>
-					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
-				</div>
-				<div class="modal-body text-white">
-					<div class="d-flex justify-content-between mt-2">
-						<p>Votre message :</p>
-						<span>0 / 1000</span>
-					</div>
-					<textarea class="form-control mt-1 bg-mylight text-black p-3" rows="4" placeholder="Exprimez-vous..." maxlength="1000"></textarea>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-xs btn-myprimary">
-						<i class="bi bi-send"></i>
-						Envoyer
-					</button>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="height: 80vh;">
+        <div class="modal-content popup-content bg-mydark" id="popUpNouveauMessage">
+            <div class="modal-header text-white text-center">
+                <h5 class="modal-title w-100" id="nouveauMessageLabel">Nouveau message</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <form action="index.php?controller=fil&methode=ajouterMessage" method="POST" class="modal-body text-white">
+                <div class="d-flex justify-content-between mt-2">
+                    <p>Votre message :</p>
+                    <span>0 / 1000</span>
+                </div>
+				<input type="hidden" name="id_fil" value="{{ fil.id }}">
+                <textarea 
+                    name="message" 
+                    class="form-control mt-1 bg-mylight text-black p-3" 
+                    rows="4" 
+                    placeholder="Exprimez-vous..." 
+                    maxlength="1000"
+                    required
+                ></textarea>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-xs btn-myprimary">
+                        <i class="bi bi-send"></i>
+                        Envoyer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 
 	<script src="js/forum.js"></script>
