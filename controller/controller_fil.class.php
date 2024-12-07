@@ -135,4 +135,41 @@ class ControllerFil extends Controller
         // Rediriger vers le fil
         $this->afficherFilParId($idFil);
     }
-}
+
+    /**
+     * @brief Méthode d'ajout d'un dislike à un message
+     * 
+     * @return void
+     */
+    public function dislike(){
+        // Récupérer les infos du message
+        $idMessage = intval($_POST['id_message']);
+        $idFil = intval($_POST['id_fil']);
+
+        // Ajouter le dislike
+        $managerReaction = new MessageDAO($this->getPdo());
+        $managerReaction->ajouterReaction($idMessage, false);
+
+        // Rediriger vers le fil
+        $this->afficherFilParId($idFil);
+    }
+
+
+    /**
+     * @brief Méthode d'ajout d'un like à un message
+     * 
+     * @return void
+     */
+    public function like(){
+        // Récupérer les infos du message
+        $idMessage = intval($_POST['id_message']);
+        $idFil = intval($_POST['id_fil']);
+
+        // Ajouter le like
+        $managerReaction = new MessageDAO($this->getPdo());
+        $managerReaction->ajouterReaction($idMessage, true);
+
+        // Rediriger vers le fil
+        $this->afficherFilParId($idFil);
+    }
+}   

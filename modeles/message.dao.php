@@ -72,6 +72,8 @@ class MessageDAO
         $message->setValeur($row['valeur']);
         $message->setDateC(new DateTime($row['dateC']));
         $message->setIdMessageParent($row['idMessageParent']);
+        $message->setNbLikes($row['like_count']);
+        $message->setNbDislikes($row['dislike_count']);
 
         // Hydratation de l'utilisateur associé
         $user = new Utilisateur();
@@ -92,13 +94,13 @@ class MessageDAO
     {
         $messages = []; // Tous les messages indexés par leur ID
         $messagesParents = []; // Tableau pour stocker uniquement les messages principaux
-    
+
         // Hydrater tous les messages et les indexer par ID
         foreach ($rows as $row) {
             $message = $this->hydrate($row);
             $messages[$message->getIdMessage()] = $message;
         }
-    
+
         // Lier les réponses à leurs parents
         foreach ($messages as $message) {
             if ($message->getIdMessageParent() === null) {
@@ -112,11 +114,11 @@ class MessageDAO
                 }
             }
         }
-    
+
         // Retourner uniquement les messages principaux (avec les réponses déjà attachées)
         return $messagesParents;
     }
-    
+
 
 
     // Méthodes de recherche
@@ -163,7 +165,7 @@ class MessageDAO
      * @param integer $id_user
      * @return array
      */
-    public function listerMessagesParIdUser( ?string $id_user): array
+    public function listerMessagesParIdUser(?string $id_user): array
     {
         $sql = "SELECT * FROM " . DB_PREFIX . "message M join " . DB_PREFIX . "utilisateur U ON  M.idUtilisateur=U.idUtilisateur WHERE M.idUtilisateur = :id_user ORDER BY dateC DESC";
         $stmt = $this->pdo->prepare($sql);
@@ -222,9 +224,10 @@ class MessageDAO
      * 
      * @return void
      */
-    public function ajouterMessage(?int $idFil, ?int $idMessageParent, ?string $message): void{
+    public function ajouterMessage(?int $idFil, ?int $idMessageParent, ?string $message): void
+    {
         // Récupérer l'id de luilisateur dans la session
-        $idUtilisateur = trim(unserialize($_SESSION['connecter'])->getId());    
+        $idUtilisateur = trim(unserialize($_SESSION['connecter'])->getId());
 
         // Requête d'insertion
         $sql = "INSERT INTO " . DB_PREFIX . "message ( valeur, dateC, idMessageParent, idFil, idUtilisateur) VALUES ( :valeur, NOW(), :idMessageParent, :idFil, :idUtilisateur)";
@@ -234,5 +237,43 @@ class MessageDAO
         $stmt->bindValue(':valeur', $message, PDO::PARAM_STR);
         $stmt->bindValue(':idUtilisateur', $idUtilisateur, PDO::PARAM_STR);
         $stmt->execute();
+    }
+
+    /**
+     * @brief Méthode d'ajout d'une réaction à un message
+     * 
+     * details Méthode permettant d'ajouter une réaction à un message. AJout d'un like ou d'un dislike selon la valeur de $reaction
+     * 
+     * @param int $idMessage Identifiant du message
+     * @param bool $reaction Réaction (true = like, false = dislike)
+     */
+    public function ajouterReaction(int $idMessage, bool $reaction): void
+    {
+        // Récupérer l'ID de l'utilisateur depuis la session
+        if (!isset($_SESSION['connecter'])) {
+            echo "Erreur : l'utilisateur n'est pas connecté.";
+            return;
+        }
+
+        $idUtilisateur = trim(unserialize($_SESSION['connecter'])->getId());
+
+        try {
+            // Préparer la requête SQL
+            $sql = "INSERT INTO " . DB_PREFIX . "reagir (idMessage, idUtilisateur, reaction) 
+                VALUES (:idMessage, :idUtilisateur, :reaction) 
+                ON DUPLICATE KEY UPDATE reaction = :reaction";
+
+            $stmt = $this->pdo->prepare($sql);
+
+            // Lier les valeurs
+            $stmt->bindValue(':idMessage', $idMessage, PDO::PARAM_INT);
+            $stmt->bindValue(':idUtilisateur', $idUtilisateur, PDO::PARAM_STR);
+            $stmt->bindValue(':reaction', $reaction ? 1 : 0, PDO::PARAM_INT);
+
+            // Exécuter la requête
+            $stmt->execute();
+        } catch (PDOException $e) {
+            echo "Erreur lors de l'insertion : " . $e->getMessage();
+        }
     }
 }
