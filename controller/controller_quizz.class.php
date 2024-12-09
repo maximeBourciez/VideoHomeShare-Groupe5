@@ -59,4 +59,9 @@ class ControllerQuizz extends Controller {
             
         ]);
     }
+
+    public function jouerQuizz(){
+        $id = $_GET['idQuizz'];
+        //A faire
+    }
 }

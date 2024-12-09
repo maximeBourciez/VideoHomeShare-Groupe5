@@ -38,6 +38,7 @@ class QuizzDAO{
     function delete(int $id): bool{
         $req = $this->pdo->prepare("DELETE FROM Quizz WHERE id = :id");
         $req->bindParam(":id", $id);
+
         return $req->execute();
     }
 
@@ -60,6 +61,7 @@ class QuizzDAO{
             $quizz = $this->hydrate($row);
             array_push($quizzs, $quizz);  // Ajout du Quizz au tableau 
         }
+        
         return $quizzs;
     }
 
@@ -72,6 +74,7 @@ class QuizzDAO{
         if($row == null){
             return null;
         }
+
         return $this->hydrate($row);
     }
 
@@ -79,6 +82,7 @@ class QuizzDAO{
         $sql = "SELECT Q.idQuizz, Q.titre, Q.description, Q.difficulte, Q.dateC, U.pseudo FROM " .DB_PREFIX. "quizz Q JOIN " .DB_PREFIX. "utilisateur U ON Q.idUtilisateur = U.idUtilisateur";
         $stmt = $this->pdo->query($sql);
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
+
         return $this->hydrateAll($stmt->fetchAll());
     }
 }

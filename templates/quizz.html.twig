@@ -20,24 +20,51 @@
 			</div>
 			<br>
 			<br>
-			<h3> Les quizz : </h3>
-			<br>
-				{% for quiz in quizz %}
-				<div class="col-md-6 mb-4">
-					<div class="card mb-3" style="max-width: 540px;">
-						<div class="row g-0">
-							<div class="card-body">
-								<h5 class="card-title">{{ quiz.titre }}</h5>
-								<p class="card-text">{{ quiz.description }}</p>
-								<p class="card-text">Difficulté : {{ quiz.difficulte }}</p>
-								<p class="card-text"><small class="text-body-secondary">Fait le {{ quiz.dateC }}</small></p>
-								<p class="card-text"><small class="text-body-secondary">Par {{ quiz.idUtilisateur }}</small></p>
-								<a href="#" class="btn btn-myprimary">Jouer</a>
+			<div class="container row">
+				<div class = "col">
+					<h3> Les quizz : </h3>
+					<br>
+						{% for quiz in quizz %}
+						<div class="col-md-12 mb-4">
+							<div class="card mb-3" style="max-width: 540px;">
+								<div class="row g-0">
+									<div class="card-body">
+										<h5 class="card-title">{{ quiz.titre }}</h5>
+										<p class="card-text">{{ quiz.description }}</p>
+										<p class="card-text">Difficulté : {{ quiz.difficulte }}</p>
+										<p class="card-text"><small class="text-body-secondary">Fait le {{ quiz.dateC }}</small></p>
+										<p class="card-text"><small class="text-body-secondary">Par {{ quiz.idUtilisateur }}</small></p>
+										<a href="index.php?controller=quizz&methode=jouerQuizz" class="btn btn-myprimary">Jouer</a>
+									</div>
+								</div>
 							</div>
 						</div>
+						{% endfor %}
+					</div>
+					<div class = "col">
+						<h3> Mes quizz : </h3>
+						<br>
+						{% for quiz in quizz %}
+							{% if quiz.idUtilisateur == idUtilisateur %}
+								<div class="col-md-12 mb-4">
+									<div class="card mb-3" style="max-width: 540px;">
+										<div class="row g-0">
+											<div class="card-body">
+												<h5 class="card-title">{{ quiz.titre }}</h5>
+												<p class="card-text">{{ quiz.description }}</p>
+												<p class="card-text">Difficulté : {{ quiz.difficulte }}</p>
+												<p class="card-text"><small class="text-body-secondary">Fait le {{ quiz.dateC }}</small></p>
+											</div>
+										</div>
+									</div>
+								</div>
+							{% endif %}
+						{% endfor %}
+						{% if not quizz.idUtilisateur %}
+							<p> Vous n'avez créé aucun quizz. </p>
+						{% endif %}
 					</div>
 				</div>
-				{% endfor %}
 			</div>
 		</div>
 	</main>
