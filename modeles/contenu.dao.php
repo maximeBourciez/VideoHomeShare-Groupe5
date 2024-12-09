@@ -22,34 +22,29 @@ class ContenuDAO{
         $stmt = $this->pdo->prepare("SELECT * FROM ".DB_PREFIX."contenu");
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $contenus = [];
-        foreach ($result as $row){
-            $contenus[] = new Contenu($row['id'], $row['titre'], new DateTime($row['date']), $row['description'], $row['lienAffiche'], $row['durée'], $row['type']);
-        }
+        $contenus = $this->hydrateAll($result);
         return $contenus;
     }
     // retourne un contenu de la base de données par l'id
-    public function findById(int $id): ?array{
-        $stmt = $this->pdo->prepare("SELECT * FROM ".DB_PREFIX."contenu WHERE id = :id");
+    public function findById(int $id): ?Contenu {
+        $stmt = $this->pdo->prepare("SELECT * FROM ".DB_PREFIX."contenu WHERE idContenu = :id");
         $stmt->bindParam(':id', $id);
         $stmt->execute();
-        $contenu = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($contenu == null){
-            return null;
-        }
-        return ($contenu);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $contenu = $this->hydrate($result);
+        return $contenu;
     }
 
     // transforme un tableau d'associations en un objet de type Contenu
     public function hydrate(array $tableauAssaus): Contenu{
-        return new Contenu($tableauAssaus['id'], $tableauAssaus['titre'], new DateTime($tableauAssaus['date']), $tableauAssaus['description'], $tableauAssaus['lienAffiche'], $tableauAssaus['durée'], $tableauAssaus['type']);
+        return new Contenu($tableauAssaus['idContenu'], $tableauAssaus['titre'], new DateTime($tableauAssaus['dateS']), $tableauAssaus['description'],$tableauAssaus['DescriptionLongue'], $tableauAssaus['lienAffiche'], $tableauAssaus['duree'], $tableauAssaus['type']);
     }
 
     // tansforme un tableau d'associations en un tableau d'objets de type Contenu
     public function hydrateAll(array $tableauAssaus): ?array{
         $contenus = [];
         foreach ($tableauAssaus as $row){
-            $contenus[] = new Contenu($row['id'], $row['titre'], new DateTime($row['date']), $row['description'], $row['lienAffiche'], $row['durée'], $row['type']);
+            $contenus[] = $this->hydrate($row);
         }
         return $contenus;
     }
