@@ -48,10 +48,16 @@
 
         <!-- Section droite -->
         <div class="navbar-end d-flex align-items-center gap-3 me-lg-4">
-			
-            <a href="index.php?controller=utilisateur&methode=connexion">
-                <button class="btn btn-myprimary">Connexion</button>
-            </a>
+			{% if utilisateurConnecte is null %}
+				<a href="index.php?controller=utilisateur&methode=connexion">
+					<button class="btn btn-myprimary">Connexion</button>
+				</a>
+			{% else %}
+				<a href="index.php?controller=utilisateur&methode=show">
+					<button class="btn btn-myprimary">Profil</button>
+				</a>
+			{% endif %}
+
             <a class="navbar-brand d-flex align-items-center text-white mb-0" href="#">
                 <p class="mb-0 me-2 d-none d-lg-block">{{ constant('WEBSITE_LANGUAGE')}}</p>
                 <img src="{{ constant('WEBSITE_LOGO_FLAG')}}" height="24" alt="FR">

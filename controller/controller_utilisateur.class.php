@@ -59,7 +59,7 @@ class ControllerUtilisateur extends Controller
         $utilisateur = $managerutilisateur->findByMail($mail);
 
         if ($utilisateur != null && password_verify($mdp, $utilisateur->getMdp())) {
-            $_SESSION['connecter'] = serialize($utilisateur);
+            $_SESSION['utilisateur'] = serialize($utilisateur);
             //Génération de la vue
             $this->show();
         } else {
@@ -238,9 +238,9 @@ class ControllerUtilisateur extends Controller
 
 
         // recuper que si l'utilisateur est connecter
-        if (isset($_SESSION['connecter'])) {
+        if (isset($_SESSION['utilisateur'])) {
             //recuperer l'utilisateur connecter if
-            $personneConnect = unserialize($_SESSION['connecter']);
+            $personneConnect = unserialize($_SESSION['utilisateur']);
             if ($id == null) {
                 $id = $personneConnect->getId();
             }
@@ -274,9 +274,9 @@ class ControllerUtilisateur extends Controller
      */
     public function edit(): void
     {
-        if (isset($_SESSION['connecter'])) {
+        if (isset($_SESSION['utilisateur'])) {
             //recuperer l'utilisateur connecter if
-            $utilisateur = unserialize($_SESSION['connecter']);
+            $utilisateur = unserialize($_SESSION['utilisateur']);
         } else {
             $utilisateur = null;
         }
@@ -306,7 +306,7 @@ class ControllerUtilisateur extends Controller
         $nom = isset($_POST['nom']) ? $_POST['nom'] : null;
 
 
-        $utilisateur = unserialize($_SESSION['connecter']);
+        $utilisateur = unserialize($_SESSION['utilisateur']);
 
         //supprimer les espaces
         $id = str_replace(' ', '', $id);
@@ -359,7 +359,7 @@ class ControllerUtilisateur extends Controller
                 }
                 // mettre à jour l'utilisateur dans la base de données
                 $managerutilisateur->update($utilisateur);
-                $_SESSION['connecter'] = serialize($utilisateur);
+                $_SESSION['utilisateur'] = serialize($utilisateur);
                 //Génération de la vue
                 $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
                 echo $template->render(array('utilisateur' => $utilisateur));
@@ -386,14 +386,14 @@ class ControllerUtilisateur extends Controller
             // vérifier si le mail est valide
             if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
 
-                $utilisateur = unserialize($_SESSION['connecter']);
+                $utilisateur = unserialize($_SESSION['utilisateur']);
                 $managerutilisateur = new UtilisateurDAO($this->getPdo());
                 // vérifier si le mail n'est pas déjà utilisé
                 if ($managerutilisateur->findByMail($mail) == null) {
                     // mettre à jour le mail de l'utilisateur
                     $utilisateur->setMail($mail);
                     $managerutilisateur->update($utilisateur);
-                    $_SESSION['connecter'] = serialize($utilisateur);
+                    $_SESSION['utilisateur'] = serialize($utilisateur);
 
                 }
             }

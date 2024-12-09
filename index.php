@@ -32,6 +32,12 @@ try  {
         throw new Exception('La méthode n\'est pas définie');
     }
 
+    if ( isset($_SESSION['utilisateur'])) {
+        $twig->addGlobal('utilisateurConnecte', $_SESSION['utilisateur']);
+    }else {
+        $twig->addGlobal('utilisateurConnecte', null);
+    }
+
     
 
     $controller = ControllerFactory::getController($controllerName, $loader, $twig);
