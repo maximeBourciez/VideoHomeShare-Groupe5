@@ -21,6 +21,9 @@ require_once 'modeles/watchlist.dao.php';
 require_once 'modeles/personnalite.dao.php';
 require_once 'modeles/quizz.dao.php';
 require_once 'modeles/question.dao.php';
+require_once 'modeles/theme.dao.php';
+require_once 'modeles/commentaire.dao.php';
+require_once 'modeles/personnalite.dao.php';
 
 // Ajout des modèles
 require_once 'modeles/fil.class.php';
@@ -31,6 +34,9 @@ require_once 'modeles/watchlist.class.php';
 require_once 'modeles/personnalite.class.php';
 require_once 'modeles/quizz.class.php';
 require_once 'modeles/question.class.php';
+require_once 'modeles/theme.class.php';
+require_once 'modeles/commentaire.class.php';
+require_once 'modeles/personnalite.class.php';
 
 
 // Ajout des contrôleurs
@@ -38,3 +44,5 @@ require_once 'controller/controller.class.php';
 require_once 'controller/controller_factory.class.php';
 require_once 'controller/controller_fil.class.php';
 require_once 'controller/controller_utilisateur.class.php';
+require_once 'controller/controller_contenu.class.php';
+
