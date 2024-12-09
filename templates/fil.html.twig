@@ -61,40 +61,6 @@
 			</div>
 		</div>
 
-		<div class="modal fade" id="repondreModal" tabindex="-1" aria-labelledby="repondreModalLabel" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered modal-lg" style="height: 80vh;">
-				<form action="index.php?controller=fil&methode=repondre" method="POST" class="modal-content popup-content bg-mydark" id="popUpRepondre">
-					<div class="modal-header text-white text-center">
-						<h5 class="modal-title w-100" id="repondreModalLabel">Répondre</h5>
-						<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
-					</div>
-					<div
-						class="modal-body text-white">
-						<!-- Message original -->
-						<div class="message-original bg-mylight text-black p-3">
-							<strong>{{ reponse.getUtilisateur().getPseudo() }}</strong>
-							<p>{{ reponse.valeur }}</p>
-						</div>
-						<!-- Champ caché pour envoyer l'ID du parent -->
-						<input type="hidden" name="id_fil" value="{{ fil.id }}">
-						<input
-						type="hidden" name="id_message_parent" value="{{ reponse.getIdMessage() }}">
-						<!-- Zone de texte -->
-						<textarea class="form-control mt-3 bg-mylight text-black p-3" rows="4" name="message" placeholder="Répondre à {{ reponse.getUtilisateur().getPseudo() }}" maxlength="1000" required></textarea>
-						<div class="text-end mt-2">
-							<span>0 / 1000</span>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="submit" class="btn btn-xs btn-myprimary">
-							<i class="bi bi-send"></i>
-							Envoyer
-						</button>
-					</div>
-				</form>
-			</div>
-		</div>
-
 		{% if reponse.reponses is not empty %}
 			{{ _self.afficherReponses(reponse.reponses, reponse.getUtilisateur() ? reponse.getUtilisateur().getId() : 0, reponse.getUtilisateur() ? reponse.getUtilisateur().getPseudo() : 'Utilisateur inconnu') }}
 		{% endif %}
@@ -182,7 +148,7 @@
 				</div>
 
 				<!-- Modal de réponse -->
-				<div class="modal fade" id="repondreModal" tabindex="-1" aria-labelledby="repondreModalLabel" aria-hidden="true">
+				{# <div class="modal fade" id="repondreModal" tabindex="-1" aria-labelledby="repondreModalLabel" aria-hidden="true">
 					<div class="modal-dialog modal-dialog-centered modal-lg" style="height: 80vh;">
 						<form action="index.php?controller=fil&methode=repondre" method="POST" class="modal-content popup-content bg-mydark" id="popUpRepondre">
 							<div class="modal-header text-white text-center">
@@ -214,7 +180,7 @@
 							</div>
 						</form>
 					</div>
-				</div>
+				</div> #}
 
 				{% if message.reponses is not empty %}
 					{{ macros.afficherReponses(message.reponses, message.getUtilisateur().getId(), message.getUtilisateur().getPseudo()) }}
@@ -259,6 +225,40 @@
 		</div>
 	</div>
 
+
+<div class="modal fade" id="repondreModal" tabindex="-1" aria-labelledby="repondreModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered modal-lg" style="height: 80vh;">
+						<form action="index.php?controller=fil&methode=repondre" method="POST" class="modal-content popup-content bg-mydark" id="popUpRepondre">
+							<div class="modal-header text-white text-center">
+								<h5 class="modal-title w-100" id="repondreModalLabel">Répondre</h5>
+								<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+							</div>
+							<div
+								class="modal-body text-white">
+								<!-- Message original -->
+								<div class="message-original bg-mylight text-black p-3">
+									<strong>{{ message.getUtilisateur().getPseudo() }}</strong>
+									<p>{{ message.valeur }}</p>
+								</div>
+								<!-- Champ caché pour envoyer l'ID du parent -->
+								<input type="hidden" name="id_fil" value="{{ fil.id }}">
+								<input
+								type="hidden" name="id_message_parent" value="{{ reponse.getIdMessage() }}">
+								<!-- Zone de texte -->
+								<textarea class="form-control mt-3 bg-mylight text-black p-3" rows="4" name="message" placeholder="Répondre à {{ message.getUtilisateur().getPseudo() }}" maxlength="1000" required></textarea>
+								<div class="text-end mt-2">
+									<span>0 / 1000</span>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="submit" class="btn btn-xs btn-myprimary">
+									<i class="bi bi-send"></i>
+									Envoyer
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
 
 	<script src="js/forum.js"></script>
 

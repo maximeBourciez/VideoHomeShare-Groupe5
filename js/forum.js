@@ -44,6 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Mettre à jour le contenu de la modale
             messageOriginal.textContent = messageText.trim();
             auteurOriginal.textContent = pseudoAuteur.textContent.trim();
+            modalTextarea.placeholder = `Répondre à ${pseudoAuteur.textContent.trim()}...`;
             modalTextarea.value = ""; 
             compteur.textContent = "0 / 1000"; 
         });
