@@ -242,7 +242,7 @@ class MessageDAO
     /**
      * @brief Méthode d'ajout d'une réaction à un message
      * 
-     * details Méthode permettant d'ajouter une réaction à un message. AJout d'un like ou d'un dislike selon la valeur de $reaction
+     * @details Méthode permettant d'ajouter une réaction à un message. AJout d'un like ou d'un dislike selon la valeur de $reaction. Si jamais l'utilisateur a déjà réagi, la réaction est mise à jour.
      * 
      * @param int $idMessage Identifiant du message
      * @param bool $reaction Réaction (true = like, false = dislike)
@@ -261,7 +261,7 @@ class MessageDAO
             // Préparer la requête SQL
             $sql = "INSERT INTO " . DB_PREFIX . "reagir (idMessage, idUtilisateur, reaction) 
                 VALUES (:idMessage, :idUtilisateur, :reaction) 
-                ON DUPLICATE KEY UPDATE reaction = :reaction";
+                ON DUPLICATE KEY UPDATE reaction = :reaction"; 
 
             $stmt = $this->pdo->prepare($sql);
 
@@ -276,4 +276,5 @@ class MessageDAO
             echo "Erreur lors de l'insertion : " . $e->getMessage();
         }
     }
+
 }

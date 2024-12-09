@@ -58,9 +58,10 @@ class ControllerFil extends Controller
      */
     public function afficherFilParId(?int $id = null)
     {
+
         // Récupérer l'id du fil si il est nul dans le parametre
         if ($id == null) {
-            $id = $_GET['id_fil'];
+            $id = $this->getGet()['id_fil'];
         }
 
         // Récupérer les infos du fil
@@ -97,7 +98,7 @@ class ControllerFil extends Controller
                 //recuperer l'utilisateur connecter if
                 $personneConnect = unserialize($_SESSION['connecter']);
                 $idUtilisateur = $personneConnect->getId();
-            } 
+            }
 
             // Validation des données (exemple simple)
             if (empty($message)) {
@@ -123,7 +124,8 @@ class ControllerFil extends Controller
      * 
      * @return void
      */
-    public function ajouterMessage(){
+    public function ajouterMessage()
+    {
         // Récupérer les infos du message
         $idFil = intval($_POST['id_fil']);
         $message = htmlspecialchars($_POST['message']);
@@ -141,7 +143,8 @@ class ControllerFil extends Controller
      * 
      * @return void
      */
-    public function dislike(){
+    public function dislike()
+    {
         // Récupérer les infos du message
         $idMessage = intval($_POST['id_message']);
         $idFil = intval($_POST['id_fil']);
@@ -160,16 +163,21 @@ class ControllerFil extends Controller
      * 
      * @return void
      */
-    public function like(){
-        // Récupérer les infos du message
-        $idMessage = intval($_POST['id_message']);
-        $idFil = intval($_POST['id_fil']);
+    public function like()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Récupérer les infos du message
+            $idMessage = intval($_POST['id_message']);
+            $idFil = intval($_POST['id_fil']);
 
-        // Ajouter le like
-        $managerReaction = new MessageDAO($this->getPdo());
-        $managerReaction->ajouterReaction($idMessage, true);
+            // Ajouter le like
+            $managerReaction = new MessageDAO($this->getPdo());
+            $managerReaction->ajouterReaction($idMessage, true);
 
-        // Rediriger vers le fil
-        $this->afficherFilParId($idFil);
+            // Rediriger vers le fil
+            $this->afficherFilParId($idFil);
+        } else {
+            die("Méthode non autorisée.");
+        }
     }
-}   
+}
