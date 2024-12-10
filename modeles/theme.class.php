@@ -1,31 +1,67 @@
 <?php
 
-class Theme{
-    // Attributs 
-    private ?int $id; //Identifiant du theme
-    private ?string $nom; //Nom du theme
+/**
+ * Classe représentant un thème dans l'application.
+ * 
+ * Cette classe permet de gérer les thèmes (films, séries, etc.) avec un identifiant unique et un nom.
+ */
+class Theme {
+    /**
+     * @var int|null $idTheme Identifiant unique du thème.
+     */
+    private ?int $idTheme;
 
-    // Constructeur
-    public function __construct(?int $id = null, ?string $nom = null){
-        $this->id = $id;
+    /**
+     * @var string|null $nom Nom du thème.
+     */
+    private ?string $nom;
+
+    /**
+     * Constructeur de la classe Theme.
+     * 
+     * @param int|null $idTheme   Identifiant unique du thème (optionnel).
+     * @param string|null $nom Nom du thème (optionnel).
+     */
+    public function __construct(?int $idTheme = null, ?string $nom = null) {
+        $this->id = $idTheme;
         $this->nom = $nom;
     }
-    
-    // Encapsulation
-    // Getters
-    public function getId(): ?int{
-        return $this->id;
+
+    /**
+     * Obtient l'identifiant unique du thème.
+     * 
+     * @return int|null Identifiant unique du thème.
+     */
+    public function getId(): ?int {
+        return $this->idTheme;
     }
-    public function getNom(): ?string{
+
+    /**
+     * Obtient le nom du thème.
+     * 
+     * @return string|null Nom du thème.
+     */
+    public function getNom(): ?string {
         return $this->nom;
     }
 
-    // Setters
-    public function setId(?int $id) : void{
-        $this->id = $id;
+    /**
+     * Définit l'identifiant unique du thème.
+     * 
+     * @param int|null $idTheme Nouvel identifiant unique du thème.
+     * @return void
+     */
+    public function setId(?int $idTheme): void {
+        $this->idTheme = $idTheme;
     }
-    public function setNom(?string $nom) : void{
+
+    /**
+     * Définit le nom du thème.
+     * 
+     * @param string|null $nom Nouveau nom du thème.
+     * @return void
+     */
+    public function setNom(?string $nom): void {
         $this->nom = $nom;
     }
-    
 }
