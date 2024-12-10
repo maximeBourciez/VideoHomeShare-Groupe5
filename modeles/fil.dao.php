@@ -139,14 +139,18 @@ class FilDAO {
      */
     public function findById(int $id): ?Fil {
         $sql = "
-            SELECT 
-                f.idFil, f.titre, f.dateC, f.description,
-                u.idUtilisateur, u.pseudo, u.urlImageProfil
+            SELECT f.*, u.idUtilisateur, u.pseudo, u.urlImageProfil, t.idTheme AS theme_id, t.nom AS theme_nom
             FROM " . DB_PREFIX . "fil AS f
-            LEFT JOIN " . DB_PREFIX . "message AS m ON f.idFil = m.idFil
+            LEFT JOIN (
+                SELECT m.idFil, MIN(m.dateC) AS firstDate
+                FROM " . DB_PREFIX . "message AS m
+                GROUP BY m.idFil
+            ) AS first_message ON f.idFil = first_message.idFil
+            LEFT JOIN " . DB_PREFIX . "message AS m ON f.idFil = m.idFil AND m.dateC = first_message.firstDate
             LEFT JOIN " . DB_PREFIX . "utilisateur AS u ON m.idUtilisateur = u.idUtilisateur
-            WHERE f.idFil = :id
-            ORDER BY m.dateC ASC LIMIT 1
+            LEFT JOIN " . DB_PREFIX . "parlerDeTheme AS p ON f.idFil = p.idFil
+            LEFT JOIN " . DB_PREFIX . "theme AS t ON p.idTheme = t.idTheme
+            WHERE f.idFil = :id;
         ";
     
         $stmt = $this->pdo->prepare($sql);
