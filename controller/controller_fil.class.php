@@ -183,7 +183,7 @@ class ControllerFil extends Controller
             // Rediriger vers le fil
             $this->afficherFilParId($idFil);
         } else {
-            die("Méthode non autorisée.");
+            throw new Exception("accesInterdit");
         }
     }
 
@@ -195,7 +195,7 @@ class ControllerFil extends Controller
      */
     public function creerFil()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['connecter'])) {
             // Récupérer les données 
             $titre = htmlspecialchars($_POST['titre']);
             $themes = $_POST['themes'];
@@ -216,7 +216,7 @@ class ControllerFil extends Controller
             // Rediriger vers le fil
             $this->afficherFilParId($idFil);
         } else {
-            die("Méthode non autorisée.");
+            throw new Exception("accesInterdit");
         }
     }
 }
