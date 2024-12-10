@@ -32,6 +32,10 @@ class Fil{
      * @var Utilisateur|null $utilisateur Utilisateur qui a créé le fil
      */
     private ?Utilisateur $utilisateur; 
+    /**
+     * @var null|Theme[] $themes Thèmes associés au fil
+     */
+    private ?array $themes;
 
 
     // Constructeur
@@ -43,13 +47,15 @@ class Fil{
      * @param DateTime|null $dateCreation Date de création du fil
      * @param string|null $description Description du fil
      * @param Utilisateur|null $utilisateur Utilisateur qui a créé le fil
+     * @param Theme[]|null $themes Thèmes associés au fil
      */
-    public function __construct(?int $id, ?string $titre, ?DateTime $dateCreation, ?string $description, ?Utilisateur $utilisateur = null){
+    public function __construct(?int $id, ?string $titre, ?DateTime $dateCreation, ?string $description, ?Utilisateur $utilisateur = null, ?array $themes = null){
         $this->id = $id;
         $this->titre = $titre;
         $this->dateCreation = $dateCreation;
         $this->description = $description;
         $this->utilisateur = $utilisateur;
+        $this->themes = $themes;
     }
 
 
@@ -94,6 +100,15 @@ class Fil{
     public function getUtilisateur(): ?Utilisateur{
         return $this->utilisateur;
     }
+
+    /**
+     * @brief Getter des thèmes associés au fil
+     * @return Theme[]|null Thèmes associés au fil
+     */
+    public function getThemes(): ?array{
+        return $this->themes;
+    }
+
 
 
     // Setters
@@ -141,5 +156,41 @@ class Fil{
     public function setUtilisateur(Utilisateur $utilisateur){
         $this->utilisateur = $utilisateur;
     }
+
+    /**
+     * @brief Setter des thèmes associés au fil
+     * @param Theme[] $themes Thèmes associés au fil
+     * @return void
+     */
+    public function setThemes(array $themes){
+        $this->themes = $themes;
+    }
+
+
+    // Méthodes
+    /**
+     * @brief Méthode pour ajouter un thème au fil
+     * 
+     * @param Theme $theme Thème à ajouter
+     * @return void
+     */
+    public function ajouterTheme(Theme $theme){
+        $this->themes[] = $theme;
+    }
+
+    /**
+     * @brief Méthode pour supprimer un thème du fil
+     * 
+     * @param Theme $theme Thème à supprimer
+     * @return void
+     */
+    public function supprimerTheme(Theme $theme){
+        $key = array_search($theme, $this->themes);
+        if($key !== false){
+            unset($this->themes[$key]);
+        }
+    }
+
+    
 
 }

@@ -71,9 +71,15 @@ class FilDAO {
         $dateCreation = new DateTime($row['dateC']);
         $description = $row['description'];
 
-        $fil = new Fil($id, $titre, $dateCreation, $description);
-        $fil->setUtilisateur($user);  // Associer l'utilisateur au fil
+        // Création de l'objet Theme
+        $themes = [];
+        if(isset($row['id'])) {
+            $theme = new Theme($row['theme_id'], $row['theme_nom']);
+            $themes[] = $theme;
+        }
 
+        // Créer le fil
+        $fil = new Fil($id, $titre, $dateCreation, $description, $user, $themes);
         return $fil;
     }
 
@@ -86,7 +92,12 @@ class FilDAO {
     function hydrateAll(array $rows): array {
         $fils = [];
         foreach ($rows as $row) {
-            $fils[] = $this->hydrate($row);  // Ajout du fil au tableau
+            if(!isset($fils[$row['idFil']])) {  // Si le fil n'existe pas dans le tableau
+                $fils[$row['idFil']] = $this->hydrate($row);  // Ajout du fil au tableau
+            }
+            // Ajout du thème au fil
+            $theme = new Theme($row['theme_id'], $row['theme_nom']);
+            $fils[$row['idFil']]->ajouterTheme($theme);    
         }
         return $fils;
     }
@@ -100,7 +111,7 @@ class FilDAO {
     
     public function findAll(): array {
         $sql = "
-            SELECT f.*, u.idUtilisateur, u.pseudo, u.urlImageProfil
+            SELECT f.*, u.idUtilisateur, u.pseudo, u.urlImageProfil, t.idTheme AS theme_id, t.nom AS theme_nom
             FROM " . DB_PREFIX . "fil AS f
             LEFT JOIN (
                 SELECT m.idFil, MIN(m.dateC) AS firstDate
@@ -108,7 +119,9 @@ class FilDAO {
                 GROUP BY m.idFil
             ) AS first_message ON f.idFil = first_message.idFil
             LEFT JOIN " . DB_PREFIX . "message AS m ON f.idFil = m.idFil AND m.dateC = first_message.firstDate
-            LEFT JOIN " . DB_PREFIX . "utilisateur AS u ON m.idUtilisateur = u.idUtilisateur;
+            LEFT JOIN " . DB_PREFIX . "utilisateur AS u ON m.idUtilisateur = u.idUtilisateur
+            LEFT JOIN " . DB_PREFIX . "parlerDeTheme AS p ON f.idFil = p.idFil
+            LEFT JOIN " . DB_PREFIX . "theme AS t ON p.idTheme = t.idTheme;
         ";
         
         $stmt = $this->pdo->query($sql);
