@@ -200,10 +200,15 @@ class ControllerFil extends Controller
             $titre = htmlspecialchars($_POST['titre']);
             $themes = $_POST['themes'];
             $description = htmlspecialchars($_POST['description']);
+            $premierMessage = htmlspecialchars($_POST['premierMessage']);
 
             // Créer le fil
             $managerFil = new FilDAO($this->getPdo());
             $idFil = $managerFil->create($titre, $description);
+
+            // Ajouter le premier message
+            $managerMessage = new MessageDAO($this->getPdo());
+            $managerMessage->ajouterMessage($idFil, null, $premierMessage);
 
             // Ajouter les thèmes
             $managerFil->addThemes($idFil, $themes);
