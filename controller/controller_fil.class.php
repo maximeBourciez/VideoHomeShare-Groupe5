@@ -34,11 +34,17 @@ class ControllerFil extends Controller
      */
     public function listerThreads()
     {
-        $filDAO = new FilDAO($this->getPdo());
-        $threads = $filDAO->findAll();
+        // Récupérer les fils de discussion
+        $managerFil = new FilDAO($this->getPdo());
+        $threads = $managerFil->findAll();
+
+        // Récupérer les thèmes disponibles
+        $managerTheme = new ThemeDAO($this->getPdo());
+        $themes = $managerTheme->findAll();
 
         echo $this->getTwig()->render('forum.html.twig', [
-            'fils' => $threads
+            'fils' => $threads,
+            'themes' => $themes
         ]);
     }
 
@@ -173,6 +179,34 @@ class ControllerFil extends Controller
             // Ajouter le like
             $managerReaction = new MessageDAO($this->getPdo());
             $managerReaction->ajouterReaction($idMessage, true);
+
+            // Rediriger vers le fil
+            $this->afficherFilParId($idFil);
+        } else {
+            die("Méthode non autorisée.");
+        }
+    }
+
+    /** 
+     * @brief Méthode de création d'un fil de discussion
+     * 
+     * @details Permet la création d'un fil de discussion avec un titre et un/plusieurs thèmes
+     * 
+     */
+    public function creerFil()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Récupérer les données 
+            $titre = htmlspecialchars($_POST['titre']);
+            $themes = $_POST['themes'];
+            $description = htmlspecialchars($_POST['description']);
+
+            // Créer le fil
+            $managerFil = new FilDAO($this->getPdo());
+            $idFil = $managerFil->create($titre, $description);
+
+            // Ajouter les thèmes
+            $managerFil->addThemes($idFil, $themes);
 
             // Rediriger vers le fil
             $this->afficherFilParId($idFil);

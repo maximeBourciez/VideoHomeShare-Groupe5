@@ -192,5 +192,47 @@ class FilDAO {
         $user = new UtilisateurDAO($this->pdo);
         return $user->hydrate($stmt->fetch());
     }
+
+    /**
+     * @brief Méthode pour ajouter un fil
+     * 
+     * @param string $titre Titre du fil
+     * @param string $description Description du fil
+     * @param int $idUtilisateur Identifiant de l'utilisateur
+     * 
+     * @return int Identifiant du fil ajouté
+     */
+    public function create(string $titre, string $description): int {
+        $sql = "
+            INSERT INTO " . DB_PREFIX . "fil (titre, dateC, description)
+            VALUES (:titre, NOW(), :description)
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':titre', $titre, PDO::PARAM_STR);
+        $stmt->bindValue(':description', $description, PDO::PARAM_STR);
+        $stmt->execute();
+        return $this->pdo->lastInsertId();
+    }
+
+    /** 
+     * @brief Méthode pour ajouter un thème à un fil
+     * 
+     * @param int $idFil Identifiant du fil
+     * @param array<int> $themes Tableau des id des thèmes sélectionnés  
+     * 
+     * @return void
+     */
+    public function addThemes(int $idFil, array $themes): void {
+        $sql = "
+            INSERT INTO " . DB_PREFIX . "parlerDeTheme (idFil, idTheme)
+            VALUES (:idFil, :idTheme)
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        foreach ($themes as $theme) {
+            $stmt->bindValue(':idFil', $idFil, PDO::PARAM_INT);
+            $stmt->bindValue(':idTheme', intval($theme), PDO::PARAM_INT);
+            $stmt->execute();
+        }
+    }
     
 }

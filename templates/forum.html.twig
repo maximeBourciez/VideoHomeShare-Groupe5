@@ -7,37 +7,145 @@
 
 {% block content %}
 
-	<main class="">
-		<div class="container">
-			{% for thread in fils %}
-				<div class="card my-4 shadow-sm border-0 rounded-3 ms-5">
-					<div class="card-body p-4 bg-mydark text-white rounded">
-						<div class="d-flex align-items-center">
-							<h3>
-								<a href="index.php?controller=fil&methode=afficherFilParId&id_fil={{ thread.getId() }}" style="color:white" class="text-decoration-none">
-									{{ thread.getTitre() }}
-								</a>
-							</h3>
-							<span class="mx-2" style="font-size: 1.2em;">•</span>
-							<p class="mt-3">Créé le
-								{{ thread.getDateCreation() | date('d M Y') }}</p>
-						</div>
+	<div class="container">
+		{% for thread in fils %}
+			<div class="card my-4 shadow-sm border-0 rounded-3 ms-5">
+				<div class="card-body p-4 bg-mydark text-white rounded">
+					<div class="d-flex align-items-center">
+						<h3>
+							<a href="index.php?controller=fil&methode=afficherFilParId&id_fil={{ thread.getId() }}" style="color:white" class="text-decoration-none">
+								{{ thread.getTitre() }}
+							</a>
+						</h3>
+						<span class="mx-2" style="font-size: 1.2em;">•</span>
+						<p class="mt-3">Créé le
+							{{ thread.getDateCreation() | date('d M Y') }}</p>
+					</div>
 
-						<p class="mt-3">{{ thread.getDescription() }}</p>
-						<div class="d-flex flex-row justify-content-between">
-							<p class="mt-3">Créé par
-								<a href="index.php?controller=utilisateur&methode=show&id_utilisateur={{thread.getUtilisateur().getId() }}" style="color:white">
-									{{ thread.getUtilisateur() ? thread.getUtilisateur().getPseudo() : 'Utilisateur inconnu' }}
-								</a>
-							</p>
-							<a href="index.php?controller=fil&methode=afficherFilParId&id_fil={{ thread.getId() }}" class="btn btn-myprimary">Voir le fil</a>
-						</div>
+					<p class="mt-3">{{ thread.getDescription() }}</p>
+					<div class="d-flex flex-row justify-content-between">
+						<p class="mt-3">Créé par
+							<a href="index.php?controller=utilisateur&methode=show&id_utilisateur={{thread.getUtilisateur().getId() }}" style="color:white">
+								{{ thread.getUtilisateur() ? thread.getUtilisateur().getPseudo() : 'Utilisateur inconnu' }}
+							</a>
+						</p>
+						<a href="index.php?controller=fil&methode=afficherFilParId&id_fil={{ thread.getId() }}" class="btn btn-myprimary">Voir le fil</a>
 					</div>
 				</div>
-			{% endfor %}
+			</div>
+		{% endfor %}
 
+	</div>
+
+
+	<!-- Bouton flottant -->
+	<button class="btn btn-myprimary position-fixed bottom-0 end-0 me-4 mb-4 px-6 d-flex align-items-center justify-content-center" style="border-radius: 50px; white-space: nowrap; min-width: 200px;" data-bs-toggle="modal" data-bs-target="#nouveauFil">
+		<i class="bi bi-pencil" style="font-size: 1.3rem; margin-right: 0.2 rem;"></i>
+		<span>Nouveau fil
+		</span>
+	</button>
+
+	<!-- Modal de nouveau fil -->
+	<div class="modal fade" id="nouveauFil" tabindex="-1" aria-labelledby="nouveauMessageLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-lg" style="height: 80vh;">
+			<div class="modal-content popup-content bg-mydark" id="popUpNouveauMessage">
+				<div class="modal-header text-white text-center">
+					<h5 class="modal-title w-100" id="nouveauMessageLabel">Nouvelle discussion</h5>
+					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+				</div>
+				<form action="index.php?controller=fil&methode=creerFil" method="POST" class="modal-body text-white">
+					<div class="row my-4">
+						<div class="col-8">
+							<input type="text" name="titre" class="form-control bg-mylight text-black" placeholder="Titre de votre discussion..." required>
+						</div>
+						<div class="col-4 position-relative">
+							<div class="custom-select-wrapper">
+								<div class="custom-select bg-mylight text-black" id="themeSelect">
+									<span class="custom-select-placeholder">Choisissez des thèmes</span>
+									<div class="custom-select-dropdown">
+										{% for theme in themes %}
+											<label class="custom-select-option">
+												<input type="checkbox" name="themes[]" value="{{ theme.getId() }}">
+												{{ theme.getNom() }}
+											</label>
+										{% endfor %}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<textarea name="description" class="form-control mt-1 bg-mylight text-black p-3" rows="4" placeholder="Exprimez-vous..." maxlength="1000" required></textarea>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-xs btn-myprimary">
+							<i class="bi bi-send"></i>
+							Envoyer
+						</button>
+					</div>
+				</form>
+			</div>
 		</div>
-	</main>
+	</div>
+
+	<style>
+		// Select de la pop up de création de thread - Forum
+		.custom-select-wrapper {
+			position: relative;
+			width: 100%;
+			height: 38px;
+		}
+
+		.custom-select {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			border: 1px solid #ced4da;
+			border-radius: 0.25rem;
+			padding: 0.375rem 0.75rem;
+			cursor: pointer;
+		}
+
+		.custom-select-placeholder {
+			display: block;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.custom-select-dropdown {
+			display: none;
+			position: absolute;
+			top: 100%;
+			left: 0;
+			width: 100%;
+			max-height: 200px;
+			overflow-y: auto;
+			background: white;
+			border: 1px solid #ced4da;
+			border-top: none;
+			z-index: 1000;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		}
+
+		.custom-select-option {
+			display: block;
+			padding: 0.375rem 0.75rem;
+			cursor: pointer;
+		}
+
+		.custom-select-option:hover {
+			background-color: #f8f9fa;
+		}
+
+		.custom-select-option input {
+			margin-right: 10px;
+		}
+
+		.custom-select.open .custom-select-dropdown {
+			display: block;
+		}
+	</style>
+
+	<script src="js/forum.js"></script>
 
 
 {% endblock %}

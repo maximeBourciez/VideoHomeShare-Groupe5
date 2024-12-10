@@ -23,7 +23,7 @@ class Theme {
      * @param string|null $nom Nom du thème (optionnel).
      */
     public function __construct(?int $idTheme = null, ?string $nom = null) {
-        $this->id = $idTheme;
+        $this->idTheme = $idTheme;
         $this->nom = $nom;
     }
 
