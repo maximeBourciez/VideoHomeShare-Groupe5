@@ -79,6 +79,20 @@ class ThemeDAO{
     }
     //But : Trouve les themes en fonction de l'identifiant du contenu
 
+    public function findThemesByCollectionId(int $collectionId): array {
+        $sql = "SELECT t.* 
+                FROM " . DB_PREFIX . "theme t
+                INNER JOIN " . DB_PREFIX . "caracteriserCollection cc ON t.idTheme = cc.idTheme
+                WHERE cc.idCollection = :collectionId";
+    
+        $pdoStatement = $this->pdo->prepare($sql);
+        $pdoStatement->execute(['collectionId' => $collectionId]);
+        $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Theme');
+        $themes = $pdoStatement->fetchAll();
+    
+        return $themes;
+    }
+
     //Methodes hydrate
     public function hydrate($tableauAssoc): ?Theme
     {

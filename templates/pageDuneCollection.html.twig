@@ -1,0 +1,138 @@
+{% extends 'base_template.html.twig' %}
+
+{% block content %}
+    <main class="container d-flex flex-column justify-content-center align-items-center flex-grow-1">
+        <div class="d-flex">
+            <!-- Section Affiche -->
+            <div class="me-5">
+                <img 
+                    src="{{ collection.lienAffiche }}" 
+                    alt="{{ collection.nom }}" 
+                    class="shadow img-fluid m-5 rounded" 
+                    style="width: 525px; height: 750px; object-fit: cover;"
+                >
+            </div>
+
+            <!-- Section Informations -->
+            <div class="col-6 d-flex flex-column justify-content-between">
+                <!-- Titre -->
+                <h1 class="mt-5 fw-bolder text-center">{{ collection.nom }}</h1>
+
+                <!-- Date et Durée -->
+                <div class="d-flex justify-content-between fs-5 fw-bolder">
+                    <p> Nombre de saison : {{ nbSaison }}</p>
+                    <p> Nombre d'épisode : {{ nbEpisode }} </p>
+                </div>
+
+                <!-- Description -->
+                <div class="shadow fst-italic fs-5 bg-dark text-white p-3 rounded">
+                    <p>{{ collection.description }}</p>
+                </div>
+
+                <!-- Genres -->
+                <div class="d-flex justify-content-left align-items-center">
+                    <p class="mb-0">Genre :</p>
+                    {% for theme in themes %}
+                        <span class="theme-tag ms-3">{{ theme.nom }}</span>
+                    {% endfor %}
+                </div>
+
+                <!-- Note et Avis -->
+                <div>
+                    <div class="d-flex text-center align-items-center">
+                        <p class="m-0">Note : {{ moyenne }}/10</p>
+                        <div id="rating" class="ms-5"></div>
+                    </div>
+                    <div>
+                        <p class="mb-5 mx-3 small fw-light">{{ total }} avis</p>
+                    </div>
+                </div>
+
+                <!-- Script de génération des étoiles -->
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        generateStarRating({{ moyenne }}/2, 5);
+                    });
+                </script>
+
+                <!-- Boutons d'action -->
+                <div class="mr-5">
+                    <div class="d-flex justify-content-right mb-5">
+                        <button class="btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
+                        <button class="btn btn-myprimary fw-normal me-4 bi bi-plus">WatchList</button>
+                        <button class="btn btn-myprimary fw-normal me-4">Les épisodes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal pour laisser un avis -->
+        <div class="modal fade" id="commenterContenu" tabindex="-1" aria-labelledby="commenterContenuLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content bg-mydark text-white " style="border: 1px solid #F2AC0F">
+                    <div class="modal-header border-bottom-0">
+                        <h5 class="modal-title" id="exampleModalLabel">Laisser un avis</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="index.php?controller" method="POST">
+                            <div class="mb-3">
+                                <label for="titre" class="form-label">Titre</label>
+                                <input type="text" class="form-control" id="titre" name="titre" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="avis" class="form-label">Avis</label>
+                                <textarea class="form-control" id="avis" name="avis" rows="3" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="note" class="form-label">Note/10</label>
+                                <select class="form-control" id="note" name="note" required>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>                                                        
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="estPositif" class="form-label">Est-ce positif ?</label>
+                                <select class="form-control" id="estPositif" name="estPositif" required>
+                                    <option value="1">Oui</option>
+                                    <option value="0">Non</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Soumettre</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Commentaires -->
+        <div class="bg-mydark rounded text-white p-3 mb-5">
+            <h1 class="mx-5">Commentaires :</h1>
+            {% for com in commentaires %}
+            <div class="d-flex align-items-center">
+                <h4 class="m-3 mb-0">{{ com.titre }}</h4>
+                <p class="m-3 mb-0">.</p>
+                <p class="m-3 mb-0">
+                    {% if com.estPositif == 1 %}
+                        {{ com.note }}/10
+                        <i class="bi bi-star-fill"></i> <!-- Étoile remplie -->
+                    {% else %}
+                        {{ com.note }}/10
+                        <i class="bi bi-star"></i> <!-- Étoile vide -->
+                    {% endif %}
+                </p>
+            </div>
+            <p class="m-3">{{ com.avis }}</p>
+            <hr>
+            {% endfor %}
+        </div>
+
+    </main>
+{% endblock %}

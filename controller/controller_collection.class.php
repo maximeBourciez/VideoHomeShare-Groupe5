@@ -1,14 +1,14 @@
 <?php
 /**
- * @brief Classe ControllerContenu
+ * @brief Classe ControllerCollection
  * 
- * @details Classe permettant de gérer le contenu d'un contenu'
+ * @details Classe permettant de gérer le contenu du site
  * 
- * @date 5/11/2024
+ * @date 10/12/2024
  * 
  * @warning Cette classe met en place une version simplifiée du design pattern Factory
  */
-class ControllerContenu extends Controller {
+class Controllercollection extends Controller {
     /**
      * @brief Constructeur de la classe ControllerContenu
      * 
@@ -19,36 +19,41 @@ class ControllerContenu extends Controller {
         parent::__construct($twig, $loader);
     }
 
-    public function afficherFilm(){
-        $id = isset($_GET['id_film']) ? $_GET['id_film'] : null;
+    public function afficherCollection(){
+        $id = isset($_GET['id_collection']) ? $_GET['id_collection'] : null;
 
         // Récupération des informations du film (contenu)
-        $managerContenu = new ContenuDAO($this->getPdo());
-        $contenu = $managerContenu->findById($id);
+        $managerCollection = new CollectionDAO($this->getPdo());
+        $collection = $managerCollection->find($id);
+
+        // Récupération du nombre de saisons de la collection
+        $managerSaison = new CollectionDAO($this->getPdo());
+        $nbSaison = $managerSaison->countSaisons($id);
+
+        // Récupération du nombre d'épisodes de la collection
+        $managerEpisode = new CollectionDAO($this->getPdo());
+        $nbEpisode = $managerEpisode->countEpisodes($id);
 
         // Récupération des thèmes associés au contenu
         $managerTheme = new ThemeDAO($this->getPdo());
-        $themes = $managerTheme->findThemesByContenuId($id);
+        $themes = $managerTheme->findThemesByCollectionId($id);
         
         // Récupérer la moyenne des notes et le total des commentaires pour ce contenu
         $managerCommentaireMoy = new CommentaireDAO($this->getPdo());
-        $notes = $managerCommentaireMoy->getMoyenneEtTotalNotesContenu($id); // Retourne un tableau avec 'moyenne' et 'total'
+        $notes = $managerCommentaireMoy->getMoyenneEtTotalNotesCollection($id); // Retourne un tableau avec 'moyenne' et 'total'
 
         // Récupérer les commentaires spécifiques à ce contenu
         $managerCommentaire = new CommentaireDAO($this->getPdo());
-        $commentaires = $managerCommentaire->getCommentairesContenu($id);
-
-        // Récupérer les personnalités associées à ce contenu
-        $managerPersonnalite = new PersonnaliteDAO($this->getPdo());
-        $personnalite = $managerPersonnalite->findAllParContenuId($id); 
+        $commentaires = $managerCommentaire->getCommentairesCollection($id);
 
         // Rendu du template avec toutes les données récupérées
-        echo $this->getTwig()->render('pageDunFilm.html.twig', [
-            'contenu' => $contenu,
+        echo $this->getTwig()->render('pageDuneCollection.html.twig', [
+            'collection' => $collection,
+            'nbSaison' => $nbSaison,
+            'nbEpisode' => $nbEpisode,
             'themes' => $themes,
             'moyenne' => $notes['moyenne'],
             'total' => $notes['total'],
-            'personnalite' => $personnalite,
             'commentaires' => $commentaires // Changement ici
         ]);
     }
