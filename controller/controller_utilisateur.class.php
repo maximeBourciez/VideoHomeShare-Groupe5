@@ -51,18 +51,22 @@ class ControllerUtilisateur extends Controller
         $mail = str_replace(' ', '', $mail);
 
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
+        if($this->comprisEntre($mail,320,6, "Le mail doit contenir", "connection")){
+            $utilisateur = $managerutilisateur->findByMail($mail);
 
-        $utilisateur = $managerutilisateur->findByMail($mail);
+            if ($utilisateur != null && password_verify($mdp, $utilisateur->getMdp())) {
+                $utilisateur->setMdp(null);
+                $_SESSION['utilisateur'] = serialize($utilisateur);
+                $this->getTwig()->addGlobal('utilisateurConnecte', $_SESSION['utilisateur']);
 
-        if ($utilisateur != null && password_verify($mdp, $utilisateur->getMdp())) {
-            $_SESSION['utilisateur'] = serialize($utilisateur);
-            //Génération de la vue
-            $this->show();
-        } else {
-            //Génération de la vue
-            $template = $this->getTwig()->load('connection.html.twig');
-            echo $template->render(array());
-        }
+                //Génération de la vue
+                $this->show();
+            } else {
+                //Génération de la vue
+                $template = $this->getTwig()->load('connection.html.twig');
+                echo $template->render(array());
+            }
+    }
     }
     /**
      * @brief vérifie les informations saisies lors de l'inscription et crée un utilisateur si les informations sont correctes et renvoie sur la page de connection   sinon renvoie sur la page d'inscription
@@ -91,8 +95,8 @@ class ControllerUtilisateur extends Controller
 
 
 
-        if ($this->comprisEntre($id, 20, 3, "L'identifiant doit contenir ") && $this->comprisEntre($pseudo, 50, 3, "Le pseudo doit contenir ") && 
-            $this->comprisEntre($mail, 50, 3, "Le mail doit contenir ") && $this->comprisEntre($nom, 50, 3, "Le nom doit contenir ") && $this->ageCorrect($date, 13) &&
+        if ($this->comprisEntre($id, 20, 3, "L'identifiant doit contenir ", "inscription" ) && $this->comprisEntre($pseudo, 50, 3, "Le pseudo doit contenir " , "inscription") && 
+            $this->comprisEntre($mail, 50, 3, "Le mail doit contenir ", "inscription") && $this->comprisEntre($nom, 50, 3, "Le nom doit contenir ", "inscription") && $this->ageCorrect($date, 13) &&
             $this->mailCorrect($mail) && $this->egale($mdp, $vmdp, "Les mots de passe")) 
             {
 
@@ -122,7 +126,7 @@ class ControllerUtilisateur extends Controller
     }
     /**
      * @brief envoie un mail à l'utilisateur pour qu'il puisse changer son mot de passe
-     * @todo cryptage de id dans le lien du mail
+     * 
      * @return void
      */
     public function envoieMailMDPOublie(): void
@@ -136,7 +140,7 @@ class ControllerUtilisateur extends Controller
             $id = $utilisateur->getId();
             $token = $this->generateToken($id, 6);    
             
-            $message = "Bonjour, \n\n Vous avez demandé à réinitialiser votre mot de passe. Voici votre lien pour changer de mot de passe : " . WEBSITE_LINK . "index.php?controller=utilisateur&methode=afficherchangerMDP&token=" .$token . " \n\n Cordialement, \n\n L'équipe de la plateforme de vhs";
+            $message = "Bonjour, \n\n Vous avez demandé à réinitialiser votre mot de passe.\n Voici votre lien pour changer de mot de passe : " . WEBSITE_LINK . "index.php?controller=utilisateur&methode=afficherchangerMDP&token=" .$token . " \n\n Cordialement, \n\n L'équipe de la plateforme de vhs";
             mail($mail, "Réinitialisation de votre mot de passe", $message);
             $template = $this->getTwig()->load('connection.html.twig');
             echo $template->render(array());
@@ -150,7 +154,7 @@ class ControllerUtilisateur extends Controller
 
     /**
      * @brief affiche la page ou l'utilisateur peut changer son mot de passe
-     * @todo decryptage de id dans GET
+     * 
      * @return void
      */
     public function afficherchangerMDP(): void
@@ -391,18 +395,18 @@ class ControllerUtilisateur extends Controller
      * @return bool
      * 
      */
-    public function comprisEntre(string $val, int $valmax, int $valmin, string $messageErreur): bool
+    public function comprisEntre(string $val, int $valmax, int $valmin, string $messageErreur, string $page ): bool
     {
         $valretour = true;
         if (strlen($val) <= $valmin) {
-            print("coucou1");
-            $template = $this->getTwig()->load('inscription.html.twig');
+            
+            $template = $this->getTwig()->load("$page.html.twig");
             echo $template->render(array('messagederreur' =>  $messageErreur . " au moins "  . $valmin . " caractères"));
             $valretour = false;
         }
         if (strlen($val) >= $valmax) {
-            print("coucou");
-            $template = $this->getTwig()->load('inscription.html.twig');
+            
+            $template = $this->getTwig()->load("$page.html.twig");
             echo $template->render(array('messagederreur' => $messageErreur . " au maximum " . $valmax . " caractères"));
             $valretour = false;
         }
