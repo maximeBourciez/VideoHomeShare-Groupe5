@@ -134,13 +134,10 @@ class ControllerUtilisateur extends Controller
         if ($utilisateur != null) {
             // crypter le id
             $id = $utilisateur->getId();
-            $token = $this->generateToken($id);
-            print($token);
-
+            $token = $this->generateToken($id, 6);    
             
-            
-            $message = "Bonjour, \n\n Vous avez demandé à réinitialiser votre mot de passe. Voici votre lien pour changer de mot de passe : " . WEBSITE_LINK . "index.php?controller=utilisateur&methode=afficherchangerMDP&id=" . $id . " \n\n Cordialement, \n\n L'équipe de la plateforme de vhs";
-            // mail($mail, "Réinitialisation de votre mot de passe", $message);
+            $message = "Bonjour, \n\n Vous avez demandé à réinitialiser votre mot de passe. Voici votre lien pour changer de mot de passe : " . WEBSITE_LINK . "index.php?controller=utilisateur&methode=afficherchangerMDP&token=" .$token . " \n\n Cordialement, \n\n L'équipe de la plateforme de vhs";
+            mail($mail, "Réinitialisation de votre mot de passe", $message);
             $template = $this->getTwig()->load('connection.html.twig');
             echo $template->render(array());
         } else {
@@ -158,17 +155,17 @@ class ControllerUtilisateur extends Controller
      */
     public function afficherchangerMDP(): void
     {
-        $id = isset($_GET['id']) ? $_GET['id'] : null;
+        $token = isset($_GET['token']) ? $_GET['token'] : null;
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
-        if ($id != null) {
+        if ($token != null) {
 
-
-            $utilisateur = $managerutilisateur->find($id);
+            $tokenUilisateur = $this->verifyToken($token);
+            $utilisateur = $managerutilisateur->find($tokenUilisateur['id']);
             if ($utilisateur != null) {
 
 
                 $template = $this->getTwig()->load('changerMDP.html.twig');
-                echo $template->render(array('id' => $id));
+                echo $template->render(array('id' => $utilisateur->getId()));
             }
         }
     }
