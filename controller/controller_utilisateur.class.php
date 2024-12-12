@@ -51,22 +51,18 @@ class ControllerUtilisateur extends Controller
         $mail = str_replace(' ', '', $mail);
 
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
-        if($this->comprisEntre($mail,320,6, "Le mail doit contenir", "connection")){
+        if ($this->comprisEntre($mail, 320, 6, "Le mail doit contenir", "connection")) {
             $utilisateur = $managerutilisateur->findByMail($mail);
 
-            if ($utilisateur != null && password_verify($mdp, $utilisateur->getMdp())) {
+            if ($this->utilisateurExiste($utilisateur, "inscription") && $this->motDePasseCorrect($mdp, $utilisateur->getMdp())) {
                 $utilisateur->setMdp(null);
                 $_SESSION['utilisateur'] = serialize($utilisateur);
                 $this->getTwig()->addGlobal('utilisateurConnecte', $_SESSION['utilisateur']);
 
                 //Génération de la vue
                 $this->show();
-            } else {
-                //Génération de la vue
-                $template = $this->getTwig()->load('connection.html.twig');
-                echo $template->render(array());
             }
-    }
+        }
     }
     /**
      * @brief vérifie les informations saisies lors de l'inscription et crée un utilisateur si les informations sont correctes et renvoie sur la page de connection   sinon renvoie sur la page d'inscription
@@ -95,10 +91,12 @@ class ControllerUtilisateur extends Controller
 
 
 
-        if ($this->comprisEntre($id, 20, 3, "L'identifiant doit contenir ", "inscription" ) && $this->comprisEntre($pseudo, 50, 3, "Le pseudo doit contenir " , "inscription") && 
-            $this->comprisEntre($mail, 50, 3, "Le mail doit contenir ", "inscription") && $this->comprisEntre($nom, 50, 3, "Le nom doit contenir ", "inscription") && $this->ageCorrect($date, 13) &&
-            $this->mailCorrect($mail) && $this->egale($mdp, $vmdp, "Les mots de passe")) 
-            {
+        if (
+            $this->comprisEntre($id, 20, 3, "L'identifiant doit contenir ", "inscription") && $this->comprisEntre($pseudo, 50, 3, "Le pseudo doit contenir ", "inscription") &&
+            $this->comprisEntre($mail, 50, 3, "Le mail doit contenir ", "inscription") && $this->comprisEntre($nom, 50, 3, "Le nom doit contenir ", "inscription") &&
+            $this->comprisEntre($mdp, null, 8, "Le mot de passe doit contenir ", "inscription") && $this->comprisEntre($vmdp, null, 8, "Le mot de passe de confirmation doit contenir ", "inscription")
+            && $this->estRobuste($mdp, "inscription") && $this->ageCorrect($date, 13) && $this->mailCorrectExitePas($mail) &&  $this->egale($mdp, $vmdp, "Les mots de passe")
+        ) {
 
             //cripter le mot de passe
             $mdp = password_hash($mdp, PASSWORD_DEFAULT);
@@ -107,9 +105,7 @@ class ControllerUtilisateur extends Controller
             $managerutilisateur->create($newUtilisateur);
             //Génération de la vue
             $template = $this->getTwig()->load('connection.html.twig');
-            echo $template->render(array(
-                'message' => "Votre compte a bien été créé."
-            ));
+            echo $template->render(array('message' => "Votre compte a bien été créé."));
         }
     }
 
@@ -138,9 +134,9 @@ class ControllerUtilisateur extends Controller
         if ($utilisateur != null) {
             // crypter le id
             $id = $utilisateur->getId();
-            $token = $this->generateToken($id, 6);    
-            
-            $message = "Bonjour, \n\n Vous avez demandé à réinitialiser votre mot de passe.\n Voici votre lien pour changer de mot de passe : " . WEBSITE_LINK . "index.php?controller=utilisateur&methode=afficherchangerMDP&token=" .$token . " \n\n Cordialement, \n\n L'équipe de la plateforme de vhs";
+            $token = $this->generateToken($id, 6);
+
+            $message = "Bonjour, \n\n Vous avez demandé à réinitialiser votre mot de passe.\n Voici votre lien pour changer de mot de passe : " . WEBSITE_LINK . "index.php?controller=utilisateur&methode=afficherchangerMDP&token=" . $token . " \n\n Cordialement, \n\n L'équipe de la plateforme de vhs";
             mail($mail, "Réinitialisation de votre mot de passe", $message);
             $template = $this->getTwig()->load('connection.html.twig');
             echo $template->render(array());
@@ -189,23 +185,22 @@ class ControllerUtilisateur extends Controller
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
         $utilisateur = $managerutilisateur->find($id);
         if ($utilisateur != null) {
-            
 
 
-                if ($mdp == $vmdp) {
-                    //crypter le mot de passe
-                    $mdp = password_hash($mdp, PASSWORD_DEFAULT);
-                    $utilisateur->setMdp($mdp);
 
-                    // modifier le mot de passe dans la base de données
-                    $managerutilisateur->update($utilisateur);
-                    $template = $this->getTwig()->load('connection.html.twig');
-                    echo $template->render(array());
-                } else {
-                    $template = $this->getTwig()->load('changerMDP.html.twig');
-                    echo $template->render(array('id' => $id));
-                }
-            
+            if ($mdp == $vmdp) {
+                //crypter le mot de passe
+                $mdp = password_hash($mdp, PASSWORD_DEFAULT);
+                $utilisateur->setMdp($mdp);
+
+                // modifier le mot de passe dans la base de données
+                $managerutilisateur->update($utilisateur);
+                $template = $this->getTwig()->load('connection.html.twig');
+                echo $template->render(array());
+            } else {
+                $template = $this->getTwig()->load('changerMDP.html.twig');
+                echo $template->render(array('id' => $id));
+            }
         }
     }
 
@@ -395,17 +390,17 @@ class ControllerUtilisateur extends Controller
      * @return bool
      * 
      */
-    public function comprisEntre(string $val, int $valmax, int $valmin, string $messageErreur, string $page ): bool
+    public function comprisEntre(string $val, ?int $valmax, int $valmin, string $messageErreur, string $page): bool
     {
         $valretour = true;
         if (strlen($val) <= $valmin) {
-            
+
             $template = $this->getTwig()->load("$page.html.twig");
             echo $template->render(array('messagederreur' =>  $messageErreur . " au moins "  . $valmin . " caractères"));
             $valretour = false;
         }
-        if (strlen($val) >= $valmax) {
-            
+        if (strlen($val) >= $valmax and $valmax != null) {
+
             $template = $this->getTwig()->load("$page.html.twig");
             echo $template->render(array('messagederreur' => $messageErreur . " au maximum " . $valmax . " caractères"));
             $valretour = false;
@@ -435,7 +430,7 @@ class ControllerUtilisateur extends Controller
      * @return bool
      * 
      */
-    public function mailCorrect(string $mail): bool
+    public function mailCorrectExitePas(string $mail): bool
     {
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
         $valretour = true;
@@ -463,43 +458,96 @@ class ControllerUtilisateur extends Controller
         return $valretour;
     }
 
-    function generateToken($userId, $temp = 1) {
+    function generateToken($userId, $temp = 1)
+    {
         $secretKey = SECRET_KEY;
         $header = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
         $payload = json_encode([
             'iat' => time(),
-            'exp' => time() + 3600*$temp,
+            'exp' => time() + 3600 * $temp,
             'id' => $userId,
         ]);
-    
+
         $base64UrlHeader = rtrim(strtr(base64_encode($header), '+/', '-_'), '=');
         $base64UrlPayload = rtrim(strtr(base64_encode($payload), '+/', '-_'), '=');
-    
+
         $signature = hash_hmac('sha256', $base64UrlHeader . "." . $base64UrlPayload, $secretKey, true);
         $base64UrlSignature = rtrim(strtr(base64_encode($signature), '+/', '-_'), '=');
-    
+
         return $base64UrlHeader . "." . $base64UrlPayload . "." . $base64UrlSignature;
     }
 
-    function verifyToken($token) {
+    function verifyToken($token)
+    {
         $secretKey = SECRET_KEY;
-    
+
         list($header, $payload, $signature) = explode('.', $token);
-    
+
         $validSignature = rtrim(strtr(base64_encode(hash_hmac('sha256', $header . "." . $payload, $secretKey, true)), '+/', '-_'), '=');
-    
+
         if ($validSignature !== $signature) {
             return null;
         }
-    
+
         $data = json_decode(base64_decode(strtr($payload, '-_', '+/')), true);
-    
+
         if ($data['exp'] < time()) {
             return null;
         }
-    
+
         return $data;
     }
-    
-    
+
+    public function utilisateurExiste(?Utilisateur $useur, string $page): bool
+    {
+        $valretour = true;
+        if ($useur == null) {
+            $valretour = false;
+            $template = $this->getTwig()->load("$page.html.twig");
+            echo $template->render(array('message' => " Ce compte n'existe pas veuillez vous inscrire"));
+        }
+        return $valretour;
+    }
+
+    public function motDePasseCorrect(string $mdp, string $mdpBDD): bool
+    {
+        $valretour = true;
+        if (!password_verify($mdp, $mdpBDD)) {
+            $valretour = false;
+            $template = $this->getTwig()->load('connection.html.twig');
+            echo $template->render(array("messagederreur" => "Le mot de passe est incorrect"));
+        }
+        return $valretour;
+    }
+
+    public function estRobuste(string $mdp, string $page): bool
+    {
+        $valretour = true;
+        $messageerreur = "Le mot de passe doit contenir";
+        if (!preg_match('/[a-z]/', $mdp)) {
+            $valretour = false;
+
+            $messageerreur = $messageerreur + " au moins une minuscule";
+        }
+        if (!preg_match('/[A-Z]/', $mdp)) {
+            $valretour = false;
+
+            $messageerreur =  ($messageerreur == "Le mot de passe doit contenir") ? $messageerreur + " au moins une majuscule" : $messageerreur + ", au moins une majuscule";
+        }
+        if (!preg_match('/[\d]/', $mdp)) {
+            $valretour = false;
+
+            $messageerreur =  ($messageerreur == "Le mot de passe doit contenir") ? $messageerreur + " au moins un chiffre" : $messageerreur + ", au moins un chiffre";
+        }
+        if (!preg_match('/[@$!%*?&]/', $mdp)) {
+            $valretour = false;
+
+            $messageerreur =  ($messageerreur == "Le mot de passe doit contenir") ? $messageerreur + " au moins un caractère spécial" : $messageerreur + " et au moins un caractère spécial";
+        }
+        if ($valretour == false) {
+            $template = $this->getTwig()->load("$page.html.twig");
+            echo $template->render(array('messagederreur' => "$messageerreur"));
+        }
+        return $valretour;
+    }
 }
