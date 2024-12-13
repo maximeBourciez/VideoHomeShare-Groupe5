@@ -113,7 +113,35 @@ class ThemeDAO{
     }
     //But : Créer les themes avec les valeurs assignées aux attributs correspondants
 
-    
+    public function createIfNotExists(Theme $theme): ?Theme {
+        // Vérifie si le thème existe déjà
+        $sql = "SELECT * FROM " . DB_PREFIX . "theme WHERE nom = :nom";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['nom' => $theme->getNom()]);
+        $existingTheme = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($existingTheme) {
+            return new Theme($existingTheme['idTheme'], $existingTheme['nom']);
+        }
+
+        // Si le thème n'existe pas, on le crée
+        $sql = "INSERT INTO " . DB_PREFIX . "theme (nom) VALUES (:nom)";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['nom' => $theme->getNom()]);
+        
+        return new Theme($this->pdo->lastInsertId(), $theme->getNom());
+    }
+
+    public function associateThemeWithContenu(int $themeId, int $contenuId): bool {
+        $sql = "INSERT INTO " . DB_PREFIX . "caracteriserContenu (idTheme, idContenu) 
+                VALUES (:themeId, :contenuId)";
+        
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            'themeId' => $themeId,
+            'contenuId' => $contenuId
+        ]);
+    }
 }
 
 ?>

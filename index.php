@@ -21,7 +21,6 @@ try  {
     if ($controllerName == '' && $methode ==''){
         $controllerName='fil';
         $methode='listerThreads';
-        
     }
 
     if ($controllerName == '' ){
@@ -32,10 +31,10 @@ try  {
         throw new Exception('La méthode n\'est pas définie');
     }
 
-    
-
+    // Créer le contrôleur approprié
     $controller = ControllerFactory::getController($controllerName, $loader, $twig);
     $controller->call($methode);
+
 }catch (Exception $e) {
    die('Erreur : ' . $e->getMessage());
 }

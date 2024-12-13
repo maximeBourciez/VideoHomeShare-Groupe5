@@ -26,7 +26,14 @@
 
                 <!-- Description -->
                 <div class="shadow fst-italic fs-5 bg-dark text-white p-3 rounded">
-                    <p>{{ contenu.description }}</p>
+                <!-- Texte de description plus petit si il est plus long que 500 caractères-->
+                    {% set description = contenu.description %}
+                    {% set descriptionmax_length = 500 %}
+                    {% if description|length > descriptionmax_length %}
+                        <p class="fs-6"> {{ description}}</p>
+                    {% else %}
+                        <p> {{ description }}</p>
+                    {% endif %}
                 </div>
 
                 <!-- Genres -->
@@ -40,7 +47,7 @@
                 <!-- Note et Avis -->
                 <div>
                     <div class="d-flex text-center align-items-center">
-                        <p class="m-0">Note : {{ moyenne }}/10</p>
+                        <p class="m-0">Note : {{ moyenne }}/5</p>
                         <div id="rating" class="ms-5"></div>
                     </div>
                     <div>
@@ -51,7 +58,7 @@
                 <!-- Script de génération des étoiles -->
                 <script>
                     document.addEventListener('DOMContentLoaded', function () {
-                        generateStarRating({{ moyenne }}/2, 5);
+                        generateStarRating({{ moyenne }}, 5);
                     });
                 </script>
 
@@ -69,8 +76,10 @@
     <div class="modal-dialog">
         <div class="modal-content bg-mydark text-white " style="border: 1px solid #F2AC0F">
             <div class="modal-header border-bottom-0">
-                <h5 class="modal-title" id="exampleModalLabel">Laisser un avis</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-header border-bottom-0 d-flex align-items-center justify-content-center m-0 p-0">
+                <h5 class="modal-title fw-bolder" id="exampleModalLabel">Laisser un avis</h5>
             </div>
             <div class="modal-body">
                 <form action="index.php?controller" method="POST">
@@ -83,25 +92,13 @@
                         <textarea class="form-control" id="avis" name="avis" rows="3" required></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="note" class="form-label">Note/10</label>
+                        <label for="note" class="form-label">Note</label>
                         <select class="form-control" id="note" name="note" required>
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
                             <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>                                                        
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="estPositif" class="form-label">Est-ce positif ?</label>
-                        <select class="form-control" id="estPositif" name="estPositif" required>
-                            <option value="1">Oui</option>
-                            <option value="0">Non</option>
+                            <option value="5">5</option>                                                     
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary">Soumettre</button>
@@ -117,23 +114,38 @@
             <h2 class="my-3 fw-bolder">Synopsis</h2>
             <div class="shadow fst-italic fs-6 bg-dark text-white p-3 rounded">
                 {% if synopsis|length > max_length %}
-                    <p>
+                    <div id="short-synopsis">
                         {{ synopsis|slice(0, max_length) ~ '...' }}
-                        <a href="#" onclick="document.getElementById('full-synopsis').style.display = 'block'; this.style.display = 'none'; return false;" class="text-primary">
+                        <a href="#" onclick="toggleSynopsis(); return false;" class="text-primary">
                             Voir plus
                         </a>
-                    </p>
-                    <p id="full-synopsis" style="display:none;">
+                    </div>
+                    <div id="full-synopsis" style="display:none;">
                         {{ synopsis }}
-                        <a href="#" onclick="document.getElementById('full-synopsis').style.display = 'none'; this.parentElement.previousElementSibling.querySelector('a').style.display = 'inline'; return false;" class="text-primary">
+                        <a href="#" onclick="toggleSynopsis(); return false;" class="text-primary">
                             Réduire
                         </a>
-                    </p>
+                    </div>
                 {% else %}
-                    <p>{{ synopsis }}</p>
+                    <div>{{ synopsis }}</div>
                 {% endif %}
             </div>
         </div>
+
+        <script>
+            function toggleSynopsis() {
+                const shortSynopsis = document.getElementById('short-synopsis');
+                const fullSynopsis = document.getElementById('full-synopsis');
+                
+                if (shortSynopsis.style.display === 'none') {
+                    shortSynopsis.style.display = 'block';
+                    fullSynopsis.style.display = 'none';
+                } else {
+                    shortSynopsis.style.display = 'none';
+                    fullSynopsis.style.display = 'block';
+                }
+            }
+        </script>
 
         <!-- Personnalités -->
         <div class="bg-mydark my-5 text-white w-100 rounded shadow position-relative">
@@ -225,6 +237,5 @@
     <hr>
     {% endfor %}
 </div>
-
     </main>
 {% endblock %}
