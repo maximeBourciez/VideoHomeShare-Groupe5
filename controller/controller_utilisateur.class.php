@@ -95,7 +95,7 @@ class ControllerUtilisateur extends Controller
             $this->comprisEntre($id, 20, 3, "L'identifiant doit contenir ", "inscription") && $this->comprisEntre($pseudo, 50, 3, "Le pseudo doit contenir ", "inscription") &&
             $this->comprisEntre($mail, 50, 3, "Le mail doit contenir ", "inscription") && $this->comprisEntre($nom, 50, 3, "Le nom doit contenir ", "inscription") &&
             $this->comprisEntre($mdp, null, 8, "Le mot de passe doit contenir ", "inscription") && $this->comprisEntre($vmdp, null, 8, "Le mot de passe de confirmation doit contenir ", "inscription")
-            && $this->estRobuste($mdp, "inscription") && $this->ageCorrect($date, 13) && $this->mailCorrectExitePas($mail) &&  $this->egale($mdp, $vmdp, "Les mots de passe")
+            && $this->estRobuste($mdp, "inscription") && $this->ageCorrect($date, 13) && $this->mailCorrectExitePas($mail) && $this->egale($mdp, $vmdp, "Les mots de passe")
         ) {
 
             //cripter le mot de passe
@@ -131,7 +131,7 @@ class ControllerUtilisateur extends Controller
         $mail = str_replace(' ', '', $mail);
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
         $utilisateur = $managerutilisateur->findByMail($mail);
-        if ($utilisateur != null) {
+        if ($this->utilisateurExiste($utilisateur, "inscription")) {
             // crypter le id
             $id = $utilisateur->getId();
             $token = $this->generateToken($id, 6);
@@ -139,12 +139,7 @@ class ControllerUtilisateur extends Controller
             $message = "Bonjour, \n\n Vous avez demandé à réinitialiser votre mot de passe.\n Voici votre lien pour changer de mot de passe : " . WEBSITE_LINK . "index.php?controller=utilisateur&methode=afficherchangerMDP&token=" . $token . " \n\n Cordialement, \n\n L'équipe de la plateforme de vhs";
             mail($mail, "Réinitialisation de votre mot de passe", $message);
             $template = $this->getTwig()->load('connection.html.twig');
-            echo $template->render(array());
-        } else {
-            //générer une popup pour dire que le mail n'est pas valide
-
-            $template = $this->getTwig()->load('inscription.html.twig');
-            echo $template->render(array());
+            echo $template->render(array('message' => "Un mail vous a été envoyé pour changer votre mot de passe"));
         }
     }
 
@@ -157,11 +152,10 @@ class ControllerUtilisateur extends Controller
     {
         $token = isset($_GET['token']) ? $_GET['token'] : null;
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
-        if ($token != null) {
-
-            $tokenUilisateur = $this->verifyToken($token);
+        $tokenUilisateur = $this->verifyToken($token);
+        if ($this->nonNull($tokenUilisateur, "Ce lien n'est pas valide ", "motDePasseOublie")) {
             $utilisateur = $managerutilisateur->find($tokenUilisateur['id']);
-            if ($utilisateur != null) {
+            if ($this->utilisateurExiste($utilisateur, "motDePasseOublie")) {
 
 
                 $template = $this->getTwig()->load('changerMDP.html.twig');
@@ -396,7 +390,7 @@ class ControllerUtilisateur extends Controller
         if (strlen($val) <= $valmin) {
 
             $template = $this->getTwig()->load("$page.html.twig");
-            echo $template->render(array('messagederreur' =>  $messageErreur . " au moins "  . $valmin . " caractères"));
+            echo $template->render(array('messagederreur' => $messageErreur . " au moins " . $valmin . " caractères"));
             $valretour = false;
         }
         if (strlen($val) >= $valmax and $valmax != null) {
@@ -457,8 +451,13 @@ class ControllerUtilisateur extends Controller
         }
         return $valretour;
     }
-
-    function generateToken($userId, $temp = 1)
+    /**
+     * @bref génére un token 
+     * @param string $userId le id de l'utilisateur que l'on veut mettre dans le token
+     * @param int $temp la durée de vie du token en heure
+     * @return string  le token
+     */
+    function generateToken(?string $userId, ?int $temp = 1)
     {
         $secretKey = SECRET_KEY;
         $header = json_encode(['typ' => 'JWT', 'alg' => 'HS256']);
@@ -477,10 +476,17 @@ class ControllerUtilisateur extends Controller
         return $base64UrlHeader . "." . $base64UrlPayload . "." . $base64UrlSignature;
     }
 
-    function verifyToken($token)
+    /**
+     * @bref permet de renvoyer les informations du token id utilisateur et date d'expiration
+     * @param string $token le token que l'on veut connaitre les informations
+     * @return array
+     */
+    function verifyToken(?string $token): ?array
     {
         $secretKey = SECRET_KEY;
-
+        if ($token == null) {
+            return null;
+        }
         list($header, $payload, $signature) = explode('.', $token);
 
         $validSignature = rtrim(strtr(base64_encode(hash_hmac('sha256', $header . "." . $payload, $secretKey, true)), '+/', '-_'), '=');
@@ -497,7 +503,12 @@ class ControllerUtilisateur extends Controller
 
         return $data;
     }
-
+    /**
+     * @bref permet de verifier si l'utilisateur existe et ranvoie un message d'erreur si il n'existe pas sur la page donnée
+     * @param Utilisateur $useur l'utilisateur que l'on veut vérifier si il existe
+     * @param string $page la page sur laquelle on veut renvoyer un message d'erreur
+     * @return bool
+     */
     public function utilisateurExiste(?Utilisateur $useur, string $page): bool
     {
         $valretour = true;
@@ -508,7 +519,12 @@ class ControllerUtilisateur extends Controller
         }
         return $valretour;
     }
-
+    /**
+     * @bref permet de verifier si le mot de passe est correct et renvoie un message d'erreur si il ne l'est pas
+     * @param string $mdp le mot de passe que l'on veut vérifier
+     * @param string $mdpBDD le mot de passe de la base de données (correct)
+     * @return bool
+     */
     public function motDePasseCorrect(string $mdp, string $mdpBDD): bool
     {
         $valretour = true;
@@ -519,7 +535,12 @@ class ControllerUtilisateur extends Controller
         }
         return $valretour;
     }
-
+    /**
+     * @bref permet de verifier si le mot de passe est robuste et renvoie un message d'erreur si il ne l'est pas
+     * @param string $mdp le mot de passe que l'on veut vérifier
+     * @param string $page la page sur laquelle on veut renvoyer un message d'erreur
+     * @return bool
+     */
     public function estRobuste(string $mdp, string $page): bool
     {
         $valretour = true;
@@ -532,21 +553,38 @@ class ControllerUtilisateur extends Controller
         if (!preg_match('/[A-Z]/', $mdp)) {
             $valretour = false;
 
-            $messageerreur =  ($messageerreur == "Le mot de passe doit contenir") ? $messageerreur + " au moins une majuscule" : $messageerreur + ", au moins une majuscule";
+            $messageerreur = ($messageerreur == "Le mot de passe doit contenir") ? $messageerreur + " au moins une majuscule" : $messageerreur + ", au moins une majuscule";
         }
         if (!preg_match('/[\d]/', $mdp)) {
             $valretour = false;
 
-            $messageerreur =  ($messageerreur == "Le mot de passe doit contenir") ? $messageerreur + " au moins un chiffre" : $messageerreur + ", au moins un chiffre";
+            $messageerreur = ($messageerreur == "Le mot de passe doit contenir") ? $messageerreur + " au moins un chiffre" : $messageerreur + ", au moins un chiffre";
         }
         if (!preg_match('/[@$!%*?&]/', $mdp)) {
             $valretour = false;
 
-            $messageerreur =  ($messageerreur == "Le mot de passe doit contenir") ? $messageerreur + " au moins un caractère spécial" : $messageerreur + " et au moins un caractère spécial";
+            $messageerreur = ($messageerreur == "Le mot de passe doit contenir") ? $messageerreur + " au moins un caractère spécial" : $messageerreur + " et au moins un caractère spécial";
         }
         if ($valretour == false) {
             $template = $this->getTwig()->load("$page.html.twig");
             echo $template->render(array('messagederreur' => "$messageerreur"));
+        }
+        return $valretour;
+    }
+    /**
+     * @bref permet de verifier si la valeur est non null et renvoie un message d'erreur si elle l'est
+     * @param mixed $val
+     * @param string $messageErreur le message d'erreur que l'on veut renvoyer
+     * @param string $page la page sur laquelle on veut renvoyer un message d'erreur
+     * @return bool
+     */
+    public function nonNull($val, string $messageErreur, string $page)
+    {
+        $valretour = true;
+        if ($val == null) {
+            $template = $this->getTwig()->load("$page.html.twig");
+            echo $template->render(array('messagederreur' => $messageErreur));
+            $valretour = false;
         }
         return $valretour;
     }
