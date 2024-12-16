@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file fil.dao.php
  * 
@@ -12,7 +13,8 @@
  * 
  * @author Maxime Bourciez <maxime.bourciez@gmail.com>
  */
-class FilDAO {
+class FilDAO
+{
     // Attributs
     /**
      * @var PDO|null $pdo Connexion à la base de données
@@ -25,7 +27,8 @@ class FilDAO {
      * 
      * @param PDO|null $pdo Connexion à la base de données
      */
-    public function __construct(?PDO $pdo) {
+    public function __construct(?PDO $pdo)
+    {
         $this->pdo = $pdo;
     }
 
@@ -35,7 +38,8 @@ class FilDAO {
      * @brief Getter de la connexion à la base de données
      * @return PDO|null Connexion à la base de données
      */
-    public function getPdo(): ?PDO {
+    public function getPdo(): ?PDO
+    {
         return $this->pdo;
     }
 
@@ -45,7 +49,8 @@ class FilDAO {
      * @param PDO $pdo Connexion à la base de données
      * @return self
      */
-    public function setPdo(PDO $pdo): self {
+    public function setPdo(PDO $pdo): self
+    {
         $this->pdo = $pdo;
         return $this;
     }
@@ -58,29 +63,57 @@ class FilDAO {
      * @param array $row Ligne de la base de données
      * @return Fil Objet Fil hydraté
      */
-    public function hydrate(array $row): Fil {
-        // Création de l'objet Utilisateur
-        $user = new Utilisateur();
-        $user->setId($row['idUtilisateur']);
-        $user->setPseudo($row['pseudo']);
-        $user->setUrlImageProfil($row['urlImageProfil']);  
-
-        // Création de l'objet Fil en incluant l'utilisateur
-        $id = $row['idFil'];
-        $titre = $row['titre'];
-        $dateCreation = new DateTime($row['dateC']);
-        $description = $row['description'];
-
+    public function hydrate(array $row): Fil
+    {
+        $fil = new Fil();
         // Création de l'objet Theme
         $themes = [];
-        if(isset($row['id'])) {
+
+        if (isset($row[0]) && is_array($row[0])) {
+            // Création de l'objet Utilisateur
+            $user = new Utilisateur();
+            $user->setId($row[0]['idUtilisateur']);
+            $user->setPseudo($row[0]['pseudo']);
+            $user->setUrlImageProfil($row[0]['urlImageProfil']);
+
+            // Création de l'objet Fil 
+            $id = $row[0]['idFil'];
+            $titre = $row[0]['titre'];
+            $dateCreation = new DateTime($row[0]['dateC']);
+            $description = $row[0]['description'];
+
+            foreach ($row as $element) {
+                if ($element['idFil'] == $id) {
+                    $theme = new Theme($element['theme_id'], $element['theme_nom']);
+                    $themes[] = $theme;
+                }
+            }
+
+            $fil = new Fil($id, $titre, $dateCreation, $description, $user, $themes);
+            return $fil;
+        } else {
+            // Création de l'objet Utilisateur
+            $user = new Utilisateur();
+            $user->setId($row['idUtilisateur']);
+            $user->setPseudo($row['pseudo']);
+            $user->setUrlImageProfil($row['urlImageProfil']);
+
+            // Création de l'objet Fil 
+            $id = $row['idFil'];
+            $titre = $row['titre'];
+            $dateCreation = new DateTime($row['dateC']);
+            $description = $row['description'];
+
             $theme = new Theme($row['theme_id'], $row['theme_nom']);
             $themes[] = $theme;
+
+            $fil = new Fil($id, $titre, $dateCreation, $description, $user, $themes);
+            return $fil;
         }
 
+
         // Créer le fil
-        $fil = new Fil($id, $titre, $dateCreation, $description, $user, $themes);
-        return $fil;
+        return new Fil();
     }
 
     /**
@@ -89,15 +122,19 @@ class FilDAO {
      * @param array $rows Tableau de lignes de la base de données
      * @return array<Fil> Tableau d'objets Fil hydratés
      */
-    function hydrateAll(array $rows): array {
+    function hydrateAll(array $rows): array
+    {
         $fils = [];
         foreach ($rows as $row) {
-            if(!isset($fils[$row['idFil']])) {  // Si le fil n'existe pas dans le tableau
-                $fils[$row['idFil']] = $this->hydrate($row);  // Ajout du fil au tableau
+            if (isset($fils[$row['idFil']])) {
+                // Ajout du thème au fil
+                $theme = new Theme($row['theme_id'], $row['theme_nom']);
+                $fils[$row['idFil']]->ajouterTheme($theme);
             }
-            // Ajout du thème au fil
-            $theme = new Theme($row['theme_id'], $row['theme_nom']);
-            $fils[$row['idFil']]->ajouterTheme($theme);    
+            // Sinon
+            else {
+                $fils[$row['idFil']] = $this->hydrate($row);
+            }
         }
         return $fils;
     }
@@ -108,8 +145,9 @@ class FilDAO {
      * 
      * @return array<Fil> Tableau d'objets Fil
      */
-    
-    public function findAll(): array {
+
+    public function findAll(): array
+    {
         $sql = "
             SELECT f.*, u.idUtilisateur, u.pseudo, u.urlImageProfil, t.idTheme AS theme_id, t.nom AS theme_nom
             FROM " . DB_PREFIX . "fil AS f
@@ -123,7 +161,7 @@ class FilDAO {
             LEFT JOIN " . DB_PREFIX . "parlerdeTheme AS p ON f.idFil = p.idFil
             LEFT JOIN " . DB_PREFIX . "theme AS t ON p.idTheme = t.idTheme;
         ";
-        
+
         $stmt = $this->pdo->query($sql);
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         return $this->hydrateAll($stmt->fetchAll());
@@ -137,7 +175,8 @@ class FilDAO {
      * @param integer $id Identifiant du fil
      * @return Fil|null
      */
-    public function findById(int $id): ?Fil {
+    public function findById(int $id): ?Fil
+    {
         $sql = "
             SELECT f.*, u.idUtilisateur, u.pseudo, u.urlImageProfil, t.idTheme AS theme_id, t.nom AS theme_nom
             FROM " . DB_PREFIX . "fil AS f
@@ -152,16 +191,14 @@ class FilDAO {
             LEFT JOIN " . DB_PREFIX . "theme AS t ON p.idTheme = t.idTheme
             WHERE f.idFil = :id;
         ";
-    
+
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
-    
-        $row = $stmt->fetch();
-        return $row ? $this->hydrate($row) : null;
+        return $this->hydrate($stmt->fetchAll());
     }
-    
+
 
     /**
      * @brief Méthode pour trouver les messages d'un fil par son id
@@ -170,7 +207,8 @@ class FilDAO {
      * @return array
      * @warning non testée
      */
-    public function findMessagesByFilId(int $idFil): array {
+    public function findMessagesByFilId(int $idFil): array
+    {
         $sql = "
             SELECT m.*, u.idUtilisateur, u.pseudo, u.urlImageProfil
             FROM " . DB_PREFIX . "message AS m
@@ -193,7 +231,8 @@ class FilDAO {
      * 
      * @return Utilisateur|null
      */
-    public function findFirstUserByFilId(int $idFil): ?Utilisateur {
+    public function findFirstUserByFilId(int $idFil): ?Utilisateur
+    {
         $sql = "
             SELECT u.*
             FROM " . DB_PREFIX . "message AS m
@@ -219,7 +258,8 @@ class FilDAO {
      * 
      * @return int Identifiant du fil ajouté
      */
-    public function create(string $titre, string $description): int {
+    public function create(string $titre, string $description): int
+    {
         $sql = "
             INSERT INTO " . DB_PREFIX . "fil (titre, dateC, description)
             VALUES (:titre, NOW(), :description)
@@ -239,7 +279,8 @@ class FilDAO {
      * 
      * @return void
      */
-    public function addThemes(int $idFil, array $themes): void {
+    public function addThemes(int $idFil, array $themes): void
+    {
         $sql = "
             INSERT INTO " . DB_PREFIX . "parlerdeTheme (idFil, idTheme)
             VALUES (:idFil, :idTheme)
@@ -251,5 +292,4 @@ class FilDAO {
             $stmt->execute();
         }
     }
-    
 }

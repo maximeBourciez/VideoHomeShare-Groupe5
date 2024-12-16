@@ -49,7 +49,7 @@ class Fil{
      * @param Utilisateur|null $utilisateur Utilisateur qui a créé le fil
      * @param Theme[]|null $themes Thèmes associés au fil
      */
-    public function __construct(?int $id, ?string $titre, ?DateTime $dateCreation, ?string $description, ?Utilisateur $utilisateur = null, ?array $themes = null){
+    public function __construct(?int $id = null, ?string $titre = null, ?DateTime $dateCreation = null, ?string $description = null, ?Utilisateur $utilisateur = null, ?array $themes = null){
         $this->id = $id;
         $this->titre = $titre;
         $this->dateCreation = $dateCreation;
