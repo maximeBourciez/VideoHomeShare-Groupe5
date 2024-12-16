@@ -120,7 +120,7 @@ class FilDAO {
             ) AS first_message ON f.idFil = first_message.idFil
             LEFT JOIN " . DB_PREFIX . "message AS m ON f.idFil = m.idFil AND m.dateC = first_message.firstDate
             LEFT JOIN " . DB_PREFIX . "utilisateur AS u ON m.idUtilisateur = u.idUtilisateur
-            LEFT JOIN " . DB_PREFIX . "parlerDeTheme AS p ON f.idFil = p.idFil
+            LEFT JOIN " . DB_PREFIX . "parlerdeTheme AS p ON f.idFil = p.idFil
             LEFT JOIN " . DB_PREFIX . "theme AS t ON p.idTheme = t.idTheme;
         ";
         
@@ -148,7 +148,7 @@ class FilDAO {
             ) AS first_message ON f.idFil = first_message.idFil
             LEFT JOIN " . DB_PREFIX . "message AS m ON f.idFil = m.idFil AND m.dateC = first_message.firstDate
             LEFT JOIN " . DB_PREFIX . "utilisateur AS u ON m.idUtilisateur = u.idUtilisateur
-            LEFT JOIN " . DB_PREFIX . "parlerDeTheme AS p ON f.idFil = p.idFil
+            LEFT JOIN " . DB_PREFIX . "parlerdeTheme AS p ON f.idFil = p.idFil
             LEFT JOIN " . DB_PREFIX . "theme AS t ON p.idTheme = t.idTheme
             WHERE f.idFil = :id;
         ";
@@ -241,7 +241,7 @@ class FilDAO {
      */
     public function addThemes(int $idFil, array $themes): void {
         $sql = "
-            INSERT INTO " . DB_PREFIX . "parlerDeTheme (idFil, idTheme)
+            INSERT INTO " . DB_PREFIX . "parlerdeTheme (idFil, idTheme)
             VALUES (:idFil, :idTheme)
         ";
         $stmt = $this->pdo->prepare($sql);

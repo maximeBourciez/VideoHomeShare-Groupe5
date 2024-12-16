@@ -84,11 +84,6 @@
 {% endblock %}
 
 {% block content %}
-
-	<pre>
-		{{ dump(fil) }}
-	</pre>
-
 	<div class="container-fluid bg-mydark text-white p-4 shadow mb-5" style="border-top: 5px solid #F2AC0F;">
 		<div class="text-center">
 			<h2 class="mb-3">{{ fil.titre }}</h2>
@@ -106,7 +101,7 @@
 						<div class="d-flex align-items-center">
 							<img src="{{ message.getUtilisateur().getUrlImageProfil() }}" alt="Avatar" class="rounded-circle me-3" width="50" height="50">
 							<div class="d-flex align-items-center">
-								<h5 class="mb-0 mx-2">
+								<h5 class="mb-0 mx-2 username-link">
 									<a href="index.php?controller=utilisateur&methode=show&id_utilisateur={{message.getUtilisateur().getId() }}" style="color:white;" class="text-decoration-none">
 										{{ message.getUtilisateur().getPseudo() ?: 'Utilisateur inconnu' }}
 									</a>
