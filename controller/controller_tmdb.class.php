@@ -17,6 +17,11 @@ class ControllerTmdb extends Controller {
             
             // Récupérer les données du film
             $movieData = $tmdbApi->getMovieById($tmdbId);
+            if ($movieData === null) {
+                // Si getMovieById retourne null (cas d'un film pour adultes)
+                echo $this->getTwig()->render('index.html.twig');
+                return;
+            }
             if ($movieData) {
                 // Convertir en objet Contenu sans sauvegarder
                 $contenu = $tmdbApi->convertToContenu($movieData);
@@ -26,6 +31,13 @@ class ControllerTmdb extends Controller {
                 
                 // Récupérer les thèmes
                 $themes = $tmdbApi->getGenres($movieData);
+
+                //Récupérer les notes et le nombre de notes
+                $commentaireDAO = new CommentaireDAO($this->getPdo());
+                $notes = $commentaireDAO->getMoyenneEtTotalNotesContenu($tmdbId);
+
+                //Récupérer les commentaires
+                $commentaires = $commentaireDAO->getCommentairesContenu($tmdbId);
                 
                 // Récupérer les thèmes depuis la BD
                 $themeDAO = new ThemeDAO($this->getPdo());
@@ -44,8 +56,9 @@ class ControllerTmdb extends Controller {
                     'contenu' => $contenu,
                     'personnalite' => $personnalites,
                     'themes' => $themesFromDB,
-                    'moyenne' => 0,
-                    'commentaires' => []
+                    'moyenne' => $notes['moyenne'],
+                    'total' => $notes['total'],
+                    'commentaires' => $commentaires
                 ]);
                 return;
             }

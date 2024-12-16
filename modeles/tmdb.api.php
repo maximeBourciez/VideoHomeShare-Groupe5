@@ -20,7 +20,14 @@ class TmdbAPI {
             return null;
         }
         
-        return json_decode($response, true);
+        $movieData = json_decode($response, true);
+        
+        // Vérification si le film est marqué comme "adult"
+        if (isset($movieData['adult']) && $movieData['adult'] === true) {
+            return null;
+        }
+        
+        return $movieData;
     }
 
     /**
@@ -105,7 +112,7 @@ class TmdbAPI {
         }
 
         // Ajouter les acteurs principaux (augmenté à 12 par exemple)
-        $actors = array_slice($movieData['credits']['cast'], 0, 11);
+        $actors = array_slice($movieData['credits']['cast'], 0, 17);
         foreach ($actors as $actor) {
             $personnalites[] = new Personnalite(
                 null,

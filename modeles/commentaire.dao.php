@@ -17,19 +17,19 @@ class commentaireDAO {
     }
 
     // Récupérer la moyenne et le total des notes pour un contenu
-    public function getMoyenneEtTotalNotesContenu(string $idContenu): array {
+    public function getMoyenneEtTotalNotesContenu(string $idContenuTmdb): array {
         $sql = 'SELECT AVG(note) AS moyenne, COUNT(note) AS total 
                 FROM vhs_commenterContenu 
-                WHERE idContenu = :idContenu';
+                WHERE idContenuTmdb = :idContenuTmdb';
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':idContenu', $idContenu, PDO::PARAM_STR);
+        $stmt->bindParam(':idContenuTmdb', $idContenuTmdb, PDO::PARAM_STR);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($result) {
             return [
-                'moyenne' => isset($result['moyenne']) ? (int) round($result['moyenne']) : 0,
+                'moyenne' => isset($result['moyenne']) ? (double) round($result['moyenne'], 1) : 0,
                 'total' => isset($result['total']) ? (int) $result['total'] : 0,
             ];
         }
@@ -65,15 +65,15 @@ class commentaireDAO {
     }
 
     // Récupérer les commentaires pour un contenu
-    public function getCommentairesContenu(string $idContenu): array {
+    public function getCommentairesContenu(string $idContenuTmdb): array {
         $sql = 'SELECT idUtilisateur, titre, note, avis, estPositif
                 FROM vhs_commenterContenu
-                WHERE idContenu = :idContenu
+                WHERE idContenuTmdb = :idContenuTmdb
                 ORDER BY dateCommentaire DESC
                 LIMIT 6';
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':idContenu', $idContenu, PDO::PARAM_STR);
+        $stmt->bindParam(':idContenuTmdb', $idContenuTmdb, PDO::PARAM_STR);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
