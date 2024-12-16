@@ -1,9 +1,9 @@
 <?php
 
 class TmdbAPI {
-    private string $apiKey = "a2096553592bde8ead1b2a0f2fa59bc0";
-    private string $baseUrl = "https://api.themoviedb.org/3";
-    private string $imageBaseUrl = "https://image.tmdb.org/t/p/original";
+    private string $apiKey = TMDB_API_KEY;
+    private string $baseUrl = TMDB_BASE_URL;
+    private string $imageBaseUrl = TMDB_IMAGE_BASE_URL;
 
     public function __construct(string $apiKey) {
         $this->apiKey = $apiKey;
@@ -92,39 +92,43 @@ class TmdbAPI {
         );
     }
 
-    /**
-     * Récupère les personnalités (acteurs/réalisateurs) d'un film
-     */
-    public function getPersonnalites(array $movieData): array {
-        $personnalites = [];
-        
-        // Ajouter les réalisateurs
-        foreach ($movieData['credits']['crew'] as $crew) {
-            if ($crew['job'] === 'Director') {
-                $personnalites[] = new Personnalite(
-                    null,
-                    $crew['name'],
-                    '',
-                    $this->imageBaseUrl . $crew['profile_path'],
-                    'Réalisateur'
-                );
-            }
-        }
-
-        // Ajouter les acteurs principaux (augmenté à 12 par exemple)
-        $actors = array_slice($movieData['credits']['cast'], 0, 17);
-        foreach ($actors as $actor) {
+ /**
+ * Récupère les personnalités (acteurs/réalisateurs) d'un film
+ */
+public function getPersonnalites(array $movieData): array {
+    $personnalites = [];
+    
+    // Ajouter les réalisateurs
+    foreach ($movieData['credits']['crew'] as $crew) {
+        if ($crew['job'] === 'Director') {
             $personnalites[] = new Personnalite(
                 null,
-                $actor['name'],
-                '',
-                $this->imageBaseUrl . $actor['profile_path'],
-                'Acteur'
+                $crew['name'], // nom
+                '', // prenom
+                !empty($crew['profile_path']) 
+                    ? $this->imageBaseUrl . $crew['profile_path'] 
+                    : null,
+                'Réalisateur'
             );
         }
-
-        return $personnalites;
     }
+
+    // Ajouter les acteurs principaux
+    $actors = array_slice($movieData['credits']['cast'], 0, 17);
+    foreach ($actors as $actor) {
+        $personnalites[] = new Personnalite(
+            null,
+            $actor['name'], // nom
+            '', // prenom
+            !empty($actor['profile_path']) 
+                ? $this->imageBaseUrl . $actor['profile_path'] 
+                : null,
+            'Acteur'
+        );
+    }
+    return $personnalites;
+}
+
 
     private function convertRuntime(int $minutes): string {
         $hours = floor($minutes / 60);
