@@ -40,24 +40,26 @@
 					</div>
 				</form>
 
-  <!-- Section droite -->
-        <div class="navbar-end d-flex align-items-center gap-3 me-lg-4">
-			{% if utilisateurConnecte is null %}
-				<a href="index.php?controller=utilisateur&methode=connexion">
-					<button class="btn btn-myprimary">Connexion</button>
-				</a>
-			{% else %}
-				<a href="index.php?controller=utilisateur&methode=show">
-					<button class="btn btn-myprimary">Profil</button>
-				</a>
-			{% endif %}
+				<!-- Section droite -->
+				<div class="navbar-end d-flex align-items-center gap-3 me-lg-4">
+					{% if utilisateurConnecte is null %}
+						<a href="index.php?controller=utilisateur&methode=connexion">
+							<button class="btn btn-myprimary">Connexion</button>
+						</a>
+					{% else %}
+						<a href="index.php?controller=utilisateur&methode=deconnexion">
+							<button class="btn btn-myprimary">
+								Déconnexion</button>
+						</a>
 
-            <a class="navbar-brand d-flex align-items-center text-white mb-0" href="#">
-                <p class="mb-0 me-2 d-none d-lg-block">{{ constant('WEBSITE_LANGUAGE')}}</p>
-                <img src="{{ constant('WEBSITE_LOGO_FLAG')}}" height="24" alt="FR">
-            </a>
-        </div>
-    </nav>
+					{% endif %}
+
+					<a class="navbar-brand d-flex align-items-center text-white mb-0" href="#">
+						<p class="mb-0 me-2 d-none d-lg-block">{{ constant('WEBSITE_LANGUAGE')}}</p>
+						<img src="{{ constant('WEBSITE_LOGO_FLAG')}}" height="24" alt="FR">
+					</a>
+				</div>
+			</nav>
 
 			<!-- Menu secondaire -->
 			<div class="collapse" id="submenu">
@@ -75,20 +77,22 @@
 						<a href="#">
 							<button class="btn btn-myprimary">Quizz</button>
 						</a>
-						<a href="index.php?controller=utilisateur&methode=show">
-							<button class="btn btn-myprimary">Profil</button>
-						</a>
+						{% if utilisateurConnecte is null %}
+							<a href="index.php?controller=utilisateur&methode=show">
+								<button class="btn btn-myprimary">Profil</button>
+							</a>
+						{% else %}
+							<a href="index.php?controller=utilisateur&methode=show">
+								<button class="btn btn-myprimary">Profil</button>
+							</a>
+						{% endif %}
 					</div>
 				</div>
 			</div>
 		</header>
 
 
-		{% block content %}
-		
-		
-		
-		{% endblock %}
+		{% block content %}{% endblock %}
 
 		<!-- Barres de couleurs -->
 		<div class="container-fluid p-0">
@@ -130,5 +134,3 @@
 		<script src="JS/notation.js" defer></script>
 	</body>
 </html>
-
-

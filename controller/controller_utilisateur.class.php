@@ -32,9 +32,7 @@ class ControllerUtilisateur extends Controller
 
         //Génération de la vue
         $template = $this->getTwig()->load('inscription.html.twig');
-        echo $template->render(array(
-            'description' => "Je fais mes tests"
-        ));
+        echo $template->render(array());
     }
 
     /**
@@ -95,8 +93,8 @@ class ControllerUtilisateur extends Controller
             $this->comprisEntre($id, 20, 3, "L'identifiant doit contenir ", "inscription") && $this->comprisEntre($pseudo, 50, 3, "Le pseudo doit contenir ", "inscription") &&
             $this->comprisEntre($mail, 50, 3, "Le mail doit contenir ", "inscription") && $this->comprisEntre($nom, 50, 3, "Le nom doit contenir ", "inscription") &&
             $this->comprisEntre($mdp, null, 8, "Le mot de passe doit contenir ", "inscription") && $this->comprisEntre($vmdp, null, 8, "Le mot de passe de confirmation doit contenir ", "inscription")
-            && $this->estRobuste($mdp, "inscription") && $this->ageCorrect($date, 13) && $this->mailCorrectExitePas($mail) && $this->egale($mdp, $vmdp, array('messagederreur' => "Les mots de passe ne sont pas identiques"), "inscription")
-            &&$this->idExistePas($id,"inscription")
+            && $this->estRobuste($mdp, "inscription") && $this->ageCorrect($date, 13) && $this->mailCorrectExitePas($mail, "inscription") && $this->egale($mdp, $vmdp, array('messagederreur' => "Les mots de passe ne sont pas identiques"), "inscription")
+            && $this->idExistePas($id, "inscription")
         ) {
 
             //cripter le mot de passe
@@ -182,7 +180,7 @@ class ControllerUtilisateur extends Controller
         if (
             $this->utilisateurExiste($utilisateur, "motDePasseOublie") && $this->comprisEntre($mdp, null, 8, "Le mot de passe doit contenir ", "changerMDP") &&
             $this->comprisEntre($vmdp, null, 8, "Le mot de passe de confirmation doit contenir ", "changerMDP") &&
-            $this->egale($mdp, $vmdp, array('messagederreur' => "Les mots de passe ne sont pas identiques", 'id' => $id),"changerMDP") && $this->estRobuste($mdp, "changerMDP")
+            $this->egale($mdp, $vmdp, array('messagederreur' => "Les mots de passe ne sont pas identiques", 'id' => $id), "changerMDP") && $this->estRobuste($mdp, "changerMDP")
         ) {
             //crypter le mot de passe
             $mdp = password_hash($mdp, PASSWORD_DEFAULT);
@@ -226,14 +224,11 @@ class ControllerUtilisateur extends Controller
 
         //récupération des messages de l'utilisateur
         $messages = $managermesage->listerMessagesParIdUser($id);
-        
+
         if ($this->utilisateurExiste($utilisateur, "inscription")) {
             $template = $this->getTwig()->load('profilUtilisateur.html.twig');
             echo $template->render(array('utilisateur' => $utilisateur, 'messages' => $messages, 'utilisateurConnecter' => $personneConnect));
-            
         }
-
-        
     }
 
     /**
@@ -277,11 +272,15 @@ class ControllerUtilisateur extends Controller
 
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
 
-        if ($this->comprisEntre($id, 20, 3, "L'identifiant doit contenir ", "modifierUtilisateur") && $this->comprisEntre($pseudo, 50, 3, "Le pseudo doit contenir ", "modifierUtilisateur") &&
-         $this->comprisEntre($nom, 50, 3, "Le nom doit contenir ", "modifierUtilisateur") && $this->idExistePas($id, "modifierUtilisateur")) {
+        if (
+            $this->comprisEntre($id, 20, 3, "L'identifiant doit contenir ", "modifierUtilisateur", $utilisateur) && $this->comprisEntre($pseudo, 50, 3, "Le pseudo doit contenir ", "modifierUtilisateur", $utilisateur) &&
+            $this->comprisEntre($nom, 50, 3, "Le nom doit contenir ", "modifierUtilisateur", $utilisateur)  && $this->fichierTropLourd($_FILES['urlImageProfil'], "profil", $utilisateur) &&
+            $this->fichierTropLourd($_FILES['urlImageBaniere'], "baniere", $utilisateur)
+        ) {
             // verifier si l'id n'est pas déjà utilisé
-            if ($managerutilisateur->find($id) == null) {
+            if ($id == $utilisateur->getId() || $this->idExistePas($id, "modifierUtilisateur", $utilisateur)) {
                 //création de l'utilisateur
+
                 $utilisateur->setId($id);
                 $utilisateur->setPseudo($pseudo);
                 $utilisateur->setNom($nom);
@@ -320,6 +319,7 @@ class ControllerUtilisateur extends Controller
                     }
                 }
                 // mettre à jour l'utilisateur dans la base de données
+                $utilisateur->setMdp($managerutilisateur->find($utilisateur->getId())->getMdp());
                 $managerutilisateur->update($utilisateur);
                 $_SESSION['utilisateur'] = serialize($utilisateur);
                 //Génération de la vue
@@ -342,21 +342,17 @@ class ControllerUtilisateur extends Controller
         //supprimer les espaces
         $mail = str_replace(' ', '', $mail);
         $mailconf = str_replace(' ', '', $mailconf);
+        $utilisateur = unserialize($_SESSION['utilisateur']);
+        $managerutilisateur = new UtilisateurDAO($this->getPdo());
         // vérifier si les deux mails sont identiques
-        if ($mail == $mailconf) {
-            // vérifier si le mail est valide
-            if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
-
-                $utilisateur = unserialize($_SESSION['utilisateur']);
-                $managerutilisateur = new UtilisateurDAO($this->getPdo());
-                // vérifier si le mail n'est pas déjà utilisé
-                if ($managerutilisateur->findByMail($mail) == null) {
-                    // mettre à jour le mail de l'utilisateur
-                    $utilisateur->setMail($mail);
-                    $managerutilisateur->update($utilisateur);
-                    $_SESSION['utilisateur'] = serialize($utilisateur);
-                }
-            }
+        if (
+            $this->comprisEntre($mail, 320, 6, "Le mail doit contenir ", "modifierUtilisateur", $utilisateur) && $this->comprisEntre($mail, 320, 6, "Le mail de verification doit contenir ", "modifierUtilisateur", $utilisateur) &&
+            $this->egale($mail, $mailconf, array('messagederreur' => "Les mails ne sont pas identiques"), "modifierUtilisateur") && $this->mailCorrectExitePas($mail, "modifierUtilisateur")
+        ) {
+            // mettre à jour le mail de l'utilisateur
+            $utilisateur->setMail($mail);
+            $managerutilisateur->update($utilisateur);
+            $_SESSION['utilisateur'] = serialize($utilisateur);
         }
         //Génération de la vue
         $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
@@ -383,19 +379,19 @@ class ControllerUtilisateur extends Controller
      * @return bool
      * 
      */
-    public function comprisEntre(string $val, ?int $valmax, int $valmin, string $messageErreur, string $page): bool
+    public function comprisEntre(string $val, ?int $valmax, int $valmin, string $messageErreur, string $page, $utilisateur = null): bool
     {
         $valretour = true;
         if (strlen($val) <= $valmin) {
 
             $template = $this->getTwig()->load("$page.html.twig");
-            echo $template->render(array('messagederreur' => $messageErreur . " au moins " . $valmin . " caractères"));
+            echo $template->render(array('messagederreur' => $messageErreur . " au moins " . $valmin . " caractères", 'utilisateur' => $utilisateur));
             $valretour = false;
         }
         if (strlen($val) >= $valmax and $valmax != null) {
 
             $template = $this->getTwig()->load("$page.html.twig");
-            echo $template->render(array('messagederreur' => $messageErreur . " au maximum " . $valmax . " caractères"));
+            echo $template->render(array('messagederreur' => $messageErreur . " au maximum " . $valmax . " caractères", 'utilisateur' => $utilisateur));
             $valretour = false;
         }
 
@@ -427,12 +423,12 @@ class ControllerUtilisateur extends Controller
      * @return bool
      * 
      */
-    public function mailCorrectExitePas(string $mail): bool
+    public function mailCorrectExitePas(string $mail, string $page): bool
     {
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
         $valretour = true;
         if (!filter_var($mail, FILTER_VALIDATE_EMAIL) && $managerutilisateur->findByMail($mail) != null) {
-            $template = $this->getTwig()->load('inscription.html.twig');
+            $template = $this->getTwig()->load("$page.html.twig");
             echo $template->render(array('messagederreur' => "Le mail n'est pas valide"));
             $valretour = false;
         }
@@ -599,19 +595,35 @@ class ControllerUtilisateur extends Controller
      * @param string $id l'identifiant que l'on veut vérifier
      * 
      */
-    public function idExistePas(string $id , string $page): bool
+    public function idExistePas(string $id, string $page, $utilisateur = null): bool
     {
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
         $valretour = true;
         if ($managerutilisateur->find($id) != null) {
             $template = $this->getTwig()->load("$page.html.twig");
-            echo $template->render(array('messagederreur' => "L'identifiant est déjà utilisé"));
+            echo $template->render(array('messagederreur' => "L'identifiant est déjà utilisé", 'utilisateur' => $utilisateur));
             $valretour = false;
         }
         return $valretour;
-
-
     }
 
-}   
 
+    public function deconnexion(): void
+    {
+        session_destroy();
+        $this->getTwig()->addGlobal('utilisateurConnecte', null);
+        $template = $this->getTwig()->load('connection.html.twig');
+        echo $template->render(array('message' => "Vous avez bien été déconnecté"));
+    }
+
+    public function fichierTropLourd($fichier, $messageErreur, $utilisateur = null): bool
+    {
+        $valretour = true;
+        if ($fichier['size'] > 2000000) {
+            $valretour = false;
+            $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
+            echo $template->render(array('messagederreur' => "Le fichier de $messageErreur est trop lourd", 'utilisateur' => $utilisateur));
+        }
+        return $valretour;
+    }
+}
