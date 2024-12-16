@@ -1,0 +1,74 @@
+{% extends 'base_template.html.twig' %}
+
+{% block title %}
+	VHS | Quizz
+{% endblock %}
+
+
+{% block content %}
+
+	<main class="">
+		<div class="container">
+			<br>
+			<div class="row text-center">
+				<div class="col">
+					<a href="index.php?controller=quizz&methode=creerQuizz&idQuizz={{ quiz.idUtilisateur }}" class="btn btn-myprimary my-2 mx-auto py-4">Créer un quizz</a>
+				</div>
+				<div class="col">
+					<a href="index.php?controller=quizz&methode=gererQuizz&idQuizz={{ quiz.idUtilisateur }}" class="btn btn-myprimary my-2 mx-auto py-4">Gérer mes quizz</a>
+				</div>
+			</div>
+			<br>
+			<br>
+			<div class="container row">
+				<div class = "col-4">
+					<h3> Les quizz : </h3>
+					<br>
+						{% for quiz in quizz %}
+						<div class="col-md-12 mb-4">
+							<div class="card mb-3 bg-mydark text-white rounded" style="max-width: 540px;">
+								<div class="row g-0">
+									<div class="card-body">
+										<h5 class="card-title">{{ quiz.titre }}</h5>
+										<p class="card-text">{{ quiz.description }}</p>
+										<p class="card-text">Difficulté : {{ quiz.difficulte }}</p>
+										<p class="card-text"><small class="text-body-secondary">Fait le {{ quiz.dateC }}</small></p>
+										<p class="card-text"><small class="text-body-secondary">Par {{ quiz.idUtilisateur }}</small></p>
+										<a href="index.php?controller=quizz&methode=jouerQuizz&idQuizz={{ quiz.id }}" class="btn btn-myprimary">Jouer</a>
+									</div>
+								</div>
+							</div>
+						</div>
+						{% endfor %}
+					</div>
+					<div class="col-4">
+					</div>
+					<div class="col-4">
+						<h3> Mes quizz : </h3>
+						<br>
+						{% for quiz in quizz %}
+							{% if quiz.idUtilisateur == idUtilisateur %}
+								<div class="col-md-12 mb-4">
+									<div class="card mb-3" style="max-width: 540px;">
+										<div class="row g-0">
+											<div class="card-body">
+												<h5 class="card-title">{{ quiz.titre }}</h5>
+												<p class="card-text">{{ quiz.description }}</p>
+												<p class="card-text">Difficulté : {{ quiz.difficulte }}</p>
+												<p class="card-text"><small class="text-body-secondary">Fait le {{ quiz.dateC }}</small></p>
+											</div>
+										</div>
+									</div>
+								</div>
+							{% endif %}
+						{% endfor %}
+						{% if not quizz.idUtilisateur %}
+							<p> Vous n'avez créé aucun quizz. </p>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+
+{% endblock %}

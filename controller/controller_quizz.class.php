@@ -34,7 +34,7 @@ class ControllerQuizz extends Controller {
         $quizzDAO = new QuizzDAO($this->getPdo());
         $quizz = $quizzDAO->findAll();
 
-        echo $this->getTwig()->render('quizz.html.twig', [
+        echo $this->getTwig()->render('listeQuizz.html.twig', [
             'quizz' => $quizz
         ]);
     }
@@ -54,7 +54,7 @@ class ControllerQuizz extends Controller {
         $quizz = $quizzDAO->findById($id);
         
         // Rendre le template avec les infos
-        echo $this->getTwig()->render('quizz.html.twig', [
+        echo $this->getTwig()->render('listeQuizz.html.twig', [
             'quizz' => $quizz
             
         ]);
@@ -63,5 +63,30 @@ class ControllerQuizz extends Controller {
     public function jouerQuizz(){
         $id = $_GET['idQuizz'];
         //A faire
+
+        // Récupérer les infos du quizz
+        $quizzDAO = new QuizzDAO($this->getPdo());
+        $quizz = $quizzDAO->findById($id);
+            
+        // Rendre le template avec les infos
+        echo $this->getTwig()->render('quizz.html.twig', [
+            'quizz' => $quizz
+                
+        ]);
+    }
+
+    public function creerQuizz(){
+        $idUtilisateur = $_GET['idUtilisateur']; 
+        //A faire
+        
+        // Rendre le template avec les infos
+        echo $this->getTwig()->render('listeQuizz.html.twig', [
+            'quizz' => $quizz
+                
+        ]);
+    }
+
+    public function gererQuizz(){
+        listerQuizz();
     }
 }
