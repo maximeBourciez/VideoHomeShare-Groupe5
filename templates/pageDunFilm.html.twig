@@ -1,55 +1,58 @@
 {% extends 'base_template.html.twig' %}
 
 {% block content %}
-    <main class="container d-flex flex-column justify-content-center align-items-center flex-grow-1">
-        <div class="d-flex">
+    <main class="movie-page container d-flex flex-column justify-content-center align-items-center flex-grow-1">
+        <div class="movie-content d-flex">
             <!-- Section Affiche -->
-            <div class="me-5">
+            <div class="movie-poster me-5">
                 <img 
                     src="{{ contenu.lienAffiche }}" 
                     alt="{{ contenu.titre }}" 
-                    class="shadow img-fluid m-5 rounded" 
+                    class="movie-poster__image shadow img-fluid m-5 rounded" 
                     style="width: 525px; height: 750px; object-fit: cover;"
                 >
             </div>
 
             <!-- Section Informations -->
-            <div class="col-6 d-flex flex-column justify-content-between">
+            <div class="movie-info col-6 d-flex flex-column justify-content-between">
                 <!-- Titre -->
-                <h1 class="mt-5 fw-bolder text-center">{{ contenu.titre }}</h1>
+                <h1 class="movie-info__title mt-5 fw-bolder text-center">{{ contenu.titre }}</h1>
 
                 <!-- Date et Durée -->
-                <div class="d-flex justify-content-between fs-5 fw-bolder">
-                    <p>Date : {{ contenu.date|date("d/m/Y") }}</p>
-                    <p>Durée : {{ contenu.duree }} min</p>
+                <div class="movie-info__metadata d-flex justify-content-between fs-5 fw-bolder">
+                    <p class="movie-info__date">Date : {{ contenu.date|date("d/m/Y") }}</p>
+                    <p class="movie-info__duration">Durée : {{ contenu.duree }} min</p>
                 </div>
 
                 <!-- Description -->
-                <div class="shadow fst-italic fs-5 bg-dark text-white p-3 rounded">
-                <!-- Texte de description plus petit si il est plus long que 500 caractères-->
+                <div class="movie-info__description shadow fst-italic fs-5 bg-dark text-white p-3 rounded">
                     {% set description = contenu.description %}
                     {% set descriptionmax_length = 500 %}
+                    {% if description is not empty %}
                     {% if description|length > descriptionmax_length %}
-                        <p class="fs-6"> {{ description}}</p>
+                            <p class="fs-6"> {{ description}}</p>
+                        {% else %}
+                            <p> {{ description }}</p>
+                        {% endif %}
                     {% else %}
-                        <p> {{ description }}</p>
+                        <p class="fs-6">Aucune description disponible pour ce film.</p>
                     {% endif %}
                 </div>
 
                 <!-- Genres -->
-                <div class="d-flex justify-content-left align-items-center">    
+                <div class="movie-info__genres d-flex justify-content-left align-items-center">    
                     {% for theme in themes %}
-                        <span class="bg-mydark text-white p-2 px-3 rounded me-3">{{ theme.nom }}</span>
+                        <span class="movie-info__genre-tag bg-mydark text-white p-2 px-3 rounded me-3">{{ theme.nom }}</span>
                     {% endfor %}
                 </div>
 
                 <!-- Note et Avis -->
-                <div>
-                    <div class="d-flex text-center align-items-center">
+                <div class="movie-info__rating">
+                    <div class="movie-info__rating-stars d-flex text-center align-items-center">
                         <p class="m-0">Note : {{ moyenne }}/5</p>
                         <div id="rating" class="ms-5"></div>
                     </div>
-                    <div>
+                    <div class="movie-info__rating-count">
                         <p class="mb-5 mx-3 small fw-light">{{ total }} avis</p>
                     </div>
                 </div>
@@ -62,56 +65,21 @@
                 </script>
 
                 <!-- Boutons d'action -->
-                <div class="mr-5">
-                    <div class="d-flex justify-content-right mb-5">
-                        <button class="btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
-                        <button class="btn btn-myprimary fw-normal me-4 bi bi-plus">WatchList</button>
+                <div class="movie-actions mr-5">
+                    <div class="movie-actions__buttons d-flex justify-content-right mb-5">
+                        <button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
+                        <button class="movie-actions__watchlist-btn btn btn-myprimary fw-normal me-4 bi bi-plus">WatchList</button>
                     </div>
                 </div>
             </div>
         </div>
-<!-- Modal pour laisser un avis -->
-<div class="modal fade" id="commenterContenu" tabindex="-1" aria-labelledby="commenterContenuLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content bg-mydark text-white " style="border: 1px solid #F2AC0F">
-            <div class="modal-header border-bottom-0">
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-header border-bottom-0 d-flex align-items-center justify-content-center m-0 p-0">
-                <h5 class="modal-title fw-bolder" id="exampleModalLabel">Laisser un avis</h5>
-            </div>
-            <div class="modal-body">
-                <form action="index.php?controller" method="POST">
-                    <div class="mb-3">
-                        <label for="titre" class="form-label">Titre</label>
-                        <input type="text" class="form-control" id="titre" name="titre" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="avis" class="form-label">Avis</label>
-                        <textarea class="form-control" id="avis" name="avis" rows="3" required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="note" class="form-label">Note</label>
-                        <select class="form-control" id="note" name="note" required>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>                                                     
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Soumettre</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+
         <!-- Synopsis -->
-        {% set synopsis = contenu.DescriptionLongue %}
-        {% set max_length = 1000 %}
-        <div class="d-flex flex-column align-items-center">
-            <h2 class="my-3 fw-bolder">Synopsis</h2>
-            <div class="shadow fst-italic fs-6 bg-dark text-white p-3 rounded">
+        <div class="movie-synopsis d-flex flex-column align-items-center">
+            <h2 class="movie-synopsis__title my-3 fw-bolder">Synopsis</h2>
+            <div class="movie-synopsis__content shadow fst-italic fs-6 bg-dark text-white p-3 rounded">
+                {% set synopsis = contenu.DescriptionLongue %}
+                {% set max_length = 1000 %}
                 {% if synopsis|length > max_length %}
                     <div id="short-synopsis">
                         {{ synopsis|slice(0, max_length) ~ '...' }}
@@ -147,8 +115,8 @@
         </script>
 
         <!-- Personnalités -->
-        <div class="bg-mydark my-5 text-white w-100 rounded shadow position-relative">
-            <h2 class="m-3">Personnalités :</h2>
+        <div class="movie-cast bg-mydark my-5 text-white w-100 rounded shadow position-relative">
+            <h2 class="movie-cast__title m-3">Personnalités :</h2>
 
             {% if personnalite|length > 6 %}
                 <div id="personnalitesCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -216,32 +184,33 @@
                 </div>
             {% endif %}
         </div>
-        <div class="bg-mydark rounded text-white p-3 mb-5 w-100">
-    <h1 class="mx-5">Commentaires :</h1>
-    {% if commentaires is not empty %}
-    {% for com in commentaires %}
-    <div class="d-flex align-items-center">
-        <h4 class="m-3 mb-0">{{ com.titre }}</h4>
-        <p class="m-3 mb-0">.</p>
-        <p class="m-3 mb-0">
-            {% if com.estPositif == 1 %}
-                {{ com.note }}/5
-                <i class="ms-3 bi bi-star-fill"></i> <!-- Étoile remplie -->
+
+        <!-- Commentaires -->
+        <div class="movie-comments bg-mydark rounded text-white p-3 mb-5 w-100">
+            <h1 class="movie-comments__title mx-5">Commentaires :</h1>
+            {% if commentaires is not empty %}
+                {% for com in commentaires %}
+                    <div class="movie-comment">
+                        <div class="movie-comment__header d-flex align-items-center">
+                            <h4 class="movie-comment__title m-3 mb-0">{{ com.titre }}</h4>
+                            <p class="movie-comment__separator m-3 mb-0">.</p>
+                            <p class="movie-comment__rating m-3 mb-0">
+                                {{ com.note }}/5
+                                <i class="ms-3 bi bi-star{% if com.estPositif == 1 %}-fill{% endif %}"></i>
+                            </p>
+                        </div>
+                        <p class="movie-comment__text m-3">{{ com.avis }}</p>
+                        <hr>
+                    </div>
+                {% endfor %}
             {% else %}
-                {{ com.note }}/5
-                <i class="ms-3 bi bi-star"></i> <!-- Étoile vide -->
+                <div class="movie-comments__empty d-flex justify-content-center align-items-center">
+                    <p class="m-3 fs-3">Aucun commentaire pour ce film. Sois le premier à commenter 😉 </p>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button class="btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
+                </div>
             {% endif %}
-        </p>
-    </div>
-    <p class="m-3">{{ com.avis }}</p>
-    <hr>
-    {% endfor %}
-    {% else %}
-        <div class="d-flex justify-content-center align-items-center">
-            <p class="m-3 fs-3">Aucun commentaire pour ce film. Sois le premier à commenter 😉 -</p>
-            <button class="btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
         </div>
-    {% endif %}
-</div>
     </main>
 {% endblock %}
