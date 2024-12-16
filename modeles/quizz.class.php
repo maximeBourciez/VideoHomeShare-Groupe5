@@ -1,19 +1,12 @@
 <?php
 
-enum Difficulte {
-    case Facile;
-    case Moyen;
-    case Difficile;
-    case Expert;
-}
-
 class Quizz {
 
     // Attributs
     private ?int $id;
     private ?string $titre;
     private ?string $description;
-    private ?Difficulte $difficulte;
+    private ?Difficulte $difficulte; //Prend une valeur entière entre 1 à 4
     private ?string $date;
 
     // Constructeur

@@ -1,0 +1,17 @@
+# constantes.yaml
+
+# Connexion à la base de données pour BV (lakartxela)
+database:
+  host: lakartxela.iutbayonne.univ-pau.fr
+  name: mbourciez_pro
+  user: mbourciez_pro
+  password: mbourciez_pro
+  prefix: vhs_
+
+# Constantes de la vue
+website:
+  title: VHS
+  title_long: VIDEO HOME SHARE
+  language: FR
+  logo: images/LOGO_V1.png
+  logo_flag: images/flag_fr.png
