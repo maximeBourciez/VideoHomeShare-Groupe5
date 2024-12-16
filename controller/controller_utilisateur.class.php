@@ -95,7 +95,8 @@ class ControllerUtilisateur extends Controller
             $this->comprisEntre($id, 20, 3, "L'identifiant doit contenir ", "inscription") && $this->comprisEntre($pseudo, 50, 3, "Le pseudo doit contenir ", "inscription") &&
             $this->comprisEntre($mail, 50, 3, "Le mail doit contenir ", "inscription") && $this->comprisEntre($nom, 50, 3, "Le nom doit contenir ", "inscription") &&
             $this->comprisEntre($mdp, null, 8, "Le mot de passe doit contenir ", "inscription") && $this->comprisEntre($vmdp, null, 8, "Le mot de passe de confirmation doit contenir ", "inscription")
-            && $this->estRobuste($mdp, "inscription") && $this->ageCorrect($date, 13) && $this->mailCorrectExitePas($mail) && $this->egale($mdp, $vmdp, "Les mots de passe")
+            && $this->estRobuste($mdp, "inscription") && $this->ageCorrect($date, 13) && $this->mailCorrectExitePas($mail) && $this->egale($mdp, $vmdp, array('messagederreur' => "Les mots de passe ne sont pas identiques"), "inscription")
+            &&$this->idExistePas($id,"inscription")
         ) {
 
             //cripter le mot de passe
@@ -178,28 +179,25 @@ class ControllerUtilisateur extends Controller
         $vmdp = isset($_POST['vmdp']) ? $_POST['vmdp'] : null;
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
         $utilisateur = $managerutilisateur->find($id);
-        if ($utilisateur != null) {
+        if (
+            $this->utilisateurExiste($utilisateur, "motDePasseOublie") && $this->comprisEntre($mdp, null, 8, "Le mot de passe doit contenir ", "changerMDP") &&
+            $this->comprisEntre($vmdp, null, 8, "Le mot de passe de confirmation doit contenir ", "changerMDP") &&
+            $this->egale($mdp, $vmdp, array('messagederreur' => "Les mots de passe ne sont pas identiques", 'id' => $id),"changerMDP") && $this->estRobuste($mdp, "changerMDP")
+        ) {
+            //crypter le mot de passe
+            $mdp = password_hash($mdp, PASSWORD_DEFAULT);
+            $utilisateur->setMdp($mdp);
 
-
-
-            if ($mdp == $vmdp) {
-                //crypter le mot de passe
-                $mdp = password_hash($mdp, PASSWORD_DEFAULT);
-                $utilisateur->setMdp($mdp);
-
-                // modifier le mot de passe dans la base de données
-                $managerutilisateur->update($utilisateur);
-                $template = $this->getTwig()->load('connection.html.twig');
-                echo $template->render(array());
-            } else {
-                $template = $this->getTwig()->load('changerMDP.html.twig');
-                echo $template->render(array('id' => $id));
-            }
+            // modifier le mot de passe dans la base de données
+            $managerutilisateur->update($utilisateur);
+            $template = $this->getTwig()->load('connection.html.twig');
+            echo $template->render(array('message' => "Votre mot de passe a bien été changé"));
         }
     }
 
     /**
-     *  @brief permet d'afficher lapage d'un utilisateur 
+     *  @brief permet d'afficher la page d'un utilisateur 
+     * @return void
      */
     public function show(): void
     {
@@ -228,15 +226,14 @@ class ControllerUtilisateur extends Controller
 
         //récupération des messages de l'utilisateur
         $messages = $managermesage->listerMessagesParIdUser($id);
-        if ($utilisateur != null) {
+        
+        if ($this->utilisateurExiste($utilisateur, "inscription")) {
             $template = $this->getTwig()->load('profilUtilisateur.html.twig');
             echo $template->render(array('utilisateur' => $utilisateur, 'messages' => $messages, 'utilisateurConnecter' => $personneConnect));
-            return;
+            
         }
 
-        //Génération de la vue
-        $template = $this->getTwig()->load('connection.html.twig');
-        echo $template->render(array());
+        
     }
 
     /**
@@ -251,14 +248,10 @@ class ControllerUtilisateur extends Controller
             $utilisateur = null;
         }
 
-        if ($utilisateur != null) {
+        if ($this->utilisateurExiste($utilisateur, "inscription")) {
             //Génération de la vue
             $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
             echo $template->render(array('utilisateur' => $utilisateur));
-        } else {
-            //Génération de la vue
-            $template = $this->getTwig()->load('index.html.twig');
-            echo $template->render(array());
         }
     }
 
@@ -284,9 +277,10 @@ class ControllerUtilisateur extends Controller
 
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
 
-        if (strlen($pseudo) <= 50 && strlen($id) <= 20 && strlen($nom) <= 50) {
+        if ($this->comprisEntre($id, 20, 3, "L'identifiant doit contenir ", "modifierUtilisateur") && $this->comprisEntre($pseudo, 50, 3, "Le pseudo doit contenir ", "modifierUtilisateur") &&
+         $this->comprisEntre($nom, 50, 3, "Le nom doit contenir ", "modifierUtilisateur") && $this->idExistePas($id, "modifierUtilisateur")) {
             // verifier si l'id n'est pas déjà utilisé
-            if ($managerutilisateur->find($id) == null || $id == $utilisateur->getId()) {
+            if ($managerutilisateur->find($id) == null) {
                 //création de l'utilisateur
                 $utilisateur->setId($id);
                 $utilisateur->setPseudo($pseudo);
@@ -381,6 +375,11 @@ class ControllerUtilisateur extends Controller
 
     /**
      * @bref pemet de verifier si la valeur est compris entre deux valeurs
+     * @param string $val la valeur que l'on veut vérifier
+     * @param int $valmax la valeur maximal que l'on autorise
+     * @param int $valmin la valeur minimal que l'on autorise
+     * @param string $messageErreur le message d'erreur que l'on veut renvoyer
+     * @param string $page la page sur laquelle on veut renvoyer un message d'erreur
      * @return bool
      * 
      */
@@ -405,15 +404,18 @@ class ControllerUtilisateur extends Controller
 
     /**
      * @bref permet de verifier si les deux valeurs sont identiques
+     * @param string $val1 la première valeur
+     * @param string $val2 la deuxième valeur
+     * @param string $messageErreur le message d'erreur que l'on veut renvoyer
      * @return bool
      * 
      */
-    public function egale(string $val1, string $val2, string $messageErreur): bool
+    public function egale(string $val1, string $val2, array $messageErreur, string $page): bool
     {
         $valretour = true;
         if ($val1 != $val2) {
-            $template = $this->getTwig()->load('inscription.html.twig');
-            echo $template->render(array('messagederreur' => $messageErreur . " ne sont pas identiques"));
+            $template = $this->getTwig()->load("$page.html.twig");
+            echo $template->render($messageErreur);
             $valretour = false;
         }
         return $valretour;
@@ -421,6 +423,7 @@ class ControllerUtilisateur extends Controller
 
     /**
      * @bref permet de verifier si le mail est correct  
+     * @param string $mail le mail que l'on veut vérifier
      * @return bool
      * 
      */
@@ -438,6 +441,8 @@ class ControllerUtilisateur extends Controller
 
     /**
      * @bref permet de verifier si l'utilisateur est assez vieux
+     * @param string $date la date de naissance de l'utilisateur
+     * @param int $age l'age minimal de l'utilisateur
      * @return bool
      * 
      */
@@ -588,4 +593,25 @@ class ControllerUtilisateur extends Controller
         }
         return $valretour;
     }
-}
+
+    /**
+     * @bref permet de  verifier l'identifiant de l'utilisateur  n'existe pas déjà
+     * @param string $id l'identifiant que l'on veut vérifier
+     * 
+     */
+    public function idExistePas(string $id , string $page): bool
+    {
+        $managerutilisateur = new UtilisateurDAO($this->getPdo());
+        $valretour = true;
+        if ($managerutilisateur->find($id) != null) {
+            $template = $this->getTwig()->load("$page.html.twig");
+            echo $template->render(array('messagederreur' => "L'identifiant est déjà utilisé"));
+            $valretour = false;
+        }
+        return $valretour;
+
+
+    }
+
+}   
+

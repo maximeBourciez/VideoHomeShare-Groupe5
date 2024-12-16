@@ -72,6 +72,7 @@ class MessageDAO
         $message->setValeur($row['valeur']);
         $message->setDateC(new DateTime($row['dateC']));
         $message->setIdMessageParent($row['idMessageParent']);
+        $message->setIdFil($row['idFil']);
 
         // Hydratation de l'utilisateur associé
         $user = new Utilisateur();
@@ -109,6 +110,9 @@ class MessageDAO
                 $parentId = $message->getIdMessageParent();
                 if (isset($messages[$parentId])) {
                     $messages[$parentId]->addReponse($message);
+                }else{
+                    // Si le parent n'existe pas, on ajoute le message comme message principal
+                    $messagesParents[] = $message;
                 }
             }
         }
