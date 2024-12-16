@@ -289,42 +289,21 @@ class ControllerUtilisateur extends Controller
 
                     if ($_FILES['urlImageProfil']['name'] != '') {
                         //supprimer l'ancienne image
-                        if (file_exists($utilisateur->getUrlImageProfil()) && $utilisateur->getUrlImageProfil() != "images/image_de_profil_de_base.svg") {
-                            unlink($utilisateur->getUrlImageProfil());
-                        }
-                        //récupérer le fichier image
-                        $urlImageProfil = isset($_FILES['urlImageProfil']) ? $_FILES['urlImageProfil'] : null;
-                        // donne le bon nom à l'image
-                        $urlImageProfil['name'] = "images/imageProfil_" . $utilisateur->getId() . "." . pathinfo($urlImageProfil['name'], PATHINFO_EXTENSION);
-                        //telecharger l'image
-                        move_uploaded_file($urlImageProfil["tmp_name"], $urlImageProfil['name']);
-                        // mettre à jour l'url de l'image dans l'ojet utilisateur
-                        $utilisateur->setUrlImageProfil($urlImageProfil['name']);
+                        $this->ajourfichier($_FILES['urlImageProfil'] , "Profil", $utilisateur);
+
                     }
                 }
                 if (isset(($_FILES['urlImageBaniere']))) {
-                    if ($_FILES['urlImageBaniere']['name'] != '') {
-                        //supprimer l'ancienne image
-                        if (file_exists($utilisateur->getUrlImageBaniere()) && $utilisateur->getUrlImageProfil() != "images/Baniere_de_base.png") {
-                            unlink($utilisateur->getUrlImageBaniere());
-                        }
-                        //récupérer le fichier image
-                        $urlImageBaniere = isset($_FILES['urlImageBaniere']) ? $_FILES['urlImageBaniere'] : null;
-                        // donne le bon nom à l'image
-                        $urlImageBaniere['name'] = "images/imageBaniere_" . $utilisateur->getId() . "." . pathinfo($urlImageBaniere['name'], PATHINFO_EXTENSION);
-                        //telecharger l'image
-                        move_uploaded_file($urlImageBaniere["tmp_name"], $urlImageBaniere['name']);
-                        // mettre à jour l'url de l'image dans l'ojet utilisateur
-                        $utilisateur->setUrlImageBaniere($urlImageBaniere['name']);
-                    }
+                    $this->ajourfichier($_FILES['urlImageBaniere'] , "Baniere", $utilisateur);
                 }
                 // mettre à jour l'utilisateur dans la base de données
                 $utilisateur->setMdp($managerutilisateur->find($utilisateur->getId())->getMdp());
                 $managerutilisateur->update($utilisateur);
+                $utilisateur->setMdp(null);
                 $_SESSION['utilisateur'] = serialize($utilisateur);
                 //Génération de la vue
                 $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
-                echo $template->render(array('utilisateur' => $utilisateur));
+                echo $template->render(array('utilisateur' => $utilisateur, 'message' => "Vos informations ont bien été modifiées"));
                 return;
             }
         }
@@ -625,5 +604,29 @@ class ControllerUtilisateur extends Controller
             echo $template->render(array('messagederreur' => "Le fichier de $messageErreur est trop lourd", 'utilisateur' => $utilisateur));
         }
         return $valretour;
+    }
+
+    public function ajourfichier($fichier, $type, $utilisateur = null)
+    {
+        if ($fichier['name'] != '') {   
+            //supprimer l'ancienne image
+            if (file_exists($utilisateur->getUrlImageBaniere()) && $utilisateur->getUrlImageProfil() != "images/".$type."_de_base.png") {
+                unlink($utilisateur->getUrlImageBaniere());
+            }
+ 
+            
+            // donne le bon nom à l'image
+            $fichier['name'] = "images/image".$type."_" . $utilisateur->getId() . "." . pathinfo($fichier['name'], PATHINFO_EXTENSION);
+            //telecharger l'image
+           if (move_uploaded_file($fichier["tmp_name"], $fichier['name'])) {
+                // mettre à jour l'url de l'image dans l'objet utilisateur
+                $utilisateur->setUrlImageBaniere($fichier['name']);
+           } else {
+           
+            $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
+            echo $template->render(array('messagederreur' => "Nous n'avons pas pu télécharger l'image de $type", 'utilisateur' => $utilisateur));
+           }
+            
+        }
     }
 }
