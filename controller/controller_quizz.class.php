@@ -84,14 +84,11 @@ class ControllerQuizz extends Controller {
             // Rendre le template avec les infos
             echo $this->getTwig()->render('creationQuizz.html.twig', [
                 'quizz' => $quizz
-                
             ]);
         }
         else{
             echo $this->getTwig()->render('creationQuizz.html.twig');
         }
-        
-
     }
 
     public function supprimerQuizz(){

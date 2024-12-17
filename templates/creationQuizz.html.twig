@@ -6,19 +6,29 @@
 
 
 {% block content %}
-    <main>
+    <main class="content flex-grow-1">
         <div class="container">
 			<br>
             <h3>Création d'un quizz :</h3>
+            <br>
             <div class="container">
-                <h4>Titre du quizz :</h4>
+                <form method="POST" action="">
+                <label for="titre"><b>Titre du quizz : </b></label>
                 <input type="text" id="titre" name="titre">
-                <h4>Description :</h4>
-                <input type="text" id="desc" name="desc">
-                <h4>Difficulté : (1 = Facile, 2 = Moyen, 3 = Difficile, 4 = Expert)</h4>
+                <br><br>
+                <label for="desc"><b>Description : </b></label>
+                <textarea id="desc" name="desc" style="width:100%; " oninput="majCaracteresRestants()"></textarea>
+                <p>255 caractères max.</p>
+                <br>
+                <label for="difficulte"><b>Difficulté : </b></label>
                 <input type="number" id="difficulte" name="difficulte" min="1" max="4">
-                <h4>Nombre de questions (minimum 4) :</h4>
-                <input type="number" id="nbQuestions" name="nbQuestions" min="4">
+                <p> (1 = Facile, 2 = Moyen, 3 = Difficile, 4 = Expert)</p>
+                <label for="nbQuestions"><b>Nombre de questions : </b></label>
+                <input type="number" id="nbQuestions" name="nbQuestions" min="4" max="20">
+                <p>La valeur doit être comprise entre 4 et 20.</p>
+                <br>
+                <a href="#" class="btn btn-myprimary">Suivant</a>
+                <br>
             </div>
         </div>
     </main>
