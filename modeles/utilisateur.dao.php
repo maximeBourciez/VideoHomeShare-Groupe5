@@ -9,11 +9,8 @@ class UtilisateurDAO {
 
     function create(Utilisateur $utilisateur): bool{
         // Préparation de la requête
-        $pdo = $this->pdo->prepare("INSERT INTO ".DB_PREFIX."utilisateur 
-        (idUtilisateur, pseudo, vraiNom, mail, mdp, role, urlImageProfil, urlImageBanniere) 
-        VALUES (:idUtilisateur, :pseudo, :nom , :mail, :mdp, :role, :urlImageProfil, :urlImageBaniere)");
-
-
+        $pdo = $this->pdo->prepare("INSERT INTO ".DB_PREFIX."utilisateur (idUtilisateur, pseudo, vraiNom, mail, mdp, role, urlImageProfil, urlImageBanniere) VALUES (:idUtilisateur, :pseudo, :nom , :mail, :mdp, :role, :urlImageProfil, :urlImageBanniere)");
+      
         // Récupération des valeurs
         $id = $utilisateur->getId();
         $pseudo = $utilisateur->getPseudo();
@@ -22,8 +19,7 @@ class UtilisateurDAO {
         $mdp = $utilisateur->getMdp();
         $role = $utilisateur->getRole();
         $urlImageProfil = $utilisateur->getUrlImageProfil();
-        $urlImageBaniere = $utilisateur->getUrlImageBaniere();
-
+        $urlImageBanniere = $utilisateur->getUrlImageBanniere();
         
         // passage des paramètres
         $pdo->bindValue(":idUtilisateur", $id);
@@ -33,7 +29,7 @@ class UtilisateurDAO {
         $pdo->bindValue(":mdp", $mdp);
         $pdo->bindValue(":role", $role);
         $pdo->bindValue(":urlImageProfil", $urlImageProfil);
-        $pdo->bindValue(":urlImageBaniere", $urlImageBaniere);
+        $pdo->bindValue(":urlImageBanniere", $urlImageBanniere);
 
         // execution de la requête
         return $pdo->execute();
@@ -76,10 +72,10 @@ class UtilisateurDAO {
         $mdp = $row['mdp'];
         $role = $row['role'];
         $urlImageProfil = $row['urlImageProfil'];
-        $urlImageBaniere = $row['urlImageBanniere'];
+        $urlImageBanniere = $row['urlImageBanniere'];
 
         // Retourner l'utilisateur
-        return new Utilisateur($id, $pseudo,$nom, $mail, $mdp, $role, $urlImageProfil, $urlImageBaniere);
+        return new Utilisateur($id, $pseudo,$nom, $mail, $mdp, $role, $urlImageProfil, $urlImageBanniere);
     }
 
     function hydrateAll(array $rows): array{
