@@ -12062,6 +12062,7 @@ body {
 }
 @media (max-width: 576px) {
   .movie-info__genres {
+    margin-top: 15px;
     flex-wrap: wrap;
     justify-content: center;
   }
@@ -12071,49 +12072,6 @@ body {
   .movie-synopsis__content {
     font-size: 0.9rem;
     padding: 1rem;
-  }
-}
-
-.movie-cast .carousel .carousel-items-xs,
-.movie-cast .carousel .carousel-items-sm,
-.movie-cast .carousel .carousel-items-md,
-.movie-cast .carousel .carousel-items-lg {
-  display: none;
-}
-@media (max-width: 575.98px) {
-  .movie-cast .carousel .carousel-items-xs {
-    display: block;
-  }
-}
-@media (min-width: 576px) and (max-width: 767.98px) {
-  .movie-cast .carousel .carousel-items-sm {
-    display: block;
-  }
-}
-@media (min-width: 768px) and (max-width: 991.98px) {
-  .movie-cast .carousel .carousel-items-md {
-    display: block;
-  }
-}
-@media (min-width: 992px) {
-  .movie-cast .carousel .carousel-items-lg {
-    display: block;
-  }
-}
-@media (max-width: 575.98px) {
-  .movie-cast .card {
-    width: 8rem !important;
-    margin: 0.5rem !important;
-  }
-  .movie-cast .card img {
-    height: 120px !important;
-  }
-  .movie-cast .card .card-body {
-    padding: 0.5rem;
-  }
-  .movie-cast .card .card-body p {
-    font-size: 0.8rem;
-    margin-bottom: 0.3rem;
   }
 }
 
