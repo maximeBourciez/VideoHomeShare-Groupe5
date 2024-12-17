@@ -75,7 +75,7 @@ class Quizz {
      */
     public function getIdUtilisateur() : ?string
     {
-        return $this->getIdUtilisateur;
+        return $this->idUtilisateur;
     }
 
     // Setters
