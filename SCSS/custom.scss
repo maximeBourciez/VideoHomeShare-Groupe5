@@ -37,6 +37,14 @@ $theme-colors: (
     transform: scale(1.05);
   }
 }
+//5.1 Body
+
+html,
+body {
+    overflow-x: hidden; /* Empêche le scroll horizontal */
+    margin: 0; /* Retirer toute marge par défaut */
+    font-family: 'Montserrat', sans-serif;
+}
 
 // 6. Classes personnalisées
 // 6.1 Couleurs de texte
@@ -269,3 +277,215 @@ $theme-colors: (
 .btn-myprimary i {
   font-size: 1.2rem; /* Taille de l'icône */
 }
+
+
+
+
+
+
+.custom-select-wrapper {
+  position: relative;
+  width: 100%;
+  height: 38px;
+}
+
+.custom-select {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  padding: 0.375rem 0.75rem;
+  cursor: pointer;
+}
+
+.custom-select-placeholder {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.custom-select-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ced4da;
+  border-top: none;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.custom-select-option {
+  display: block;
+  padding: 0.375rem 0.75rem;
+  cursor: pointer;
+}
+
+.custom-select-option:hover {
+  background-color: #f8f9fa;
+}
+
+.custom-select-option input {
+  margin-right: 10px;
+}
+
+.custom-select.open .custom-select-dropdown {
+  display: block;
+}
+
+//8. Theme
+
+.theme-tag {
+  text-align: center;
+  background-color: $secondary;
+  border-radius: 20px;
+  padding: 5px 10px;
+  display: inline-block;
+}
+
+// 9 Notation/étoile
+/* Conteneur global de notation */
+.star-rating {
+  font-size: 48px;
+  color: #ddd;
+  position: relative;
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.star-rating .star-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.star-rating .star-full,
+.star-rating .star-half {
+  margin-right: 2px;
+  cursor: pointer;
+  vertical-align: middle; /* Align stars vertically in the middle */
+}
+
+.star-rating .star-half {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-28%); /* Center the half star vertically */
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  color: $dark;
+}
+
+.star-rating .stars-fill .star-full {
+  color: $primary;
+}
+
+.star-rating .stars-half .star-full {
+  color: #ddd;
+}
+
+.star-rating .stars-half .star-half {
+  color: $primary;
+}
+
+//Carousel
+
+.custom-carousel-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background-color: rgba(0,0,0,0.5);
+  border-radius: 50%;
+  z-index: 10;
+  margin: 0 15px;
+}
+
+.carousel-control-prev {
+  left: 0;
+}
+
+.carousel-control-next {
+  right: 0;
+}
+
+@media (max-width: 768px) {
+  .custom-carousel-control {
+      width: 40px;
+      height: 40px;
+      margin: 0 10px;
+  }
+}
+
+//Responsive page dun film
+.movie-content {
+  @media (max-width: 992px) {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.movie-poster {
+  &__image {
+    @media (max-width: 992px) {
+      width: 100% !important;
+      max-width: 350px;
+      height: auto !important;
+    }
+  }
+}
+
+.movie-info {
+  @media (max-width: 992px) {
+    width: 100%;
+    padding: 0 15px;
+  }
+
+  &__metadata {
+    @media (max-width: 576px) {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  &__genres {
+    @media (max-width: 576px) {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  }
+}
+
+.movie-synopsis {
+  &__content {
+    @media (max-width: 768px) {
+      font-size: 0.9rem;
+      padding: 1rem;
+    }
+  }
+}
+
+.movie-comments {
+  &__title {
+    @media (max-width: 576px) {
+      font-size: 1.5rem;
+      margin: 0.5rem !important;
+    }
+  }
+}
+
+.movie-comment {
+  &__header {
+    @media (max-width: 576px) {
+      flex-direction: column;
+    }
+  }
+}
+

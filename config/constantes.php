@@ -28,4 +28,9 @@ define('WEBSITE_TITLE_LONG', $config['website']['title_long']);
 define('WEBSITE_LANGUAGE', $config['website']['language']);
 define('WEBSITE_LOGO', $config['website']['logo']);
 define('WEBSITE_LOGO_FLAG', $config['website']['logo_flag']);
-?>
+define('WEBSITE_LINK', $config['website']['website_link']);
+
+// Constantes de l'API TMDB
+define('TMDB_API_KEY', $config['tmdb']['api_key']);
+define('TMDB_BASE_URL', $config['tmdb']['base_url']);
+define('TMDB_IMAGE_BASE_URL', $config['tmdb']['image_base_url']);

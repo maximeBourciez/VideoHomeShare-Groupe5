@@ -3,9 +3,9 @@
     "bootstrap": "^5.3.3"
   },
   "devDependencies": {
-    "sass": "^1.80.6"
+    "sass": "^1.83.0"
   },
-  "scripts":{
+  "scripts": {
     "build": "sass SCSS/custom.scss CSS/style.css"
   }
 }

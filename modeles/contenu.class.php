@@ -1,24 +1,28 @@
 <?php 
 
 
-class Contenu{
+class Contenu{   
     private ?int $id;
     private ?string $titre;
     private ?DateTime $date;
     private ?string $description;
+    private ?string $DescriptionLongue;
     private ?string $lienAffiche;
-    private ?int $durée;
     private ?string $type;
+    private ?string $duree;
+  
     //constructeur
-    public function __construct(?int $id = null, ?string $titre = null, ?DateTime $date = null, ?string $description = null, ?string $lienAffiche = null, ?string $durée = null, ?string $type = null){
+    public function __construct(?int $id = null, ?string $titre = null, ?DateTime $date = null, ?string $description = null, ?string $DescriptionLongue = null, ?string $lienAffiche = null, ?string $duree = null, ?string $type = null){
         $this->id = $id;
         $this->titre = $titre;
         $this->date = $date;
         $this->description = $description;
+        $this->DescriptionLongue = $DescriptionLongue;
         $this->lienAffiche = $lienAffiche;
-        $this->durée = $durée;
+        $this->duree = $duree;
         $this->type = $type;
     }
+  
     //getters and setters
     //get id
     public function getId(): ?int{
@@ -63,12 +67,12 @@ class Contenu{
         $this->lienAffiche = $lienAffiche;
     }
     //get durée
-    public function getDurée(): ?int{
-        return $this->durée;
+    public function getDuree(): ?string{
+        return $this->duree;
     }
     // set durée
-    public function setDurée(?int $durée): void{
-        $this->durée = $durée;
+    public function setDuree(?string $duree): void{
+        $this->duree = $duree;
     }
     //get type
     public function getType(): ?string{
@@ -79,4 +83,13 @@ class Contenu{
         $this->type = $type;
     }
 
+    //get DescriptionLongue
+    public function getDescriptionLongue(): ?string{
+        return $this->DescriptionLongue;
+    }
+
+    // set DescriptionLongue
+    public function setDescriptionLongue(?string $DescriptionLongue): void{
+        $this->DescriptionLongue = $DescriptionLongue;
+    }
 }

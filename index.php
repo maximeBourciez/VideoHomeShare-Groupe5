@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 // Inclure tous les modèles & contrôleurs
 require_once "include.php";
 
@@ -21,7 +21,6 @@ try  {
     if ($controllerName == '' && $methode ==''){
         $controllerName='fil';
         $methode='listerThreads';
-        
     }
 
     if ($controllerName == '' ){
@@ -32,10 +31,17 @@ try  {
         throw new Exception('La méthode n\'est pas définie');
     }
 
-    
+
+    // Créer le contrôleur approprié
+    if ( isset($_SESSION['utilisateur'])) {
+        $twig->addGlobal('utilisateurConnecte', $_SESSION['utilisateur']);
+    }else {
+        $twig->addGlobal('utilisateurConnecte', null);
+    }
 
     $controller = ControllerFactory::getController($controllerName, $loader, $twig);
     $controller->call($methode);
+
 }catch (Exception $e) {
    die('Erreur : ' . $e->getMessage());
 }
