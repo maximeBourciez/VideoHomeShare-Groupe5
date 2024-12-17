@@ -46,15 +46,9 @@ class ControllerFil extends Controller
             'fils' => $threads,
             'themes' => $themes
         ]);
+        exit();
     }
 
-    /**
-     * @brief Méthode d'affichage d'un fil de discussion par son identifiant
-     * 
-     * @details Méthode permettant d'afficher un fil de discussion par son identifiant, et ainsi de permettre l'afficahge de la discussion sous-jacente
-     *
-     * @return void
-     */
     /**
      * @brief Méthode d'affichage d'un fil de discussion par son identifiant
      * 
@@ -78,13 +72,12 @@ class ControllerFil extends Controller
         $messageDAO = new MessageDAO($this->getPdo());
         $messages = $messageDAO->listerMessagesParFil($id);
 
-        
-
         // Rendre le template avec les infos
         echo $this->getTwig()->render('fil.html.twig', [
             'messages' => $messages,
             'fil' => $fil
         ]);
+        exit();
     }
 
     /**
@@ -117,8 +110,8 @@ class ControllerFil extends Controller
             $managerMessage->ajouterMessage($idFil, $idMessageParent, $message);
 
             // Rediriger vers le fil
-            $this->afficherFilParId($idFil);
-            exit;
+            $this->genererVue($idFil);
+            exit();
         } else {
             die("Méthode non autorisée.");
         }
@@ -142,7 +135,8 @@ class ControllerFil extends Controller
         $managerMessage->ajouterMessage($idFil, null, $message);
 
         // Rediriger vers le fil
-        $this->afficherFilParId($idFil);
+        $this->genererVue($idFil);
+        exit();
     }
 
     /**
@@ -161,7 +155,8 @@ class ControllerFil extends Controller
         $managerReaction->ajouterReaction($idMessage, false);
 
         // Rediriger vers le fil
-        $this->afficherFilParId($idFil);
+        $this->genererVue($idFil);
+        exit();
     }
 
 
@@ -182,7 +177,8 @@ class ControllerFil extends Controller
             $managerReaction->ajouterReaction($idMessage, true);
 
             // Rediriger vers le fil
-            $this->afficherFilParId($idFil);
+            $this->genererVue($idFil);
+            exit();
         } else {
             throw new Exception("accesInterdit");
         }
@@ -215,9 +211,25 @@ class ControllerFil extends Controller
             $managerFil->addThemes($idFil, $themes);
 
             // Rediriger vers le fil
-            $this->afficherFilParId($idFil);
+            $this->genererVue($idFil);
+            exit();
         } else {
             throw new Exception("accesInterdit");
         }
+    }
+
+    /**
+     * Fonction d'affichage de la vue
+     * 
+     * @param int $idFIl Identifiant BD du fil à charger
+     * 
+     * @return void
+     */
+    private function genererVue(int $idFil){
+        // Envoyer le script pour le refresh de la requête
+        echo "<script>
+                history.replaceState({}, '', 'index.php?controller=fil&methode=afficherFilParId&id_fil=$idFil');
+                window.location.reload();
+              </script>";
     }
 }
