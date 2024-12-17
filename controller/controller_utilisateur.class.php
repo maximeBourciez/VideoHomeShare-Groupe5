@@ -52,8 +52,9 @@ class ControllerUtilisateur extends Controller
         if ($this->comprisEntre($mail, 320, 6, "Le mail doit contenir", "connection")) {
             $utilisateur = $managerutilisateur->findByMail($mail);
 
-            if ($this->utilisateurExiste($utilisateur, "inscription") && $this->motDePasseCorrect($mdp, $utilisateur->getMdp())) {
+            if ($this->utilisateurExiste($utilisateur, "inscription") && !$this->isBruteForce($utilisateur->getId()) && $this->motDePasseCorrect($mdp, $utilisateur->getMdp(), $utilisateur)) {
                 $utilisateur->setMdp(null);
+                $this->resetAttempts($utilisateur->getId());
                 $_SESSION['utilisateur'] = serialize($utilisateur);
                 $this->getTwig()->addGlobal('utilisateurConnecte', $_SESSION['utilisateur']);
 
@@ -93,7 +94,7 @@ class ControllerUtilisateur extends Controller
             $this->comprisEntre($id, 20, 3, "L'identifiant doit contenir ", "inscription") && $this->comprisEntre($pseudo, 50, 3, "Le pseudo doit contenir ", "inscription") &&
             $this->comprisEntre($mail, 50, 3, "Le mail doit contenir ", "inscription") && $this->comprisEntre($nom, 50, 3, "Le nom doit contenir ", "inscription") &&
             $this->comprisEntre($mdp, null, 8, "Le mot de passe doit contenir ", "inscription") && $this->comprisEntre($vmdp, null, 8, "Le mot de passe de confirmation doit contenir ", "inscription")
-            && $this->estRobuste($mdp, "inscription") && $this->ageCorrect($date, 13) && $this->mailCorrectExitePas($mail, "inscription") && $this->egale($mdp, $vmdp, array('messagederreur' => "Les mots de passe ne sont pas identiques"), "inscription")
+            && $this->estRobuste($mdp, "inscription") && $this->ageCorrect($date, 13) && $this->mailCorrectExistePas($mail, "inscription") && $this->egale($mdp, $vmdp, array('messagederreur' => "Les mots de passe ne sont pas identiques"), "inscription")
             && $this->idExistePas($id, "inscription")
         ) {
 
@@ -289,12 +290,11 @@ class ControllerUtilisateur extends Controller
 
                     if ($_FILES['urlImageProfil']['name'] != '') {
                         //supprimer l'ancienne image
-                        $this->ajourfichier($_FILES['urlImageProfil'] , "Profil", $utilisateur);
-
+                        $this->ajourfichier($_FILES['urlImageProfil'], "Profil", $utilisateur);
                     }
                 }
                 if (isset(($_FILES['urlImageBaniere']))) {
-                    $this->ajourfichier($_FILES['urlImageBaniere'] , "Baniere", $utilisateur);
+                    $this->ajourfichier($_FILES['urlImageBaniere'], "Baniere", $utilisateur);
                 }
                 // mettre à jour l'utilisateur dans la base de données
                 $utilisateur->setMdp($managerutilisateur->find($utilisateur->getId())->getMdp());
@@ -326,11 +326,14 @@ class ControllerUtilisateur extends Controller
         // vérifier si les deux mails sont identiques
         if (
             $this->comprisEntre($mail, 320, 6, "Le mail doit contenir ", "modifierUtilisateur", $utilisateur) && $this->comprisEntre($mail, 320, 6, "Le mail de verification doit contenir ", "modifierUtilisateur", $utilisateur) &&
-            $this->egale($mail, $mailconf, array('messagederreur' => "Les mails ne sont pas identiques"), "modifierUtilisateur") && $this->mailCorrectExitePas($mail, "modifierUtilisateur")
+            $this->egale($mail, $mailconf, array('messagederreur' => "Les mails ne sont pas identiques"), "modifierUtilisateur") && $this->mailCorrectExistePas($mail, "modifierUtilisateur", $utilisateur)
         ) {
             // mettre à jour le mail de l'utilisateur
             $utilisateur->setMail($mail);
+            $utilisateur->setMdp($managerutilisateur->find($utilisateur->getId())->getMdp());
+            var_dump($utilisateur);
             $managerutilisateur->update($utilisateur);
+            $utilisateur->setMdp(null);
             $_SESSION['utilisateur'] = serialize($utilisateur);
         }
         //Génération de la vue
@@ -402,13 +405,14 @@ class ControllerUtilisateur extends Controller
      * @return bool
      * 
      */
-    public function mailCorrectExitePas(string $mail, string $page): bool
+    public function mailCorrectExistePas(string $mail, string $page, $utilisateur = null): bool
     {
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
         $valretour = true;
-        if (!filter_var($mail, FILTER_VALIDATE_EMAIL) && $managerutilisateur->findByMail($mail) != null) {
+
+        if (!filter_var($mail, FILTER_VALIDATE_EMAIL) || $managerutilisateur->findByMail($mail) != null) {
             $template = $this->getTwig()->load("$page.html.twig");
-            echo $template->render(array('messagederreur' => "Le mail n'est pas valide"));
+            echo $template->render(array('messagederreur' => "Le mail n'est pas valide", 'utilisateur' => $utilisateur));
             $valretour = false;
         }
         return $valretour;
@@ -505,13 +509,22 @@ class ControllerUtilisateur extends Controller
      * @param string $mdpBDD le mot de passe de la base de données (correct)
      * @return bool
      */
-    public function motDePasseCorrect(string $mdp, string $mdpBDD): bool
+    public function motDePasseCorrect(string $mdp, string $mdpBDD, $utilisateur): bool
     {
         $valretour = true;
         if (!password_verify($mdp, $mdpBDD)) {
+            $message = "";
             $valretour = false;
+            $this->recordFailedAttempt($utilisateur->getId());
+            if (isset($_SESSION['login_attempts'][$utilisateur->getId()]['count'])) {
+                if ($_SESSION['login_attempts'][$utilisateur->getId()]['count'] == 5) {
+                    $message = "Vous avez été bloqué pour 10 minutes";
+                } else {
+                    $message = "il vous reste " . (5 - $_SESSION['login_attempts'][$utilisateur->getId()]['count']) . " tentatives avant d'être bloqué 10 minutes";
+                }
+            }
             $template = $this->getTwig()->load('connection.html.twig');
-            echo $template->render(array("messagederreur" => "Le mot de passe est incorrect"));
+            echo $template->render(array("messagederreur" => "Le mot de passe est incorrect $message"));
         }
         return $valretour;
     }
@@ -586,7 +599,10 @@ class ControllerUtilisateur extends Controller
         return $valretour;
     }
 
-
+    /**
+     * @bref permet de deconnecter l'utilisateur
+     * @return void
+     */
     public function deconnexion(): void
     {
         session_destroy();
@@ -594,8 +610,13 @@ class ControllerUtilisateur extends Controller
         $template = $this->getTwig()->load('connection.html.twig');
         echo $template->render(array('message' => "Vous avez bien été déconnecté"));
     }
-
-    public function fichierTropLourd($fichier, $messageErreur, $utilisateur = null): bool
+    /**
+     * @bref permet de verifier si le fichier est trop lourd et renvoie un message d'erreur si il l'est
+     * @param array $fichier le fichier que l'on veut vérifier
+     * @param string $messageErreur le message d'erreur que l'on veut renvoyer
+     * @param Utilisateur $utilisateur l'utilisateur sur lequel on veut renvoyer un message d'erreur
+     */
+    public function fichierTropLourd(array $fichier, ?string $messageErreur, ?Utilisateur $utilisateur = null): bool
     {
         $valretour = true;
         if ($fichier['size'] > 2000000) {
@@ -606,27 +627,93 @@ class ControllerUtilisateur extends Controller
         return $valretour;
     }
 
+    /**
+     * @bref permet de mettre à jour l'image de l'utilisateur
+     * @param array $fichier le fichier que l'on veut mettre à jour
+     * @param string $type le type de fichier que l'on veut mettre à jour
+     * @param Utilisateur $utilisateur l'utilisateur sur lequel on veut mettre à jour l'image
+     */
     public function ajourfichier($fichier, $type, $utilisateur = null)
     {
-        if ($fichier['name'] != '') {   
+        if ($fichier['name'] != '') {
             //supprimer l'ancienne image
-            if (file_exists($utilisateur->getUrlImageBaniere()) && $utilisateur->getUrlImageProfil() != "images/".$type."_de_base.png") {
-                unlink($utilisateur->getUrlImageBaniere());
+            if (file_exists($utilisateur->getUrlImageBaniere()) && $utilisateur->getUrlImageProfil() != "images/" . $type . "_de_base.png") {
+                switch ($type) {
+                    case "Profil":
+                        unlink($utilisateur->getUrlImageProfil());
+                        break;
+                    case "Baniere":
+                        unlink($utilisateur->getUrlImageBaniere());
+                        break;
+                }
             }
- 
-            
+
             // donne le bon nom à l'image
-            $fichier['name'] = "images/image".$type."_" . $utilisateur->getId() . "." . pathinfo($fichier['name'], PATHINFO_EXTENSION);
+            $fichier['name'] = "images/image" . $type . "_" . $utilisateur->getId() . "." . pathinfo($fichier['name'], PATHINFO_EXTENSION);
             //telecharger l'image
-           if (move_uploaded_file($fichier["tmp_name"], $fichier['name'])) {
+            if (move_uploaded_file($fichier["tmp_name"], $fichier['name'])) {
                 // mettre à jour l'url de l'image dans l'objet utilisateur
-                $utilisateur->setUrlImageBaniere($fichier['name']);
-           } else {
-           
-            $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
-            echo $template->render(array('messagederreur' => "Nous n'avons pas pu télécharger l'image de $type", 'utilisateur' => $utilisateur));
-           }
-            
+                switch ($type) {
+                    case "Profil":
+                        $utilisateur->setUrlImageProfil($fichier['name']);
+                        break;
+                    case "Baniere":
+                        $utilisateur->setUrlImageBaniere($fichier['name']);
+                        break;
+                }
+            } else {
+
+                $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
+                echo $template->render(array('messagederreur' => "Nous n'avons pas pu télécharger l'image de $type", 'utilisateur' => $utilisateur));
+            }
         }
     }
+
+    function isBruteForce($username)
+    {
+        $maxAttempts = 5;
+        $lockoutTime = 10 * 60; // 10 minutes
+
+        if (!isset($_SESSION['login_attempts'])) {
+            $_SESSION['login_attempts'] = [];
+        }
+
+        if (!isset($_SESSION['login_attempts'][$username])) {
+            $_SESSION['login_attempts'][$username] = ['count' => 0, 'last_attempt' => time()];
+        }
+
+        $attempts = $_SESSION['login_attempts'][$username];
+
+        if ($attempts['count'] >= $maxAttempts && (time() - $attempts['last_attempt']) < $lockoutTime) {
+            $template = $this->getTwig()->load('connection.html.twig');
+            $tempsenminute = round(($lockoutTime - (time() - $attempts['last_attempt'])) / 60);
+            $tempsenseconde = round(($lockoutTime - (time() - $attempts['last_attempt'])) % 60);
+            $message = "Vous avez été bloqué pour  $tempsenminute  minutes $tempsenseconde secondes";
+            echo $template->render(array('messagederreur' => $message));
+
+            return true;
+        }
+
+        return false;
+    }
+
+    function recordFailedAttempt($username)
+    {
+        if (!isset($_SESSION['login_attempts'][$username])) {
+            $_SESSION['login_attempts'][$username] = ['count' => 0, 'last_attempt' => time()];
+        }
+
+        $_SESSION['login_attempts'][$username]['count']++;
+        $_SESSION['login_attempts'][$username]['last_attempt'] = time();
+
+    }
+
+    function resetAttempts($username)
+    {
+        if (isset($_SESSION['login_attempts'][$username])) {
+            unset($_SESSION['login_attempts'][$username]);
+        }
+    }
+
+    
 }

@@ -29,11 +29,18 @@
 			</div>
 		</div>
 		<div class="text-center col-12 col-md-8 col-lg-6 mx-auto p-4 bg-mydark text-white rounded my-5">
+			{% if message is defined %}
+				<div class="alert alert-success text-black" role="alert">
+					{{message}}
+				</div>
+			{% endif %}
 			<form action="index.php?controller=utilisateur&methode=modificationprofil" enctype="multipart/form-data" method="post" accept-charset="UTF-8" class=" ">
 				{% if messagederreur is defined %}
-                	<div class="alert alert-danger bg-tercary mx-5" role="alert"> Erreur : {{ messagederreur }}</div>
-                
-            	{% endif %}
+					<div class="alert alert-danger bg-tercary mx-5" role="alert">
+						Erreur :
+						{{ messagederreur }}</div>
+
+				{% endif %}
 				<div class="form-group mb-3">
 					<label class="d-block text-start mb-0">
 						Changer l'idantifiant
@@ -56,7 +63,7 @@
 					<label class="d-block text-start mb-0">
 						Changer la photo de profil
 					</label>
-					<input type="file" name="urlImageProfil" class="form-control" accept=".png, .jpg, .svg, .webp" >
+					<input type="file" name="urlImageProfil" class="form-control" accept=".png, .jpg, .svg, .webp">
 				</div>
 				<div class="form-group mb-3">
 					<label class="d-block text-start mb-0">
@@ -68,7 +75,7 @@
 					<label class=" text-start mb-0 col">
 						autoriser les notifications
 					</label>
-					<input  class="col h-100 my-auto" type="checkbox" name="autoriserNotifications">
+					<input class="col h-100 my-auto" type="checkbox" name="autoriserNotifications">
 				</div>
 
 
@@ -76,10 +83,10 @@
 				<br>
 
 			</form>
-			<a class=""	 data-bs-toggle="modal" data-bs-target="#changermail">
+			<a class="" data-bs-toggle="modal" data-bs-target="#changermail">
 				<p class="mt-4">Changer d'adresse mail</p>
 			</a>
-			
+
 			<a href="index.php?controller=utilisateur&methode=afficherpageMDPOublier">
 				<p class="mt-2">Changer de mot de passe</p>
 			</a>
@@ -108,7 +115,7 @@
 
 								<input type="submit" class="btn btn-primary" value='valider'></input>
 
-							</form>
+						</form>
 					</div>
 				</div>
 			</div>
