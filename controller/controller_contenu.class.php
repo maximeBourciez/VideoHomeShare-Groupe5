@@ -12,7 +12,7 @@ class ControllerContenu extends Controller {
         $tmdbId = isset($_GET['tmdb_id']) ? intval($_GET['tmdb_id']) : null;
         if ($tmdbId) {
             // Initialiser l'API TMDB
-            $tmdbApi = new TmdbAPI('a2096553592bde8ead1b2a0f2fa59bc0');
+            $tmdbApi = new TmdbAPI(TMDB_API_KEY);
             
             // Récupérer les données du film
             $movieData = $tmdbApi->getMovieById($tmdbId);

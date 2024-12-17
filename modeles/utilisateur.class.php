@@ -18,7 +18,7 @@ class Utilisateur{
     private ?string $urlImageBanniere;
     
     // Constructeur
-    function __construct(?string $id = null, ?string $pseudo = null, ?string $nom = null, ?string $mail = null, ?string $mdp = null, ?string $role = null, ?string $urlImageProfil = null, ?string $urlImageBanière = null){
+    function __construct(?string $id = null, ?string $pseudo = null, ?string $nom = null, ?string $mail = null, ?string $mdp = null, ?string $role = null, ?string $urlImageProfil = null, ?string $urlImageBanniere = null){
         $this->id = $id;
         $this->pseudo = $pseudo;
         $this->nom = $nom;

@@ -11954,7 +11954,6 @@ body {
   font-size: 1.2rem; /* Taille de l'icône */
 }
 
-
 .custom-select-wrapper {
   position: relative;
   width: 100%;
@@ -12009,6 +12008,7 @@ body {
 
 .custom-select.open .custom-select-dropdown {
   display: block;
+}
 
 .theme-tag {
   text-align: center;
@@ -12088,7 +12088,6 @@ body {
     height: 40px;
     margin: 0 10px;
   }
-
 }
 @media (max-width: 992px) {
   .movie-content {
@@ -12119,7 +12118,6 @@ body {
 }
 @media (max-width: 576px) {
   .movie-info__genres {
-    margin-top: 15px;
     flex-wrap: wrap;
     justify-content: center;
   }

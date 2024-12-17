@@ -15,3 +15,10 @@ website:
   language: FR
   logo: images/LOGO_V1.png
   logo_flag: images/flag_fr.png
+  website_link: http://lakartxela.iutbayonne.univ-pau.fr/~mbourciez/VHS/ 
+
+# Constantes de l'api
+tmdb:
+  api_key: "a2096553592bde8ead1b2a0f2fa59bc0"
+  base_url: "https://api.themoviedb.org/3"
+  image_base_url: "https://image.tmdb.org/t/p/original"

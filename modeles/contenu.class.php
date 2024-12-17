@@ -1,18 +1,14 @@
 <?php 
 
-enum TypeContenu {
-    case Episode;
-    case Film;
-}
 
-class Contenu{
+class Contenu{   
     private ?int $id;
     private ?string $titre;
     private ?DateTime $date;
     private ?string $description;
     private ?string $DescriptionLongue;
-    private ?string $lienAffiche;;
-    private ?TypeContenu $type;
+    private ?string $lienAffiche;
+    private ?string $type;
     private ?string $duree;
   
     //constructeur
@@ -79,11 +75,11 @@ class Contenu{
         $this->duree = $duree;
     }
     //get type
-    public function getType(): ?TypeContenu{
+    public function getType(): ?string{
         return $this->type;
     }
     // set type
-    public function setType(?TypeContenu $type): void{
+    public function setType(?string $type): void{
         $this->type = $type;
     }
 
