@@ -6,10 +6,10 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 	<main class="content row flex-grow-1">
 
-		<img src="{{ utilisateur.urlImageBaniere}}" alt="bagnede l'utilisateur {{utilisateur.pseudo}}" style=" width :100%;  max-height: 13em;  min-height: 3m;">
+		<img src="{{ utilisateur.urlImageBaniere}}" alt="bannière de l'utilisateur {{utilisateur.pseudo}}" style=" width :100%;  max-height: 13em;  min-height: 3m;">
 		<div class="row mt-3">
-			<div class="col-2 ">
-				<img src="{{ utilisateur.urlImageProfil}}" alt="imge de profilutilisateur l'utilisateur {{utilisateur.pseudo}}" style=" width :100%; max-width: 10em; max-height: 10em; min-width: 3em; min-height: 3m;" class=" d-block ps-2 rounded-circle  m-auto">
+			<div class="col-2 d-flex align-items-center justify-content-center">
+				<img src="{{ utilisateur.urlImageProfil}}" alt="image de profil de l'utilisateur {{utilisateur.pseudo}}" style=" width :100%; max-width: 10em; max-height: 10em; min-width: 3em; min-height: 3m;" class=" d-block ps-2 rounded-circle  m-auto">
 			</div>
 			<div class=" row row-cols-1 col px-0">
 				<h2 class=" mt-auto mb-0 ">{{utilisateur.pseudo}}</h2>
@@ -17,15 +17,15 @@
 			</div>
 		</div>
 
-		<div class="row row-cols-3 w-75 mx-auto">
+		<div class="row row-cols-sm-3 row-cols-1 w-75 mx-auto ">
 			<div>
-				<a href="index.php?controller=utilisateur&methode=show&id_utilisateur={{utilisateur.getId()}}" class="btn btn-primary w-100">A propos</a>
+				<a href="index.php?controller=utilisateur&methode=show&id_utilisateur={{utilisateur.getId()}}" class="btn btn-primary w-100 mb-2">A propos</a>
 			</div>
 			<div>
-				<a href="index.php?controller=utilisateur&methode=notification&id_utilisateur={{utilisateur.getId()}}" class="btn btn-primary  w-100">Vos notifications</a>
+				<a href="index.php?controller=utilisateur&methode=notification&id_utilisateur={{utilisateur.getId()}}" class="btn btn-primary  w-100 mb-2">Vos notifications</a>
 			</div>
 			<div>
-				<a href="index.php?controller=utilisateur&methode=edit" class="btn btn-primary  w-100">Modifier mon profil</a>
+				<a href="index.php?controller=utilisateur&methode=edit" class="btn btn-primary  w-100 mb-2">Modifier mon profil</a>
 			</div>
 		</div>
 		<div class="text-center col-12 col-md-8 col-lg-6 mx-auto p-4 bg-mydark text-white rounded my-5">
@@ -60,11 +60,11 @@
 					</label>
 					<input type="file" name="urlImageBaniere" class="form-control" accept=".png, .jpg, .svg, .webp">
 				</div>
-				<div class="form-group mb-3">
-					<label class="d-block text-start mb-0">
+				<div class="form-group my-4 row  ">
+					<label class=" text-start mb-0 col">
 						autoriser les notifications
 					</label>
-					<input type="checkbox" name="autoriserNotifications">
+					<input  class="col h-100 my-auto" type="checkbox" name="autoriserNotifications">
 				</div>
 
 
@@ -72,10 +72,10 @@
 				<br>
 
 			</form>
-			<a data-bs-toggle="modal" data-bs-target="#changermail">
-				<p class="mt-2">Changer d'adresse mail</p>
+			<a class=""	 data-bs-toggle="modal" data-bs-target="#changermail">
+				<p class="mt-4">Changer d'adresse mail</p>
 			</a>
-			<br>
+			
 			<a href="index.php?controller=utilisateur&methode=afficherpageMDPOublier">
 				<p class="mt-2">Changer de mot de passe</p>
 			</a>
@@ -86,7 +86,7 @@
 					<div class="modal-content bg-mydark" style="border: 1px solid #F2AC0F;">
 
 						<div class="modal-header border-bottom-0">
-							<button type="button" class="btn-close " style="color: #fff;" data-bs-dismiss="modal" aria-label="Close"></button>
+							<button type="button" class="btn-close btn-close-white " data-bs-dismiss="modal" aria-label="Close"></button>
 						</div>
 						<div class="modal-body">
 							<form method="post" action="index.php?controller=utilisateur&methode=changerMail">

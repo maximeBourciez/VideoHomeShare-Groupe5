@@ -31,7 +31,14 @@ try  {
         throw new Exception('La méthode n\'est pas définie');
     }
 
+
     // Créer le contrôleur approprié
+    if ( isset($_SESSION['utilisateur'])) {
+        $twig->addGlobal('utilisateurConnecte', $_SESSION['utilisateur']);
+    }else {
+        $twig->addGlobal('utilisateurConnecte', null);
+    }
+
     $controller = ControllerFactory::getController($controllerName, $loader, $twig);
     $controller->call($methode);
 

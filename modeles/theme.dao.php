@@ -1,47 +1,99 @@
 <?php
 
-class ThemeDAO{
+/**
+ * Classe Data Access Object (DAO) pour gérer les thèmes dans la base de données.
+ * 
+ * Cette classe fournit des méthodes pour interagir avec la table des thèmes,
+ * notamment pour effectuer des recherches et créer des objets Theme.
+ */
+class ThemeDAO {
+    /**
+     * @var PDO|null $pdo Instance PDO pour l'accès à la base de données.
+     */
     private ?PDO $pdo;
 
-    public function __construct(?PDO $pdo = null){
+    /**
+     * Constructeur de la classe ThemeDAO.
+     * 
+     * @param PDO|null $pdo Instance PDO (optionnelle) pour l'accès à la base de données.
+     */
+    public function __construct(?PDO $pdo = null) {
         $this->pdo = $pdo;
     }
 
-    //Encapsulation
-    //Getter
-    public function getPdo(): ?PDO{
+    /**
+     * Obtient l'instance PDO associée à cette DAO.
+     * 
+     * @return PDO|null Instance PDO actuelle.
+     */
+    public function getPdo(): ?PDO {
         return $this->pdo;
     }
 
-    //Setter
-    public function setPdo($pdo): void{
+    /**
+     * Définit l'instance PDO associée à cette DAO.
+     * 
+     * @param PDO|null $pdo Nouvelle instance PDO.
+     * @return void
+     */
+    public function setPdo(?PDO $pdo): void {
         $this->pdo = $pdo;
     }
 
-    //Methodes
-    //A tester quand la BD sera mise en place
-    //Methodes find
-    public function findAssoc(?int $id): ?array
-    {
-        $sql="SELECT * FROM ".DB_PREFIX."theme WHERE id= :id";
+    /**
+     * Recherche un thème par son identifiant.
+     * 
+     * @param int|null $id Identifiant du thème à rechercher.
+     * @return Theme|null Thème correspondant ou null si introuvable.
+     */
+    public function find(?int $id): ?Theme{
+        $sql="SELECT * FROM ".DB_PREFIX. "theme WHERE id= :id";
         $pdoStatement = $this->pdo->prepare($sql);
         $pdoStatement->execute(array("id"=>$id));
-        $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
+        $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Theme');
         $theme = $pdoStatement->fetch();
-        return $theme;
-    }
-    //But : Trouve une theme en fonction de son identifiant - Version Assoc
 
-    public function findAllAssoc(){
-        $sql="SELECT * FROM ".DB_PREFIX."theme";
+        return $theme;
+    }    
+
+    /**
+     * Recherche tous les thèmes.
+     * 
+     * @return Theme[] Liste des thèmes.
+     */
+    public function findAll(){
+        $sql="SELECT * FROM ".DB_PREFIX. "theme";
         $pdoStatement = $this->pdo->prepare($sql);
         $pdoStatement->execute();
-        $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
+        $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Theme');
         $theme = $pdoStatement->fetchAll();
+
         return $theme;
     }
-    //But : Trouve toutes les themes - Version Assoc
 
+
+    /**
+     * Hydrate un tableau associatif en un objet Theme.
+     * 
+     * @param array $data Tableau associatif contenant les données d'un thème.
+     * 
+     * @return Theme Instance de Theme créée à partir des données.
+     */
+    public function hydrate(array $data): Theme {
+        return new Theme(
+            $data['id'] ?? null,
+            $data['nom'] ?? null
+        );
+    }
+
+
+    /**
+     * Méthode de récupération des thèmes pour un contenu par son id
+     * 
+     * @param int $contenuID Identifiant du contenu concerné
+     * 
+     * @return array Liste des thèmes du contenu
+     */
     public function findThemesByContenuId(int $contenuId): array {
         $sql = "SELECT t.* 
                 FROM " . DB_PREFIX . "theme t
@@ -55,42 +107,28 @@ class ThemeDAO{
     
         return $themes;
     }
-    //But : Trouve les themes en fonction de l'identifiant du contenu
 
-    public function findThemesByCollectionId(int $collectionId): array {
-        $sql = "SELECT t.* 
-                FROM " . DB_PREFIX . "theme t
-                INNER JOIN " . DB_PREFIX . "caracteriserCollection cc ON t.idTheme = cc.idTheme
-                WHERE cc.idCollection = :collectionId";
-    
-        $pdoStatement = $this->pdo->prepare($sql);
-        $pdoStatement->execute(['collectionId' => $collectionId]);
-        $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Theme');
-        $themes = $pdoStatement->fetchAll();
-    
-        return $themes;
-    }
-
-    //Methodes hydrate
-    public function hydrate($tableauAssoc): ?Theme
-    {
-        $theme = new Theme($tableauAssoc['id'], $tableauAssoc['nom']);
-
-        return $theme;
-    }
-    //But : Créer une theme avec les valeurs assignées aux attributs correspondants
-
-    public function hydrateAll($tableau): ?array{
+    /**
+     * Hydrate une liste de tableaux associatifs en une liste d'objets Theme.
+     * 
+     * @param array $dataList Liste de tableaux associatifs contenant les données des thèmes.
+     * @return Theme[] Liste des instances de Theme créées.
+     */
+    public function hydrateAll(array $dataList): array {
         $themes = [];
-        foreach($tableau as $tableauAssoc){
-            $theme = $this->hydrate($tableauAssoc);
-            $themes[] = $theme;
+        foreach ($dataList as $data) {
+            $themes[] = $this->hydrate($data);
         }
-
         return $themes;
     }
-    //But : Créer les themes avec les valeurs assignées aux attributs correspondants
-
+    
+  /**
+  * Crée un Thème en BD si il n'existe pas
+  *
+  * @param Theme $theme Theme à vérifier
+  *
+  * @return Theme|null
+  */
     public function createIfNotExists(Theme $theme): ?Theme {
         // Vérifie si le thème existe déjà
         $sql = "SELECT * FROM " . DB_PREFIX . "theme WHERE nom = :nom";
@@ -110,6 +148,14 @@ class ThemeDAO{
         return new Theme($this->pdo->lastInsertId(), $theme->getNom());
     }
 
+    /**
+    * Focntion pour associer un thème à un contenu
+    *
+    * @param int $themeId Identifiant du thème
+    * @param int $contenuId Identifiant du contenu
+    *
+    * @return bool Indicateut de fonctionnement de la méthode
+    */
     public function associateThemeWithContenu(int $themeId, int $contenuId): bool {
         $sql = "INSERT INTO " . DB_PREFIX . "caracteriserContenu (idTheme, idContenu) 
                 VALUES (:themeId, :contenuId)";
@@ -122,4 +168,3 @@ class ThemeDAO{
     }
 }
 
-?>

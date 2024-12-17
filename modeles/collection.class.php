@@ -1,5 +1,10 @@
 <?php
 
+  
+enum TypeCollection{
+    case Saga;
+    case Serie;
+}
 /**
  * Classe représentant une collection.
  *
@@ -16,7 +21,7 @@ class Collection {
     /**
      * @var string|null $type Type de la collection.
      */
-    private ?string $type; 
+    private ?TypeCollection $type; 
     
     /**
      * @var string|null $nom Nom de la collection.
@@ -40,6 +45,17 @@ class Collection {
      * @param string|null $lienAffiche Lien vers l'affiche de la collection (par défaut null).
      */
     public function __construct(?int $id = null, ?string $type = null, ?string $nom = null, ?string $lienAffiche = null){
+
+
+
+class Collection{
+    // Attributs 
+    private ?int $id; //Identifiant de la collection
+    private ?TypeCollection $type; //Type de collection
+    private ?string $nom; //Nom de la collection
+
+    // Constructeur
+    public function __construct(?int $id = null, ?TypeCollection $type = null, ?string $nom = null){
         $this->id = $id;
         $this->type = $type;
         $this->nom = $nom;
@@ -54,13 +70,8 @@ class Collection {
     public function getId(): ?int{
         return $this->id;
     }
-    
-    /**
-     * Récupère le type de la collection.
-     *
-     * @return string|null Le type de la collection.
-     */
-    public function getType(): ?string{
+
+    public function getType(): ?TypeCollection{
         return $this->type;
     }
     
@@ -94,9 +105,10 @@ class Collection {
     /**
      * Définit le type de la collection.
      *
-     * @param string|null $type Le type de la collection.
+     * @param TypeCollection|null $type Le type de la collection.
      */
-    public function setType(?string $type) : void{
+
+    public function setType(?TypeCollection $type) : void{
         $this->type = $type;
     }
     
