@@ -95,7 +95,7 @@ class ControllerUtilisateur extends Controller
             $this->comprisEntre($mail, 50, 3, "Le mail doit contenir ", "inscription") && $this->comprisEntre($nom, 50, 3, "Le nom doit contenir ", "inscription") &&
             $this->comprisEntre($mdp, null, 8, "Le mot de passe doit contenir ", "inscription") && $this->comprisEntre($vmdp, null, 8, "Le mot de passe de confirmation doit contenir ", "inscription")
             && $this->estRobuste($mdp, "inscription") && $this->ageCorrect($date, 13) && $this->mailCorrectExistePas($mail, "inscription") && $this->egale($mdp, $vmdp, array('messagederreur' => "Les mots de passe ne sont pas identiques"), "inscription")
-            && $this->idExistePas($id, "inscription")
+            && $this->idExistePas($id, "inscription") && !$this->verificationDeNom($id, "inscription") && !$this->verificationDeNom($pseudo, "inscription") && !$this->verificationDeNom($nom, "inscription")
         ) {
 
             //cripter le mot de passe
@@ -276,7 +276,7 @@ class ControllerUtilisateur extends Controller
         if (
             $this->comprisEntre($id, 20, 3, "L'identifiant doit contenir ", "modifierUtilisateur", $utilisateur) && $this->comprisEntre($pseudo, 50, 3, "Le pseudo doit contenir ", "modifierUtilisateur", $utilisateur) &&
             $this->comprisEntre($nom, 50, 3, "Le nom doit contenir ", "modifierUtilisateur", $utilisateur)  && $this->fichierTropLourd($_FILES['urlImageProfil'], "profil", $utilisateur) &&
-            $this->fichierTropLourd($_FILES['urlImageBaniere'], "baniere", $utilisateur)
+            $this->fichierTropLourd($_FILES['urlImageBaniere'], "baniere", $utilisateur)&& !$this->verificationDeNom($id, "modifierUtilisateur") && !$this->verificationDeNom($pseudo, "modifierUtilisateur") && !$this->verificationDeNom($nom, "modifierUtilisateur")
         ) {
             // verifier si l'id n'est pas déjà utilisé
             if ($id == $utilisateur->getId() || $this->idExistePas($id, "modifierUtilisateur", $utilisateur)) {
@@ -716,4 +716,22 @@ class ControllerUtilisateur extends Controller
     }
 
     
+
+    // Fonction pour vérifier si un texte contient des variantes de profanité avec des chiffres
+    public function verificationDeNom($text, $page) : bool {
+
+        $profanity_list = json_decode(file_get_contents("config/nomincorect.json"), true); // Vous pouvez ajouter d'autres mots
+        // On parcourt chaque mot de profanité
+        foreach ($profanity_list['nom'] as $word) {
+            // Expression régulière pour détecter le mot de profanité avec des chiffres ou autres caractères spéciaux
+            $pattern = '/' . preg_quote($word, '/') . '[0-9]*/i';  
+            if (preg_match($pattern, $text)) {
+                $template = $this->getTwig()->load("$page.html.twig");
+                echo $template->render(array('messagederreur' => "Le texte contient de la profanité"));
+                return true; // Le texte contient de la profanité
+            }
+        }
+        return false; // Aucun mot de profanité trouvé
+    }
+
 }
