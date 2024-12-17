@@ -1,21 +1,21 @@
 {% extends 'base_template.html.twig' %}
 
 {% block title %}
-	VHS | Quizz
+	VHS | Liste des quizz
 {% endblock %}
 
 
 {% block content %}
 
-	<main class="">
+	<main>
 		<div class="container">
 			<br>
 			<div class="row text-center">
 				<div class="col">
-					<a href="index.php?controller=quizz&methode=creerQuizz&idQuizz={{ quiz.idUtilisateur }}" class="btn btn-myprimary my-2 mx-auto py-4">Créer un quizz</a>
+					<a href="index.php?controller=quizz&methode=creerQuizz&idUtilisateur={{ quiz.idUtilisateur }}" class="btn btn-myprimary my-2 mx-auto py-4">Créer un quizz</a>
 				</div>
 				<div class="col">
-					<a href="index.php?controller=quizz&methode=gererQuizz&idQuizz={{ quiz.idUtilisateur }}" class="btn btn-myprimary my-2 mx-auto py-4">Gérer mes quizz</a>
+					<a onclick="gererQuizz()" class="btn btn-myprimary my-2 mx-auto py-4">Gérer mes quizz</a>
 				</div>
 			</div>
 			<br>
@@ -56,6 +56,8 @@
 												<p class="card-text">{{ quiz.description }}</p>
 												<p class="card-text">Difficulté : {{ quiz.difficulte }}</p>
 												<p class="card-text"><small class="text-body-secondary">Fait le {{ quiz.dateC }}</small></p>
+												    <div id="gerer-quizz-boutons">
+        											</div>
 											</div>
 										</div>
 									</div>

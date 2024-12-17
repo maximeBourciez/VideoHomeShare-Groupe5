@@ -1,0 +1,25 @@
+{% extends 'base_template.html.twig' %}
+
+{% block title %}
+	VHS | Création d'un quizz
+{% endblock %}
+
+
+{% block content %}
+    <main>
+        <div class="container">
+			<br>
+            <h3>Création d'un quizz :</h3>
+            <div class="container">
+                <h4>Titre du quizz :</h4>
+                <input type="text" id="titre" name="titre">
+                <h4>Description :</h4>
+                <input type="text" id="desc" name="desc">
+                <h4>Difficulté : (1 = Facile, 2 = Moyen, 3 = Difficile, 4 = Expert)</h4>
+                <input type="number" id="difficulte" name="difficulte" min="1" max="4">
+                <h4>Nombre de questions (minimum 4) :</h4>
+                <input type="number" id="nbQuestions" name="nbQuestions" min="4">
+            </div>
+        </div>
+    </main>
+{% endblock %}

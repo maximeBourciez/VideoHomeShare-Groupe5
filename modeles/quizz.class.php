@@ -6,17 +6,17 @@ class Quizz {
     private ?int $id;
     private ?string $titre;
     private ?string $description;
-    private ?string $difficulte;
-    private ?string $dateC;
+    private ?int $difficulte; //Prend une valeur entière entre 1 à 4
+    private ?string $date;
     private ?string $idUtilisateur;
 
     // Constructeur
-    function __construct(?int $id = null, ?string $titre = null, ?string $description = null, ?string $difficulte = null, ?string $dateC = null, ?string $idUtilisateur = null){
+    function __construct(?int $id = null, ?string $titre = null, ?string $description = null, ?int $difficulte = null, ?string $date = null, ?string $idUtilisateur = null){
         $this->id = $id;
         $this->titre = $titre;
         $this->description = $description;
         $this->difficulte = $difficulte;
-        $this->dateC = $dateC;
+        $this->date = $date;
         $this->idUtilisateur = $idUtilisateur;
     }
 
@@ -53,9 +53,9 @@ class Quizz {
 
     /**
      * Get the value of difficulte
-     * @return string
+     * @return int
      */
-    public function getDifficulte(): ?string
+    public function getDifficulte(): ?int
     {
         return $this->difficulte;
     }
@@ -64,19 +64,19 @@ class Quizz {
      * Get the value of date
      * @return string
      */
-    public function getDateC(): ?string
+    public function getDate(): ?string
     {
-        return $this->dateC;
+        return $this->date;
     }
 
     /**
      * Get the value of idUtilisateur
      * @return string
      */
-    public function getIdUtilisateur(): ?string
+    public function getIdUtilisateur() : ?string
     {
-        return $this->idUtilisateur;
-    }    
+        return $this->getIdUtilisateur;
+    }
 
     // Setters
 
@@ -112,10 +112,10 @@ class Quizz {
 
     /**
      * Set the value of difficulte
-     * @param string $difficulte
+     * @param Difficulte $difficulte
      * @return void
      */
-    public function setDifficulte(string $difficulte): void
+    public function setDifficulte(Difficulte $difficulte): void
     {
         $this->difficulte = $difficulte;
     }
@@ -125,20 +125,20 @@ class Quizz {
      * @param string $date
      * @return void
      */
-    public function setDateC(string $dateC): void
+    public function setDate(string $date): void
     {
-        $this->dateC = $dateC;
+        $this->date = $date;
     }
 
     /**
-     * Get the value of idUtilisateur
-     * @param string $idUtilisateur
+     * Set the value of idUtilisateur
+     * @param int $idUtilisateur
      * @return void
      */
     public function setIdUtilisateur(string $idUtilisateur): void
     {
         $this->idUtilisateur = $idUtilisateur;
-    } 
+    }
 
     // Méthodes
 

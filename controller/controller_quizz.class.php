@@ -75,18 +75,46 @@ class ControllerQuizz extends Controller {
         ]);
     }
 
-    public function creerQuizz(){
+    public function creerQuizz(){ 
+        $idQuizz = $_GET['idQuizz'];
         $idUtilisateur = $_GET['idUtilisateur']; 
         //A faire
-        
-        // Rendre le template avec les infos
-        echo $this->getTwig()->render('listeQuizz.html.twig', [
-            'quizz' => $quizz
+
+        if ($idQuizz != NULL){
+            // Rendre le template avec les infos
+            echo $this->getTwig()->render('creationQuizz.html.twig', [
+                'quizz' => $quizz
                 
-        ]);
+            ]);
+        }
+        else{
+            echo $this->getTwig()->render('creationQuizz.html.twig');
+        }
+        
+
     }
 
-    public function gererQuizz(){
+    public function supprimerQuizz(){
+        $idQuizz = $_GET['idQuizz'];
+        $quizzDAO = new QuizzDAO($this->getPdo());
+        $quizzDAO->delete($idQuizz);
+
+        //Redirection
         listerQuizz();
     }
+
+    public function modifierQuizz(){
+        creerQuizz();
+    }
+
+    public function gererQuizz() : String{
+        $modifURL = "index.php?controller=quizz&methode=modifierQuizz&idQuizz={{ quiz.id }}";
+        $supprURL = "index.php?controller=quizz&methode=supprimerQuizz&idQuizz={{ quiz.id }}";
+
+        return "
+        <a href='{$modifURL}' class='btn btn-myprimary'>Modifier</a>
+        <a href='{$supprURL}' class='btn btn-myprimary' style='margin-left: 10px;'>Supprimer</a>
+        ";
+    }
+
 }
