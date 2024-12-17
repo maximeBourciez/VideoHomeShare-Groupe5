@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 // Inclure tous les modèles & contrôleurs
 require_once "include.php";
 
@@ -30,6 +30,12 @@ try  {
 
     if ($methode == '' ){
         throw new Exception('La méthode n\'est pas définie');
+    }
+
+    if ( isset($_SESSION['utilisateur'])) {
+        $twig->addGlobal('utilisateurConnecte', $_SESSION['utilisateur']);
+    }else {
+        $twig->addGlobal('utilisateurConnecte', null);
     }
 
     

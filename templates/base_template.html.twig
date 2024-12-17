@@ -1,106 +1,151 @@
 <!DOCTYPE html>
 <html lang="{{ constant('WEBSITE_LANGUAGE')}}">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="CSS/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
-    <title>{{ constant('WEBSITE_TITLE_LONG')}}</title>
-    <style>
-        /* S'assure que le body occupe toute la hauteur */
-        html, body {
-            height: 100%;
-        }
-    </style>
-</head>
-<body class="d-flex flex-column bg-mylight">
-    <header>
-        			<nav
-				class="navbar navbar-expand-lg navbar-mydark py-2">
-				<!-- Logo et le bouton menu -->
-				<div class="d-flex flex-row">
-					<a class="navbar-brand d-flex align-items-center ms-5" href="#">
-						<img src="{{ constant('WEBSITE_LOGO') }}" height="95" width="155" alt="VHS Logo">
-					</a>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="icon" href="{{ constant('WEBSITE_LOGO') }}">
+		<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+		<link rel="stylesheet" href="CSS/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
+		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
 
+		<title>{% block title %} {{ constant('WEBSITE_TITLE_LONG')}} {% endblock %}</title>
+		<style>
+			html,
+			body {
+				overflow-x: hidden; /* Empêche le scroll horizontal */
+				margin: 0; /* Retirer toute marge par défaut */
+				font-family: 'Montserrat', sans-serif;
+			}
+		</style>
+
+		
+
+	</head>
+	<body class="d-flex flex-column min-vh-100 bg-mylight">
+		<header>
+			<nav
+				class="navbar navbar-expand-lg navbar-mydark justify-content-center">
+				<!-- Section gauche -->
+				<div class="navbar-start d-flex align-items-center">
+					<a class="navbar-brand d-none d-lg-flex align-items-center ms-lg-5" href="index.php">
+						<img src="{{ constant('WEBSITE_LOGO') }}" class="img-fluid website-logo" alt="VHS Logo">
+					</a>
+					<button class="navbar-toggler bi bi-list" type="button" data-bs-toggle="collapse" data-bs-target="#submenu" aria-expanded="false" aria-label="Toggle navigation"></button>
 					<div class="collapse navbar-collapse" id="navbarContent">
-						<div
-							class="d-flex align-items-center ms-lg-2">
-							<!-- Bouton Menu qui ouvre le menu secondaire -->
-							<button class="btn btn-myprimary bi bi-list" type="button" data-bs-toggle="collapse" data-bs-target="#submenu" aria-expanded="false" aria-controls="submenu">Menu</button>
+						<div class="d-flex align-items-center ms-lg-2">
+							<button class="btn btn-myprimary bi bi-list" type="button" data-bs-toggle="collapse" data-bs-target="#submenu" aria-expanded="false">
+								Menu
+							</button>
 						</div>
 					</div>
 				</div>
 
-				<!-- Bar de recherche -->
-				<form class="d-flex mx-auto">
-					<input class="form-control me-2" style="width: 700px;" type="search" placeholder="Barre de recherche" aria-label="Search">
-					<button class="btn btn-myprimary btn-search" type="submit">
-						<i class="bi bi-search"></i>
-					</button>
+				<!-- Section centrale (barre de recherche) -->
+				<form class="search-form-container flex-grow-1">
+					<div class="input-group">
+						<input class="form-control fw-light" type="search" placeholder="Barre de recherche" aria-label="Search">
+						<button class="btn bg-myprimary" type="submit">
+							<i class="bi bi-search"></i>
+						</button>
+					</div>
 				</form>
 
-				<!-- Bouton de connexion et de langue -->
-				<div class="d-flex flex-row align-items-center">
-					<a href="index.php?controller=utilisateur&methode=connexion" ><button class="btn btn-myprimary me-4" >Connexion</button></a>
-					<a class="navbar-brand d-flex align-items-center text-white" href="#">
-						<p class="mb-0 me-2">{{ constant('WEBSITE_LANGUAGE')}}</p>
-						<img src="{{ constant('WEBSITE_LOGO_FLAG')}}" height="24" alt="FR">
-					</a>
-				</div>
-			</nav>
 
-			<!-- Menu secondaire avec les 5 boutons -->
-			<div class="collapse" id="submenu">
-				<div class="d-flex flex-row justify-content-center py-4 bg-mydark" style="gap:75px; border-top: 2px solid #F2AC0F; height: 100px;">
-					<button class="btn btn-myprimary">Forum</button>
-					<button class="btn btn-myprimary">Watch2Gather</button>
-					<button class="btn btn-myprimary">WatchList</button>
-					<button class="btn btn-myprimary">Quizz</button>
+  <!-- Section droite -->
+        <div class="navbar-end d-flex align-items-center gap-3 me-lg-4">
+			{% if utilisateurConnecte is null %}
+				<a href="index.php?controller=utilisateur&methode=connexion">
+					<button class="btn btn-myprimary">Connexion</button>
+				</a>
+			{% else %}
+				<a href="index.php?controller=utilisateur&methode=show">
 					<button class="btn btn-myprimary">Profil</button>
+				</a>
+			{% endif %}
+
+            <a class="navbar-brand d-flex align-items-center text-white mb-0" href="#">
+                <p class="mb-0 me-2 d-none d-lg-block">{{ constant('WEBSITE_LANGUAGE')}}</p>
+                <img src="{{ constant('WEBSITE_LOGO_FLAG')}}" height="24" alt="FR">
+            </a>
+        </div>
+    </nav>
+
+
+			<!-- Menu secondaire -->
+			<div class="collapse" id="submenu">
+				<div class="bg-mydark border-top border-2 border-myprimary py-4">
+					<div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 gap-md-5">
+						<a href="index.php?controller=fil&methode=listerThreads">
+							<button class="btn btn-myprimary">Forum</button>
+						</a>
+						<a href="#">
+							<button class="btn btn-myprimary">Watch2Gether</button>
+						</a>
+						<a href="#">
+							<button class="btn btn-myprimary">WatchList</button>
+						</a>
+						<a href="#">
+							<button class="btn btn-myprimary">Quizz</button>
+						</a>
+						<a href="index.php?controller=utilisateur&methode=show">
+							<button class="btn btn-myprimary">Profil</button>
+						</a>
+					</div>
 				</div>
 			</div>
+		</header>
 
-    </header>
-    
-    
-    {% block content %}{% endblock %}
 
-    
-	<!-- Définition des trois bars de couleurs -->
+		{% block content %}
+		
+		
+		
+		{% endblock %}
 
-<div class="container-fluid color-bars">
-    <div class="row">
-        <div class="col-12 bg-myprimary py-2 mb-2"></div> <!-- Couleur de la première bande avec espace en bas -->
-        <div class="col-12 bg-mysecondary py-2 mb-2"></div> <!-- Couleur de la deuxième bande avec espace en bas -->
-        <div class="col-12 bg-mytercary py-2 mb-2"></div> <!-- Couleur de la troisième bande sans espace en bas -->
-    </div>
-</div>
+		<!-- Barres de couleurs -->
+		<div class="container-fluid p-0">
+			<div class="row g-2">
+				<div class="col-12 bg-myprimary py-2" style="height: 2vh;"></div>
+				<div class="col-12 bg-mysecondary py-2" style="height: 2vh;"></div>
+				<div class="col-12 bg-mytercary py-2 mb-2" style="height: 2vh;"></div>
+			</div>
+		</div>
 
-    <footer class="footer-bg bg-mydark mt-auto py-4">
-	<div class="d-flex flex-row justify-content-center text-white" style="gap:50px">
-	<p>À propos de VHS</p>
-	<p>Conditions d'utilisation</p>
-	<p>Politique de confidentialité</p>
-	<p>Politique de cookies</p>
-	</div>
-        <div class="d-flex flex-row justify-content-center" style="gap:25px">
-            <i>
-                <a href="https://www.facebook.com/"><img src="https://img.icons8.com/ios-glyphs/30/ffffff/facebook-new.png"/></a>
-            </i>
-            <i>
-                <a href="https://www.instagram.com/"><img src="https://img.icons8.com/ios-glyphs/30/ffffff/instagram-new.png"/></a>
-            </i>
-            <i>
-                <a href="https://twitter.com/"><img src="https://img.icons8.com/ios-glyphs/30/ffffff/twitter--v1.png"/></a>
-            </i>
-        </div>
-        <div class="d-flex justify-content-center">
-            <p class="text-white text-center">© 2024 VHS</p>
-        </div>
-    </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+		<!-- Footer -->
+		<footer class="bg-mydark mt-auto py-4">
+			<div class="container">
+				<div class="row text-center">
+					<div class="col-12">
+						<div class="d-flex flex-wrap justify-content-center text-white gap-3 mb-3">
+							<p class="mb-2">À propos de VHS</p>
+							<p class="mb-2">Conditions d'utilisation</p>
+							<p class="mb-2">Politique de confidentialité</p>
+							<p class="mb-2">Politique de cookies</p>
+						</div>
+					</div>
+					<div class="col-12">
+						<div class="d-flex justify-content-center gap-3 mb-3">
+							<a href="https://www.facebook.com/"><img src="https://img.icons8.com/ios-glyphs/30/ffffff/facebook-new.png" alt="Facebook" class="logo-facebook"/></a>
+							<a href="https://www.instagram.com/"><img src="https://img.icons8.com/ios-glyphs/30/ffffff/instagram-new.png" alt="Instagram" class="logo-instagram"/></a>
+							<a href="https://twitter.com/"><img src="https://img.icons8.com/ios-glyphs/30/ffffff/twitter--v1.png" alt="Twitter" class="logo-twitter"/></a>
+						</div>
+					</div>
+					<div class="col-12">
+						<p class="text-white mb-0">© 2024 VHS</p>
+					</div>
+				</div>
+			</div>
+		</footer>
+
+
+		{% block script %}
+			<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+		{% endblock %}
+
+	</body>
 </html>
+
+

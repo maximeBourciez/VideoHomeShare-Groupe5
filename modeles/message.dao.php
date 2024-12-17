@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 /**
  * @file message.dao.php
  * 
@@ -12,7 +13,8 @@
  * 
  * @author Maxime Bourciez <maxime.bourciez@gmail.com>
  */
-class MessageDAO{
+class MessageDAO
+{
     // Attiributs 
     /**
      * @var PDO|null $pdo Connexion à la BD
@@ -25,7 +27,8 @@ class MessageDAO{
      * 
      * @param PDO|null $pdo Connexion à la base de données
      */
-    public function __construct(?PDO $pdo = null){
+    public function __construct(?PDO $pdo = null)
+    {
         $this->pdo = $pdo;
     }
 
@@ -36,7 +39,8 @@ class MessageDAO{
      *
      * @return PDO|null Connexion à la base de données
      */
-    public function getPdo(): ?PDO{
+    public function getPdo(): ?PDO
+    {
         return $this->pdo;
     }
 
@@ -47,7 +51,8 @@ class MessageDAO{
      * @param PDO $pdo Connexion à la base de données
      * @return self
      */
-    public function setPdo(PDO $pdo): self{
+    public function setPdo(PDO $pdo): self
+    {
         $this->pdo = $pdo;
         return $this;
     }
@@ -60,40 +65,60 @@ class MessageDAO{
      * @param array $row Ligne de la base de données
      * @return Message Objet Message hydraté
      */
-    public function hydrate(array $row): Message{ 
-        // Récupération de l'utilisateur
+    public function hydrate(array $row): Message
+    {
+        $message = new Message();
+        $message->setIdMessage($row['idMessage']);
+        $message->setValeur($row['valeur']);
+        $message->setDateC(new DateTime($row['dateC']));
+        $message->setIdMessageParent($row['idMessageParent']);
+        $message->setNbLikes($row['like_count']);
+        $message->setNbDislikes($row['dislike_count']);
+
+        // Hydratation de l'utilisateur associé
         $user = new Utilisateur();
         $user->setId($row['idUtilisateur']);
         $user->setPseudo($row['pseudo']);
         $user->setUrlImageProfil($row['urlImageProfil']);
-        
-        // Récupération des valeurs
-        $id = $row['id'];
-        $valeur = $row['valeur'];
-        $nbLike = $row['nbLike'];
-        $nbDislike = $row['nbDislike'];
-        $date = $row['date'];
-        $id_message_parent = $row['id_message_parent'];
-        $id_fil = $row['idFil'];
+        $message->setUtilisateur($user);
 
-        // Retourner le message
-        return new Message($id, $valeur, $nbLike, $nbDislike, $date, $user, $id_message_parent, $id_fil);
-    } 
-
-    /**
-     * @brief Méthode d'hydratation de tous les messages
-     * 
-     * @param array $rows Tableau de lignes de la base de données
-     * @return array<Message> Tableau d'objets Message hydratés
-     */
-    function hydrateAll(array $rows): array{
-        $messages = [];
-        foreach($rows as $row){
-            $message = $this->hydrate($row);
-            array_push($messages, $message);  // Ajout du message au tableau 
-        }
-        return $messages;
+        return $message;
     }
+    /**
+     * @brief Méthode d'hydratation de tous les messages avec gestion des réponses
+     *
+     * @param array $rows Tableau de lignes récupérées de la base de données
+     * @return array<Message> Tableau d'objets Message hydratés, avec réponses associées
+     */
+    public function hydrateAll(array $rows): array
+    {
+        $messages = []; // Tous les messages indexés par leur ID
+        $messagesParents = []; // Tableau pour stocker uniquement les messages principaux
+
+        // Hydrater tous les messages et les indexer par ID
+        foreach ($rows as $row) {
+            $message = $this->hydrate($row);
+            $messages[$message->getIdMessage()] = $message;
+        }
+
+        // Lier les réponses à leurs parents
+        foreach ($messages as $message) {
+            if ($message->getIdMessageParent() === null) {
+                // Message sans parent -> c'est un message principal
+                $messagesParents[] = $message;
+            } else {
+                // Message avec parent -> ajouter comme réponse
+                $parentId = $message->getIdMessageParent();
+                if (isset($messages[$parentId])) {
+                    $messages[$parentId]->addReponse($message);
+                }
+            }
+        }
+
+        // Retourner uniquement les messages principaux (avec les réponses déjà attachées)
+        return $messagesParents;
+    }
+
 
 
     // Méthodes de recherche
@@ -103,7 +128,8 @@ class MessageDAO{
      * @return array<Message> Tableau d'objets Message
      * 
      */
-    public function listerMessages(): array{
+    public function listerMessages(): array
+    {
         $sql = "SELECT * FROM" . DB_PREFIX . "message";
         $stmt = $this->pdo->query($sql);
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
@@ -118,8 +144,9 @@ class MessageDAO{
      * @param integer $id
      * @return Message|null
      */
-    public function chercherMessageParId(int $id): ?Message{
-        $sql = "SELECT * FROM" . DB_PREFIX . "message WHERE id = :id";
+    public function chercherMessageParId(int $id): ?Message
+    {
+        $sql = "SELECT * FROM" . DB_PREFIX . "message  WHERE id = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -128,7 +155,8 @@ class MessageDAO{
     }
 
 
-    
+
+
     /**
      * @brief Méthode permettant de lister les messages d'un utilisateur par id_user
      *
@@ -137,16 +165,19 @@ class MessageDAO{
      * @param integer $id_user
      * @return array
      */
-    public function listerMessagesParIdUser(int $id_user): array{
-        $sql = "SELECT * FROM" . DB_PREFIX . "message WHERE id_user = :id_user";
+    public function listerMessagesParIdUser(?string $id_user): array
+    {
+        $sql = "SELECT * FROM " . DB_PREFIX . "message M join " . DB_PREFIX . "utilisateur U ON  M.idUtilisateur=U.idUtilisateur WHERE M.idUtilisateur = :id_user ORDER BY dateC DESC";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':id_user', $id_user, PDO::PARAM_INT);
+        $stmt->bindValue(':id_user', $id_user, PDO::PARAM_STR);
         $stmt->execute();
-        $stmt->setFetchMode(PDO::FETCH_CLASS, 'Message');
-        return $stmt->fetchAll();
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $messages = $stmt->fetchAll();
+
+        return ($this->hydrateAll($messages));
     }
 
-    
+
 
     /**
      * @brief Méthode de listing des messages par fil
@@ -157,75 +188,93 @@ class MessageDAO{
      * 
      * @return array<Message> Tableau d'objets Message
      */
-    
-     public function listerMessagesParFil(int $idFil): array {
-        $sql = "
-        SELECT m.*, u.idUtilisateur, u.pseudo, u.urlImageProfil, 
-               m2.valeur AS reponse_valeur, m2.idUtilisateur AS reponse_utilisateur, m2.dateC AS reponse_dateC
-        FROM " . DB_PREFIX . "message AS m
-        LEFT JOIN " . DB_PREFIX . "message AS m2 ON m.idMessage = m2.idMessageParent
-        INNER JOIN " . DB_PREFIX . "utilisateur AS u ON m.idUtilisateur = u.idUtilisateur
-        WHERE m.idFil = :idFil
-        ORDER BY 
-            m.idMessageParent IS NULL DESC,  
-            m.dateC ASC;                    
-        ";
-    
+
+    public function listerMessagesParFil(int $idFil): array
+    {
+        $sql = "SELECT m.*, u.*, like_count, dislike_count
+                FROM vhs_message m
+                LEFT JOIN (
+                                SELECT
+                                    idMessage,
+                                    SUM(CASE WHEN `reaction` = true THEN 1 ELSE 0 END) AS like_count,
+                                    SUM(CASE WHEN `reaction` = false THEN 1 ELSE 0 END) AS dislike_count
+                                FROM vhs_reagir
+                                GROUP BY idMessage
+                            ) AS ld1 ON m.idMessage = ld1.idMessage
+                LEFT JOIN vhs_utilisateur u ON m.idUtilisateur = u.idUtilisateur
+                WHERE m.idFil = :idFil;";
+
+
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':idFil', $idFil, PDO::PARAM_INT);
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $messages = $stmt->fetchAll();
-    
+
         // Hydrate les messages
-        $hydratedMessages = [];
-        foreach ($messages as $row) {
-            // Hydratation d'un message parent
-            $message = new Message();
-            $message->setIdMessage($row['idMessage']);
-            $message->setValeur($row['valeur']);
-            $message->setNbLike($row['nblike']);
-            $message->setNbDislike($row['nbdislike']);
-            $message->setDateC(new DateTime($row['dateC']));
-            $message->setIdMessageParent($row['idMessageParent']);
-            
-            // Hydratation de l'utilisateur du message parent
-            $user = new Utilisateur();
-            $user->setId($row['idUtilisateur']);
-            $user->setPseudo($row['pseudo']);
-            $user->setUrlImageProfil($row['urlImageProfil']);
-            $message->setUtilisateur($user);
-    
-            // Ajouter une réponse s'il y en a
-            if ($row['reponse_valeur']) {
-                $reponse = new Message();
-                $reponse->setValeur($row['reponse_valeur']);
-                $reponse->setDateC(new DateTime($row['reponse_dateC']));  // Ajouter la date de la réponse
-               
-                // Hydratation de l'utilisateur de la réponse
-                $reponseUser = new Utilisateur();
-                $reponseUser->setId($row['reponse_utilisateur']);
-                $reponseUser->setPseudo($row['reponse_utilisateur'] ? $this->getUserPseudoById($row['reponse_utilisateur']) : 'Utilisateur inconnu');
-                $reponse->setUtilisateur($reponseUser);
-                
-                // Assigner la réponse au message
-                $message->setReponse($reponse);
-            }
-    
-            $hydratedMessages[] = $message;
-        }
-    
-        return $hydratedMessages;
+        return $this->hydrateAll($messages);
     }
-    
-    // Nouvelle méthode pour récupérer le pseudo de l'utilisateur de la réponse
-    private function getUserPseudoById(string $userId): string {
-        $sql = "SELECT pseudo FROM " . DB_PREFIX . "utilisateur WHERE idUtilisateur = :idUtilisateur";
+
+    /**
+     * @brief Méthode d'ajout d'une reponse dans un fil de discussion
+     * 
+     * @param int|null $idFil Identifiant du fil
+     * @param int|null $idMessageParent Identifiant du message parent
+     * @param string|null $message Contenu du message
+     * 
+     * @return void
+     */
+    public function ajouterMessage(?int $idFil, ?int $idMessageParent, ?string $message): void
+    {
+        // Récupérer l'id de luilisateur dans la session
+        $idUtilisateur = trim(unserialize($_SESSION['connecter'])->getId());
+
+        // Requête d'insertion
+        $sql = "INSERT INTO " . DB_PREFIX . "message ( valeur, dateC, idMessageParent, idFil, idUtilisateur) VALUES ( :valeur, NOW(), :idMessageParent, :idFil, :idUtilisateur)";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':idUtilisateur', $userId, PDO::PARAM_STR);
+        $stmt->bindValue(':idFil', $idFil, PDO::PARAM_INT);
+        $stmt->bindValue(':idMessageParent', $idMessageParent, PDO::PARAM_INT);
+        $stmt->bindValue(':valeur', $message, PDO::PARAM_STR);
+        $stmt->bindValue(':idUtilisateur', $idUtilisateur, PDO::PARAM_STR);
         $stmt->execute();
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $user ? $user['pseudo'] : 'Utilisateur inconnu';
     }
-    
+
+    /**
+     * @brief Méthode d'ajout d'une réaction à un message
+     * 
+     * @details Méthode permettant d'ajouter une réaction à un message. AJout d'un like ou d'un dislike selon la valeur de $reaction. Si jamais l'utilisateur a déjà réagi, la réaction est mise à jour.
+     * 
+     * @param int $idMessage Identifiant du message
+     * @param bool $reaction Réaction (true = like, false = dislike)
+     */
+    public function ajouterReaction(int $idMessage, bool $reaction): void
+    {
+        // Récupérer l'ID de l'utilisateur depuis la session
+        if (!isset($_SESSION['connecter'])) {
+            echo "Erreur : l'utilisateur n'est pas connecté.";
+            return;
+        }
+
+        $idUtilisateur = trim(unserialize($_SESSION['connecter'])->getId());
+
+        try {
+            // Préparer la requête SQL
+            $sql = "INSERT INTO " . DB_PREFIX . "reagir (idMessage, idUtilisateur, reaction) 
+                VALUES (:idMessage, :idUtilisateur, :reaction) 
+                ON DUPLICATE KEY UPDATE reaction = :reaction"; 
+
+            $stmt = $this->pdo->prepare($sql);
+
+            // Lier les valeurs
+            $stmt->bindValue(':idMessage', $idMessage, PDO::PARAM_INT);
+            $stmt->bindValue(':idUtilisateur', $idUtilisateur, PDO::PARAM_STR);
+            $stmt->bindValue(':reaction', $reaction ? 1 : 0, PDO::PARAM_INT);
+
+            // Exécuter la requête
+            $stmt->execute();
+        } catch (PDOException $e) {
+            echo "Erreur lors de l'insertion : " . $e->getMessage();
+        }
+    }
+
 }
