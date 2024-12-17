@@ -48,4 +48,3 @@ require_once 'controller/controller_fil.class.php';
 require_once 'controller/controller_utilisateur.class.php';
 require_once 'controller/controller_contenu.class.php';
 require_once 'controller/controller_collection.class.php';
-require_once 'controller/controller_tmdb.class.php';

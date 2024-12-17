@@ -21,17 +21,6 @@ class ThemeDAO{
     //Methodes
     //A tester quand la BD sera mise en place
     //Methodes find
-    public function find(?int $id): ?Theme{
-        $sql="SELECT * FROM ".DB_PREFIX. "theme WHERE id= :id";
-        $pdoStatement = $this->pdo->prepare($sql);
-        $pdoStatement->execute(array("id"=>$id));
-        $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Theme');
-        $theme = $pdoStatement->fetch();
-
-        return $theme;
-    }
-    //But : Trouve une theme en fonction de son identifiant
-
     public function findAssoc(?int $id): ?array
     {
         $sql="SELECT * FROM ".DB_PREFIX."theme WHERE id= :id";
@@ -42,17 +31,6 @@ class ThemeDAO{
         return $theme;
     }
     //But : Trouve une theme en fonction de son identifiant - Version Assoc
-
-    public function findAll(){
-        $sql="SELECT * FROM ".DB_PREFIX. "theme";
-        $pdoStatement = $this->pdo->prepare($sql);
-        $pdoStatement->execute();
-        $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Theme');
-        $theme = $pdoStatement->fetchAll();
-
-        return $theme;
-    }
-    //But : Trouve toutes les themes
 
     public function findAllAssoc(){
         $sql="SELECT * FROM ".DB_PREFIX."theme";
