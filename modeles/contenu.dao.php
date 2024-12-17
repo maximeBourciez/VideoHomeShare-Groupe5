@@ -49,4 +49,87 @@ class ContenuDAO{
         return $contenus;
     }
 
+    /**
+     * Crée un contenu à partir d'un ID TMDB
+     */
+    public function createFromTmdb(int $tmdbId): ?Contenu {
+        // Initialiser l'API TMDB avec votre clé
+        $tmdbApi = new TmdbAPI('a2096553592bde8ead1b2a0f2fa59bc0');
+        
+        // Récupérer les données du film
+        $movieData = $tmdbApi->getMovieById($tmdbId);
+        if (!$movieData) {
+            return null;
+        }
+
+        // Convertir en objet Contenu
+        $contenu = $tmdbApi->convertToContenu($movieData);
+        
+        // Insérer le contenu dans la base de données
+        $sql = "INSERT INTO " . DB_PREFIX . "contenu (titre, dateS, description, DescriptionLongue, lienAffiche, duree, type) 
+                VALUES (:titre, :dateS, :description, :descriptionLongue, :lienAffiche, :duree, :type)";
+        
+        $stmt = $this->pdo->prepare($sql);
+        $date = $contenu->getDate()->format('Y-m-d');
+        
+        $stmt->execute([
+            ':titre' => $contenu->getTitre(),
+            ':dateS' => $date,
+            ':description' => $contenu->getDescription(),
+            ':descriptionLongue' => $contenu->getDescriptionLongue(),
+            ':lienAffiche' => $contenu->getLienAffiche(),
+            ':duree' => $contenu->getDuree(),
+            ':type' => $contenu->getType()
+        ]);
+
+        // Récupérer l'ID généré
+        $contenu->setId($this->pdo->lastInsertId());
+
+        // Ajouter les personnalités
+        $personnalites = $tmdbApi->getPersonnalites($movieData);
+        $personnaliteDAO = new PersonnaliteDAO($this->pdo);
+        
+        foreach ($personnalites as $personnalite) {
+            $personnaliteDAO->create($personnalite);
+            // Ajouter la relation dans la table participer
+            $this->addPersonnaliteToContenu($personnalite->getId(), $contenu->getId(), $personnalite->getRole());
+        }
+
+        return $contenu;
+    }
+
+    private function addPersonnaliteToContenu(int $idPersonnalite, int $idContenu, string $role): void {
+        $sql = "INSERT INTO " . DB_PREFIX . "participer (idPersonaliter, idContenu, role) 
+                VALUES (:idPersonnalite, :idContenu, :role)";
+        
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            ':idPersonnalite' => $idPersonnalite,
+            ':idContenu' => $idContenu,
+            ':role' => $role
+        ]);
+    }
+
+    public function addTheme(int $contenuId, int $themeId): bool {
+        $sql = "INSERT INTO " . DB_PREFIX . "avoir_theme (idContenu, idTheme) 
+                VALUES (:contenuId, :themeId)";
+        
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':contenuId' => $contenuId,
+            ':themeId' => $themeId
+        ]);
+    }
+
+    public function removeTheme(int $contenuId, int $themeId): bool {
+        $sql = "DELETE FROM " . DB_PREFIX . "avoir_theme 
+                WHERE idContenu = :contenuId AND idTheme = :themeId";
+        
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':contenuId' => $contenuId,
+            ':themeId' => $themeId
+        ]);
+    }
+
 }

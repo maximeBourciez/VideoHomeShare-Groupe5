@@ -424,3 +424,68 @@ body {
   }
 }
 
+//Responsive page dun film
+.movie-content {
+  @media (max-width: 992px) {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.movie-poster {
+  &__image {
+    @media (max-width: 992px) {
+      width: 100% !important;
+      max-width: 350px;
+      height: auto !important;
+    }
+  }
+}
+
+.movie-info {
+  @media (max-width: 992px) {
+    width: 100%;
+    padding: 0 15px;
+  }
+
+  &__metadata {
+    @media (max-width: 576px) {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+
+  &__genres {
+    @media (max-width: 576px) {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+  }
+}
+
+.movie-synopsis {
+  &__content {
+    @media (max-width: 768px) {
+      font-size: 0.9rem;
+      padding: 1rem;
+    }
+  }
+}
+
+.movie-comments {
+  &__title {
+    @media (max-width: 576px) {
+      font-size: 1.5rem;
+      margin: 0.5rem !important;
+    }
+  }
+}
+
+.movie-comment {
+  &__header {
+    @media (max-width: 576px) {
+      flex-direction: column;
+    }
+  }
+}
+

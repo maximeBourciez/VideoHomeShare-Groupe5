@@ -1,58 +1,69 @@
 <?php
-/**
- * @brief Classe ControllerContenu
- * 
- * @details Classe permettant de gérer le contenu du site
- * 
- * @date 5/11/2024
- * 
- * @warning Cette classe met en place une version simplifiée du design pattern Factory
- */
+
 class ControllerContenu extends Controller {
-    /**
-     * @brief Constructeur de la classe ControllerContenu
-     * 
-     * @param \Twig\Environment $twig Environnement Twig
-     * @param \Twig\Loader\FilesystemLoader $loader Chargeur de templates
-     */
-    public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader){
+    public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader) {
         parent::__construct($twig, $loader);
     }
 
-    public function afficherFilm(){
-        $id = isset($_GET['id_film']) ? $_GET['id_film'] : null;
+    /**
+     * Affiche les informations d'un film depuis TMDB sans l'importer
+     */
+    public function afficherFilm(): void {
+        $tmdbId = isset($_GET['tmdb_id']) ? intval($_GET['tmdb_id']) : null;
+        if ($tmdbId) {
+            // Initialiser l'API TMDB
+            $tmdbApi = new TmdbAPI('a2096553592bde8ead1b2a0f2fa59bc0');
+            
+            // Récupérer les données du film
+            $movieData = $tmdbApi->getMovieById($tmdbId);
+            if ($movieData === null) {
+                // Si getMovieById retourne null (cas d'un film pour adultes)
+                echo $this->getTwig()->render('index.html.twig');
+                return;
+            }
+            if ($movieData) {
+                // Convertir en objet Contenu sans sauvegarder
+                $contenu = $tmdbApi->convertToContenu($movieData);
+                
+                // Récupérer les personnalités
+                $personnalites = $tmdbApi->getPersonnalites($movieData);
+                
+                // Récupérer les thèmes
+                $themes = $tmdbApi->getGenres($movieData);
 
-        // Récupération des informations du film (contenu)
-        $managerContenu = new ContenuDAO($this->getPdo());
-        $contenu = $managerContenu->findById($id);
+                //Récupérer les notes et le nombre de notes
+                $commentaireDAO = new CommentaireDAO($this->getPdo());
+                $notes = $commentaireDAO->getMoyenneEtTotalNotesContenu($tmdbId);
 
-        // Récupération des thèmes associés au contenu
-        $managerTheme = new ThemeDAO($this->getPdo());
-        $themes = $managerTheme->findThemesByContenuId($id);
-        
-        // Récupérer la moyenne des notes et le total des commentaires pour ce contenu
-        $managerCommentaireMoy = new CommentaireDAO($this->getPdo());
-        $notes = $managerCommentaireMoy->getMoyenneEtTotalNotesContenu($id); // Retourne un tableau avec 'moyenne' et 'total'
+                //Récupérer les commentaires
+                $commentaires = $commentaireDAO->getCommentairesContenu($tmdbId);
+                
+                // Récupérer les thèmes depuis la BD
+                $themeDAO = new ThemeDAO($this->getPdo());
+                $themesFromDB = [];
+                
+                // Pour chaque thème de TMDB
+                foreach ($themes as $theme) {
+                    $themeFromDB = $themeDAO->createIfNotExists($theme);
+                    if ($themeFromDB) {
+                        $themesFromDB[] = $themeFromDB;
+                    }
+                }
+                
+                // Afficher le template avec les données
+                echo $this->getTwig()->render('pageDunContenu.html.twig', [
+                    'contenu' => $contenu,
+                    'personnalite' => $personnalites,
+                    'themes' => $themesFromDB,
+                    'moyenne' => $notes['moyenne'],
+                    'total' => $notes['total'],
+                    'commentaires' => $commentaires
+                ]);
+                return;
+            }
+        }
 
-        // Récupérer les commentaires spécifiques à ce contenu
-        $managerCommentaire = new CommentaireDAO($this->getPdo());
-        $commentaires = $managerCommentaire->getCommentairesContenu($id);
-
-        // Récupérer les personnalités associées à ce contenu
-        $managerPersonnalite = new PersonnaliteDAO($this->getPdo());
-        $personnalite = $managerPersonnalite->findAllParContenuId($id); 
-
-        // Rendu du template avec toutes les données récupérées
-        echo $this->getTwig()->render('pageDunFilm.html.twig', [
-            'contenu' => $contenu,
-            'themes' => $themes,
-            'moyenne' => $notes['moyenne'],
-            'total' => $notes['total'],
-            'personnalite' => $personnalite,
-            'commentaires' => $commentaires // Changement ici
-        ]);
+        // Si pas d'ID ou film non trouvé, afficher le formulaire
+        // echo $this->getTwig()->render('importerTmdb.html.twig');
     }
-}
-
-
-?>
+} 
