@@ -1,6 +1,6 @@
 <?php
 
-class TmdbAPI {
+class TmdbAPIContenu {
     private string $apiKey = TMDB_API_KEY;
     private string $baseUrl = TMDB_BASE_URL;
     private string $imageBaseUrl = TMDB_IMAGE_BASE_URL;
