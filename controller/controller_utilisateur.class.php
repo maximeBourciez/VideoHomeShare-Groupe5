@@ -26,7 +26,7 @@ class ControllerUtilisateur extends Controller
 
     /**
      * @brief permet d'afficher la page d'inscription
-     * @todo rajouter un date de naisance et metre le ninimal à quatorzan
+     * 
      * @return void
      */
     public function inscription(): void
@@ -59,10 +59,9 @@ class ControllerUtilisateur extends Controller
         $utilisateur = $managerutilisateur->findByMail($mail);
 
         if ($utilisateur != null && password_verify($mdp, $utilisateur->getMdp())) {
-            $_SESSION['connecter'] = serialize($utilisateur);
+            $_SESSION['utilisateur'] = serialize($utilisateur);
             //Génération de la vue
-            $template = $this->getTwig()->load('index.html.twig');
-            echo $template->render(array());
+            $this->show();
         } else {
             //Génération de la vue
             $template = $this->getTwig()->load('connection.html.twig');
@@ -84,6 +83,7 @@ class ControllerUtilisateur extends Controller
         $id = isset($_POST['idantifiant']) ? $_POST['idantifiant'] : null;
         $pseudo = isset($_POST['pseudo']) ? $_POST['pseudo'] : null;
         $mail = isset($_POST['mail']) ? $_POST['mail'] : null;
+        $date = isset($_POST['date']) ? $_POST['date'] : null;
         $mdp = isset($_POST['mdp']) ? $_POST['mdp'] : null;
         $vmdp = isset($_POST['vmdp']) ? $_POST['vmdp'] : null;
         $nom = isset($_POST['nom']) ? $_POST['nom'] : null;
@@ -93,8 +93,12 @@ class ControllerUtilisateur extends Controller
         $mail = str_replace(' ', '', $mail);
 
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
+        // vérification que la personne est assez vieille
+        if (strtotime($date) < strtotime(date("Y-m-d") . " -156 month")) {
 
-        if (strlen($pseudo) <= 50 && strlen($id) <= 20 && strlen($mail) <= 320 && strlen($mdp) <= 100 && strlen($vmdp) <= 100 && strlen($nom) <= 50) {
+
+
+
             // verifier si l'id n'est pas déjà utilisé
             if ($managerutilisateur->find($id) == null) {
                 // verifier si le mail est valide 
@@ -234,9 +238,9 @@ class ControllerUtilisateur extends Controller
 
 
         // recuper que si l'utilisateur est connecter
-        if (isset($_SESSION['connecter'])) {
+        if (isset($_SESSION['utilisateur'])) {
             //recuperer l'utilisateur connecter if
-            $personneConnect = unserialize($_SESSION['connecter']);
+            $personneConnect = unserialize($_SESSION['utilisateur']);
             if ($id == null) {
                 $id = $personneConnect->getId();
             }
@@ -270,9 +274,9 @@ class ControllerUtilisateur extends Controller
      */
     public function edit(): void
     {
-        if (isset($_SESSION['connecter'])) {
+        if (isset($_SESSION['utilisateur'])) {
             //recuperer l'utilisateur connecter if
-            $utilisateur = unserialize($_SESSION['connecter']);
+            $utilisateur = unserialize($_SESSION['utilisateur']);
         } else {
             $utilisateur = null;
         }
@@ -302,7 +306,7 @@ class ControllerUtilisateur extends Controller
         $nom = isset($_POST['nom']) ? $_POST['nom'] : null;
 
 
-        $utilisateur = unserialize($_SESSION['connecter']);
+        $utilisateur = unserialize($_SESSION['utilisateur']);
 
         //supprimer les espaces
         $id = str_replace(' ', '', $id);
@@ -355,7 +359,7 @@ class ControllerUtilisateur extends Controller
                 }
                 // mettre à jour l'utilisateur dans la base de données
                 $managerutilisateur->update($utilisateur);
-                $_SESSION['connecter'] = serialize($utilisateur);
+                $_SESSION['utilisateur'] = serialize($utilisateur);
                 //Génération de la vue
                 $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
                 echo $template->render(array('utilisateur' => $utilisateur));
@@ -366,14 +370,14 @@ class ControllerUtilisateur extends Controller
     }
 
     /**
-    * @brief permet de changer le mail de l'utilisateur
-    */
+     * @brief permet de changer le mail de l'utilisateur
+     */
     public function changerMail(): void
     {
         // récupération des données du formulaire
         $mail = isset($_POST['mail']) ? $_POST['mail'] : null;
         $mailconf = isset($_POST['mailconf']) ? $_POST['mailconf'] : null;
-        
+
         //supprimer les espaces
         $mail = str_replace(' ', '', $mail);
         $mailconf = str_replace(' ', '', $mailconf);
@@ -381,15 +385,15 @@ class ControllerUtilisateur extends Controller
         if ($mail == $mailconf) {
             // vérifier si le mail est valide
             if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
-            
-                $utilisateur = unserialize($_SESSION['connecter']);
+
+                $utilisateur = unserialize($_SESSION['utilisateur']);
                 $managerutilisateur = new UtilisateurDAO($this->getPdo());
                 // vérifier si le mail n'est pas déjà utilisé
                 if ($managerutilisateur->findByMail($mail) == null) {
                     // mettre à jour le mail de l'utilisateur
                     $utilisateur->setMail($mail);
                     $managerutilisateur->update($utilisateur);
-                    $_SESSION['connecter'] = serialize($utilisateur);
+                    $_SESSION['utilisateur'] = serialize($utilisateur);
 
                 }
             }
@@ -406,9 +410,9 @@ class ControllerUtilisateur extends Controller
      */
     public function notification(): void
     {
-        
+
         $template = $this->getTwig()->load('enConstruction.htlm.twig');
-        echo $template->render(array('fontionliter'=> "notification"));
+        echo $template->render(array('fontionliter' => "notification"));
     }
 
 

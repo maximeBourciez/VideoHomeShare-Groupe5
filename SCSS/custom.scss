@@ -37,6 +37,14 @@ $theme-colors: (
     transform: scale(1.05);
   }
 }
+//5.1 Body
+
+html,
+body {
+    overflow-x: hidden; /* Empêche le scroll horizontal */
+    margin: 0; /* Retirer toute marge par défaut */
+    font-family: 'Montserrat', sans-serif;
+}
 
 // 6. Classes personnalisées
 // 6.1 Couleurs de texte
@@ -274,6 +282,7 @@ $theme-colors: (
 
 
 
+
 .custom-select-wrapper {
   position: relative;
   width: 100%;
@@ -329,3 +338,89 @@ $theme-colors: (
 .custom-select.open .custom-select-dropdown {
   display: block;
 }
+
+//8. Theme
+
+.theme-tag {
+  text-align: center;
+  background-color: $secondary;
+  border-radius: 20px;
+  padding: 5px 10px;
+  display: inline-block;
+}
+
+// 9 Notation/étoile
+/* Conteneur global de notation */
+.star-rating {
+  font-size: 48px;
+  color: #ddd;
+  position: relative;
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.star-rating .star-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.star-rating .star-full,
+.star-rating .star-half {
+  margin-right: 2px;
+  cursor: pointer;
+  vertical-align: middle; /* Align stars vertically in the middle */
+}
+
+.star-rating .star-half {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-28%); /* Center the half star vertically */
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  color: $dark;
+}
+
+.star-rating .stars-fill .star-full {
+  color: $primary;
+}
+
+.star-rating .stars-half .star-full {
+  color: #ddd;
+}
+
+.star-rating .stars-half .star-half {
+  color: $primary;
+}
+
+//Carousel
+
+.custom-carousel-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background-color: rgba(0,0,0,0.5);
+  border-radius: 50%;
+  z-index: 10;
+  margin: 0 15px;
+}
+
+.carousel-control-prev {
+  left: 0;
+}
+
+.carousel-control-next {
+  right: 0;
+}
+
+@media (max-width: 768px) {
+  .custom-carousel-control {
+      width: 40px;
+      height: 40px;
+      margin: 0 10px;
+  }
+}
+

@@ -71,6 +71,7 @@ class ThemeDAO {
         return $theme;
     }
 
+
     /**
      * Hydrate un tableau associatif en un objet Theme.
      * 
@@ -82,6 +83,33 @@ class ThemeDAO {
             $data['id'] ?? null,
             $data['nom'] ?? null
         );
+
+    public function findAllAssoc(){
+        $sql="SELECT * FROM ".DB_PREFIX."theme";
+        $pdoStatement = $this->pdo->prepare($sql);
+        $pdoStatement->execute();
+        $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
+        $theme = $pdoStatement->fetchAll();
+        return $theme;
+    }
+    //But : Trouve toutes les themes - Version Assoc
+
+    public function findThemesByContenuId(int $contenuId): array {
+        $sql = "SELECT t.* 
+                FROM " . DB_PREFIX . "theme t
+                INNER JOIN " . DB_PREFIX . "caracteriserContenu cc ON t.idTheme = cc.idTheme
+                WHERE cc.idContenu = :contenuId";
+    
+        $pdoStatement = $this->pdo->prepare($sql);
+        $pdoStatement->execute(['contenuId' => $contenuId]);
+        $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Theme');
+        $themes = $pdoStatement->fetchAll();
+    
+        return $themes;
+    }
+    //But : Trouve les themes en fonction de l'identifiant du contenu
+
+
     }
 
     /**
@@ -97,6 +125,10 @@ class ThemeDAO {
         }
         return $themes;
     }
+
+    //But : Créer les themes avec les valeurs assignées aux attributs correspondants
+
+
 }
 
 

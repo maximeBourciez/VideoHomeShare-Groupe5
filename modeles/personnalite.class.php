@@ -6,13 +6,15 @@ class Personnalite{
     private ?string $nom;
     private ?string $prenom;
     private ?string $urlImage;
+    private ?string $role;
 
     // Constructeur
-    function __construct(?int $id = null, ?string $nom = null, ?string $prenom = null, ?string $urlImage = null){
+    function __construct(?int $id = null, ?string $nom = null, ?string $prenom = null, ?string $urlImage = null, ?string $role = null){
         $this->id = $id;
         $this->nom = $nom;
         $this->prenom = $prenom;
         $this->urlImage = $urlImage;
+        $this->role = $role;
     }
 
     // Encapsulation
@@ -56,6 +58,16 @@ class Personnalite{
         return $this->urlImage;
     }
 
+    /**
+     * Get the value of role
+     * @return string $role
+     * @return void
+     */
+    public function getRole(): ?string
+    {
+        return $this->role;
+    }
+
     // Setters
 
     /**
@@ -96,6 +108,16 @@ class Personnalite{
     public function setUrlImage(string $urlImage): void
     {
         $this->urlImage = $urlImage;
+    }
+
+    /**
+     * Set the value of role
+     * @param string $role
+     * @return void
+     */
+    public function setRole(string $role): void
+    {
+        $this->role = $role;
     }
 
     // méthodes
