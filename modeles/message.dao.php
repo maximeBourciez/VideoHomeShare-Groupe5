@@ -70,7 +70,10 @@ class MessageDAO
         $message = new Message();
         $message->setIdMessage($row['idMessage']);
         $message->setValeur($row['valeur']);
-        $message->setDateC(new DateTime($row['dateC']));
+
+        // Gestion sécurisée de la date
+        $message->setDateC(!empty($row['dateC']) ? new DateTime($row['dateC']) : null);
+
         $message->setIdMessageParent($row['idMessageParent']);
         $message->setNbLikes($row['like_count']);
         $message->setNbDislikes($row['dislike_count']);
@@ -342,12 +345,12 @@ class MessageDAO
      * 
      * @return void
      */
-    public function purgerReactions(?int $idMessage) : void 
+    public function purgerReactions(?int $idMessage): void
     {
         // Préparer la requête
-        $sql = "DELETE FROM ". DB_PREFIX . "reagir
+        $sql = "DELETE FROM " . DB_PREFIX . "reagir
                WHERE idMessage = :idMessage";
-        
+
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':idMessage', $idMessage);
         $stmt->execute();

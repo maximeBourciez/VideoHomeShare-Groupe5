@@ -72,11 +72,15 @@ class ControllerFil extends Controller
         $messageDAO = new MessageDAO($this->getPdo());
         $messages = $messageDAO->listerMessagesParFil($id);
 
+        // Récupérer les infos pour les signalements
+        $signalements = RaisonSignalement::getAllReasons();
+
         // Rendre le template avec les infos
         echo $this->getTwig()->render('fil.html.twig', [
             'messages' => $messages,
             'fil' => $fil,
-            'messageSuppr' => VALEUR_MESSAGE_SUPPRIME
+            'messageSuppr' => VALEUR_MESSAGE_SUPPRIME,
+            'raisonSignalement' => $signalements
         ]);
         exit();
     }
@@ -132,19 +136,19 @@ class ControllerFil extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $idFil = isset($_POST['id_fil']) ? intval($_POST['id_fil']) : null;
             $message = isset($_POST['message']) ? htmlspecialchars($_POST['message']) : null;
-    
+
             if (!isset($_SESSION["utilisateur"])) {
                 throw new Exception("Accès interdit");
             }
-    
+
             $managerMessage = new MessageDAO($this->getPdo());
             $managerMessage->ajouterMessage($idFil, null, $message);
-    
+
             $this->genererVue($idFil);
             exit();
         } else {
             throw new Exception("Méthode HTTP invalide");
-        }   
+        }
     }
 
     /**
@@ -247,7 +251,8 @@ class ControllerFil extends Controller
      * 
      * @return void
      */
-    public function supprimerMessage(){
+    public function supprimerMessage()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['utilisateur'])) {
             // Récupérer les infos depuis le formulaire
             $idMessageASuppr = $_POST["idMessage"];
@@ -260,7 +265,7 @@ class ControllerFil extends Controller
             $managerMessage = new MessageDAO($this->getPdo());
             $indiquePropriete = $managerMessage->checkProprieteMessage($idMessageASuppr, $idUser);
 
-            if(!$indiquePropriete){
+            if (!$indiquePropriete) {
                 throw new Exception("accesInterdit");
             }
 
@@ -271,7 +276,41 @@ class ControllerFil extends Controller
             // Réafficher le fil
             $this->genererVue($idFil);
             exit();
+        } else {
+            throw new Exception("accesInterdit");
         }
-        
+    }
+
+    /**
+     * Méthode permettant de recueillir un signalement en BD
+     * 
+     * @return void
+     */
+    public function signalerMessage()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['utilisateur'])) {
+            // Récupérer les données du formulaire
+            $idMessage = $_POST['id_message'];
+            $raison = $_POST['raison'];
+            $idFIl = $_POST['id_fil'];
+
+            // Récupérer les données de l'utilisateur
+            $idUser = trim(unserialize($_SESSION['utilisateur'])->getId());
+
+            // Créer l'objet signalement
+            $signalement = new Signalement();
+            $signalement->setIdMessage($idMessage);
+            $signalement->setIdUtilisateur($idUser);
+            $signalement->setRaison($raison->toString());            
+
+            // Insérer le signalement en BD
+            $managerSignalement = new SignalementDAO($this->getPdo());
+            $managerSignalement->ajouterSignalement($signalement);
+
+            $this->genererVue($idFIl);
+            exit();
+        } else {
+            throw new Exception("accesInterdit");
+        }
     }
 }

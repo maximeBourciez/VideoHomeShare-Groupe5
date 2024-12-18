@@ -1,26 +1,65 @@
 <?php
 
+
+/**
+ * @file signalement.dao.php
+ * 
+ * @brief Signalement Data Access Object
+ * 
+ * @details Data Access Object de la classe Signalement
+ * 
+ * @version 1.0
+ * 
+ * @date 18/12/2024
+ * 
+ * @author Maxime Bourciez <maxime.bourciez@gmail.com>
+ */
 class SignalementDAO{
+    // Attributs
+    /**
+     * @var PDO|null $pdo Connexion à la base de données
+     */
     private ?PDO $pdo;
 
+    // Constructeur
+    /**
+     * @brief Constructeur de la classe SignalementDAO
+     * 
+     * @param PDO|null $pdo Connexion à la base de données
+     */
     public function __construct(?PDO $pdo = null){
         $this->pdo = $pdo;
     }
 
     //Encapsulation
     //Getter
+    /**
+     * @brief Getter de l'attribut pdo
+     * 
+     * @return PDO|null
+     */
     public function getPdo(): ?PDO{
         return $this->pdo;
     }
 
     //Setter
+    /**
+     * @brief Setter de l'attribut pdo
+     * 
+     * @param PDO|null $pdo Connexion à la base de données
+     */
     public function setPdo($pdo): void{
         $this->pdo = $pdo;
     }
 
     //Methodes
-    //A tester quand la BD sera mise en place
-    //Methodes find
+    /**
+     * @brief Trouve une signalement en fonction de son identifiant
+     * 
+     * @param int|null $id Identifiant du signalement
+     * 
+     * @return Signalement|null
+     */
     public function find(?int $id): ?Signalement{
         $sql="SELECT * FROM ".DB_PREFIX. "signalement WHERE id= :id";
         $pdoStatement = $this->pdo->prepare($sql);
@@ -30,8 +69,14 @@ class SignalementDAO{
 
         return $signalement;
     }
-    //But : Trouve une signalement en fonction de son identifiant
-
+    
+    /**
+     * @brief Trouve une signalement en fonction de son identifiant - Version Assoc
+     * 
+     * @param int|null $id Identifiant du signalement
+     * 
+     * @return array|null
+     */
     public function findAssoc(?int $id): ?array
     {
         $sql="SELECT * FROM ".DB_PREFIX."signalement WHERE id= :id";
@@ -41,8 +86,14 @@ class SignalementDAO{
         $signalement = $pdoStatement->fetch();
         return $signalement;
     }
-    //But : Trouve une signalement en fonction de son identifiant - Version Assoc
-
+    
+    /**
+     * @brief Trouve toutes les signalements
+     * 
+     * @return array|null
+     * 
+     * @details Trouve toutes les signalements
+     */
     public function findAll(){
         $sql="SELECT * FROM ".DB_PREFIX. "signalement";
         $pdoStatement = $this->pdo->prepare($sql);
@@ -52,8 +103,14 @@ class SignalementDAO{
 
         return $signalement;
     }
-    //But : Trouve toutes les signalements
-
+    
+    /**
+     * @brief Trouve toutes les signalements - Version Assoc
+     * 
+     * @return array|null
+     * 
+     * @details Trouve toutes les signalements
+     */
     public function findAllAssoc(){
         $sql="SELECT * FROM ".DB_PREFIX."signalement";
         $pdoStatement = $this->pdo->prepare($sql);
@@ -62,17 +119,30 @@ class SignalementDAO{
         $signalement = $pdoStatement->fetchAll();
         return $signalement;
     }
-    //But : Trouve toutes les signalements - Version Assoc
+    
 
     //Methodes hydrate
+    /**
+     * @brief Hydrate un signalement
+     * 
+     * @param array $tableauAssoc Tableau associatif contenant les informations du signalement
+     * 
+     * @return Signalement|null
+     */
     public function hydrate($tableauAssoc): ?Signalement
     {
         $signalement = new Signalement($tableauAssoc['id'], $tableauAssoc['raison']);
 
         return $signalement;
     }
-    //But : Créer une signalement avec les valeurs assignées aux attributs correspondants
-
+    
+    /**
+     * @brief Hydrate tous les signalements
+     * 
+     * @param array $tableau Tableau contenant les informations des signalements
+     * 
+     * @return array|null
+     */
     public function hydrateAll($tableau): ?array{
         $signalements = [];
         foreach($tableau as $tableauAssoc){
@@ -82,7 +152,27 @@ class SignalementDAO{
 
         return $signalements;
     }
-    //But : Créer les signalements avec les valeurs assignées aux attributs correspondants
+
+    //Methodes
+    /**
+     * @brief Ajoute un signalement
+     * 
+     * @param Signalement $signalement Signalement à ajouter
+     * 
+     * @return int
+     */
+    public function ajouterSignalement(Signalement $signalement): int{
+        // Préparer la requête
+        $sql = "INSERT INTO ".DB_PREFIX."signalement (raison, idMessage, idUtilisateur) VALUES (:raison, :idMessage, :idUtilisateur)";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':raison', $signalement->getRaison()->toString());
+        $stmt->bindValue(':idMessage', $signalement->getIdMessage());
+        $stmt->bindValue(':idUtilisateur', $signalement->getIdUtilisateur());
+
+        // Exécuter la requête et récupérer l'identifiant
+        $stmt->execute();
+        return $this->pdo->lastInsertId();
+    }
 }
 
 ?>
