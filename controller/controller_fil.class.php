@@ -75,7 +75,8 @@ class ControllerFil extends Controller
         // Rendre le template avec les infos
         echo $this->getTwig()->render('fil.html.twig', [
             'messages' => $messages,
-            'fil' => $fil
+            'fil' => $fil,
+            'messageSuppr' => VALEUR_MESSAGE_SUPPRIME
         ]);
         exit();
     }
@@ -239,5 +240,37 @@ class ControllerFil extends Controller
                 history.replaceState({}, '', 'index.php?controller=fil&methode=afficherFilParId&id_fil=$idFil');
                 window.location.reload();
               </script>";
+    }
+
+    /**
+     * Méthode de suppression d'un message
+     * 
+     * @return void
+     */
+    public function supprimerMessage(){
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['utilisateur'])) {
+            // Récupérer les infos depuis le formulaire
+            $idMessageASuppr = $_POST["idMessage"];
+            $idFil = $_POST["id_fil"];
+
+            // Récupérer l'id de l'utilisateur 
+            $idUser = trim(unserialize($_SESSION["utilisateur"])->getId());
+
+            // Vérifier que le message provient bien de l'utilisateur
+            $managerMessage = new MessageDAO($this->getPdo());
+            $indiquePropriete = $managerMessage->checkProprieteMessage($idMessageASuppr, $idUser);
+
+            if(!$indiquePropriete){
+                throw new Exception("accesInterdit");
+            }
+
+            // Supprimer le message
+            $managerMessage->supprimerMessage($idMessageASuppr);
+
+            // Réafficher le fil
+            $this->genererVue($idFil);
+            exit();
+        }
+        
     }
 }

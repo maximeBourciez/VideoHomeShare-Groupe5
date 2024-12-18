@@ -22,3 +22,8 @@ tmdb:
   api_key: "a2096553592bde8ead1b2a0f2fa59bc0"
   base_url: "https://api.themoviedb.org/3"
   image_base_url: "https://image.tmdb.org/t/p/original"
+
+# Constantes utiles
+threads:
+  valeurMessageSupprime: "Ce message a été supprimé." 
+  valeurUtilisateurMessageSupprime: null

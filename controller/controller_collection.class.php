@@ -36,7 +36,7 @@ class Controllercollection extends Controller {
 
         // Récupération des thèmes associés au contenu
         $managerTheme = new ThemeDAO($this->getPdo());
-        $themes = $managerTheme->findThemesByCollectionId($id);
+        //$themes = $managerTheme->findThemesByCollectionId($id);
         
         // Récupérer la moyenne des notes et le total des commentaires pour ce contenu
         $managerCommentaireMoy = new CommentaireDAO($this->getPdo());
@@ -51,7 +51,7 @@ class Controllercollection extends Controller {
             'collection' => $collection,
             'nbSaison' => $nbSaison,
             'nbEpisode' => $nbEpisode,
-            'themes' => $themes,
+            //'themes' => $themes,
             'moyenne' => $notes['moyenne'],
             'total' => $notes['total'],
             'commentaires' => $commentaires // Changement ici

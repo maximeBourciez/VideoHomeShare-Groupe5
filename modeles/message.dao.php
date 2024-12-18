@@ -261,7 +261,7 @@ class MessageDAO
             // Préparer la requête SQL
             $sql = "INSERT INTO " . DB_PREFIX . "reagir (idMessage, idUtilisateur, reaction) 
                 VALUES (:idMessage, :idUtilisateur, :reaction) 
-                ON DUPLICATE KEY UPDATE reaction = :reaction"; 
+                ON DUPLICATE KEY UPDATE reaction = :reaction";
 
             $stmt = $this->pdo->prepare($sql);
 
@@ -277,4 +277,61 @@ class MessageDAO
         }
     }
 
+    /**
+     * Méthode qui retourne si le message appartient bien à l'utilisateur
+     * 
+     * @param int|null $idMessage Message à supprimer
+     * @param string|null $idUser Identifiant de l'utilisateur qui veut supprimer le message
+     * 
+     * @return bool 
+     */
+    public function checkProprieteMessage(?int $idMessage, ?string $idUser)
+    {
+        // Préparer la requête
+        $sql = "SELECT * FROM " . DB_PREFIX . "message M
+                WHERE idMessage = :idMessage
+                AND idUtilisateur = :idUser";
+
+        $stmt = $this->pdo->prepare($sql);
+
+        // Lier les valeurs
+        $stmt->bindValue(':idMessage', $idMessage, PDO::PARAM_INT);
+        $stmt->bindValue(':idUser', $idUser, PDO::PARAM_STR);
+
+        // Exécuter la requête
+        $stmt->execute();
+
+        // Récupérer le résultat
+        $count = $stmt->fetchColumn();
+
+        // Retourner vrai si le message appartient à l'utilisateur
+        return $count > 0;
+    }
+
+    /**
+     * Méthode de suppression d'un message
+     * 
+     * @param int|null $idMessage identifiant du message à supprimer
+     * 
+     * @return void
+     */
+    public function supprimerMessage(?int $idMessage): void
+    {
+        // Préparer la requête SQL
+        $sql = "UPDATE " . DB_PREFIX . "message
+            SET valeur = :valeurMessageSupprime, 
+                idUtilisateur = :valeurUtilisateurSupprime
+            WHERE idMessage = :idMessage";
+
+        // Préparer la requête
+        $stmt = $this->pdo->prepare($sql);
+
+        // Lier les valeurs
+        $stmt->bindValue(':valeurMessageSupprime', VALEUR_MESSAGE_SUPPRIME, PDO::PARAM_STR);
+        $stmt->bindValue(':valeurUtilisateurSupprime', VALEUR_UTILISATEUR_MESSAGE_SUPPRIME, PDO::PARAM_NULL);
+        $stmt->bindValue(':idMessage', $idMessage, PDO::PARAM_INT);
+
+        // Exécuter la requête
+        $stmt->execute();
+    }
 }
