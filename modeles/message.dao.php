@@ -73,6 +73,8 @@ class MessageDAO
         $message->setDateC(new DateTime($row['dateC']));
         $message->setIdMessageParent($row['idMessageParent']);
         $message->setIdFil($row['idFil']);
+        $message->setNbLikes($row['like_count']);
+        $message->setNbDislikes($row['dislike_count']);
 
         // Hydratation de l'utilisateur associé
         $user = new Utilisateur();
@@ -93,13 +95,13 @@ class MessageDAO
     {
         $messages = []; // Tous les messages indexés par leur ID
         $messagesParents = []; // Tableau pour stocker uniquement les messages principaux
-    
+
         // Hydrater tous les messages et les indexer par ID
         foreach ($rows as $row) {
             $message = $this->hydrate($row);
             $messages[$message->getIdMessage()] = $message;
         }
-    
+
         // Lier les réponses à leurs parents
         foreach ($messages as $message) {
             if ($message->getIdMessageParent() === null) {
@@ -116,11 +118,11 @@ class MessageDAO
                 }
             }
         }
-    
+
         // Retourner uniquement les messages principaux (avec les réponses déjà attachées)
         return $messagesParents;
     }
-    
+
 
 
     // Méthodes de recherche
@@ -167,7 +169,7 @@ class MessageDAO
      * @param integer $id_user
      * @return array
      */
-    public function listerMessagesParIdUser( ?string $id_user): array
+    public function listerMessagesParIdUser(?string $id_user): array
     {
         $sql = "SELECT * FROM " . DB_PREFIX . "message M join " . DB_PREFIX . "utilisateur U ON  M.idUtilisateur=U.idUtilisateur WHERE M.idUtilisateur = :id_user ORDER BY dateC DESC";
         $stmt = $this->pdo->prepare($sql);
@@ -193,50 +195,6 @@ class MessageDAO
 
     public function listerMessagesParFil(int $idFil): array
     {
-        // $sql = "SELECT
-        //         m1.*,
-        //         COALESCE(m1.idMessageParent, m1.idMessage) AS thread_id,
-        //         u1.idUtilisateur AS auteur_id,
-        //         u1.pseudo AS auteur_pseudo,
-        //         u1.urlImageProfil AS auteur_urlImageProfil,
-        //         m2.idMessage AS reponse_id,
-        //         m2.valeur AS reponse_valeur,
-        //         m2.dateC AS reponse_dateC,
-        //         m2.idUtilisateur AS reponse_utilisateur_id,
-        //         u2.pseudo AS reponse_pseudo,
-        //         u2.urlImageProfil AS reponse_urlImageProfil,
-        //         ld1.like_count AS like_count,
-        //         ld1.dislike_count AS dislike_count,
-        //         ld2.like_count AS reponse_like_count,
-        //         ld2.dislike_count AS reponse_dislike_count
-        //     FROM (
-        //         SELECT
-        //             m.*,
-        //             COALESCE(m.idMessageParent, m.idMessage) AS thread_id
-        //         FROM " . DB_PREFIX . "message m
-        //         WHERE m.idFil = :idFil
-        //     ) AS m1
-        //     INNER JOIN " . DB_PREFIX . "utilisateur u1 ON m1.idUtilisateur = u1.idUtilisateur
-        //     LEFT JOIN " . DB_PREFIX . "message m2 ON m1.idMessage = m2.idMessageParent
-        //     LEFT JOIN " . DB_PREFIX . "utilisateur u2 ON m2.idUtilisateur = u2.idUtilisateur
-        //     LEFT JOIN (
-        //         SELECT
-        //             idMessage,
-        //             SUM(CASE WHEN `reaction` = true THEN 1 ELSE 0 END) AS like_count,
-        //             SUM(CASE WHEN `reaction` = false THEN 1 ELSE 0 END) AS dislike_count
-        //         FROM " . DB_PREFIX . "reagir
-        //         GROUP BY idMessage
-        //     ) AS ld1 ON m1.idMessage = ld1.idMessage
-        //     LEFT JOIN (
-        //         SELECT
-        //             idMessage,
-        //             SUM(CASE WHEN `reaction` = true THEN 1 ELSE 0 END) AS like_count,
-        //             SUM(CASE WHEN `reaction` = false THEN 1 ELSE 0 END) AS dislike_count
-        //         FROM " . DB_PREFIX . "reagir
-        //         GROUP BY idMessage
-        //     ) AS ld2 ON m2.idMessage = ld2.idMessage
-        //     ORDER BY m1.thread_id ASC, m1.dateC ASC;";
-
         $sql = "SELECT m.*, u.*, like_count, dislike_count
                 FROM vhs_message m
                 LEFT JOIN (
@@ -261,14 +219,66 @@ class MessageDAO
         return $this->hydrateAll($messages);
     }
 
-    // Nouvelle méthode pour récupérer le pseudo de l'utilisateur de la réponse
-    private function getUserPseudoById(string $userId): string
+    /**
+     * @brief Méthode d'ajout d'une reponse dans un fil de discussion
+     * 
+     * @param int|null $idFil Identifiant du fil
+     * @param int|null $idMessageParent Identifiant du message parent
+     * @param string|null $message Contenu du message
+     * 
+     * @return void
+     */
+    public function ajouterMessage(?int $idFil, ?int $idMessageParent, ?string $message): void
     {
-        $sql = "SELECT pseudo FROM " . DB_PREFIX . "utilisateur WHERE idUtilisateur = :idUtilisateur";
+        // Récupération de l'id de l'utilisateur 
+        $idUser = trim(unserialize($_SESSION["utilisateur"])->getId());
+
+        // Requête d'insertion
+        $sql = "INSERT INTO " . DB_PREFIX . "message ( valeur, dateC, idMessageParent, idFil, idUtilisateur) VALUES ( :valeur, NOW(), :idMessageParent, :idFil, :idUtilisateur)";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':idUtilisateur', $userId, PDO::PARAM_STR);
+        $stmt->bindValue(':idFil', $idFil, PDO::PARAM_INT);
+        $stmt->bindValue(':idMessageParent', $idMessageParent, PDO::PARAM_INT);
+        $stmt->bindValue(':valeur', $message, PDO::PARAM_STR);
+        $stmt->bindValue(':idUtilisateur', $idUser, PDO::PARAM_STR);
         $stmt->execute();
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $user ? $user['pseudo'] : 'Utilisateur inconnu';
     }
+
+    /**
+     * @brief Méthode d'ajout d'une réaction à un message
+     * 
+     * @details Méthode permettant d'ajouter une réaction à un message. AJout d'un like ou d'un dislike selon la valeur de $reaction. Si jamais l'utilisateur a déjà réagi, la réaction est mise à jour.
+     * 
+     * @param int $idMessage Identifiant du message
+     * @param bool $reaction Réaction (true = like, false = dislike)
+     */
+    public function ajouterReaction(int $idMessage, bool $reaction): void
+    {
+        // Récupérer l'ID de l'utilisateur depuis la session
+        if (!isset($_SESSION['utilisateur'])) {
+            echo "Erreur : l'utilisateur n'est pas connecté.";
+            return;
+        }
+
+        $idUtilisateur = trim(unserialize($_SESSION['utilisateur'])->getId());
+
+        try {
+            // Préparer la requête SQL
+            $sql = "INSERT INTO " . DB_PREFIX . "reagir (idMessage, idUtilisateur, reaction) 
+                VALUES (:idMessage, :idUtilisateur, :reaction) 
+                ON DUPLICATE KEY UPDATE reaction = :reaction"; 
+
+            $stmt = $this->pdo->prepare($sql);
+
+            // Lier les valeurs
+            $stmt->bindValue(':idMessage', $idMessage, PDO::PARAM_INT);
+            $stmt->bindValue(':idUtilisateur', $idUtilisateur, PDO::PARAM_STR);
+            $stmt->bindValue(':reaction', $reaction ? 1 : 0, PDO::PARAM_INT);
+
+            // Exécuter la requête
+            $stmt->execute();
+        } catch (PDOException $e) {
+            echo "Erreur lors de l'insertion : " . $e->getMessage();
+        }
+    }
+
 }

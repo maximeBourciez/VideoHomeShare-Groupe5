@@ -15,8 +15,7 @@ class UtilisateurDAO
         $pdo = $this->pdo->prepare("INSERT INTO " . DB_PREFIX . "utilisateur 
         (idUtilisateur, pseudo, vraiNom, mail, mdp, role, urlImageProfil, urlImageBanniere) 
         VALUES (:idUtilisateur, :pseudo, :nom , :mail, :mdp, :role, :urlImageProfil, :urlImageBaniere)");
-
-
+      
         // Récupération des valeurs
         $id = $utilisateur->getId();
         $pseudo = $utilisateur->getPseudo();
@@ -25,8 +24,7 @@ class UtilisateurDAO
         $mdp = $utilisateur->getMdp();
         $role = $utilisateur->getRole();
         $urlImageProfil = $utilisateur->getUrlImageProfil();
-        $urlImageBaniere = $utilisateur->getUrlImageBaniere();
-
+        $urlImageBanniere = $utilisateur->getUrlImageBanniere();
 
         // passage des paramètres
         $pdo->bindValue(":idUtilisateur", $id);
@@ -36,7 +34,7 @@ class UtilisateurDAO
         $pdo->bindValue(":mdp", $mdp);
         $pdo->bindValue(":role", $role);
         $pdo->bindValue(":urlImageProfil", $urlImageProfil);
-        $pdo->bindValue(":urlImageBaniere", $urlImageBaniere);
+        $pdo->bindValue(":urlImageBanniere", $urlImageBanniere);
 
         // execution de la requête
         return $pdo->execute();
@@ -44,6 +42,7 @@ class UtilisateurDAO
 
     function update(Utilisateur $utilisateur): bool
     {
+
         $pdo = $this->pdo->prepare("UPDATE " . DB_PREFIX . "utilisateur SET  pseudo = :pseudo, vraiNom = :nom, mail = :mail, mdp = :mdp,  urlImageProfil = :urlImageProfil, urlImageBanniere = :urlImageBaniere WHERE idUtilisateur = :id");
 
         $id = $utilisateur->getId();
@@ -52,7 +51,7 @@ class UtilisateurDAO
         $mail = $utilisateur->getMail();
         $mdp = $utilisateur->getMdp();
         $urlImageProfil = $utilisateur->getUrlImageProfil();
-        $urlImageBaniere = $utilisateur->getUrlImageBaniere();
+        $urlImageBaniere = $utilisateur->getUrlImageBanniere();
         $pdo->bindParam(":id", $id);
         $pdo->bindParam(":pseudo", $pseudo);
         $pdo->bindParam(":nom", $nom);
@@ -79,11 +78,19 @@ class UtilisateurDAO
         $mail = $row['mail'];
         $mdp = $row['mdp'];
         $role = $row['role'];
+
+        // Transformer le role
+        $roleEnum = Role::fromString($role);
+        if ($roleEnum !== null) {
+            $role = $roleEnum;
+        }
+
         $urlImageProfil = $row['urlImageProfil'];
-        $urlImageBaniere = $row['urlImageBanniere'];
+        $urlImageBanniere = $row['urlImageBanniere'];
 
         // Retourner l'utilisateur
         return new Utilisateur($id, $pseudo, $nom, $mail, $mdp, $role, $urlImageProfil, $urlImageBaniere);
+
     }
 
     function hydrateAll(array $rows): array
