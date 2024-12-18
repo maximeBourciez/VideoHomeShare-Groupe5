@@ -37,6 +37,7 @@ require_once 'modeles/question.class.php';
 require_once 'modeles/theme.class.php';
 require_once 'modeles/commentaire.class.php';
 require_once 'modeles/personnalite.class.php';
+require_once 'modeles/utilitaires.class.php';
 
 
 // Ajout des contrôleurs
