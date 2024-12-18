@@ -41,13 +41,13 @@ class commentaireDAO {
     }
 
     // Récupérer les commentaires pour un collection
-    public function getMoyenneEtTotalNotesCollection(string $idCollection): array {
+    public function getMoyenneEtTotalNotesCollection(string $idCollectionTmdb): array {
         $sql = 'SELECT AVG(note) AS moyenne, COUNT(note) AS total 
                 FROM vhs_commenterCollection 
-                WHERE idCollection = :idCollection';
+                WHERE idCollectionTmdb = :idCollectionTmdb';
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':idCollection', $idCollection, PDO::PARAM_STR);
+        $stmt->bindParam(':idCollectionTmdb', $idCollectionTmdb, PDO::PARAM_STR);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -85,15 +85,15 @@ class commentaireDAO {
     }
     
     //récupérer les commentaires pour une collection
-    public function getCommentairesCollection(string $idCollection): array {
+    public function getCommentairesCollection(string $idCollectionTmdb): array {
         $sql = 'SELECT idUtilisateur, titre, note, avis, estPositif
                 FROM vhs_commenterCollection
-                WHERE idCollection = :idCollection
+                WHERE idCollectionTmdb = :idCollectionTmdb
                 ORDER BY dateCommentaire DESC
                 LIMIT 6';
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':idCollection', $idCollection, PDO::PARAM_STR);
+        $stmt->bindParam(':idCollectionTmdb', $idCollectionTmdb, PDO::PARAM_STR);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -102,37 +102,6 @@ class commentaireDAO {
         }
 
         return [];
-    }
-
-
-    // Créer un commentaire pour un contenu
-    public function createCommentaireContenu(Commentaire $commentaire, string $idContenu) {
-        $sql = 'INSERT INTO vhs_commenterContenu (idUtilisateur, titre, note, avis, estPositif, dateCommentaire, idContenu)
-                VALUES (:idUtilisateur, :titre, :note, :avis, :estPositif, NOW(), :idContenu)';
-
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':idUtilisateur', $commentaire->getIdUtilisateur(), PDO::PARAM_STR);
-        $stmt->bindParam(':titre', $commentaire->getTitre(), PDO::PARAM_STR);
-        $stmt->bindParam(':note', $commentaire->getNote(), PDO::PARAM_INT);
-        $stmt->bindParam(':avis', $commentaire->getAvis(), PDO::PARAM_STR);
-        $stmt->bindParam(':estPositif', $commentaire->getEstPositif(), PDO::PARAM_BOOL);
-        $stmt->bindParam(':idContenu', $idContenu, PDO::PARAM_STR);
-        $stmt->execute();
-    }
-
-    // Créer un commentaire pour une collection
-    public function createCommentaireCollection(Commentaire $commentaire, string $idCollection) {
-        $sql = 'INSERT INTO vhs_commenterCollection (idUtilisateur, titre, note, avis, estPositif, dateCommentaire, idCollection)
-                VALUES (:idUtilisateur, :titre, :note, :avis, :estPositif, NOW(), :idCollection)';
-
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':idUtilisateur', $commentaire->getIdUtilisateur(), PDO::PARAM_STR);
-        $stmt->bindParam(':titre', $commentaire->getTitre(), PDO::PARAM_STR);
-        $stmt->bindParam(':note', $commentaire->getNote(), PDO::PARAM_INT);
-        $stmt->bindParam(':avis', $commentaire->getAvis(), PDO::PARAM_STR);
-        $stmt->bindParam(':estPositif', $commentaire->getEstPositif(), PDO::PARAM_BOOL);
-        $stmt->bindParam(':idCollection', $idCollection, PDO::PARAM_STR);
-        $stmt->execute();
     }
 
     // Hydrater un commentaire (Commentaire standard)

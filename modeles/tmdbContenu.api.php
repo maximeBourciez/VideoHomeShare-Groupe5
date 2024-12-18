@@ -4,6 +4,7 @@ class TmdbAPIContenu {
     private string $apiKey = TMDB_API_KEY;
     private string $baseUrl = TMDB_BASE_URL;
     private string $imageBaseUrl = TMDB_IMAGE_BASE_URL;
+    private ?int $tmdbId = null;
 
     public function __construct(string $apiKey) {
         $this->apiKey = $apiKey;
@@ -95,7 +96,7 @@ class TmdbAPIContenu {
  /**
  * Récupère les personnalités (acteurs/réalisateurs) d'un film
  */
-public function getPersonnalites(array $movieData): array {
+public function getPersonnalitesContenu(array $movieData): array {
     $personnalites = [];
     
     // Ajouter les réalisateurs
@@ -153,7 +154,7 @@ public function getPersonnalites(array $movieData): array {
         return null;
     }
 
-    public function getGenres($movieData): array {
+    public function getGenresContenu($movieData): array {
         $themes = [];
         if (isset($movieData['genres'])) {
             foreach ($movieData['genres'] as $genre) {
@@ -165,5 +166,14 @@ public function getPersonnalites(array $movieData): array {
             }
         }
         return $themes;
+    }
+
+    public function getTmdbId(): ?int {
+        return $this->tmdbId;
+    }
+
+    public function setTmdbId(?int $tmdbId): self {
+        $this->tmdbId = $tmdbId;
+        return $this;
     }
 }

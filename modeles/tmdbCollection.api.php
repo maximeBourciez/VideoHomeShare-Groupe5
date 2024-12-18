@@ -65,17 +65,15 @@ class TmdbAPICollection {
     private function formatDescription(array $collectionData): string {
         $description = '';
         
-        // Ajouter l'overview principal
         if (!empty($collectionData['overview'])) {
             $description .= $collectionData['overview'] . "\n\n";
         }
         
-        // Ajouter la liste des films
         if (!empty($collectionData['parts'])) {
             $description .= "Films de la collection :\n";
             foreach ($collectionData['parts'] as $film) {
                 $date = !empty($film['release_date']) ? ' (' . substr($film['release_date'], 0, 4) . ')' : '';
-                $description .= "- " . $film['title'] . $date . "\n";
+                $description .= "- " . $film['title'] . $date . " [" . $film['id'] . "]\n";
             }
         }
 
@@ -166,5 +164,116 @@ class TmdbAPICollection {
         }
 
         return [];
+    }
+
+    /**
+     * Récupère les personnalités d'une collection par son ID ou objet Collection
+     * @param int|Collection $collection ID de la collection ou objet Collection
+     */
+    public function getPersonnalitesCollection($collection): array {
+        // Extraire l'ID si un objet Collection est passé
+        $collectionId = is_object($collection) ? $collection->getId() : $collection;
+        
+        if (!is_int($collectionId)) {
+            return [];
+        }
+
+        $url = "https://api.themoviedb.org/3/collection/{$collectionId}?api_key={$this->apiKey}&language=fr-FR&append_to_response=credits";
+        
+        $response = file_get_contents($url);
+        if ($response === false) {
+            return [];
+        }
+        
+        $collectionData = json_decode($response, true);
+        $personnalites = [];
+        
+        if (isset($collectionData['parts'])) {
+            foreach ($collectionData['parts'] as $movie) {
+                // Récupérer les détails du film pour avoir les crédits
+                $movieUrl = "https://api.themoviedb.org/3/movie/{$movie['id']}?api_key={$this->apiKey}&language=fr-FR&append_to_response=credits";
+                $movieResponse = file_get_contents($movieUrl);
+                if ($movieResponse !== false) {
+                    $movieData = json_decode($movieResponse, true);
+                    
+                    // Ajouter les réalisateurs
+                    if (isset($movieData['credits']['crew'])) {
+                        foreach ($movieData['credits']['crew'] as $crew) {
+                            if ($crew['job'] === 'Director') {
+                                $personnalites[] = new Personnalite(
+                                    null,
+                                    $crew['name'],
+                                    '',
+                                    !empty($crew['profile_path']) 
+                                        ? $this->imageBaseUrl . $crew['profile_path'] 
+                                        : null,
+                                    'Réalisateur'
+                                );
+                            }
+                        }
+                    }
+                    
+                    // Ajouter les acteurs principaux
+                    if (isset($movieData['credits']['cast'])) {
+                        $actors = array_slice($movieData['credits']['cast'], 0, 5);
+                        foreach ($actors as $actor) {
+                            $personnalites[] = new Personnalite(
+                                null,
+                                $actor['name'],
+                                '',
+                                !empty($actor['profile_path']) 
+                                    ? $this->imageBaseUrl . $actor['profile_path'] 
+                                    : null,
+                                'Acteur'
+                            );
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Éliminer les doublons en comparant les noms
+        $uniquePersonnalites = [];
+        $seenNames = [];
+        
+        foreach ($personnalites as $personnalite) {
+            if (!in_array($personnalite->getNom(), $seenNames)) {
+                $seenNames[] = $personnalite->getNom();
+                $uniquePersonnalites[] = $personnalite;
+            }
+        }
+        
+        return $uniquePersonnalites;
+    }
+
+    /**
+     * Récupère les détails de tous les films d'une collection
+     */
+    public function getMoviesFromCollection(int $collectionId): array {
+        $collection = $this->getCollectionById($collectionId);
+        if (!$collection) {
+            return [];
+        }
+        
+        $movies = [];
+        $description = $collection->getDescription();
+        preg_match_all('/- (.+) \((\d{4})\) \[(\d+)\]/', $description, $matches);
+
+        if (!empty($matches[1])) {
+            $tmdbContenuApi = new TmdbAPIContenu($this->apiKey);
+            
+            for ($i = 0; $i < count($matches[1]); $i++) {
+                $movieId = $matches[3][$i];
+                $movieData = $tmdbContenuApi->getMovieById($movieId);
+                
+                if ($movieData) {
+                    $contenu = $tmdbContenuApi->convertToContenu($movieData);
+                    $contenu->setTmdbId($movieId);
+                    $movies[] = $contenu;
+                }
+            }
+        }
+
+        return $movies;
     }
 }

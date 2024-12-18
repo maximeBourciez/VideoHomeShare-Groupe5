@@ -83,78 +83,25 @@
         </div>
 
 
-        <!-- Personnalités -->
-        <div class="movie-cast bg-mydark my-5 text-white w-100 rounded shadow position-relative">
-            <h2 class="movie-cast__title m-3">Personnalités :</h2>
-            {% if personnalite is not empty %}
-            {% if personnalite|length > 6 %}
-                <div id="personnalitesCarousel" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        {% set chunks = personnalite|batch(6) %}
-                        {% for chunk in chunks %}
-                            <div class="carousel-item {{ loop.first ? 'active' : '' }}">
-                                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 justify-content-center">
-                                    {% for personne in chunk %}
-                                        <div class="card bg-mylight mx-3 mb-3" style="width: 10rem;">
-                                            <img 
-                                                src="{{ personne.urlImage }}" 
-                                                alt="{{ personne.nom }}" 
-                                                class="shadow img-fluid my-1 rounded" 
-                                                style="width: 100%; height: 150px; object-fit: cover;"
-                                            >
-                                            <div class="card-body">
-                                                <p class="card-text mb-0 fw-light">{{ personne.nom }}</p>
-                                                <div class="spacer my-2"></div>
-                                                <p class="card-text">{{ personne.role }}</p>
-                                            </div>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
+        <!-- Films de la collection -->
+        <div>
+            <h2>Films de la collection</h2>
+        </div>
 
-                    <button 
-                        class="carousel-control-prev custom-carousel-control" 
-                        type="button" 
-                        data-bs-target="#personnalitesCarousel" 
-                        data-bs-slide="prev"
-                    >
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Précédent</span>
-                    </button>
-                    <button 
-                        class="carousel-control-next custom-carousel-control" 
-                        type="button" 
-                        data-bs-target="#personnalitesCarousel" 
-                        data-bs-slide="next"
-                    >
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Suivant</span>
-                    </button>
-                </div>
-            {% else %}
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-                    {% for personne in personnalite %}
-                        <div class="card bg-mylight mx-3 mb-3" style="width: 10rem;">
-                            <img 
-                                src="{{ personne.urlImage }}" 
-                                alt="{{ personne.nom }}" 
-                                class="shadow img-fluid my-1 rounded" 
-                                style="width: 100%; height: 150px; object-fit: cover;"
-                            >
-                            <div class="card-body">
-                                <p class="card-text mb-0">{{ personne.nom }}</p>
-                                <p class="card-text mt-0">{{ personne.prenom }}</p>
-                                <p class="card-text">{{ personne.role }}</p>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-            {% else %}
-                <p class="fs-6 ms-3">Aucune personnalité disponible pour ce film.</p>
-            {% endif %}
+        <div class="d-flex flex-column bg-mydark w-100 rounded my-5 shadow">
+        {% for film in films %}
+        <div class="d-flex">
+            <a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ film.tmdbId }}">
+                <img src="{{ film.lienAffiche }}" class="rounded float-start m-2" alt="{{ film.titre }}" style="width: 200px; height: 300px;">
+            </a>
+            <div class="d-flex flex-column text-white my-auto ms-3">
+                <h3>{{ film.titre }}</h3>
+                <p>{{ film.description }}</p>
+                <a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ film.tmdbId }}" class="btn btn-myprimary">Voir plus</a>
+            </div>
+        </div>
+        <hr class="text-white m-0 p-0">
+        {% endfor %}
         </div>
 
         <!-- Commentaires -->

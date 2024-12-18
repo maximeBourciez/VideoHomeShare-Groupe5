@@ -26,10 +26,10 @@ class ControllerContenu extends Controller {
                 $contenu = $tmdbApi->convertToContenu($movieData);
                 
                 // Récupérer les personnalités
-                $personnalites = $tmdbApi->getPersonnalites($movieData);
+                $personnalites = $tmdbApi->getPersonnalitesContenu($movieData);
                 
                 // Récupérer les thèmes
-                $themes = $tmdbApi->getGenres($movieData);
+                $themes = $tmdbApi->getGenresContenu($movieData);
 
                 //Récupérer les notes et le nombre de notes
                 $commentaireDAO = new CommentaireDAO($this->getPdo());
@@ -63,7 +63,8 @@ class ControllerContenu extends Controller {
             }
         }
 
-        // Si pas d'ID ou film non trouvé, afficher le formulaire
-        // echo $this->getTwig()->render('importerTmdb.html.twig');
+
+        // Si pas d'ID ou contenu non trouvée, rediriger vers la page d'accueil
+        echo $this->getTwig()->render('index.html.twig');
     }
 } 

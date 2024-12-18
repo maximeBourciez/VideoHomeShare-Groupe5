@@ -23,11 +23,25 @@ class ControllerCollection extends Controller {
             if ($collection) {
                 // Récupérer les genres de la collection
                 $genres = $this->tmdbApi->getGenresFromCollection($tmdbId);
+
+                // Récupérer tous les films de la collection
+                $films = $this->tmdbApi->getMoviesFromCollection($tmdbId);
+
+                //Récupérer les notes et le nombre de notes
+                $commentaireDAO = new CommentaireDAO($this->getPdo());
+                $notes = $commentaireDAO->getMoyenneEtTotalNotesCollection($tmdbId);
+   
+                //Récupérer les commentaires
+                $commentaires = $commentaireDAO->getCommentairesCollection($tmdbId);
                 
                 // Afficher le template avec les données
                 echo $this->getTwig()->render('pageDuneCollection.html.twig', [
                     'collection' => $collection,
-                    'themes' => $genres
+                    'themes' => $genres,
+                    'films' => $films,
+                    'moyenne' => $notes['moyenne'],
+                    'total' => $notes['total'],
+                    'commentaires' => $commentaires,
                 ]);
                 return;
             }
