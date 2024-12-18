@@ -2,7 +2,7 @@
 	{% set auteurParentId = idAuteur %}
 	{% set auteurParentPseudo = pseudoAuteur %}
 	{% for reponse in reponses %}
-		<div class="card my-4 shadow-sm border-0 rounded-3 ms-5">
+		<div id="{{reponse.getIdMessage() }}" class="card my-4 shadow-sm border-0 rounded-3 ms-5">
 			<div class="card-body p-4 bg-mydark text-white rounded">
 				<div class="d-flex align-items-center">
 					<img src="{{ reponse.getUtilisateur() ? reponse.getUtilisateur().getUrlImageProfil() : 'default_avatar.jpg' }}" alt="Avatar" class="rounded-circle me-3" width="50" height="50">
@@ -97,7 +97,7 @@
 	<div class="container">
 		{% for message in messages %}
 			{% if message.idMessageParent is null %}
-				<div class="card my-4 shadow-sm border-0 rounded-3">
+				<div id="{{message.getIdMessage()}}" class="card my-4 shadow-sm border-0 rounded-3">
 					<div class="card-body p-4 bg-mydark text-white rounded">
 						<div class="d-flex align-items-center">
 							<img src="{{ message.getUtilisateur().getUrlImageProfil() }}" alt="Avatar" class="rounded-circle me-3" width="50" height="50">

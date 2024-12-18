@@ -39,6 +39,7 @@ require_once 'modeles/theme.class.php';
 require_once 'modeles/theme.dao.php';
 require_once 'modeles/commentaire.class.php';
 require_once 'modeles/personnalite.class.php';
+require_once 'modeles/utilitaires.class.php';
 require_once 'modeles/collection.class.php';
 require_once 'modeles/tmdbCollection.api.php';
 require_once 'modeles/tmdbContenu.api.php';   
