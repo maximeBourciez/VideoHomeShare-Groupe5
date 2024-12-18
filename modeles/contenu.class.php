@@ -10,9 +10,11 @@ class Contenu{
     private ?string $lienAffiche;
     private ?string $type;
     private ?string $duree;
+    private ?int $tmdbId;
+    private ?string $lienAfficheReduite;
   
     //constructeur
-    public function __construct(?int $id = null, ?string $titre = null, ?DateTime $date = null, ?string $description = null, ?string $DescriptionLongue = null, ?string $lienAffiche = null, ?string $duree = null, ?string $type = null){
+    public function __construct(?int $id = null, ?string $titre = null, ?DateTime $date = null, ?string $description = null, ?string $DescriptionLongue = null, ?string $lienAffiche = null, ?string $duree = null, ?string $type = null, ?string $lienAfficheReduite = null){
         $this->id = $id;
         $this->titre = $titre;
         $this->date = $date;
@@ -21,6 +23,8 @@ class Contenu{
         $this->lienAffiche = $lienAffiche;
         $this->duree = $duree;
         $this->type = $type;
+        $this->tmdbId = null;
+        $this->lienAfficheReduite = $lienAfficheReduite;
     }
   
     //getters and setters
@@ -91,5 +95,22 @@ class Contenu{
     // set DescriptionLongue
     public function setDescriptionLongue(?string $DescriptionLongue): void{
         $this->DescriptionLongue = $DescriptionLongue;
+    }
+
+    public function getTmdbId(): ?int {
+        return $this->tmdbId;
+    }
+
+    public function setTmdbId(?int $tmdbId): self {
+        $this->tmdbId = $tmdbId;
+        return $this;
+    }
+
+    public function getLienAfficheReduite(): ?string {
+        return $this->lienAfficheReduite;
+    }
+
+    public function setLienAfficheReduite(?string $lienAfficheReduite): void {
+        $this->lienAfficheReduite = $lienAfficheReduite;
     }
 }

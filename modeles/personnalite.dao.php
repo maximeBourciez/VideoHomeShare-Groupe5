@@ -43,4 +43,5 @@ class PersonnaliteDAO
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         return $this->hydrateAll($stmt->fetchAll());
     }
+    
 }

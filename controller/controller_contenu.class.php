@@ -8,11 +8,11 @@ class ControllerContenu extends Controller {
     /**
      * Affiche les informations d'un film depuis TMDB sans l'importer
      */
-    public function afficherFilm(): void {
+    public function afficherContenu(): void {
         $tmdbId = isset($_GET['tmdb_id']) ? intval($_GET['tmdb_id']) : null;
         if ($tmdbId) {
             // Initialiser l'API TMDB
-            $tmdbApi = new TmdbAPI(TMDB_API_KEY);
+            $tmdbApi = new TmdbAPIContenu(TMDB_API_KEY);
             
             // Récupérer les données du film
             $movieData = $tmdbApi->getMovieById($tmdbId);
@@ -26,10 +26,10 @@ class ControllerContenu extends Controller {
                 $contenu = $tmdbApi->convertToContenu($movieData);
                 
                 // Récupérer les personnalités
-                $personnalites = $tmdbApi->getPersonnalites($movieData);
+                $personnalites = $tmdbApi->getPersonnalitesContenu($movieData);
                 
                 // Récupérer les thèmes
-                $themes = $tmdbApi->getGenres($movieData);
+                $themes = $tmdbApi->getGenresContenu($movieData);
 
                 //Récupérer les notes et le nombre de notes
                 $commentaireDAO = new CommentaireDAO($this->getPdo());
@@ -63,7 +63,8 @@ class ControllerContenu extends Controller {
             }
         }
 
-        // Si pas d'ID ou film non trouvé, afficher le formulaire
-        // echo $this->getTwig()->render('importerTmdb.html.twig');
+
+        // Si pas d'ID ou contenu non trouvée, rediriger vers la page d'accueil
+        echo $this->getTwig()->render('index.html.twig');
     }
 } 
