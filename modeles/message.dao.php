@@ -334,4 +334,22 @@ class MessageDAO
         // Exécuter la requête
         $stmt->execute();
     }
+
+    /**
+     * Méthode permettant de supprimer toutes les réactions à un message lors de sa suppression
+     * 
+     * @param int|null $idMessage Identifiant du message dont les réactions sont à purger
+     * 
+     * @return void
+     */
+    public function purgerReactions(?int $idMessage) : void 
+    {
+        // Préparer la requête
+        $sql = "DELETE FROM ". DB_PREFIX . "reagir
+               WHERE idMessage = :idMessage";
+        
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':idMessage', $idMessage);
+        $stmt->execute();
+    }
 }

@@ -266,6 +266,7 @@ class ControllerFil extends Controller
 
             // Supprimer le message
             $managerMessage->supprimerMessage($idMessageASuppr);
+            $managerMessage->purgerReactions($idMessageASuppr);
 
             // Réafficher le fil
             $this->genererVue($idFil);
