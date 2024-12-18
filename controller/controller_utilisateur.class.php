@@ -110,9 +110,11 @@ class ControllerUtilisateur extends Controller
                             //cripter le mot de passe
                             $mdp = password_hash($mdp, PASSWORD_DEFAULT);
 
+                            // Création du rôle 
+                            $roleUser = Role::Utilisateur;
 
                             //création de l'utilisateur
-                            $newUtilisateur = new Utilisateur($id, $pseudo, $nom, $mail, $mdp, "Utilisateur", "images/image_de_profil_de_base.svg", "images/Baniere_de_base.png");
+                            $newUtilisateur = new Utilisateur($id, $pseudo, $nom, $mail, $mdp, $roleUser, "images/image_de_profil_de_base.svg", "images/Baniere_de_base.png");
                             $managerutilisateur->create($newUtilisateur);
                             //Génération de la vue
                             $template = $this->getTwig()->load('connection.html.twig');

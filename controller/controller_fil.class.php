@@ -84,6 +84,8 @@ class ControllerFil extends Controller
      * @brief Méthode d'ajout d'un message dans un fil de discussion
      * 
      * @details Récupère les infos du message à ajouter, du message parent et du fil puis l'ajoute dans la base de données
+     * 
+     * @todo Raise exception si user non connecté
      *  
      * @return void
      */
@@ -94,9 +96,9 @@ class ControllerFil extends Controller
             $idFil = intval($_POST['id_fil']);
             $idMessageParent = intval($_POST['id_message_parent']);
             $message = htmlspecialchars($_POST['message']);
-            if (isset($_SESSION['connecter'])) {
-                //recuperer l'utilisateur connecter if
-                $personneConnect = unserialize($_SESSION['connecter']);
+            if (isset($_SESSION['utilisateur'])) {
+
+                $personneConnect = unserialize($_SESSION['utilisateur']);
                 $idUtilisateur = $personneConnect->getId();
             }
 
@@ -126,17 +128,22 @@ class ControllerFil extends Controller
      */
     public function ajouterMessage()
     {
-        // Récupérer les infos du message
-        $idFil = intval($_POST['id_fil']);
-        $message = htmlspecialchars($_POST['message']);
-
-        // Ajouter le message
-        $managerMessage = new MessageDAO($this->getPdo());
-        $managerMessage->ajouterMessage($idFil, null, $message);
-
-        // Rediriger vers le fil
-        $this->genererVue($idFil);
-        exit();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $idFil = isset($_POST['id_fil']) ? intval($_POST['id_fil']) : null;
+            $message = isset($_POST['message']) ? htmlspecialchars($_POST['message']) : null;
+    
+            if (!isset($_SESSION["utilisateur"])) {
+                throw new Exception("Accès interdit");
+            }
+    
+            $managerMessage = new MessageDAO($this->getPdo());
+            $managerMessage->ajouterMessage($idFil, null, $message);
+    
+            $this->genererVue($idFil);
+            exit();
+        } else {
+            throw new Exception("Méthode HTTP invalide");
+        }   
     }
 
     /**
@@ -192,7 +199,7 @@ class ControllerFil extends Controller
      */
     public function creerFil()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['connecter'])) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['utilisateur'])) {
             // Récupérer les données 
             $titre = htmlspecialchars($_POST['titre']);
             $themes = $_POST['themes'];
@@ -225,7 +232,8 @@ class ControllerFil extends Controller
      * 
      * @return void
      */
-    private function genererVue(int $idFil){
+    private function genererVue(int $idFil)
+    {
         // Envoyer le script pour le refresh de la requête
         echo "<script>
                 history.replaceState({}, '', 'index.php?controller=fil&methode=afficherFilParId&id_fil=$idFil');

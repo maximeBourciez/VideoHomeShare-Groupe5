@@ -226,8 +226,8 @@ class MessageDAO
      */
     public function ajouterMessage(?int $idFil, ?int $idMessageParent, ?string $message): void
     {
-        // Récupérer l'id de luilisateur dans la session
-        $idUtilisateur = trim(unserialize($_SESSION['connecter'])->getId());
+        // Récupération de l'id de l'utilisateur 
+        $idUser = trim(unserialize($_SESSION["utilisateur"])->getId());
 
         // Requête d'insertion
         $sql = "INSERT INTO " . DB_PREFIX . "message ( valeur, dateC, idMessageParent, idFil, idUtilisateur) VALUES ( :valeur, NOW(), :idMessageParent, :idFil, :idUtilisateur)";
@@ -235,7 +235,7 @@ class MessageDAO
         $stmt->bindValue(':idFil', $idFil, PDO::PARAM_INT);
         $stmt->bindValue(':idMessageParent', $idMessageParent, PDO::PARAM_INT);
         $stmt->bindValue(':valeur', $message, PDO::PARAM_STR);
-        $stmt->bindValue(':idUtilisateur', $idUtilisateur, PDO::PARAM_STR);
+        $stmt->bindValue(':idUtilisateur', $idUser, PDO::PARAM_STR);
         $stmt->execute();
     }
 
@@ -250,12 +250,12 @@ class MessageDAO
     public function ajouterReaction(int $idMessage, bool $reaction): void
     {
         // Récupérer l'ID de l'utilisateur depuis la session
-        if (!isset($_SESSION['connecter'])) {
+        if (!isset($_SESSION['utilisateur'])) {
             echo "Erreur : l'utilisateur n'est pas connecté.";
             return;
         }
 
-        $idUtilisateur = trim(unserialize($_SESSION['connecter'])->getId());
+        $idUtilisateur = trim(unserialize($_SESSION['utilisateur'])->getId());
 
         try {
             // Préparer la requête SQL

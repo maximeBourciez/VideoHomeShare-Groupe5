@@ -1,9 +1,23 @@
 <?php
 
 enum Role {
-    case Normal;
+    case Utilisateur;
     case Moderateur;
-    case Administrateur;
+
+    // Méthode pour récupérer l'instance de l'énum à partir d'une chaîne
+    public static function fromString(string $value): ?Role {
+        foreach (self::cases() as $role) {
+            if ($role->name === $value) {
+                return $role;
+            }
+        }
+        return null; // Retourne null si aucune correspondance
+    }
+
+    // Méthode pour convertir une instance de Role en chaîne
+    public function toString(): string {
+        return $this->name;
+    }
 }
 
 class Utilisateur{
@@ -18,7 +32,7 @@ class Utilisateur{
     private ?string $urlImageBanniere;
     
     // Constructeur
-    function __construct(?string $id = null, ?string $pseudo = null, ?string $nom = null, ?string $mail = null, ?string $mdp = null, ?string $role = null, ?string $urlImageProfil = null, ?string $urlImageBanniere = null){
+    function __construct(?string $id = null, ?string $pseudo = null, ?string $nom = null, ?string $mail = null, ?string $mdp = null, ?Role $role = null, ?string $urlImageProfil = null, ?string $urlImageBanniere = null){
         $this->id = $id;
         $this->pseudo = $pseudo;
         $this->nom = $nom;
