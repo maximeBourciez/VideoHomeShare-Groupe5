@@ -65,7 +65,7 @@ class QuizzDAO{
         return $quizzs;
     }
 
-    function find(int $id): ?Quizz{
+    function findById(int $id): ?Quizz{
         $sql = "SELECT Q.*, U.pseudo FROM Quizz Q JOIN Utilisateur U ON Q.idUtilisateur = U.idUtilisateur WHERE idQuizz = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);

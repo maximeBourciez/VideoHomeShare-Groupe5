@@ -47,11 +47,11 @@ class ControllerQuizz extends Controller {
      * @return void
      */
     public function afficherQuizzParId(){
-        $id = $_GET['idQuizz'];
+        $idQuizz = $_GET['idQuizz'];
 
         // Récupérer les infos du quizz
         $quizzDAO = new QuizzDAO($this->getPdo());
-        $quizz = $quizzDAO->findById($id);
+        $quizz = $quizzDAO->findById($idQuizz);
         
         // Rendre le template avec les infos
         echo $this->getTwig()->render('listeQuizz.html.twig', [
@@ -61,12 +61,12 @@ class ControllerQuizz extends Controller {
     }
 
     public function jouerQuizz(){
-        $id = $_GET['idQuizz'];
+        $idQuizz = $_GET['idQuizz'];
         //A faire
 
         // Récupérer les infos du quizz
         $quizzDAO = new QuizzDAO($this->getPdo());
-        $quizz = $quizzDAO->findById($id);
+        $quizz = $quizzDAO->findById($idQuizz);
             
         // Rendre le template avec les infos
         echo $this->getTwig()->render('quizz.html.twig', [
@@ -80,10 +80,11 @@ class ControllerQuizz extends Controller {
         $idUtilisateur = $_GET['idUtilisateur']; 
         //A faire
 
-        if ($idQuizz != NULL){
+        if ($idQuizz !== NULL){
             // Rendre le template avec les infos
             echo $this->getTwig()->render('creationQuizz.html.twig', [
-                'quizz' => $quizz
+                'quizz' => $quizz,
+                'idQuizz' => $idQuizz //Passe l'ID au template pour qu'il puisse être utilisé
             ]);
         }
         else{
@@ -100,18 +101,33 @@ class ControllerQuizz extends Controller {
         listerQuizz();
     }
 
-    public function modifierQuizz(){
-        creerQuizz();
-    }
-
     public function gererQuizz() : String{
-        $modifURL = "index.php?controller=quizz&methode=modifierQuizz&idQuizz={{ quiz.id }}";
+        $modifURL = "index.php?controller=quizz&methode=creerQuizz&idQuizz={{ quiz.id }}";
         $supprURL = "index.php?controller=quizz&methode=supprimerQuizz&idQuizz={{ quiz.id }}";
 
         return "
         <a href='{$modifURL}' class='btn btn-myprimary'>Modifier</a>
         <a href='{$supprURL}' class='btn btn-myprimary' style='margin-left: 10px;'>Supprimer</a>
         ";
+    }
+
+    public function gererQuestion(){
+        $idQuizz = $_GET['idQuizz'];
+        var_dump($idQuizz);
+
+        // Récupérer les infos du quizz
+        $quizzDAO = new QuizzDAO($this->getPdo());
+        $quizz = $quizzDAO->findById($idQuizz);
+            
+        if ($idQuizz !== NULL){
+            // Rendre le template avec les infos
+            echo $this->getTwig()->render('creationQuestion.html.twig', [
+                'quizz' => $quizz
+            ]);
+        }
+        else{
+            echo $this->getTwig()->render('creationQuestion.html.twig');
+        }       
     }
 
 }
