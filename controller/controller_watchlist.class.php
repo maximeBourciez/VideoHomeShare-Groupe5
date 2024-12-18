@@ -15,6 +15,9 @@ class ControllerWhatchlist extends Controller
      */
     public function accueil(): void
     {
+        //Recupération des watchlists publiques
+        $managerWatchlist = new WatchlistDAO($this->getPdo());
+        $watchlists = $managerWatchlist->findAll();
 
         //Génération de la vue
         $template = $this->getTwig()->load('whatchlists.html.twig');
