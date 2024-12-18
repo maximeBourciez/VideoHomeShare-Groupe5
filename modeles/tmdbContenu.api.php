@@ -77,20 +77,28 @@ class TmdbAPIContenu {
             $descriptionLongue .= implode(', ', $keywords);
         }
 
+        // Création des liens d'images avec différentes tailles
         $lienAffiche = !empty($movieData['poster_path']) 
-            ? 'https://image.tmdb.org/t/p/original' . $movieData['poster_path']
+            ? "https://image.tmdb.org/t/p/original" . $movieData['poster_path']
+            : null;
+        
+        $lienAfficheReduite = !empty($movieData['poster_path'])
+            ? "https://image.tmdb.org/t/p/w185" . $movieData['poster_path']
             : null;
 
-        return new Contenu(
-            null,
-            $movieData['title'],
-            $date,
-            $descriptionCourte,
-            $descriptionLongue,
-            $lienAffiche,
-            $movieData['runtime'],
-            'Film'
+        $contenu = new Contenu(
+            null,                // id
+            $movieData['title'], // titre
+            $date,              // date
+            $descriptionCourte, // description
+            $descriptionLongue, // descriptionLongue
+            $lienAffiche,       // lienAffiche
+            $movieData['runtime'], // duree
+            'Film',             // type
+            $lienAfficheReduite // lienAfficheReduite
         );
+
+        return $contenu;
     }
 
  /**

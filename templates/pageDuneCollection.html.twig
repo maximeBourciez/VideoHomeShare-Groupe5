@@ -6,11 +6,15 @@
             <!-- Section Affiche -->
             <div class="movie-poster me-5">
                 {% if collection.lienAffiche is not empty %}
-                <img 
+               <img 
                     src="{{ collection.lienAffiche }}" 
                     alt="{{ collection.titreCollection }}" 
                     class="movie-poster__image shadow img-fluid m-5 rounded" 
                     style="width: 525px; height: 750px; object-fit: cover;"
+                    loading="lazy"
+                    crossorigin="anonymous"
+                    referrerpolicy="no-referrer"
+                    onerror="this.src='images/no-image.svg'"
                 >
                 {% else %}
                 <img 
@@ -68,7 +72,9 @@
                 <!-- Script de génération des étoiles -->
                 <script>
                     document.addEventListener('DOMContentLoaded', function () {
-                        generateStarRating({{ moyenne }}, 5);
+                        if (document.querySelector('#rating')) {
+                            generateStarRating({{ moyenne }}, 5);
+                        }
                     });
                 </script>
 
@@ -87,22 +93,30 @@
         <div>
             <h2>Films de la collection</h2>
         </div>
-
         <div class="d-flex flex-column bg-mydark w-100 rounded my-5 shadow">
         {% for film in films %}
         <div class="d-flex">
             <a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ film.tmdbId }}">
-                <img src="{{ film.lienAffiche }}" class="rounded float-start m-2" alt="{{ film.titre }}" style="width: 200px; height: 300px;">
+                <img 
+                    src="{{ film.lienAfficheReduite }}" 
+                    class="rounded float-start m-2" 
+                    alt="{{ film.titre }}" 
+                    style="width: 100px; height: 150px;"
+                    loading="lazy"
+                    crossorigin="anonymous"
+                    referrerpolicy="no-referrer"
+                    onerror="this.src='images/no-image.svg'"
+                >
             </a>
-            <div class="d-flex flex-column text-white my-auto ms-3">
+            <div class="d-flex flex-column text-white my-2 ms-3">
                 <h3>{{ film.titre }}</h3>
-                <p>{{ film.description }}</p>
+                <p>{{ film.description|length > 250 ? film.description|slice(0, 250) ~ '...' : film.description }}</p>
                 <a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ film.tmdbId }}" class="btn btn-myprimary">Voir plus</a>
             </div>
         </div>
         <hr class="text-white m-0 p-0">
         {% endfor %}
-        </div>
+        </div> 
 
         <!-- Commentaires -->
         <div class="movie-comments bg-mydark rounded text-white p-3 mb-5 w-100">
