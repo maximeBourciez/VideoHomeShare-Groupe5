@@ -17,9 +17,9 @@ Enfin, nous pensons proposer le Watch Together, une fonctionnalité permettant a
 
 ## Architecture technique
 ### Frontend
-HTML, CSS, TWIG
+HTML, CSS, TWIG, JavaScript
 ### Backend
-PHP
+PHP, JavaScript
 ### Base de données
 SQL
 ### API
@@ -45,7 +45,7 @@ ELK Stack
 <br>
 
 ## Technologies utilisées
-HTML, CSS, SCSS, PHP, JSON, YAML, TWIG, BOOTSTRAP
+HTML, CSS, SCSS, PHP, JSON, YAML, TWIG, BOOTSTRAP, JavaScript
 <br>
 <br>
 
