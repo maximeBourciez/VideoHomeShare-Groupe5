@@ -7,16 +7,16 @@ class Quizz {
     private ?string $titre;
     private ?string $description;
     private ?int $difficulte; //Prend une valeur entière entre 1 à 4
-    private ?string $date;
+    private ?string $dateC;
     private ?string $idUtilisateur;
 
     // Constructeur
-    function __construct(?int $id = null, ?string $titre = null, ?string $description = null, ?int $difficulte = null, ?string $date = null, ?string $idUtilisateur = null){
+    function __construct(?int $id = null, ?string $titre = null, ?string $description = null, ?int $difficulte = null, ?string $dateC = null, ?string $idUtilisateur = null){
         $this->id = $id;
         $this->titre = $titre;
         $this->description = $description;
         $this->difficulte = $difficulte;
-        $this->date = $date;
+        $this->dateC = $dateC;
         $this->idUtilisateur = $idUtilisateur;
     }
 
@@ -64,9 +64,9 @@ class Quizz {
      * Get the value of date
      * @return string
      */
-    public function getDate(): ?string
+    public function getDateC(): ?string
     {
-        return $this->date;
+        return $this->dateC;
     }
 
     /**
@@ -125,9 +125,9 @@ class Quizz {
      * @param string $date
      * @return void
      */
-    public function setDate(string $date): void
+    public function setDateC(string $dateC): void
     {
-        $this->date = $date;
+        $this->dateC = $dateC;
     }
 
     /**

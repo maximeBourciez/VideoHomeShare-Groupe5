@@ -9,41 +9,40 @@
 	<main class="content flex-grow-1">
 		<div class="container">
 			<br>
-			<h3>Création d'un quizz :</h3>
+			<h3>Création d'un quizz</h3>
 			<br>
-			<div class="container">
-				<form method="POST" action="">
+			<form method="POST" action="">
+				<div class="container card-body p-4 bg-mydark text-white rounded">
 					<label for="titre">
-						<b>Titre du quizz :
-						</b>
+						<b>Titre du quizz :</b>
 					</label>
 					<input type="text" id="titre" name="titre">
 					<br><br>
 					<label for="desc">
-						<b>Description :
-						</b>
+						<b>Description :</b>
 					</label>
-					<textarea id="desc" name="desc" style="width:100%; "></textarea>
+					<textarea id="desc" name="desc" style="width:100%; height:15%;" maxlength="255"></textarea>
 					<p id="compteur">255 caractères restants</p>
 					<br>
 					<label for="difficulte">
-						<b>Difficulté :
-						</b>
+						<b>Difficulté :</b>
 					</label>
 					<input type="number" id="difficulte" name="difficulte" min="1" max="4">
-					<p>
-						(1 = Facile, 2 = Moyen, 3 = Difficile, 4 = Expert)</p>
+					<br><small>(1 = Facile, 2 = Moyen, 3 = Difficile, 4 = Expert)</small>
+					<br>
+					<br>
 					<label for="nbQuestions">
 						<b>Nombre de questions :</b>
 					</label>
 					<input type="number" id="nbQuestions" name="nbQuestions" min="4" max="20">
-					<p>La valeur doit être comprise entre 4 et 20.</p>
-					<br>
-					<a href="index.php?controller=quizz&methode=gererQuestion&idQuizz={{ idQuizz }}" class="btn btn-myprimary">Suivant</a>
-					<br>
+					<br><small>La valeur doit être comprise entre 4 et 20.</small>
 				</div>
-			</div>
-		</main>
+				<br>
+				<a href="index.php?controller=quizz&methode=gererQuestion&idQuizz={{ idQuizz }}" class="btn btn-myprimary">Suivant</a>
+				<br><br>
+			</form>
+		</div>
+	</main>
 
-        <script src="JS/quizz.js">
-	{% endblock %}
+    <script src="JS/quizz.js"></script>
+{% endblock %}

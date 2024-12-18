@@ -7,6 +7,6 @@ document.addEventListener("DOMContentLoaded", () => { // Récupération des donn
     champText.addEventListener("input", () => { // Utilisation d'une fonction fléchée
         let currentLength = champText.value.length;
         let remaining = maxChar - currentLength;
-        counter.textContent = `${remaining} caractères restants`; 
+        counter.textContent = `${remaining} caractères restants`;
     });
 });

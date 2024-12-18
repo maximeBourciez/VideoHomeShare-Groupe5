@@ -60,6 +60,13 @@ class ControllerQuizz extends Controller {
         ]);
     }
 
+    /**
+     * @brief Méthode d'affichage d'un quizz en mode jeu
+     * 
+     * @details Méthode permettant d'afficher un quizz en mode jeu, qui affiche chaque question avec les réponses correspondantes
+     *
+     * @return void
+     */
     public function jouerQuizz(){
         $idQuizz = $_GET['idQuizz'];
         //A faire
@@ -75,16 +82,22 @@ class ControllerQuizz extends Controller {
         ]);
     }
 
+    /**
+     * @brief Méthode de création d'un quizz
+     * 
+     * @details Méthode qui permet de créer ou de modifier un quizz en récupérant les valeurs nécessaires pour un quizz précis
+     *
+     * @return void
+     */
     public function creerQuizz(){ 
         $idQuizz = $_GET['idQuizz'];
         $idUtilisateur = $_GET['idUtilisateur']; 
-        //A faire
 
         if ($idQuizz !== NULL){
             // Rendre le template avec les infos
             echo $this->getTwig()->render('creationQuizz.html.twig', [
-                'quizz' => $quizz,
-                'idQuizz' => $idQuizz //Passe l'ID au template pour qu'il puisse être utilisé
+                'idQuizz' => $idQuizz, //Passe l'ID au template pour qu'il puisse être utilisé
+                'idUtilisateur' => $idUtilisateur
             ]);
         }
         else{
@@ -92,6 +105,13 @@ class ControllerQuizz extends Controller {
         }
     }
 
+    /**
+     * @brief Méthode de suppression d'un quizz
+     * 
+     * @details Méthode permettant de supprimer un quizz en récupérant son id
+     *
+     * @return void
+     */
     public function supprimerQuizz(){
         $idQuizz = $_GET['idQuizz'];
         $quizzDAO = new QuizzDAO($this->getPdo());
@@ -101,6 +121,13 @@ class ControllerQuizz extends Controller {
         listerQuizz();
     }
 
+    /**
+     * @brief Méthode permettant de gérer des quizz
+     * 
+     * @details Méthode permettant de gérer les quizz d'un utilisateur, affichant deux boutons pour modifier ou supprimer un quizz.
+     *
+     * @return void
+     */
     public function gererQuizz() : String{
         $modifURL = "index.php?controller=quizz&methode=creerQuizz&idQuizz={{ quiz.id }}";
         $supprURL = "index.php?controller=quizz&methode=supprimerQuizz&idQuizz={{ quiz.id }}";
@@ -111,21 +138,33 @@ class ControllerQuizz extends Controller {
         ";
     }
 
-    public function gererQuestion(){
-        $idQuizz = $_GET['idQuizz'];
-        var_dump($idQuizz);
-
-        // Récupérer les infos du quizz
-        $quizzDAO = new QuizzDAO($this->getPdo());
-        $quizz = $quizzDAO->findById($idQuizz);
+    /**
+     * @brief Méthode de gestion de question
+     * 
+     * @details Méthode permettant de gérer une question et appelle l'interface correspondante
+     *
+     * @return void
+     */
+    public function gererQuizzQuestion(){
+        $idQuizz = $_POST['idQuizz'];
+        $titre = $_POST['titre'];
+        $desc = $_POST['desc'];
+        $difficulte = $_POST['difficulte'];
+        $nbQuestions = $_POST['nbQuestions'];
             
         if ($idQuizz !== NULL){
+            // Récupérer les infos du quizz
+            $quizzDAO = new QuizzDAO($this->getPdo());
+            $quizz = $quizzDAO->findById($idQuizz);
             // Rendre le template avec les infos
             echo $this->getTwig()->render('creationQuestion.html.twig', [
                 'quizz' => $quizz
             ]);
         }
         else{
+            $quizz = new Quizz($idQuizz, $titre, $desc, $difficulte, $nbQuestions);
+            $quizzDAO = new QuizzDAO($this->getPdo());
+            $quizz = $quizzDAO->findById($idQuizz);
             echo $this->getTwig()->render('creationQuestion.html.twig');
         }       
     }

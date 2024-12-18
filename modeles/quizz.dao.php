@@ -49,10 +49,10 @@ class QuizzDAO{
         $description = $row['description'];
         $difficulte = $row['difficulte'];
         $dateC = $row['dateC'];
-        $pseudo = $row['pseudo'];
+        $idUtilisateur = $row['idUtilisateur'];
 
         // Retourner le Quizz
-        return new Quizz($id, $titre, $description, $difficulte, $dateC, $pseudo);
+        return new Quizz($id, $titre, $description, $difficulte, $dateC, $idUtilisateur);
     }
 
     function hydrateAll(array $rows): array{
@@ -79,7 +79,7 @@ class QuizzDAO{
     }
 
     function findAll(): array{
-        $sql = "SELECT Q.idQuizz, Q.titre, Q.description, Q.difficulte, Q.dateC, U.pseudo FROM " .DB_PREFIX. "quizz Q JOIN " .DB_PREFIX. "utilisateur U ON Q.idUtilisateur = U.idUtilisateur";
+        $sql = "SELECT Q.*, U.pseudo FROM " .DB_PREFIX. "quizz Q JOIN " .DB_PREFIX. "utilisateur U ON Q.idUtilisateur = U.idUtilisateur";
         $stmt = $this->pdo->query($sql);
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
 

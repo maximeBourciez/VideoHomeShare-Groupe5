@@ -80,7 +80,7 @@ class ControllerUtilisateur extends Controller
     {
 
         //réccupération des données du formulaire
-        $id = isset($_POST['idantifiant']) ? $_POST['idantifiant'] : null;
+        $id = isset($_POST['identifiant']) ? $_POST['identifiant'] : null;
         $pseudo = isset($_POST['pseudo']) ? $_POST['pseudo'] : null;
         $mail = isset($_POST['mail']) ? $_POST['mail'] : null;
         $date = isset($_POST['date']) ? $_POST['date'] : null;
@@ -95,10 +95,6 @@ class ControllerUtilisateur extends Controller
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
         // vérification que la personne est assez vieille
         if (strtotime($date) < strtotime(date("Y-m-d") . " -156 month")) {
-
-
-
-
             // verifier si l'id n'est pas déjà utilisé
             if ($managerutilisateur->find($id) == null) {
                 // verifier si le mail est valide 
