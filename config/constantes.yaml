@@ -1,12 +1,10 @@
-# constantes.yaml
-
-# Connexion à la base de données pour BV (lakartxela)
+# Connexion à la base de données
 database:
-  host: lakartxela.iutbayonne.univ-pau.fr
-  name: mbourciez_pro
-  user: mbourciez_pro
-  password: mbourciez_pro
-  prefix: vhs_
+  host: "lakartxela.iutbayonne.univ-pau.fr" #"localhost"
+  name: "mbourciez_pro" 
+  user: "mbourciez_pro" #"root"
+  password: "mbourciez_pro" #""
+  prefix: "vhs_"
 
 # Constantes de la vue
 website:
@@ -15,10 +13,14 @@ website:
   language: FR
   logo: images/LOGO_V1.png
   logo_flag: images/flag_fr.png
-  website_link: http://lakartxela.iutbayonne.univ-pau.fr/~mbourciez/VHS/ 
+  website_link: "http://lakartxela.iutbayonne.univ-pau.fr/~mbourciez/projet_vhs/" #"localhost/YOUR_PATH"
 
-# Constantes de l'api
+# Constantes de l'api TMBD
 tmdb:
   api_key: "a2096553592bde8ead1b2a0f2fa59bc0"
   base_url: "https://api.themoviedb.org/3"
   image_base_url: "https://image.tmdb.org/t/p/original"
+
+# Contantes pour la sécurité
+security:
+  secret_key: "LMlj-S&8+j1NHAX5GHCB0$lP0oRUa99do$pCWokaF#oIoYah^8NKtCLV3U_7purUn67U30K2FD+!d2_I+KnFPKFZ4!pYgobpKE"

@@ -32,9 +32,10 @@ try  {
     }
 
 
+
     // Créer le contrôleur approprié
     if ( isset($_SESSION['utilisateur'])) {
-        $twig->addGlobal('utilisateurConnecte', $_SESSION['utilisateur']);
+        $twig->addGlobal('utilisateurConnecte', unserialize($_SESSION['utilisateur']));
     }else {
         $twig->addGlobal('utilisateurConnecte', null);
     }

@@ -78,16 +78,19 @@ class TmdbAPIContenu {
             : null;
 
         $contenu = new Contenu(
-            null,                // id
-            $movieData['title'], // titre
-            $date,              // date
-            $descriptionCourte, // description
-            $descriptionLongue, // descriptionLongue
-            $lienAffiche,       // lienAffiche
-            $movieData['runtime'], // duree
-            'Film',             // type
-            $lienAfficheReduite // lienAfficheReduite
+            null,                   // id
+            $movieData['title'],    // titre
+            $date,                  // date
+            $descriptionCourte,     // description
+            $descriptionLongue,     // descriptionLongue
+            $lienAffiche,          // lienAffiche
+            $movieData['runtime'],  // duree
+            'Film',                // type
+            $lienAfficheReduite    // lienAfficheReduite
         );
+        
+        // Ajouter l'ID TMDB
+        $contenu->setTmdbId($movieData['id']);
 
         return $contenu;
     }

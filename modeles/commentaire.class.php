@@ -6,22 +6,24 @@ class Commentaire {
     private ?int $note;
     private ?string $avis;
     private ?int $estPositif;
+    private ?int $idContenuTmdb;
 
     public function __construct(
-        ?string $idUtilisateur, 
-        ?string $titre, 
-        ?int $note, 
-        ?string $avis, 
-        ?int $estPositif
+        ?string $idUtilisateur = null,
+        ?string $titre = null,
+        ?int $note = null,
+        ?string $avis = null,
+        ?bool $estPositif = null,
+        ?int $idContenuTmdb = null
     ) {
         $this->idUtilisateur = $idUtilisateur;
         $this->titre = $titre;
         $this->note = $note;
         $this->avis = $avis;
         $this->estPositif = $estPositif;
+        $this->idContenuTmdb = $idContenuTmdb;
     }
 
-    
 
     /**
      * Get the value of idUtilisateur
@@ -120,6 +122,17 @@ class Commentaire {
     {
         $this->estPositif = $estPositif;
 
+        return $this;
+    }
+
+    public function getIdContenuTmdb()
+    {
+        return $this->idContenuTmdb;
+    }
+
+    public function setIdContenuTmdb($idContenuTmdb)
+    {
+        $this->idContenuTmdb = $idContenuTmdb;
         return $this;
     }
 }

@@ -75,7 +75,11 @@
                 <!-- Boutons d'action -->
                 <div class="movie-actions mr-5">
                     <div class="movie-actions__buttons d-flex justify-content-right mb-5">
-                        <button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
+                        {% if utilisateurConnecte is not null %}
+                            <button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
+                        {% else %}
+                            <button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Laisser un avis</button>
+                        {% endif %}
                         <button class="movie-actions__watchlist-btn btn btn-myprimary fw-normal me-4 bi bi-plus">WatchList</button>
                     </div>
                 </div>
@@ -237,7 +241,8 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/avis/ajouter/{{ contenu.id }}" method="POST">
+                    <form action="index.php?controller=commentaire&methode=createCommentaireContenu" method="POST">
+                        <input type="hidden" name="idContenu" value="{{contenu.tmdbId}}"> 
                         <div class="mb-3">
                             <label for="titre" class="form-label">Titre de votre avis</label>
                             <input type="text" class="form-control" id="titre" name="titre" required placeholder="Ex : J'ai adoré ce film !">
@@ -261,6 +266,22 @@
                             <button type="submit" class="btn btn-myprimary">Publier</button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Veuillez vous connecter -->
+    <div class="modal fade" id="veuillezVousConnecter" tabindex="-1" aria-labelledby="modalAvisLabel" aria-hidden="true">   
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-mydark text-white">
+                <div class="modal-body text-center">
+                    <p class="fs-3">Si vous voulez laisser un avis et participer à la communauté, vous devez d'abord vous connecter 😏</p>
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <a href="index.php?controller=utilisateur&methode=connexion">
+                        <button type="button" class="btn btn-myprimary">Connexion</button>
+                    </a>
                 </div>
             </div>
         </div>

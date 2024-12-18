@@ -104,6 +104,28 @@ class commentaireDAO {
         return [];
     }
 
+    public function createCommentaireContenu(Commentaire $commentaire): void {
+        $sql = 'INSERT INTO vhs_commenterContenu (idContenuTmdb, idUtilisateur, titre, note, avis, estPositif) VALUES (:idContenuTmdb, :idUtilisateur, :titre, :note, :avis, :estPositif)';
+        $stmt = $this->pdo->prepare($sql);
+        
+        // Stocker les valeurs dans des variables intermédiaires
+        $idContenuTmdb = $commentaire->getIdContenuTmdb();
+        $idUtilisateur = $commentaire->getIdUtilisateur();
+        $titre = $commentaire->getTitre();
+        $note = $commentaire->getNote();
+        $avis = $commentaire->getAvis();
+        $estPositif = $commentaire->getEstPositif();
+        
+        // Utiliser les variables pour bindParam
+        $stmt->bindParam(':idContenuTmdb', $idContenuTmdb, PDO::PARAM_INT);
+        $stmt->bindParam(':idUtilisateur', $idUtilisateur, PDO::PARAM_STR);
+        $stmt->bindParam(':titre', $titre, PDO::PARAM_STR);
+        $stmt->bindParam(':note', $note, PDO::PARAM_INT);
+        $stmt->bindParam(':avis', $avis, PDO::PARAM_STR);
+        $stmt->bindParam(':estPositif', $estPositif, PDO::PARAM_BOOL);
+        $stmt->execute();
+    }
+
     // Hydrater un commentaire (Commentaire standard)
     public function hydrate(array $tableauAssaus): Commentaire {
         return new Commentaire($tableauAssaus['idUtilisateur'], $tableauAssaus['titre'], $tableauAssaus['note'], $tableauAssaus['avis'], $tableauAssaus['estPositif']);
