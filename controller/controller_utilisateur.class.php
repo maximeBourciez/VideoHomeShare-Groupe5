@@ -217,6 +217,7 @@ class ControllerUtilisateur extends Controller
 
             // modifier le mot de passe dans la base de données
             $managerutilisateur->update($utilisateur);
+            
             $template = $this->getTwig()->load('connection.html.twig');
             echo $template->render(array('message' => "Votre mot de passe a bien été changé"));
         }else{
