@@ -267,7 +267,7 @@ class TmdbAPICollection {
                 $movieData = $tmdbContenuApi->getMovieById($movieId);
                 
                 if ($movieData) {
-                    $contenu = $tmdbContenuApi->convertToContenu($movieData);
+                    $contenu = $tmdbContenuApi->convertToContenuLight($movieData);
                     $contenu->setTmdbId($movieId);
                     $movies[] = $contenu;
                 }

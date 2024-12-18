@@ -68,15 +68,6 @@ class TmdbAPIContenu {
             $descriptionLongue .= implode(', ', $companies) . "\n\n";
         }
         
-        // Ajouter des mots-clés si disponibles
-        if (isset($movieData['keywords']['keywords']) && !empty($movieData['keywords']['keywords'])) {
-            $descriptionLongue .= "Mots-clés : ";
-            $keywords = array_map(function($keyword) {
-                return $keyword['name'];
-            }, $movieData['keywords']['keywords']);
-            $descriptionLongue .= implode(', ', $keywords);
-        }
-
         // Création des liens d'images avec différentes tailles
         $lienAffiche = !empty($movieData['poster_path']) 
             ? "https://image.tmdb.org/t/p/original" . $movieData['poster_path']
@@ -101,6 +92,32 @@ class TmdbAPIContenu {
         return $contenu;
     }
 
+
+    /**
+     * Convertit un film TMDB en objet ContenuLeger sans certaines informations.
+     */
+    public function convertToContenuLight($movieData): Contenu {  
+        // Description courte : utiliser overview
+        $descriptionCourte = $movieData['overview'] ?? '';
+
+        $lienAfficheReduite = !empty($movieData['poster_path'])
+            ? "https://image.tmdb.org/t/p/w185" . $movieData['poster_path']
+            : null;
+
+        $contenu = new Contenu(
+            null,
+            $movieData['title'], // titre
+            null,
+            $descriptionCourte, 
+            null,
+            null,
+            null,
+            'Film',             // type
+            $lienAfficheReduite // lienAfficheReduite
+        );
+
+        return $contenu;
+    }
  /**
  * Récupère les personnalités (acteurs/réalisateurs) d'un film
  */
