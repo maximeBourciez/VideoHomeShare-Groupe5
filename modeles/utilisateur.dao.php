@@ -89,7 +89,7 @@ class UtilisateurDAO
         $urlImageBanniere = $row['urlImageBanniere'];
 
         // Retourner l'utilisateur
-        return new Utilisateur($id, $pseudo, $nom, $mail, $mdp, $role, $urlImageProfil, $urlImageBaniere);
+        return new Utilisateur($id, $pseudo, $nom, $mail, $mdp, $role, $urlImageProfil, $urlImageBanniere);
 
     }
 

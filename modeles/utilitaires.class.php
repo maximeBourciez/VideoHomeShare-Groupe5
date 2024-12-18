@@ -284,13 +284,13 @@ class Utilitaires
     {
         if ($fichier['name'] != '') {
             //supprimer l'ancienne image
-            if (file_exists($utilisateur->getUrlImageBaniere()) && $utilisateur->getUrlImageProfil() != "images/" . $type . "_de_base.png") {
+            if (file_exists($utilisateur->getUrlImageBanniere()) && $utilisateur->getUrlImageProfil() != "images/" . $type . "_de_base.png") {
                 switch ($type) {
                     case "Profil":
                         unlink($utilisateur->getUrlImageProfil());
                         break;
                     case "Baniere":
-                        unlink($utilisateur->getUrlImageBaniere());
+                        unlink($utilisateur->getUrlImageBanniere());
                         break;
                 }
             }
@@ -305,7 +305,7 @@ class Utilitaires
                         $utilisateur->setUrlImageProfil($fichier['name']);
                         break;
                     case "Baniere":
-                        $utilisateur->setUrlImageBaniere($fichier['name']);
+                        $utilisateur->setUrlImageBanniere($fichier['name']);
                         break;
                 }
             } else {

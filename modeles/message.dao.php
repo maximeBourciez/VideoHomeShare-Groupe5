@@ -73,8 +73,13 @@ class MessageDAO
         $message->setDateC(new DateTime($row['dateC']));
         $message->setIdMessageParent($row['idMessageParent']);
         $message->setIdFil($row['idFil']);
-        $message->setNbLikes($row['like_count']);
-        $message->setNbDislikes($row['dislike_count']);
+        if (isset($row['like_count'])){
+            $message->setNbLikes($row['like_count']);
+        }
+        if (isset($row['dislike_count'])){
+            $message->setNbDislikes($row['dislike_count']);
+        }
+        
 
         // Hydratation de l'utilisateur associé
         $user = new Utilisateur();
