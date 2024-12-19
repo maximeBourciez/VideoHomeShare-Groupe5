@@ -162,6 +162,7 @@ class SignalementDAO{
      * @return int
      */
     public function ajouterSignalement(Signalement $signalement): int{
+        var_dump($signalement);
         // Préparer la requête
         $sql = "INSERT INTO ".DB_PREFIX."signalement (raison, idMessage, idUtilisateur) VALUES (:raison, :idMessage, :idUtilisateur)";
         $stmt = $this->pdo->prepare($sql);

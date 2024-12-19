@@ -301,7 +301,7 @@ class ControllerFil extends Controller
             $signalement = new Signalement();
             $signalement->setIdMessage($idMessage);
             $signalement->setIdUtilisateur($idUser);
-            $signalement->setRaison($raison->toString());            
+            $signalement->setRaison(RaisonSignalement::fromString($raison));            
 
             // Insérer le signalement en BD
             $managerSignalement = new SignalementDAO($this->getPdo());
