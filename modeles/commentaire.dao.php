@@ -1,22 +1,50 @@
 <?php
-class commentaireDAO {
+
+/**
+ * @brief Classe d'accès aux données pour les commentaires
+ * 
+ * Cette classe gère toutes les opérations de lecture et d'écriture
+ * des commentaires dans la base de données, incluant les notes et avis
+ * sur les contenus et collections.
+ * 
+ * @author François Barlic <<francois.barlic57@gmail.com>>
+ * @version 1.0
+ */
+class CommentaireDAO {
+    /** @var PDO|null Instance de connexion à la base de données */
     private ?PDO $pdo;
 
+    /**
+     * @brief Constructeur de CommentaireDAO
+     * 
+     * @param PDO|null $pdo Instance de connexion à la base de données
+     */
     public function __construct(?PDO $pdo = null) {
         $this->pdo = $pdo;
     }
 
-    // get pdo
+    /**
+     * @brief Récupère l'instance PDO
+     * @return PDO|null L'instance de connexion
+     */
     public function getPdo(): ?PDO {
         return $this->pdo;
     }
 
-    // set pdo
-    public function setPdo(PDO $pdo) {
+    /**
+     * @brief Définit l'instance PDO
+     * @param PDO $pdo Nouvelle instance de connexion
+     */
+    public function setPdo(PDO $pdo): void {
         $this->pdo = $pdo;
     }
 
-    // Récupérer la moyenne et le total des notes pour un contenu
+    /**
+     * @brief Récupère la moyenne et le total des notes pour un contenu
+     * 
+     * @param string $idContenuTmdb Identifiant TMDB du contenu
+     * @return array Tableau avec la moyenne et le total des notes
+     */
     public function getMoyenneEtTotalNotesContenu(string $idContenuTmdb): array {
         $sql = 'SELECT AVG(note) AS moyenne, COUNT(note) AS total 
                 FROM vhs_commenterContenu 
@@ -40,7 +68,12 @@ class commentaireDAO {
         ];
     }
 
-    // Récupérer les commentaires pour un collection
+    /**
+     * @brief Récupère la moyenne et le total des notes pour une collection
+     * 
+     * @param string $idCollectionTmdb Identifiant TMDB de la collection
+     * @return array Tableau avec la moyenne et le total des notes
+     */
     public function getMoyenneEtTotalNotesCollection(string $idCollectionTmdb): array {
         $sql = 'SELECT AVG(note) AS moyenne, COUNT(note) AS total 
                 FROM vhs_commenterCollection 
@@ -64,7 +97,12 @@ class commentaireDAO {
         ];
     }
 
-    // Récupérer les commentaires pour un contenu
+    /**
+     * @brief Récupère les commentaires pour un contenu
+     * 
+     * @param string $idContenuTmdb Identifiant TMDB du contenu
+     * @return array Liste des commentaires
+     */
     public function getCommentairesContenu(string $idContenuTmdb): array {
         $sql = 'SELECT idUtilisateur, titre, note, avis, estPositif
                 FROM vhs_commenterContenu
@@ -77,14 +115,15 @@ class commentaireDAO {
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if ($result) {
-            return $result;
-        }
-
-        return [];
+        return $result ?: [];
     }
-    
-    //récupérer les commentaires pour une collection
+
+    /**
+     * @brief Récupère les commentaires pour une collection
+     * 
+     * @param string $idCollectionTmdb Identifiant TMDB de la collection
+     * @return array Liste des commentaires
+     */
     public function getCommentairesCollection(string $idCollectionTmdb): array {
         $sql = 'SELECT idUtilisateur, titre, note, avis, estPositif
                 FROM vhs_commenterCollection
@@ -97,18 +136,20 @@ class commentaireDAO {
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if ($result) {
-            return $result;
-        }
-
-        return [];
+        return $result ?: [];
     }
 
+    /**
+     * @brief Crée un nouveau commentaire pour un contenu
+     * 
+     * @param Commentaire $commentaire Le commentaire à créer
+     */
     public function createCommentaireContenu(Commentaire $commentaire): void {
-        $sql = 'INSERT INTO vhs_commenterContenu (idContenuTmdb, idUtilisateur, titre, note, avis, estPositif) VALUES (:idContenuTmdb, :idUtilisateur, :titre, :note, :avis, :estPositif)';
+        $sql = 'INSERT INTO vhs_commenterContenu (idContenuTmdb, idUtilisateur, titre, note, avis, estPositif) 
+                VALUES (:idContenuTmdb, :idUtilisateur, :titre, :note, :avis, :estPositif)';
+        
         $stmt = $this->pdo->prepare($sql);
         
-        // Stocker les valeurs dans des variables intermédiaires
         $idContenuTmdb = $commentaire->getIdContenuTmdb();
         $idUtilisateur = $commentaire->getIdUtilisateur();
         $titre = $commentaire->getTitre();
@@ -116,7 +157,6 @@ class commentaireDAO {
         $avis = $commentaire->getAvis();
         $estPositif = $commentaire->getEstPositif();
         
-        // Utiliser les variables pour bindParam
         $stmt->bindParam(':idContenuTmdb', $idContenuTmdb, PDO::PARAM_INT);
         $stmt->bindParam(':idUtilisateur', $idUtilisateur, PDO::PARAM_STR);
         $stmt->bindParam(':titre', $titre, PDO::PARAM_STR);
@@ -126,12 +166,28 @@ class commentaireDAO {
         $stmt->execute();
     }
 
-    // Hydrater un commentaire (Commentaire standard)
+    /**
+     * @brief Hydrate un commentaire à partir d'un tableau de données
+     * 
+     * @param array $tableauAssaus Données du commentaire
+     * @return Commentaire Le commentaire hydraté
+     */
     public function hydrate(array $tableauAssaus): Commentaire {
-        return new Commentaire($tableauAssaus['idUtilisateur'], $tableauAssaus['titre'], $tableauAssaus['note'], $tableauAssaus['avis'], $tableauAssaus['estPositif']);
+        return new Commentaire(
+            $tableauAssaus['idUtilisateur'],
+            $tableauAssaus['titre'],
+            $tableauAssaus['note'],
+            $tableauAssaus['avis'],
+            $tableauAssaus['estPositif']
+        );
     }
 
-    // Hydrater tous les commentaires
+    /**
+     * @brief Hydrate plusieurs commentaires à partir d'un tableau de données
+     * 
+     * @param array $tableauAssaus Tableau de données des commentaires
+     * @return array|null Liste des commentaires hydratés
+     */
     public function hydrateAll(array $tableauAssaus): ?array {
         $commentaires = [];
         foreach ($tableauAssaus as $row) {

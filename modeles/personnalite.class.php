@@ -1,15 +1,46 @@
 <?php
 
-class Personnalite{
-    // Attributs
+/**
+ * @brief Classe représentant une personnalité du cinéma
+ * 
+ * Cette classe définit la structure d'une personnalité (acteur, réalisateur, etc.)
+ * avec ses informations de base comme le nom, prénom, rôle et image.
+ * 
+ * @author François Barlic <<francois.barlic57@gmail.com>>
+ * @version 1.0
+ */
+class Personnalite {
+    /** @var int|null Identifiant unique de la personnalité */
     private ?int $id;
+
+    /** @var string|null Nom de famille de la personnalité */
     private ?string $nom;
+
+    /** @var string|null Prénom de la personnalité */
     private ?string $prenom;
+
+    /** @var string|null URL de l'image de la personnalité */
     private ?string $urlImage;
+
+    /** @var string|null Rôle dans la production (acteur, réalisateur, etc.) */
     private ?string $role;
 
-    // Constructeur
-    function __construct(?int $id = null, ?string $nom = null, ?string $prenom = null, ?string $urlImage = null, ?string $role = null){
+    /**
+     * @brief Constructeur de la classe Personnalite
+     * 
+     * @param int|null $id Identifiant unique
+     * @param string|null $nom Nom de famille
+     * @param string|null $prenom Prénom
+     * @param string|null $urlImage URL de l'image
+     * @param string|null $role Rôle dans la production
+     */
+    function __construct(
+        ?int $id = null, 
+        ?string $nom = null, 
+        ?string $prenom = null, 
+        ?string $urlImage = null, 
+        ?string $role = null
+    ) {
         $this->id = $id;
         $this->nom = $nom;
         $this->prenom = $prenom;
@@ -17,109 +48,83 @@ class Personnalite{
         $this->role = $role;
     }
 
-    // Encapsulation
-
-    // Getters
-
     /**
-     * Get the value of id
-     * @return int
+     * @brief Récupère l'identifiant de la personnalité
+     * @return int|null L'identifiant
      */
-    public function getId(): ?int
-    {
+    public function getId(): ?int {
         return $this->id;
     }
 
     /**
-     * Get the value of nom
-     * @return string
+     * @brief Définit l'identifiant de la personnalité
+     * @param int $id Le nouvel identifiant
      */
-    public function getNom(): ?string
-    {
-        return $this->nom;
-    }
-
-    /**
-     * Get the value of prenom
-     * @return string
-     */
-    public function getPrenom(): ?string
-    {
-        return $this->prenom;
-    }
-
-    /**
-     * Get the value of urlImage
-     * @return string
-     */
-    public function getUrlImage(): ?string
-
-    {
-        return $this->urlImage;
-    }
-
-    /**
-     * Get the value of role
-     * @return string $role
-     * @return void
-     */
-    public function getRole(): ?string
-    {
-        return $this->role;
-    }
-
-    // Setters
-
-    /**
-     * Set the value of id
-     * @param int $id
-     * @return void
-     */
-    public function setId(int $id): void
-    {
+    public function setId(int $id): void {
         $this->id = $id;
     }
 
     /**
-     * Set the value of nom
-     * @param string $nom
-     * @return void
+     * @brief Récupère le nom de la personnalité
+     * @return string|null Le nom de famille
      */
-    public function setNom(string $nom): void
-    {
+    public function getNom(): ?string {
+        return $this->nom;
+    }
+
+    /**
+     * @brief Définit le nom de la personnalité
+     * @param string $nom Le nouveau nom
+     */
+    public function setNom(string $nom): void {
         $this->nom = $nom;
     }
 
     /**
-     * Set the value of prenom
-     * @param string $prenom
-     * @return void
+     * @brief Récupère le prénom de la personnalité
+     * @return string|null Le prénom
      */
-    public function setPrenom(string $prenom): void
-    {
+    public function getPrenom(): ?string {
+        return $this->prenom;
+    }
+
+    /**
+     * @brief Définit le prénom de la personnalité
+     * @param string $prenom Le nouveau prénom
+     */
+    public function setPrenom(string $prenom): void {
         $this->prenom = $prenom;
     }
 
     /**
-     * Set the value of urlImage
-     * @param string $urlImage
-     * @return void
+     * @brief Récupère l'URL de l'image
+     * @return string|null L'URL de l'image
      */
-    public function setUrlImage(string $urlImage): void
-    {
+    public function getUrlImage(): ?string {
+        return $this->urlImage;
+    }
+
+    /**
+     * @brief Définit l'URL de l'image
+     * @param string $urlImage La nouvelle URL
+     */
+    public function setUrlImage(string $urlImage): void {
         $this->urlImage = $urlImage;
     }
 
     /**
-     * Set the value of role
-     * @param string $role
-     * @return void
+     * @brief Récupère le rôle de la personnalité
+     * @return string|null Le rôle (acteur, réalisateur, etc.)
      */
-    public function setRole(string $role): void
-    {
-        $this->role = $role;
+    public function getRole(): ?string {
+        return $this->role;
     }
 
-    // méthodes
-
+    /**
+     * @brief Définit le rôle de la personnalité
+     * @param string $role Le nouveau rôle
+     */
+    public function setRole(string $role): void {
+        $this->role = $role;
+    }
 }
