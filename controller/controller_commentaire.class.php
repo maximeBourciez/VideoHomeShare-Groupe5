@@ -31,31 +31,58 @@ class ControllerCommentaire extends Controller {
      * @return void
      */
     public function createCommentaireContenu(): void {
-        $idTmdbContenu = $_POST['idContenu'];
-        $utilisateur = unserialize($_SESSION['utilisateur']);
-        $idUtilisateur = $utilisateur->getId();
+        // Vérification de la session et désérialisation de l'utilisateur
+        $utilisateur = isset($_SESSION['utilisateur']) ? unserialize($_SESSION['utilisateur']) : null;
         
-        $estPositif = $_POST['note'] >= 3 ? true : false;
+        if (!$utilisateur) {
+            $template = $this->getTwig()->load('pageDunContenu.html.twig');
+            echo $template->render(['messagederreur' => 'Vous devez être connecté pour poster un commentaire.']);
+            return;
+        }
 
-        $commentaire = new Commentaire(
-            $idUtilisateur,
-            $_POST['titre'],
-            $_POST['note'],
-            $_POST['commentaire'],
-            $estPositif,
-            $idTmdbContenu
-        );
+        // Récupération et nettoyage des données POST
+        $idTmdbContenu = isset($_POST['idContenu']) ? htmlspecialchars($_POST['idContenu']) : null;
+        $titre = isset($_POST['titre']) ? htmlspecialchars($_POST['titre']) : null;
+        $note = isset($_POST['note']) ? (int)htmlspecialchars($_POST['note']) : null;
+        $commentaireTexte = isset($_POST['commentaire']) ? htmlspecialchars($_POST['commentaire']) : null;
 
-        $commentaireDAO = new CommentaireDAO($this->getPdo());
-        $commentaireDAO->createCommentaireContenu($commentaire);
+        // Validation des données
+        $message = "";
+        if (!Utilitaires::comprisEntre($titre, 100, 3, "Le titre doit contenir", $message) ||
+            !Utilitaires::comprisEntre($commentaireTexte, 1000, 10, "Le commentaire doit contenir", $message)) {
+            
+            // Redirection vers la page du film avec message d'erreur
+            $controllerContenu = new ControllerContenu($this->getTwig(), $this->getLoader());
+            $_GET['tmdb_id'] = $idTmdbContenu;
+            $controllerContenu->afficherContenu(['messagederreur' => $message]);
+            return;
+        }
 
-        // Créer une instance du ControllerContenu
-        $controllerContenu = new ControllerContenu($this->getTwig(), $this->getLoader());
-        
-        // Définir l'ID TMDB dans $_GET pour la méthode afficherContenu
-        $_GET['tmdb_id'] = $idTmdbContenu;
-        
-        // Appeler directement la méthode d'affichage
-        $controllerContenu->afficherContenu();
+        try {
+            // Création de l'objet commentaire
+            $commentaire = new Commentaire(
+                $utilisateur->getId(),
+                $titre,
+                $note,
+                $commentaireTexte,
+                $note >= 3,
+                $idTmdbContenu
+            );
+
+            // Sauvegarde dans la base de données
+            $commentaireDAO = new CommentaireDAO($this->getPdo());
+            $commentaireDAO->createCommentaireContenu($commentaire);
+
+            // Redirection vers la page du contenu avec message de succès
+            $controllerContenu = new ControllerContenu($this->getTwig(), $this->getLoader());
+            $_GET['tmdb_id'] = $idTmdbContenu;
+            $controllerContenu->afficherContenu(['message' => 'Votre commentaire a été ajouté avec succès.']);
+
+        } catch (Exception $e) {
+            // Redirection vers la page du film avec message d'erreur
+            $controllerContenu = new ControllerContenu($this->getTwig(), $this->getLoader());
+            $_GET['tmdb_id'] = $idTmdbContenu;
+            $controllerContenu->afficherContenu(['messagederreur' => $e->getMessage()]);
+        }
     }
 }

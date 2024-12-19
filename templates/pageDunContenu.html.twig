@@ -242,10 +242,13 @@
                 </div>
                 <div class="modal-body">
                     <form action="index.php?controller=commentaire&methode=createCommentaireContenu" method="POST">
-                        <input type="hidden" name="idContenu" value="{{contenu.tmdbId}}"> 
+                        <input type="hidden" name="idContenu" value="{{ contenu.tmdbId|escape('html_attr') }}"> 
                         <div class="mb-3">
                             <label for="titre" class="form-label">Titre de votre avis</label>
-                            <input type="text" class="form-control" id="titre" name="titre" required placeholder="Ex : J'ai adoré ce film !">
+                            <input type="text" class="form-control" id="titre" name="titre" required 
+                                   placeholder="Ex : J'ai adoré ce film !"
+                                   pattern="^[a-zA-Z0-9àáâãäçèéêëìíîïñòóôõöùúûüýÿ\s\-.,!?']{1,100}$"
+                                   maxlength="100">
                         </div>
                         <div class="mb-3">
                             <label for="note" class="form-label">Note</label>
@@ -259,7 +262,9 @@
                         </div>
                         <div class="mb-3">
                             <label for="commentaire" class="form-label">Votre commentaire</label>
-                            <textarea class="form-control" id="commentaire" name="commentaire" rows="4" required placeholder="Ex : Ce film est vraiment génial car..."></textarea>
+                            <textarea class="form-control" id="commentaire" name="commentaire" rows="4" required 
+                                      placeholder="Ex : Ce film est vraiment génial car..."
+                                      maxlength="1000"></textarea>
                         </div>
                         <div class="modal-footer border-0">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>

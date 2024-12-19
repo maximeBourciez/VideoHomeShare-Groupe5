@@ -140,11 +140,39 @@ class CommentaireDAO {
     }
 
     /**
+     * @brief Vérifie si un utilisateur a déjà commenté un contenu
+     * 
+     * @param string $idUtilisateur ID de l'utilisateur
+     * @param string $idContenuTmdb ID du contenu TMDB
+     * @return bool True si l'utilisateur a déjà commenté, false sinon
+     */
+    public function aDejaCommente(string $idUtilisateur, string $idContenuTmdb): bool {
+        $sql = 'SELECT COUNT(*) as nbCommentaires 
+                FROM vhs_commenterContenu 
+                WHERE idUtilisateur = :idUtilisateur 
+                AND idContenuTmdb = :idContenuTmdb';
+        
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':idUtilisateur', $idUtilisateur, PDO::PARAM_STR);
+        $stmt->bindParam(':idContenuTmdb', $idContenuTmdb, PDO::PARAM_STR);
+        $stmt->execute();
+        
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return ($result['nbCommentaires'] > 0);
+    }
+
+    /**
      * @brief Crée un nouveau commentaire pour un contenu
      * 
      * @param Commentaire $commentaire Le commentaire à créer
+     * @throws Exception Si l'utilisateur a déjà commenté
      */
     public function createCommentaireContenu(Commentaire $commentaire): void {
+        // Vérification si l'utilisateur a déjà commenté
+        if ($this->aDejaCommente($commentaire->getIdUtilisateur(), $commentaire->getIdContenuTmdb())) {
+            throw new Exception("Désolé mais vous avez déjà commenté et noté ce film.");
+        }
+
         $sql = 'INSERT INTO vhs_commenterContenu (idContenuTmdb, idUtilisateur, titre, note, avis, estPositif) 
                 VALUES (:idContenuTmdb, :idUtilisateur, :titre, :note, :avis, :estPositif)';
         
