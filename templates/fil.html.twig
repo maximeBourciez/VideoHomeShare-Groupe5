@@ -36,7 +36,7 @@
                             <form method="POST" action="index.php?controller=fil&methode=like">
                                 <input type="hidden" name="id_message" value="{{ reponse.getIdMessage() }}">
                                 <input type="hidden" name="id_fil" value="{{ idFil }}">
-                                {% if reponse.valeur == messageSuppr and reponse.getUtilisateur().getPseudo() is null %}
+                                {% if reponse.valeur == messageSuppr and reponse.getUtilisateur().getPseudo() is null or utilisateurConnecte is null %}
                                     <button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;" type="submit" disabled>
                                 {% else %}
                                     <button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;" type="submit">
@@ -52,7 +52,7 @@
                             <form method="POST" action="index.php?controller=fil&methode=dislike">
                                 <input type="hidden" name="id_message" value="{{ reponse.getIdMessage() }}">
                                 <input type="hidden" name="id_fil" value="{{ idFil }}">
-                                {% if reponse.valeur == messageSuppr and reponse.getUtilisateur().getPseudo() is null %}
+                                {% if reponse.valeur == messageSuppr and reponse.getUtilisateur().getPseudo() is null or utilisateurConnecte is null %}
                                     <button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;" type="submit" disabled>
                                 {% else %}
                                     <button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;" type="submit">
@@ -65,7 +65,7 @@
                                     </span>
                                 </button>
                             </form>
-                            {% if reponse.valeur == messageSuppr and reponse.getUtilisateur().getPseudo() is null %}
+                            {% if reponse.valeur == messageSuppr and reponse.getUtilisateur().getPseudo() is null or utilisateurConnecte is null %}
                                 <button class="btn btn-sm" style="background-color: #F2F2F2; color: #000;" data-bs-toggle="modal" data-bs-target="#repondreModal" data-id-message-parent="{{ reponse.getIdMessage() }}"                                disabled>
                             {% else %}
                                 <button class="btn btn-sm" style="background-color: #F2F2F2; color: #000;" data-bs-toggle="modal" data-bs-target="#repondreModal" data-id-message-parent="{{ reponse.getIdMessage() }}">
@@ -79,7 +79,7 @@
                                 <form method="POST" action="index.php?controller=fil&methode=supprimerMessage">
                                     <input type="hidden" name="idMessage" value="{{ reponse.getIdMessage() }}">
                                     <input type="hidden" name="id_fil" value="{{ idFil }}">
-                                    {% if reponse.valeur == messageSuppr and reponse.getUtilisateur().getPseudo() is null %}
+                                    {% if reponse.valeur == messageSuppr and reponse.getUtilisateur().getPseudo() is null or utilisateurConnecte is null%}
                                         <button class="btn btn-sm" style="background-color: #dc3545; color: white;" disabled>
                                     {% else %}
                                         <button class="btn btn-sm" style="background-color: #dc3545; color: white;">
@@ -91,10 +91,10 @@
                                 <form method="POST" action="index.php?controller=fil&methode=signalerMessage">
                                     <input type="hidden" name="idMessage" value="{{ reponse.getIdMessage() }}">
                                     <input type="hidden" name="id_fil" value="{{ idFil }}">
-                                    {% if reponse.valeur == messageSuppr and reponse.getUtilisateur().getPseudo() is null %}
-                                        <button class="btn btn-sm" style="background-color: #dc3545; color: white;" disabled>
+                                    {% if reponse.valeur == messageSuppr and reponse.getUtilisateur().getPseudo() is null or utilisateurConnecte is null %}
+                                        <button class="btn btn-sm" style="background-color: #dc3545; color: white;" data-bs-toggle="modal" data-bs-target="#signalement" data-id-message="{{ reponse.getIdMessage() }}" disabled>
                                     {% else %}
-                                        <button class="btn btn-sm" style="background-color: #dc3545; color: white;">
+                                        <button class="btn btn-sm" style="background-color: #dc3545; color: white;" data-bs-toggle="modal" data-bs-target="#signalement" data-id-message="{{ reponse.getIdMessage() }}">
                                     {% endif %}
                                         <i class="bi bi-flag"></i>
                                         Signaler
@@ -166,7 +166,7 @@ VHS | Fil
 									<form method="POST" action="index.php?controller=fil&methode=like">
 										<input type="hidden" name="id_message" value="{{ message.getIdMessage() }}">
 										<input type="hidden" name="id_fil" value="{{ fil.id }}">
-											{% if message.valeur == messageSuppr and message.getUtilisateur().getPseudo() is null %}
+											{% if message.valeur == messageSuppr and message.getUtilisateur().getPseudo() is null or utilisateurConnecte is null %}
 												<button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;" type="submit" disabled>
 											{% else %}
 												<button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;" type="submit">
@@ -182,7 +182,7 @@ VHS | Fil
 									<form method="POST" action="index.php?controller=fil&methode=dislike">
 										<input type="hidden" name="id_message" value="{{ message.getIdMessage() }}">
 										<input type="hidden" name="id_fil" value="{{ fil.id }}">
-										{% if message.valeur == messageSuppr and message.getUtilisateur().getPseudo() is null %}
+										{% if message.valeur == messageSuppr and message.getUtilisateur().getPseudo() is null or utilisateurConnecte is null %}
 											<button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;" type="submit" disabled>
 										{% else %}
 											<button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;" type="submit">
@@ -195,7 +195,7 @@ VHS | Fil
 											</span>
 										</button>
 									</form>
-										{% if message.valeur == messageSuppr and message.getUtilisateur().getPseudo() is null %}
+										{% if message.valeur == messageSuppr and message.getUtilisateur().getPseudo() is null or utilisateurConnecte is null %}
 											<button class="btn btn-sm" style="background-color: #F2F2F2; color: #000;" data-bs-toggle="modal" data-bs-target="#repondreModal" data-id-message-parent="{{ message.getIdMessage() }}" disabled>
 										{% else %}
 											<button class="btn btn-sm" style="background-color: #F2F2F2; color: #000;" data-bs-toggle="modal" data-bs-target="#repondreModal" data-id-message-parent="{{ message.getIdMessage() }}">
@@ -209,7 +209,7 @@ VHS | Fil
 										<form method="POST" action="index.php?controller=fil&methode=supprimerMessage">
 											<input type="hidden" name="idMessage" value="{{ message.getIdMessage() }}">
 											<input type="hidden" name="id_fil" value="{{ fil.id }}">
-											{% if message.valeur == messageSuppr and message.getUtilisateur().getPseudo() is null %}
+											{% if message.valeur == messageSuppr and message.getUtilisateur().getPseudo() is null or utilisateurConnecte is null %}
 												<button class="btn btn-sm" style="background-color: #dc3545; color: white;" disabled>
 											{% else %}
 												<button class="btn btn-sm" style="background-color: #dc3545; color: white;">
@@ -218,7 +218,7 @@ VHS | Fil
 											</button>
 										</form>
 									{% else %}
-											{% if message.valeur == messageSuppr and message.getUtilisateur().getPseudo() is null %}
+											{% if message.valeur == messageSuppr and message.getUtilisateur().getPseudo() is null or utilisateurConnecte is null %}
 												<button class="btn btn-sm" style="background-color: #dc3545; color: white;" data-bs-toggle="modal" data-bs-target="#signalement" data-id-message="{{ message.getIdMessage() }}" disabled>
 											{% else %}
 												<button class="btn btn-sm" style="background-color: #dc3545; color: white;" data-bs-toggle="modal" data-bs-target="#signalement" data-id-message="{{ message.getIdMessage() }}">
@@ -243,7 +243,8 @@ VHS | Fil
 	</div>
 
 	<!-- Bouton flottant -->
-	<button class="btn btn-myprimary position-fixed bottom-0 end-0 me-4 mb-4 px-6 d-flex align-items-center justify-content-center" style="border-radius: 50px; white-space: nowrap; min-width: 200px;" data-bs-toggle="modal" data-bs-target="#nouveauMessage">
+	
+	<button class="btn btn-myprimary position-fixed bottom-0 end-0 me-4 mb-4 px-6 d-flex align-items-center justify-content-center" style="border-radius: 50px; white-space: nowrap; min-width: 200px;" data-bs-toggle="modal" data-bs-target="#nouveauMessage" {% if utilisateurConnecte is null %} disabled {% endif %}>
 		<i class="bi bi-pencil" style="font-size: 1.3rem; margin-right: 0.2 rem;"></i>
 		<span>Ecrire un message
 		</span>
