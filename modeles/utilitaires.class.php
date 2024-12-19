@@ -398,4 +398,16 @@ class Utilitaires
         return false; // Aucun mot de profanité trouvé
     }
 
+   public static function verifUtiliateurverifier(string $id, string &$messageErreur , $managerutilisateur) : bool {
+        $valretour = true;
+        var_dump($managerutilisateur->verificationUtilisateurValide($id));
+        if (!$managerutilisateur->verificationUtilisateurValide($id)) {
+            
+            $messageErreur = "ce compte n'est pas vérifié veuillez vérifier votre mail pour activer votre compte";
+            $valretour = false;
+        }
+        return $valretour;
+    
+   }
+
 }

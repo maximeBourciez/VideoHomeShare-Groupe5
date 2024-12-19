@@ -13,8 +13,8 @@ class UtilisateurDAO
     {
         // Préparation de la requête
         $pdo = $this->pdo->prepare("INSERT INTO " . DB_PREFIX . "utilisateur 
-        (idUtilisateur, pseudo, vraiNom, mail, mdp, role, urlImageProfil, urlImageBanniere) 
-        VALUES (:idUtilisateur, :pseudo, :nom , :mail, :mdp, :role, :urlImageProfil, :urlImageBaniere)");
+        (idUtilisateur, pseudo, vraiNom, mail, mdp, role, urlImageProfil, urlImageBanniere , dateI  ,estValider) 
+        VALUES (:idUtilisateur, :pseudo, :nom , :mail, :mdp, :role, :urlImageProfil, :urlImageBanniere , NOW() , 0)");
       
         // Récupération des valeurs
         $id = $utilisateur->getId();
@@ -22,7 +22,7 @@ class UtilisateurDAO
         $nom = $utilisateur->getNom();
         $mail = $utilisateur->getMail();
         $mdp = $utilisateur->getMdp();
-        $role = $utilisateur->getRole();
+        $role = $utilisateur->getRole()->toString();
         $urlImageProfil = $utilisateur->getUrlImageProfil();
         $urlImageBanniere = $utilisateur->getUrlImageBanniere();
 
@@ -32,6 +32,7 @@ class UtilisateurDAO
         $pdo->bindValue(":nom", $nom);
         $pdo->bindValue(":mail", $mail);
         $pdo->bindValue(":mdp", $mdp);
+        
         $pdo->bindValue(":role", $role);
         $pdo->bindValue(":urlImageProfil", $urlImageProfil);
         $pdo->bindValue(":urlImageBanniere", $urlImageBanniere);
@@ -78,6 +79,7 @@ class UtilisateurDAO
         $mail = $row['mail'];
         $mdp = $row['mdp'];
         $role = $row['role'];
+
 
         // Transformer le role
         $roleEnum = Role::fromString($role);
@@ -148,5 +150,22 @@ class UtilisateurDAO
             return $this->hydrate($row);
         }
         return null;
+    }
+
+    public function deleteUtilisateurnonconfirme(): bool
+    {
+        $sql = "DELETE FROM " . DB_PREFIX . "utilisateur WHERE (NOW()-dateI)/3600 >= 24 and estValider = 0";
+        $pdo = $this->pdo->prepare($sql);
+        return $pdo->execute();
+    }
+
+    public function verificationUtilisateurValide(String $id): bool
+    { 
+        $sql = "select estValider from " . DB_PREFIX . "utilisateur WHERE idUtilisateur = :id";
+        $pdo = $this->pdo->prepare($sql);
+        $pdo->bindValue(':id', $id, PDO::PARAM_STR);
+        $pdo->execute();
+        $row = $pdo->fetch();
+        return $row["estValider"];
     }
 }
