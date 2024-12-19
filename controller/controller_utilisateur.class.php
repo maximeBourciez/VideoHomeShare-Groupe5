@@ -42,35 +42,39 @@ class ControllerUtilisateur extends Controller
      */
     public function checkInfoConnecter()
     {
-
+        // récupération des données du formulaire
         $mail = isset($_POST['mail']) ?  htmlspecialchars($_POST['mail']) : null;
         $mdp = isset($_POST['pwd']) ?  htmlspecialchars($_POST['pwd']) : null;
-
+        // supprimer les espaces
         $mail = str_replace(' ', '', $mail);
 
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
         $message = "";
-        
+        // vérification des informations saisies
         if (Utilitaires::comprisEntre($mail, 320, 6, "le mail doit contenir", $message)) {
             $utilisateur = $managerutilisateur->findByMail($mail);
-
+            // vérification que l'utilisateur existe et que le mot de passe est correct
             if (Utilitaires::utilisateurExiste($utilisateur, $message ) && !Utilitaires::isBruteForce($utilisateur->getId(), $message ) && 
                 Utilitaires::motDePasseCorrect($mdp, $utilisateur->getMdp(), $utilisateur , $message) && Utilitaires::verifUtiliateurverifier($utilisateur->getId(), $message, $managerutilisateur)) {
+               
                 $utilisateur->setMdp(null);
                 Utilitaires::resetBrutForce($utilisateur->getId());
+                //création de la variable de session
                 $_SESSION['utilisateur'] = serialize($utilisateur);
+                //ajout de l'utilisateur connecté dans les variables globales de twig
                 $this->getTwig()->addGlobal('utilisateurConnecte', $_SESSION['utilisateur']);
 
                 //Génération de la vue
                 $this->show();
             }
             else{
+                // affichage de la page de connection avec un message d'erreur
                 $template = $this->getTwig()->load('connection.html.twig');
                 echo $template->render(array('messagederreur' => $message));
             }
         }
         else{
-           
+           // affichage de la page de connection avec un message d'erreur
             $template = $this->getTwig()->load('connection.html.twig');
             echo $template->render(array('messagederreur' =>$message));
         }
@@ -98,11 +102,12 @@ class ControllerUtilisateur extends Controller
 
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
 
-        // vérification que la personne est assez vieille
+        
 
 
 
         $message = "";
+        // vérification des informations saisies lors de l'inscription 
         if (
             Utilitaires::comprisEntre($id, 20, 3, "L'identifiant doit contenir ", $message ) && Utilitaires::comprisEntre($pseudo, 50, 3, "Le pseudo doit contenir ", $message ) &&
             Utilitaires::comprisEntre($mail, 50, 3, "Le mail doit contenir ", $message ) && Utilitaires::comprisEntre($nom, 50, 3, "Le nom doit contenir ", $message ) &&
@@ -123,6 +128,7 @@ class ControllerUtilisateur extends Controller
             $template = $this->getTwig()->load('connection.html.twig');
             echo $template->render(array('message' => "un mail vous a été envoyé pour confirmer votre compte veuillez cliquer sur le lien dans le mail"));
         }else{
+            // affichage de la page d'inscription avec un message d'erreur
             $template = $this->getTwig()->load('inscription.html.twig');
             echo $template->render(array('messagederreur' => $message));
         }
@@ -135,7 +141,7 @@ class ControllerUtilisateur extends Controller
      */
     public function afficherpageMDPOublier(): void
     {
-
+        // affichage de la page de mot de passe oublié
         $template = $this->getTwig()->load('motDePasseOublie.html.twig');
         echo $template->render(array());
     }
@@ -146,22 +152,29 @@ class ControllerUtilisateur extends Controller
      */
     public function envoieMailMDPOublie(): void
     {
+        // récupération des données du formulaire
         $mail = isset($_POST['email']) ?  htmlspecialchars($_POST['email']) : null;
+        // supprimer les espaces
         $mail = str_replace(' ', '', $mail);
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
+        
         $utilisateur = $managerutilisateur->findByMail($mail);
         $messageErreur = "";
+        // vérification de l'existence de l'utilisateur
         if (Utilitaires::utilisateurExiste($utilisateur, $messageErreur)) {
-            // crypter le id
+           
             $id = $utilisateur->getId();
+             // crypter le id de l'utilisateur
             $token = Utilitaires::generateToken($id, 6);
-
+            //envoie du mail
             $message = "Bonjour, \n\n Vous avez demandé à réinitialiser votre mot de passe.\n Voici votre lien pour changer de mot de passe : " . WEBSITE_LINK . "index.php?controller=utilisateur&methode=afficherchangerMDP&token=" . $token . " \n\n Cordialement, \n\n L'équipe de la plateforme de vhs";
             mail($mail, "Réinitialisation de votre mot de passe", $message);
+            // affichage de la page de connection avec un message de confirmation
             $template = $this->getTwig()->load('connection.html.twig');
             echo $template->render(array('message' => "Un mail vous a été envoyé pour changer votre mot de passe"));
         }
         else{
+            // affichage de la page de mot de passe oublié avec un message d'erreur
             $template = $this->getTwig()->load('inscription.html.twig');
             echo $template->render(array('message' => $messageErreur));
         }
@@ -174,22 +187,27 @@ class ControllerUtilisateur extends Controller
      */
     public function afficherchangerMDP(): void
     {
+        // récupération du token dans l'url
         $token = isset($_GET['token']) ?  htmlspecialchars($_GET['token']) : null;
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
         $tokenUilisateur = Utilitaires::verifyToken($token);
         $messageErreur = "";
+        // vérification de l'existence de l'utilisateur
         if (Utilitaires::nonNull($tokenUilisateur,$messageErreur )) {
             $utilisateur = $managerutilisateur->find($tokenUilisateur['id']);
+            // vérification de l'existence de l'utilisateur
             if (Utilitaires::utilisateurExiste($utilisateur, $messageErreur)) {
 
-
+                // affichage de la page de changement de mot de passe
                 $template = $this->getTwig()->load('changerMDP.html.twig');
                 echo $template->render(array('id' => $utilisateur->getId()));
             }else{
+                // affichage de la page d'inscription avec un message d'erreur
                 $template = $this->getTwig()->load('inscription.html.twig');
                 echo $template->render(array('messagederreur' => $messageErreur));
             }
         }else{
+            // affichage de la page d'inscription avec un message d'erreur
             $template = $this->getTwig()->load('inscription.html.twig');
             echo $template->render(array('messagederreur' => $messageErreur));
         }
@@ -204,12 +222,13 @@ class ControllerUtilisateur extends Controller
     {
         // récupération des données du formulaire
         $id = isset($_POST['id']) ?  htmlspecialchars($_POST['id']) : null;
-
         $mdp = isset($_POST['mdp']) ?  htmlspecialchars($_POST['mdp']) : null;
         $vmdp = isset($_POST['vmdp']) ?  htmlspecialchars($_POST['vmdp']) : null;
+        
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
         $utilisateur = $managerutilisateur->find($id);
         $messageErreur = "";
+        // vérification des informations saisies lors du changement de mot de passe
         if (
             Utilitaires::utilisateurExiste($utilisateur, $messageErreur) && Utilitaires::comprisEntre($mdp, null, 8, "Le mot de passe doit contenir ", $messageErreur) &&
             Utilitaires::comprisEntre($vmdp, null, 8, "Le mot de passe de confirmation doit contenir ", $messageErreur) &&
@@ -221,10 +240,11 @@ class ControllerUtilisateur extends Controller
 
             // modifier le mot de passe dans la base de données
             $managerutilisateur->update($utilisateur);
-            
+            // affichage de la page de connection avec un message de confirmation
             $template = $this->getTwig()->load('connection.html.twig');
             echo $template->render(array('message' => "Votre mot de passe a bien été changé"));
         }else{
+            // affichage de la page de changement de mot de passe avec un message d'erreur
             $template = $this->getTwig()->load('changerMDP.html.twig');
             echo $template->render(array('id' => $id, 'messagederreur' => $messageErreur));
         }
@@ -276,6 +296,7 @@ class ControllerUtilisateur extends Controller
      */
     public function edit(): void
     {
+        // vérifier si l'utilisateur est connecté
         if (isset($_SESSION['utilisateur'])) {
             //recuperer l'utilisateur connecter if
             $utilisateur = unserialize($_SESSION['utilisateur']);
@@ -283,12 +304,14 @@ class ControllerUtilisateur extends Controller
             $utilisateur = null;
         }
         $messageErreur = "";
+        // vérifier si l'utilisateur existe
         if (Utilitaires::utilisateurExiste($utilisateur, $messageErreur)) {
-            //Génération de la vue
+            // affichage de la page de modification de l'utilisateur
             $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
             echo $template->render(array('utilisateur' => $utilisateur));
         }
         else{
+            // affichage de la page d'inscription avec un message d'erreur
             $template = $this->getTwig()->load('inscription.html.twig');
             echo $template->render(array('messagederreur' => $messageErreur));
         }
@@ -306,7 +329,7 @@ class ControllerUtilisateur extends Controller
         $pseudo = isset($_POST['pseudo']) ?  htmlspecialchars($_POST['pseudo']) : null;
         $nom = isset($_POST['nom']) ?  htmlspecialchars($_POST['nom']) : null;
 
-
+        // récupérer l'utilisateur connecté
         $utilisateur = unserialize($_SESSION['utilisateur']);
 
         //supprimer les espaces
@@ -316,6 +339,7 @@ class ControllerUtilisateur extends Controller
 
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
         $messageErreur = "";
+        // vérification des informations saisies lors de la modification
         if (
             Utilitaires::comprisEntre($id, 20, 3, "L'identifiant doit contenir ", $messageErreur ) && Utilitaires::comprisEntre($pseudo, 50, 3, "Le pseudo doit contenir ", $messageErreur) &&
             Utilitaires::comprisEntre($nom, 50, 3, "Le nom doit contenir ", $messageErreur)  && Utilitaires::fichierTropLourd($_FILES['urlImageProfil'], "profil", $messageErreur) &&
@@ -344,15 +368,17 @@ class ControllerUtilisateur extends Controller
                 $managerutilisateur->update($utilisateur);
                 $utilisateur->setMdp(null);
                 $_SESSION['utilisateur'] = serialize($utilisateur);
-                //Génération de la vue
+                // affichage de la page de modification de l'utilisateur avec un message de confirmation
                 $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
                 echo $template->render(array('utilisateur' => $utilisateur, 'message' => "Vos informations ont bien été modifiées"));
                 return;
             }else{
+                // affichage de la page de modification de l'utilisateur avec un message d'erreur
                 $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
                 echo $template->render(array('utilisateur' => $utilisateur, 'messagederreur' => $messageErreur));
             }
         }else{
+            // affichage de la page de modification de l'utilisateur avec un message d'erreur
             $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
             echo $template->render(array('utilisateur' => $utilisateur, 'messagederreur' => $messageErreur));
         }
@@ -373,7 +399,7 @@ class ControllerUtilisateur extends Controller
         $utilisateur = unserialize($_SESSION['utilisateur']);
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
         $messageErreur = "";
-        // vérifier si les deux mails sont identiques
+        // vérifier si les deux mails sont identiques et si le mail est correct
         if (
             Utilitaires::comprisEntre($mail, 320, 6, "Le mail doit contenir ", $messageErreur) && Utilitaires::comprisEntre($mail, 320, 6, "Le mail de verification doit contenir ", $messageErreur) &&
             Utilitaires::egale($mail, $mailconf, "Les mails ", $messageErreur) && Utilitaires::mailCorrectExistePas($mail, $messageErreur, $managerutilisateur)
@@ -385,7 +411,7 @@ class ControllerUtilisateur extends Controller
             $managerutilisateur->update($utilisateur);
             $utilisateur->setMdp(null);
             $_SESSION['utilisateur'] = serialize($utilisateur);
-            //Génération de la vue
+            // affichage de la page de modification de l'utilisateur
             $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
             echo $template->render(array('utilisateur' => $utilisateur));
         }else{
@@ -410,7 +436,9 @@ class ControllerUtilisateur extends Controller
      */
     public function deconnexion(): void
     {
+        // détruire la session
         session_destroy();
+        // supprimer l'utilisateur connecté des variables globales de twig
         $this->getTwig()->addGlobal('utilisateurConnecte', null);
         $template = $this->getTwig()->load('connection.html.twig');
         echo $template->render(array('message' => "Vous avez bien été déconnecté"));
@@ -423,22 +451,28 @@ class ControllerUtilisateur extends Controller
      */
     public function confirmationCompte(): void
     {
+        // récupération du token dans l'url
         $token = isset($_GET['token']) ?  htmlspecialchars($_GET['token']) : null;
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
         $tokenUilisateur = Utilitaires::verifyToken($token);
         $messageErreur = "";
+        // vérification de l'existence de l'utilisateur
         if (Utilitaires::nonNull($tokenUilisateur,$messageErreur )) {
             $utilisateur = $managerutilisateur->find($tokenUilisateur['id']);
+            // vérification de l'existence de l'utilisateur
             if (Utilitaires::utilisateurExiste($utilisateur, $messageErreur)) {
                 $utilisateur->setRole(Role::Utilisateur);
                 $managerutilisateur->update($utilisateur);
+                // affichage de la page de connection avec un message de confirmation
                 $template = $this->getTwig()->load('connection.html.twig');
                 echo $template->render(array('message' => "Votre compte a bien été confirmé"));
             }else{
+                // affichage de la page d'inscription avec un message d'erreur
                 $template = $this->getTwig()->load('inscription.html.twig');
                 echo $template->render(array('messagederreur' => $messageErreur));
             }
         }else{
+            // affichage de la page d'inscription avec un message d'erreur
             $template = $this->getTwig()->load('inscription.html.twig');
             echo $template->render(array('messagederreur' => $messageErreur));
         }
