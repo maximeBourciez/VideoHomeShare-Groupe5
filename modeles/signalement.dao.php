@@ -166,9 +166,9 @@ class SignalementDAO{
         // Préparer la requête
         $sql = "INSERT INTO ".DB_PREFIX."signalement (raison, idMessage, idUtilisateur) VALUES (:raison, :idMessage, :idUtilisateur)";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':raison', $signalement->getRaison()->toString());
-        $stmt->bindValue(':idMessage', $signalement->getIdMessage());
-        $stmt->bindValue(':idUtilisateur', $signalement->getIdUtilisateur());
+        $stmt->bindValue(':raison', $signalement->getRaison()->toString(), PDO::PARAM_STR);
+        $stmt->bindValue(':idMessage', $signalement->getIdMessage(), PDO::PARAM_INT);
+        $stmt->bindValue(':idUtilisateur', $signalement->getIdUtilisateur(), PDO::PARAM_STR);
 
         // Exécuter la requête et récupérer l'identifiant
         $stmt->execute();
