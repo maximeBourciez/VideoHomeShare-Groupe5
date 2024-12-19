@@ -194,18 +194,21 @@ class MessageDAO
 
     public function listerMessagesParFil(int $idFil): array
     {
-        $sql = "SELECT m.*, u.*, like_count, dislike_count
-                FROM vhs_message m
+        $sql = "SELECT m.*, 
+                        u.*, 
+                        ld1.like_count, 
+                        ld1.dislike_count
+                FROM ". DB_PREFIX . "message m
                 LEFT JOIN (
-                                SELECT
-                                    idMessage,
-                                    SUM(CASE WHEN `reaction` = true THEN 1 ELSE 0 END) AS like_count,
-                                    SUM(CASE WHEN `reaction` = false THEN 1 ELSE 0 END) AS dislike_count
-                                FROM vhs_reagir
-                                GROUP BY idMessage
-                            ) AS ld1 ON m.idMessage = ld1.idMessage
-                LEFT JOIN vhs_utilisateur u ON m.idUtilisateur = u.idUtilisateur
-                WHERE m.idFil = :idFil;";
+                    SELECT idMessage,
+                            SUM(CASE WHEN reaction = true THEN 1 ELSE 0 END) AS like_count,
+                            SUM(CASE WHEN reaction = false THEN 1 ELSE 0 END) AS dislike_count
+                    FROM ". DB_PREFIX . "reagir
+                    GROUP BY idMessage
+                ) AS ld1 ON m.idMessage = ld1.idMessage
+                LEFT JOIN ". DB_PREFIX . "utilisateur u ON m.idUtilisateur = u.idUtilisateur
+                WHERE m.idFil = :idFil
+                ORDER BY m.dateC DESC;";
 
 
         $stmt = $this->pdo->prepare($sql);
