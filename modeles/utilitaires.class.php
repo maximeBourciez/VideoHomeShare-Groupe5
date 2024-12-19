@@ -284,13 +284,13 @@ class Utilitaires
     {
         if ($fichier['name'] != '') {
             //supprimer l'ancienne image
-            if (file_exists($utilisateur->getUrlImageBaniere()) && $utilisateur->getUrlImageProfil() != "images/" . $type . "_de_base.png") {
+            if (file_exists($utilisateur->getUrlImageBanniere()) && $utilisateur->getUrlImageProfil() != "images/" . $type . "_de_base.png") {
                 switch ($type) {
                     case "Profil":
                         unlink($utilisateur->getUrlImageProfil());
                         break;
                     case "Baniere":
-                        unlink($utilisateur->getUrlImageBaniere());
+                        unlink($utilisateur->getUrlImageBanniere());
                         break;
                 }
             }
@@ -305,7 +305,7 @@ class Utilitaires
                         $utilisateur->setUrlImageProfil($fichier['name']);
                         break;
                     case "Baniere":
-                        $utilisateur->setUrlImageBaniere($fichier['name']);
+                        $utilisateur->setUrlImageBanniere($fichier['name']);
                         break;
                 }
             } else {
@@ -397,5 +397,17 @@ class Utilitaires
         }
         return false; // Aucun mot de profanité trouvé
     }
+
+   public static function verifUtiliateurverifier(string $id, string &$messageErreur , $managerutilisateur) : bool {
+        $valretour = true;
+        var_dump($managerutilisateur->verificationUtilisateurValide($id));
+        if (!$managerutilisateur->verificationUtilisateurValide($id)) {
+            
+            $messageErreur = "ce compte n'est pas vérifié veuillez vérifier votre mail pour activer votre compte";
+            $valretour = false;
+        }
+        return $valretour;
+    
+   }
 
 }

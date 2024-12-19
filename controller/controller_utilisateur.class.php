@@ -50,11 +50,12 @@ class ControllerUtilisateur extends Controller
 
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
         $message = "";
-        $veriflong=  Utilitaires::comprisEntre($mail, 320, 6, "le mail doit contenir", $message);
+        
         if (Utilitaires::comprisEntre($mail, 320, 6, "le mail doit contenir", $message)) {
             $utilisateur = $managerutilisateur->findByMail($mail);
 
-            if (Utilitaires::utilisateurExiste($utilisateur, $message ) && !Utilitaires::isBruteForce($utilisateur->getId(), $message ) && Utilitaires::motDePasseCorrect($mdp, $utilisateur->getMdp(), $utilisateur , $message)) {
+            if (Utilitaires::utilisateurExiste($utilisateur, $message ) && !Utilitaires::isBruteForce($utilisateur->getId(), $message ) && 
+                Utilitaires::motDePasseCorrect($mdp, $utilisateur->getMdp(), $utilisateur , $message) && Utilitaires::verifUtiliateurverifier($utilisateur->getId(), $message, $managerutilisateur)) {
                 $utilisateur->setMdp(null);
                 Utilitaires::resetBrutForce($utilisateur->getId());
                 $_SESSION['utilisateur'] = serialize($utilisateur);
@@ -105,7 +106,7 @@ class ControllerUtilisateur extends Controller
         if (
             Utilitaires::comprisEntre($id, 20, 3, "L'identifiant doit contenir ", $message ) && Utilitaires::comprisEntre($pseudo, 50, 3, "Le pseudo doit contenir ", $message ) &&
             Utilitaires::comprisEntre($mail, 50, 3, "Le mail doit contenir ", $message ) && Utilitaires::comprisEntre($nom, 50, 3, "Le nom doit contenir ", $message ) &&
-            Utilitaires::comprisEntre($mdp, null, 8, "Le mot de passe doit contenir ", "inscription") && Utilitaires::comprisEntre($vmdp, null, 8, "Le mot de passe de confirmation doit contenir ", "inscription")
+            Utilitaires::comprisEntre($mdp, null, 8, "Le mot de passe doit contenir ", $message) && Utilitaires::comprisEntre($vmdp, null, 8, "Le mot de passe de confirmation doit contenir ", $message)
             && Utilitaires::estRobuste($mdp, $message ) && Utilitaires::ageCorrect($date, 13,$message) && Utilitaires::mailCorrectExistePas($mail, $message,  $managerutilisateur) && Utilitaires::egale($mdp, $vmdp, "Les mots de passe", $message)
             && Utilitaires::idExistePas($id, $message, $managerutilisateur ) && !Utilitaires::verificationDeNom($id, "l'Identifiant ",$message ) && !Utilitaires::verificationDeNom($pseudo, "le pseudo",$message) && !Utilitaires::verificationDeNom($nom, "le nom",$message)
         ) {
@@ -113,11 +114,14 @@ class ControllerUtilisateur extends Controller
             //cripter le mot de passe
             $mdp = password_hash($mdp, PASSWORD_DEFAULT);
             //création de l'utilisateur
-            $newUtilisateur = new Utilisateur($id, $pseudo, $nom, $mail, $mdp, "Utilisateur", "images/image_de_profil_de_base.svg", "images/Baniere_de_base.png");
+            $role = Role::Utilisateur;
+            $token = Utilitaires::generateToken($id, 24);
+             mail($mail, "Confirmation de votre compte", "Bonjour, \n\n Vous avez créé un compte sur notre plateforme. Pour confirmer votre compte, veuillez cliquer sur le lien suivant : " . WEBSITE_LINK . "index.php?controller=utilisateur&methode=confirmationCompte&token=" . $token . " \n\n Cordialement, \n\n L'équipe de la plateforme de vhs");
+            $newUtilisateur = new Utilisateur($id, $pseudo, $nom, $mail, $mdp, $role, "images/Profil_de_base.svg", "images/Baniere_de_base.png");
             $managerutilisateur->create($newUtilisateur);
             //Génération de la vue
             $template = $this->getTwig()->load('connection.html.twig');
-            echo $template->render(array('message' => "Votre compte a bien été créé."));
+            echo $template->render(array('message' => "un mail vous a été envoyé pour confirmer votre compte veuillez cliquer sur le lien dans le mail"));
         }else{
             $template = $this->getTwig()->load('inscription.html.twig');
             echo $template->render(array('messagederreur' => $message));
@@ -412,5 +416,32 @@ class ControllerUtilisateur extends Controller
         echo $template->render(array('message' => "Vous avez bien été déconnecté"));
     }
   
+    /**
+     * @brief permet de confirmer le compte de l'utilisateur
+     * 
+     * @return void
+     */
+    public function confirmationCompte(): void
+    {
+        $token = isset($_GET['token']) ?  htmlspecialchars($_GET['token']) : null;
+        $managerutilisateur = new UtilisateurDAO($this->getPdo());
+        $tokenUilisateur = Utilitaires::verifyToken($token);
+        $messageErreur = "";
+        if (Utilitaires::nonNull($tokenUilisateur,$messageErreur )) {
+            $utilisateur = $managerutilisateur->find($tokenUilisateur['id']);
+            if (Utilitaires::utilisateurExiste($utilisateur, $messageErreur)) {
+                $utilisateur->setRole(Role::Utilisateur);
+                $managerutilisateur->update($utilisateur);
+                $template = $this->getTwig()->load('connection.html.twig');
+                echo $template->render(array('message' => "Votre compte a bien été confirmé"));
+            }else{
+                $template = $this->getTwig()->load('inscription.html.twig');
+                echo $template->render(array('messagederreur' => $messageErreur));
+            }
+        }else{
+            $template = $this->getTwig()->load('inscription.html.twig');
+            echo $template->render(array('messagederreur' => $messageErreur));
+        }
+    }
 
 }
