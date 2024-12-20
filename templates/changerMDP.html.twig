@@ -13,9 +13,11 @@
             
             <input type="text" name="id" style="display: none" value="{{ id }}">     
             <p class="text-start mb-0"> Nouveau mot de passe </p>
-            <input type="password" name="mdp" class="form-control mb-2 "> 
+            <input type="password" name="mdp" class="form-control mb-2 " minlength="8" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" 
+                required title="Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial."> 
             <p class="text-start mb-0"> Vérification mot de passe </p>
-            <input type="password" name="vmdp" class="form-control mb-3 ">
+            <input type="password" name="vmdp" class="form-control mb-3 " minlength="8" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" 
+                required title="Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.">
             <input type="submit" class="btn btn-myprimary my-2  w-50 mx-auto" value="Changer le mot de passe"> 
             
             <a href="index.php?controller=utilisateur&methode=connexion" class="text-white"> se connecter </a>
