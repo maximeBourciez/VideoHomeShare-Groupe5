@@ -76,7 +76,7 @@ class ControllerQuizz extends Controller {
         $quizz = $quizzDAO->findById($idQuizz);
             
         // Rendre le template avec les infos
-        echo $this->getTwig()->render('quizz.html.twig', [
+        echo $this->getTwig()->render('jouerQuizz.html.twig', [
             'quizz' => $quizz
                 
         ]);
@@ -122,20 +122,14 @@ class ControllerQuizz extends Controller {
     }
 
     /**
-     * @brief Méthode permettant de gérer des quizz
+     * @brief Méthode permettant de gérer un quizz
      * 
-     * @details Méthode permettant de gérer les quizz d'un utilisateur, affichant deux boutons pour modifier ou supprimer un quizz.
+     * @details Méthode permettant de gérer le quizz d'un utilisateur
      *
      * @return void
      */
     public function gererQuizz() : String{
-        $modifURL = "index.php?controller=quizz&methode=creerQuizz&idQuizz={{ quiz.id }}";
-        $supprURL = "index.php?controller=quizz&methode=supprimerQuizz&idQuizz={{ quiz.id }}";
-
-        return "
-        <a href='{$modifURL}' class='btn btn-myprimary'>Modifier</a>
-        <a href='{$supprURL}' class='btn btn-myprimary' style='margin-left: 10px;'>Supprimer</a>
-        ";
+        //A faire
     }
 
     /**
@@ -145,7 +139,8 @@ class ControllerQuizz extends Controller {
      *
      * @return void
      */
-    public function gererQuizzQuestion(){
+    public function gererQuestion(){
+        //Récupère toutes les infos du quizz (à déplacer)
         $idQuizz = $_POST['idQuizz'];
         $titre = $_POST['titre'];
         $desc = $_POST['desc'];
@@ -162,9 +157,13 @@ class ControllerQuizz extends Controller {
             ]);
         }
         else{
+            //Crée un nouveau quizz (à déplacer)
             $quizz = new Quizz($idQuizz, $titre, $desc, $difficulte, $nbQuestions);
+
             $quizzDAO = new QuizzDAO($this->getPdo());
             $quizz = $quizzDAO->findById($idQuizz);
+            
+            // Rendre le template sans information
             echo $this->getTwig()->render('creationQuestion.html.twig');
         }       
     }

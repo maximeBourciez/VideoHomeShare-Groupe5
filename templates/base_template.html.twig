@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ constant('WEBSITE_LANGUAGE')}}">
+<html lang="{{ constant('WEBSITE_LANGUAGE') }}">
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,8 +19,6 @@
 				font-family: 'Montserrat', sans-serif;
 			}
 		</style>
-
-		
 
 	</head>
 	<body class="d-flex flex-column min-vh-100 bg-mylight">
@@ -55,7 +53,7 @@
 
   <!-- Section droite -->
         <div class="navbar-end d-flex align-items-center gap-3 me-lg-4">
-			{% if utilisateurConnecte is null %}
+			{% if utilisateurConnecte == null %}
 				<a href="index.php?controller=utilisateur&methode=connexion">
 					<button class="btn btn-myprimary">Connexion</button>
 				</a>
