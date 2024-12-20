@@ -8,9 +8,6 @@ document.addEventListener("DOMContentLoaded", () => { // Récupération des donn
         let currentLength = champText.value.length;
         let remaining = maxChar - currentLength;
         counter.textContent = `${remaining} caractères restants`;
-    });
-
-    document.body.removeChild(document.body.childNodes[0]);
-    
+    });  
 
 });
