@@ -49,5 +49,6 @@ class ControllerCollection extends Controller {
 
         // Si pas d'ID ou collection non trouvée, rediriger vers la page d'accueil
         echo $this->getTwig()->render('index.html.twig');
+
     }
 } 
