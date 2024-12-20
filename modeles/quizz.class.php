@@ -6,11 +6,11 @@ class Quizz {
     private ?int $id;
     private ?string $titre;
     private ?string $description;
-    private ?string $difficulte;
+    private ?Difficulte $difficulte; //Prend une valeur entière entre 1 à 4
     private ?string $date;
 
     // Constructeur
-    function __construct(?int $id = null, ?string $titre = null, ?string $description = null, ?string $difficulte = null, ?string $date = null){
+    function __construct(?int $id = null, ?string $titre = null, ?string $description = null, ?Difficulte $difficulte = null, ?string $date = null){
         $this->id = $id;
         $this->titre = $titre;
         $this->description = $description;
@@ -51,9 +51,9 @@ class Quizz {
 
     /**
      * Get the value of difficulte
-     * @return string
+     * @return Difficulte
      */
-    public function getDifficulte(): ?string
+    public function getDifficulte(): ?Difficulte
     {
         return $this->difficulte;
     }
@@ -101,10 +101,10 @@ class Quizz {
 
     /**
      * Set the value of difficulte
-     * @param string $difficulte
+     * @param Difficulte $difficulte
      * @return void
      */
-    public function setDifficulte(string $difficulte): void
+    public function setDifficulte(Difficulte $difficulte): void
     {
         $this->difficulte = $difficulte;
     }

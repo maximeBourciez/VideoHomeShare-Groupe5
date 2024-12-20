@@ -5,14 +5,22 @@
     
 <main class="content row flex-grow-1">
     <form action="index.php?controller=utilisateur&methode=checkInfoConnecter" method="POST" class="text-center col-12 col-md-6 col-lg-4 mx-auto my-auto p-4 text-white rounded">
+        {% if message is defined %}
+            <div class="alert alert-success text-black" role="alert"> {{message}} </div>
+        {% endif %}
         <img src="{{ constant('WEBSITE_LOGO') }}" height="95" width="155" alt="VHS Logo" class="mx-auto my-2">
         <div class="bg-mydark text-white rounded p-4 mb-5">
             <h3 class="mb-3 fw-bold">Connexion</h3>
+            
+            {% if messagederreur is defined %}
+                <div class="alert alert-danger bg-tercary mx-5" role="alert"> Erreur : {{ messagederreur }}</div>
+                
+            {% endif %}
 
             <!-- Champ Email -->
             <div class="form-group mb-3">
                 <label for="email" class="d-block text-start mb-0 fw-light">Mail</label> <!-- Align label à gauche -->
-                <input type="email" name="mail" id="email" class="form-control" required>
+                <input type="email" name="mail" id="email" class="form-control" minlength="6" maxlength="320" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="adresse mail non valide " required>
             </div>
 
             <!-- Champ Mot de Passe -->

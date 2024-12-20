@@ -1,87 +1,120 @@
-{% macro afficherReponses(reponses, idAuteur, pseudoAuteur) %}
-	{% for reponse in reponses %}
-		<div class="card my-4 shadow-sm border-0 rounded-3 ms-5">
-			<div class="card-body p-4 bg-mydark text-white rounded">
-				<div class="d-flex align-items-center">
-					<img src="{{ reponse.getUtilisateur() ? reponse.getUtilisateur().getUrlImageProfil() : 'default_avatar.jpg' }}" alt="Avatar" class="rounded-circle me-3" width="50" height="50">
-					<div class="d-flex align-items-center">
-						<h5 class="mb-0 mx-2 username-link">
-							<a href="index.php?controller=utilisateur&methode=show&id_utilisateur={{ reponse.getUtilisateur() ? reponse.getUtilisateur().getId() : 0 }}" style="color:white;" class="text-decoration-none">
-								{{ reponse.getUtilisateur() ? reponse.getUtilisateur().getPseudo() : 'Utilisateur inconnu' }}
-							</a>
-						</h5>
-						<span class="mx-2" style="font-size: 1.2em;">•</span>
-						<small>{{ reponse.datePublication | date('d M Y') }}</small>
-						<span class="mx-2" style="font-size: 1.2em;">•</span>
-						<small>
-							Répond à
-							<a href="index.php?controller=utilisateur&methode=show&id_utilisateur={{ idAuteur }}">
-								@{{ pseudoAuteur ? pseudoAuteur : 'Utilisateur inconnu' }}
-							</a>
-						</small>
-					</div>
-				</div>
-				<p class="mt-3">{{ reponse.valeur }}</p>
-				<div class="d-flex justify-content-between mt-4">
-					<div class="d-flex w-100 mt-4">
-						<div class="me-auto">
-							<button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;">
-								<i class="bi bi-hand-thumbs-up"></i>
-								{{ reponse.nbLikes }}
-							</button>
-							<button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;">
-								<i class="bi bi-hand-thumbs-down"></i>
-								{{ reponse.nbDislikes }}
-							</button>
-							<button class="btn btn-sm" style="background-color: #F2F2F2; color: #000;" data-bs-toggle="modal" data-bs-target="#repondreModal">
-								<i class="bi bi-reply"></i>
-								Répondre
-							</button>
-						</div>
-						<div class="d-flex justify-content-end" style="flex-grow: 1;">
-							<button class="btn btn-sm" style="background-color: #dc3545; color: white;">
-								<i class="bi bi-flag"></i>
-								Signaler
-							</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
 
-		<div class="modal fade" id="repondreModal" tabindex="-1" aria-labelledby="repondreModalLabel" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered">
-				<div class="modal-content popup-content bg-mydark">
-					<div class="modal-header text-white">
-						<h5 class="modal-title" id="repondreModalLabel">Répondre</h5>
-						<button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
-					</div>
-					<div
-						class="modal-body text-white">
-						<!-- Message original -->
-						<div class="message-original bg-mylight text-black p-3">
-							<strong>{{ reponse.getUtilisateur().getPseudo() }}</strong>
-							<p>{{ reponse.valeur }}</p>
-						</div>
-						<!-- Zone de texte -->
-						<textarea class="form-control mt-3" rows="4" placeholder="Répondre à D4rK_545uk3_du_93..." maxlength="1000"></textarea>
-						<div class="text-end mt-2">
-							<span>0 / 1000</span>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-myprimary">
-							<i class="bi bi-send"></i>
-							Envoyer
-						</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		{% if reponse.reponses is not empty %}
-			{{ _self.afficherReponses(reponse.reponses, reponse.getUtilisateur() ? reponse.getUtilisateur().getId() : 0, reponse.getUtilisateur() ? reponse.getUtilisateur().getPseudo() : 'Utilisateur inconnu') }}
-		{% endif %}
-	{% endfor %}
+{% macro afficherReponses(reponses, idAuteur, pseudoAuteur, idFil, messageSuppr) %}
+    {% set auteurParentId = idAuteur %}
+    {% set auteurParentPseudo = pseudoAuteur %}
+    {% for reponse in reponses %}
+        <div class="card my-4 shadow-sm border-0 rounded-3 ms-5">
+            <div class="card-body p-4 bg-mydark text-white rounded">
+                <div class="d-flex align-items-center">
+                    <img src="{{ reponse.getUtilisateur() ? reponse.getUtilisateur().getUrlImageProfil() : 'default_avatar.jpg' }}" alt="Avatar" class="rounded-circle me-3" width="50" height="50">
+                    <div class="d-flex align-items-center">
+                        <h5 class="mb-0 mx-2 username-link">
+                            <a href="index.php?controller=utilisateur&methode=show&id_utilisateur={{reponse	.getUtilisateur().getId() }}" style="color:white;" class="text-decoration-none">
+								{{ reponse.getUtilisateur().getPseudo() ?: 'Utilisateur inconnu' }}
+
+							</a>
+                        </h5>
+                        <span class="mx-2" style="font-size: 1.2em;">•</span>
+                        <small>{{ reponse.datePublication | date('d M Y') }}</small>
+                        <span class="mx-2" style="font-size: 1.2em;">•</span>
+                        <small>
+                            Répond à
+                            <a href="index.php?controller=utilisateur&methode=show&id_utilisateur={{ auteurParentId }}">
+                                @{{ auteurParentPseudo }}
+                            </a>
+                        </small>
+                    </div>
+                </div>
+                <p class="mt-3">
+					{% if reponse.getValeur() == messageSuppr and reponse.getUtilisateur().getPseudo() is null %}
+						<i>{{ reponse.valeur }}</i>
+					{% else %}
+						{{ reponse.valeur }}
+					{% endif %}
+				</p>
+                <div class="d-flex justify-content-between mt-4">
+                    <div class="d-flex w-100 mt-4 ">
+                        <div class="me-auto d-flex flex-row">
+                            <form method="POST" action="index.php?controller=fil&methode=like">
+                                <input type="hidden" name="id_message" value="{{ reponse.getIdMessage() }}">
+                                <input type="hidden" name="id_fil" value="{{ idFil }}">
+                                {% if reponse.valeur == messageSuppr and reponse.getUtilisateur().getPseudo() is null or utilisateurConnecte is null %}
+                                    <button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;" type="submit" disabled>
+                                {% else %}
+                                    <button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;" type="submit">
+                                {% endif %}
+                                    <i class="bi bi-hand-thumbs-up"></i>
+                                    <span>
+                                        {% if reponse.nbLikes > 0 %}
+                                            {{ reponse.nbLikes }}
+                                        {% endif %}
+                                    </span>
+                                </button>
+                            </form>
+                            <form method="POST" action="index.php?controller=fil&methode=dislike">
+                                <input type="hidden" name="id_message" value="{{ reponse.getIdMessage() }}">
+                                <input type="hidden" name="id_fil" value="{{ idFil }}">
+                                {% if reponse.valeur == messageSuppr and reponse.getUtilisateur().getPseudo() is null or utilisateurConnecte is null %}
+                                    <button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;" type="submit" disabled>
+                                {% else %}
+                                    <button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;" type="submit">
+                                {% endif %}
+                                    <i class="bi bi-hand-thumbs-down"></i>
+                                    <span>
+                                        {% if reponse.nbDislikes > 0 %}
+                                            {{ reponse.nbDislikes }}
+                                        {% endif %}
+                                    </span>
+                                </button>
+                            </form>
+                            {% if reponse.valeur == messageSuppr and reponse.getUtilisateur().getPseudo() is null or utilisateurConnecte is null %}
+                                <button class="btn btn-sm" style="background-color: #F2F2F2; color: #000;" data-bs-toggle="modal" data-bs-target="#repondreModal" data-id-message-parent="{{ reponse.getIdMessage() }}"                                disabled>
+                            {% else %}
+                                <button class="btn btn-sm" style="background-color: #F2F2F2; color: #000;" data-bs-toggle="modal" data-bs-target="#repondreModal" data-id-message-parent="{{ reponse.getIdMessage() }}">
+                            {% endif %}
+                                <i class="bi bi-reply"></i>
+                                Répondre
+                            </button>
+                        </div>
+                        <div class="d-flex justify-content-end" style="flex-grow: 1;">
+                            {% if reponse.getUtilisateur().getId() == utilisateurConnecte.getId() %}
+                                <form method="POST" action="index.php?controller=fil&methode=supprimerMessage">
+                                    <input type="hidden" name="idMessage" value="{{ reponse.getIdMessage() }}">
+                                    <input type="hidden" name="id_fil" value="{{ idFil }}">
+                                    {% if reponse.valeur == messageSuppr and reponse.getUtilisateur().getPseudo() is null or utilisateurConnecte is null%}
+                                        <button class="btn btn-sm" style="background-color: #dc3545; color: white;" disabled>
+                                    {% else %}
+                                        <button class="btn btn-sm" style="background-color: #dc3545; color: white;">
+                                    {% endif %}
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            {% else %}
+                                <form method="POST" action="index.php?controller=fil&methode=signalerMessage">
+                                    <input type="hidden" name="idMessage" value="{{ reponse.getIdMessage() }}">
+                                    <input type="hidden" name="id_fil" value="{{ idFil }}">
+                                    {% if reponse.valeur == messageSuppr and reponse.getUtilisateur().getPseudo() is null or utilisateurConnecte is null %}
+                                        <button class="btn btn-sm" style="background-color: #dc3545; color: white;" data-bs-toggle="modal" data-bs-target="#signalement" data-id-message="{{ reponse.getIdMessage() }}" disabled>
+                                    {% else %}
+                                        <button class="btn btn-sm" style="background-color: #dc3545; color: white;" data-bs-toggle="modal" data-bs-target="#signalement" data-id-message="{{ reponse.getIdMessage() }}">
+                                    {% endif %}
+                                        <i class="bi bi-flag"></i>
+                                        Signaler
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Affichage des réponses aux réponses -->
+        {% if reponse.reponses is not empty %}
+            {{ _self.afficherReponses(reponse.reponses, reponse.getUtilisateur() ? reponse.getUtilisateur().getId() : 0, reponse.getUtilisateur() ? reponse.getUtilisateur().getPseudo() : 'Utilisateur inconnu', idFil, messageSuppr) }}
+        {% endif %}
+
+    {% endfor %}
 {% endmacro %}
 
 
@@ -89,25 +122,29 @@
 {% extends 'base_template.html.twig' %}
 
 {% block title %}
-	VHS | Fil
+VHS | Fil
 {% endblock %}
 
 {% block content %}
+<main class="flex-grow-1">
 	<div class="container-fluid bg-mydark text-white p-4 shadow mb-5" style="border-top: 5px solid #F2AC0F;">
 		<div class="text-center">
 			<h2 class="mb-3">{{ fil.titre }}</h2>
 			<p class="">{{ fil.description }}</p>
+			{% for theme in fil.getThemes() %}
+				<span class="badge bg-myprimary text-dark me-2 mb-2 p-2">{{ theme.getNom() }}</span>
+			{% endfor %}
 		</div>
 	</div>
 	<div class="container">
 		{% for message in messages %}
 			{% if message.idMessageParent is null %}
-				<div class="card my-4 shadow-sm border-0 rounded-3">
+				<div id="{{message.getIdMessage()}}" class="card my-4 shadow-sm border-0 rounded-3">
 					<div class="card-body p-4 bg-mydark text-white rounded">
 						<div class="d-flex align-items-center">
-							<img src="{{ message.getUtilisateur().getUrlImageProfil() }}" alt="Avatar" class="rounded-circle me-3" width="50" height="50">
+							<img src="{{ reponse.getUtilisateur() ? reponse.getUtilisateur().getUrlImageProfil() : 'default_avatar.jpg' }}" alt="Avatar" class="rounded-circle me-3" width="50" height="50">
 							<div class="d-flex align-items-center">
-								<h5 class="mb-0 mx-2">
+								<h5 class="mb-0 mx-2 username-link">
 									<a href="index.php?controller=utilisateur&methode=show&id_utilisateur={{message.getUtilisateur().getId() }}" style="color:white;" class="text-decoration-none">
 										{{ message.getUtilisateur().getPseudo() ?: 'Utilisateur inconnu' }}
 									</a>
@@ -116,67 +153,90 @@
 								<small>{{ message.dateC | date('d M Y') }}</small>
 							</div>
 						</div>
-						<p class="mt-3">{{ message.valeur }}</p>
+						<div class="message" data-id-message="{{ message.getIdMessage() }}">
+							<p class="message-text">
+								{% if message.valeur == messageSuppr and message.getUtilisateur().getPseudo() is null %}
+									<i>{{ message.valeur }}</i>
+								{% else %}
+									{{ message.valeur }}
+								{% endif %}
+							</p>
+						</div>
 						<div class="d-flex justify-content-between mt-4">
 							<div class="d-flex w-100 mt-4">
-								<div class="me-auto">
-									<button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;">
-										<i class="bi bi-hand-thumbs-up"></i>
-										{{ reponse.nbLikes }}
-									</button>
-									<button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;">
-										<i class="bi bi-hand-thumbs-down"></i>
-										{{ reponse.nbDislikes }}
-									</button>
-									<button class="btn btn-sm" style="background-color: #F2F2F2; color: #000;" data-bs-toggle="modal" data-bs-target="#repondreModal">
-										<i class="bi bi-reply"></i>
-										Répondre
-									</button>
+								<div class="me-auto d-flex flex-row">
+									<form method="POST" action="index.php?controller=fil&methode=like">
+										<input type="hidden" name="id_message" value="{{ message.getIdMessage() }}">
+										<input type="hidden" name="id_fil" value="{{ fil.id }}">
+											{% if message.valeur == messageSuppr and message.getUtilisateur().getPseudo() is null or utilisateurConnecte is null %}
+												<button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;" type="submit" disabled>
+											{% else %}
+												<button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;" type="submit">
+											{% endif %}
+											<i class="bi bi-hand-thumbs-up"></i>
+											<span>
+											{% if message.nbLikes > 0 %}
+												{{ message.nbLikes }}
+											{% endif %}
+											</span>
+										</button>
+									</form>
+									<form method="POST" action="index.php?controller=fil&methode=dislike">
+										<input type="hidden" name="id_message" value="{{ message.getIdMessage() }}">
+										<input type="hidden" name="id_fil" value="{{ fil.id }}">
+										{% if message.valeur == messageSuppr and message.getUtilisateur().getPseudo() is null or utilisateurConnecte is null %}
+											<button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;" type="submit" disabled>
+										{% else %}
+											<button class="btn btn-sm me-2" style="background-color: #F2F2F2; color: #000;" type="submit">
+										{% endif %}
+											<i class="bi bi-hand-thumbs-down"></i>
+											<span>
+												{% if message.nbDislikes > 0 %}
+													{{ message.nbDislikes }}
+												{% endif %}
+											</span>
+										</button>
+									</form>
+										{% if message.valeur == messageSuppr and message.getUtilisateur().getPseudo() is null or utilisateurConnecte is null %}
+											<button class="btn btn-sm" style="background-color: #F2F2F2; color: #000;" data-bs-toggle="modal" data-bs-target="#repondreModal" data-id-message-parent="{{ message.getIdMessage() }}" disabled>
+										{% else %}
+											<button class="btn btn-sm" style="background-color: #F2F2F2; color: #000;" data-bs-toggle="modal" data-bs-target="#repondreModal" data-id-message-parent="{{ message.getIdMessage() }}">
+										{% endif %}
+											<i class="bi bi-reply"></i>
+											Répondre
+										</button>
 								</div>
 								<div class="d-flex justify-content-end" style="flex-grow: 1;">
-									<button class="btn btn-sm" style="background-color: #dc3545; color: white;">
-										<i class="bi bi-flag"></i>
-										Signaler
-									</button>
+									{% if message.getUtilisateur().getId() == utilisateurConnecte.getId() %}
+										<form method="POST" action="index.php?controller=fil&methode=supprimerMessage">
+											<input type="hidden" name="idMessage" value="{{ message.getIdMessage() }}">
+											<input type="hidden" name="id_fil" value="{{ fil.id }}">
+											{% if message.valeur == messageSuppr and message.getUtilisateur().getPseudo() is null or utilisateurConnecte is null %}
+												<button class="btn btn-sm" style="background-color: #dc3545; color: white;" disabled>
+											{% else %}
+												<button class="btn btn-sm" style="background-color: #dc3545; color: white;">
+												{% endif %}
+												<i class="bi bi-trash"></i>
+											</button>
+										</form>
+									{% else %}
+											{% if message.valeur == messageSuppr and message.getUtilisateur().getPseudo() is null or utilisateurConnecte is null %}
+												<button class="btn btn-sm" style="background-color: #dc3545; color: white;" data-bs-toggle="modal" data-bs-target="#signalement" data-id-message="{{ message.getIdMessage() }}" disabled>
+											{% else %}
+												<button class="btn btn-sm" style="background-color: #dc3545; color: white;" data-bs-toggle="modal" data-bs-target="#signalement" data-id-message="{{ message.getIdMessage() }}">
+											{% endif %}
+												<i class="bi bi-flag"></i>
+												Signaler
+											</button>
+									{% endif %}
 								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<!-- Modal de réponse -->
-				<div class="modal fade" id="repondreModal" tabindex="-1" aria-labelledby="repondreModalLabel" aria-hidden="true">
-					<div class="modal-dialog modal-dialog-centered modal-lg" style="height: 80vh;">
-						<div class="modal-content popup-content bg-mydark" id="popUpRepondre">
-							<div class="modal-header text-white text-center">
-								<h5 class="modal-title w-100" id="repondreModalLabel">Répondre</h5>
-								<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
-							</div>
-							<div
-								class="modal-body text-white">
-								<!-- Message original -->
-								<div class="message-original bg-mylight text-black p-3">
-									<strong>{{ message.getUtilisateur().getPseudo() }}</strong>
-									<p>{{ message.valeur }}</p>
-								</div>
-								<!-- Zone de texte -->
-								<textarea class="form-control mt-3 bg-mylight text-black p-3" rows="4" placeholder="Répondre à {{ message.getUtilisateur().getPseudo() }}" maxlength="1000" oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"></textarea>
-								<div class="text-end mt-2">
-									<span>0 / 1000</span>
-								</div>
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-xs btn-myprimary">
-									<i class="bi bi-send"></i>
-									Envoyer
-								</button>
 							</div>
 						</div>
 					</div>
 				</div>
 
 				{% if message.reponses is not empty %}
-					{{ macros.afficherReponses(message.reponses, message.getUtilisateur().getId(), message.getUtilisateur().getPseudo()) }}
+					{{ macros.afficherReponses(message.reponses, message.getUtilisateur().getId(), message.getUtilisateur().getPseudo(), fil.id, messageSuppr) }}
 				{% endif %}
 
 
@@ -185,9 +245,11 @@
 	</div>
 
 	<!-- Bouton flottant -->
-	<button class="btn btn-myprimary position-fixed bottom-0 end-0 me-4 mb-4 px-6 d-flex align-items-center justify-content-center" style="border-radius: 50px; white-space: nowrap; min-width: 200px;" data-bs-toggle="modal" data-bs-target="#nouveauMessage">
+	
+	<button class="btn btn-myprimary position-fixed bottom-0 end-0 me-4 mb-4 px-6 d-flex align-items-center justify-content-center" style="border-radius: 50px; white-space: nowrap; min-width: 200px;" data-bs-toggle="modal" data-bs-target="#nouveauMessage" {% if utilisateurConnecte is null %} disabled {% endif %}>
 		<i class="bi bi-pencil" style="font-size: 1.3rem; margin-right: 0.2 rem;"></i>
-		<span>Ecrire un message   </span>
+		<span>Ecrire un message
+		</span>
 	</button>
 
 
@@ -199,74 +261,99 @@
 					<h5 class="modal-title w-100" id="nouveauMessageLabel">Nouveau message</h5>
 					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
 				</div>
-				<div class="modal-body text-white">
+				<form action="index.php?controller=fil&methode=ajouterMessage" method="POST" class="modal-body text-white">
 					<div class="d-flex justify-content-between mt-2">
 						<p>Votre message :</p>
 						<span>0 / 1000</span>
 					</div>
-					<textarea class="form-control mt-1 bg-mylight text-black p-3" rows="4" placeholder="Exprimez-vous..." maxlength="1000"></textarea>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-xs btn-myprimary">
-						<i class="bi bi-send"></i>
-						Envoyer
-					</button>
-				</div>
+					<input type="hidden" name="id_fil" value="{{ fil.id }}">
+					<textarea name="message" class="form-control mt-1 bg-mylight text-black p-3" rows="4" placeholder="Exprimez-vous..." maxlength="1000" required></textarea>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-xs btn-myprimary">
+							<i class="bi bi-send"></i>
+							Envoyer
+						</button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
 
+	<!-- Modal de réponse à un autre message -->
+	<div class="modal fade" id="repondreModal" tabindex="-1" aria-labelledby="repondreModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-lg" style="height: 80vh;">
+			<form action="index.php?controller=fil&methode=repondre" method="POST" class="modal-content popup-content bg-mydark" id="popUpRepondre">
+				<div class="modal-header text-white text-center">
+					<h5 class="modal-title w-100" id="repondreModalLabel">Répondre</h5>
+					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+				</div>
+				<div
+					class="modal-body text-white">
+					<!-- Message original -->
+					<div class="message-original bg-mylight text-black p-3">
+						<strong>{{ message.getUtilisateur().getPseudo() }}</strong>
+						<p>{{ message.valeur }}</p>
+					</div>
+					<!-- Champ caché pour envoyer l'ID du parent -->
+					<input type="hidden" name="id_fil" value="{{ fil.id }}">
+					<input
+					type="hidden" name="id_message_parent" value="{{ reponse.getIdMessage() }}">
+					<!-- Zone de texte -->
+					<textarea class="form-control mt-3 bg-mylight text-black p-3" rows="4" name="message" placeholder="Répondre à {{ message.getUtilisateur().getPseudo() }}" maxlength="1000" required></textarea>
+					<div class="text-end mt-2">
+						<span>0 / 1000</span>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-xs btn-myprimary">
+						<i class="bi bi-send"></i>
+						Envoyer
+					</button>
+				</div>
 
-	<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Sélectionne toutes les textareas dans les modals
-        const textareas = document.querySelectorAll(".modal textarea");
-
-		// Vider la textarea à chaque ouverture du modal & reset le compteur
-		document.querySelectorAll(".modal").forEach(modal => {
-			modal.addEventListener("show.bs.modal", () => {
-				modal.querySelector("textarea").value = "";
-				modal.querySelector("span").textContent = "0 / 1000";
-			});
-		});
-        
-        textareas.forEach(textarea => {
-            // Trouve le compteur associé dans le même modal
-            const counter = textarea.closest(".modal").querySelector(".modal-body span");
-
-            textarea.addEventListener("input", () => {
-                const length = textarea.value.length;
-                counter.textContent = `${length} / 1000`;
-            });
-        });
-
-
-		// Sélectionne tous les boutons "Répondre"
-		const repondreButtons = document.querySelectorAll(".btn[data-bs-target='#repondreModal']");
-		
-		// Modale cible
-		const repondreModal = document.getElementById("repondreModal");
-		const modalTextarea = repondreModal.querySelector("textarea");
-		const messageOriginal = repondreModal.querySelector(".message-original p");
-		const auteurOriginal = repondreModal.querySelector(".message-original strong");
-		const compteur = repondreModal.querySelector(".modal-body span");
-
-		repondreButtons.forEach(button => {
-			button.addEventListener("click", function () {
-				// Récupérer les données associées au bouton "Répondre"
-				const parentMessage = this.closest(".card-body");
-				const messageText = parentMessage.querySelector("p").textContent;
-				const pseudoAuteur = parentMessage.querySelector(".username-link").textContent;
-
-				// Mettre à jour le contenu de la modale
-				messageOriginal.textContent = messageText.trim();
-				auteurOriginal.textContent = pseudoAuteur.trim();
-				modalTextarea.value = ""; // Vide la zone de texte
-				compteur.textContent = "0 / 1000"; // Réinitialise le compteur
-			});
-		});
-    });
-</script>
+			</form>
+		</div>
+	</div>
 
 
+	<!-- Modal de signalement -->
+	<div class="modal fade" id="signalement" tabindex="-1" aria-labelledby="signalement" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="nouveauMessageLabel">Signaler un message</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <form action="index.php?controller=fil&methode=signalerMessage" method="POST">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <p style="color: #F2AC0F;">Vous signalez le message :</p>
+                        <span class="message-to-signal " > </span> 
+                    </div>
+                    <p class="mt-2" style="color: #F2AC0F;">Pour la raison :</p>
+                    <select name="raison" class="form-select" required>
+                        <option value="" disabled selected>Choisissez une raison</option>
+                        {% for raison in raisonSignalement %}
+                            <option value="{{ raison }}">{{ raison }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="hidden" name="id_message" value="" id="id_message_signalement"> 
+					<input type="hidden" name="id_fil" value="{{ fil.id }}">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-send"></i>
+                        Envoyer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+	<script src="js/thread.js"></script>
+
+
+</main>
 {% endblock %}

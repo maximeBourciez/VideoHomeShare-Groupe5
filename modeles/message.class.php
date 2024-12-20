@@ -51,6 +51,12 @@ class Message {
     private ?Utilisateur $utilisateur;
 
     /**
+     * @var int $idFil 
+     * @brief Identifiant du fil de discussion auquel appartient le message.
+     */
+    private ?int $idFil;
+
+    /**
      * @var array<Message>|null $reponse
      * @brief Une réponse à ce message, si elle existe. Null si ce n'est pas une réponse.
      */
@@ -67,7 +73,7 @@ class Message {
      * @param Utilisateur $utilisateur L'utilisateur qui a écrit le message.
      * @param Message|null $reponse Une réponse à ce message, si elle existe. Null si ce n'est pas une réponse.
      */
-    public function __construct(?int $idMessage = null, ?string $valeur = null, ?DateTime $dateC = null, ?int $nbLikes = null,?int $nbDislikes = null, ?int $idMessageParent = null, ?Utilisateur $utilisateur = null, ?array $reponse = []) {
+    public function __construct(?int $idMessage = null, ?string $valeur = null, ?DateTime $dateC = null, ?int $nbLikes = null,?int $nbDislikes = null, ?int $idMessageParent = null, ?Utilisateur $utilisateur = null, ?array $reponse = [] , ?int $idFil = null) {
         $this->idMessage = $idMessage;
         $this->valeur = $valeur;
         $this->dateC = $dateC;
@@ -76,6 +82,7 @@ class Message {
         $this->idMessageParent = $idMessageParent;
         $this->utilisateur = $utilisateur;
         $this->reponses = $reponse;
+        $this->idFil = $idFil;
     }
 
 
@@ -193,6 +200,23 @@ class Message {
      */
     public function setUtilisateur(Utilisateur $utilisateur): void {
         $this->utilisateur = $utilisateur;
+    }
+
+    /**
+     * @brief Récupère l'identifiant du fil de discussion auquel appartient le message.
+     * @return int|null L'identifiant du fil de discussion auquel appartient le message. 
+     * 
+     */
+    public function getIdFil(): ?int {
+        return $this->idFil;
+    }
+
+    /**
+     * @brief Définir l'identifiant du fil de discussion auquel appartient le message.
+     * @param int|null $idFil L'identifiant du fil de discussion auquel appartient le message.
+     */
+    public function setIdFil(?int $idFil): void {
+        $this->idFil = $idFil;
     }
 
     /**
