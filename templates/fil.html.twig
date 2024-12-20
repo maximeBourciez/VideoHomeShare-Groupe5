@@ -1,3 +1,4 @@
+
 {% macro afficherReponses(reponses, idAuteur, pseudoAuteur, idFil, messageSuppr) %}
     {% set auteurParentId = idAuteur %}
     {% set auteurParentPseudo = pseudoAuteur %}
@@ -10,6 +11,7 @@
                         <h5 class="mb-0 mx-2 username-link">
                             <a href="index.php?controller=utilisateur&methode=show&id_utilisateur={{reponse	.getUtilisateur().getId() }}" style="color:white;" class="text-decoration-none">
 								{{ reponse.getUtilisateur().getPseudo() ?: 'Utilisateur inconnu' }}
+
 							</a>
                         </h5>
                         <span class="mx-2" style="font-size: 1.2em;">•</span>
@@ -137,7 +139,7 @@ VHS | Fil
 	<div class="container">
 		{% for message in messages %}
 			{% if message.idMessageParent is null %}
-				<div class="card my-4 shadow-sm border-0 rounded-3">
+				<div id="{{message.getIdMessage()}}" class="card my-4 shadow-sm border-0 rounded-3">
 					<div class="card-body p-4 bg-mydark text-white rounded">
 						<div class="d-flex align-items-center">
 							<img src="{{ reponse.getUtilisateur() ? reponse.getUtilisateur().getUrlImageProfil() : 'default_avatar.jpg' }}" alt="Avatar" class="rounded-circle me-3" width="50" height="50">

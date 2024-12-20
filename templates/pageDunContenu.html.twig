@@ -21,7 +21,6 @@
                 >
                 {% endif %}
             </div>
-
             <!-- Section Informations -->
             <div class="movie-info col-6 d-flex flex-column justify-content-between">
                 <!-- Titre -->
@@ -270,5 +269,6 @@
 {% endblock %}
 
 {% block script %}
+    {{ parent() }}
     <script type="text/javascript" src="JS/notation.js"></script>
 {% endblock %}

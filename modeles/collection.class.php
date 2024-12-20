@@ -1,132 +1,73 @@
-<?php
+<?php 
 
 
-enum TypeCollection
-{
-    case Saga;
-    case Serie;
-}
-/**
- * Classe représentant une collection.
- *
- * Cette classe permet de définir et de manipuler les informations relatives à une collection,
- * telles que son identifiant, son type, son nom et le lien de son affiche.
- */
-class Collection
-{
-
-    /**
-     * @var int|null $id Identifiant unique de la collection.
-     */
+class Collection{   
     private ?int $id;
-
-    /**
-     * @var string|null $type Type de la collection.
-     */
-    private ?TypeCollection $type;
-
-    /**
-     * @var string|null $nom Nom de la collection.
-     */
-    private ?string $nom;
-
-    /**
-     * @var string|null $lienAffiche Lien de l'affiche de la collection.
-     */
+    private ?string $titreCollection;
+    private ?DateTime $date;
+    private ?string $description;
     private ?string $lienAffiche;
-
-    /**
-     * Constructeur de la classe Collection.
-     *
-     * Initialise une collection avec les valeurs optionnelles pour l'identifiant, le type,
-     * le nom et le lien de l'affiche.
-     *
-     * @param int|null $id Identifiant de la collection (par défaut null).
-     * @param string|null $type Type de la collection (par défaut null).
-     * @param string|null $nom Nom de la collection (par défaut null).
-     * @param string|null $lienAffiche Lien vers l'affiche de la collection (par défaut null).
-     */
-    public function __construct(?int $id = null, ?TypeCollection $type = null, ?string $nom = null, ?string $lienAffiche = null)
-    {
+    private ?int $nombreFilms;
+  
+    //constructeur
+    public function __construct(?int $id = null, ?string $titreCollection = null, ?DateTime $date = null, ?string $description = null, ?string $lienAffiche = null, ?int $nombreFilms = null){
         $this->id = $id;
-        $this->type = $type;
-        $this->nom = $nom;
+        $this->titreCollection = $titreCollection;
+        $this->date = $date;
+        $this->description = $description;
         $this->lienAffiche = $lienAffiche;
+        $this->nombreFilms = $nombreFilms;
     }
-
-    /**
-     * Récupère l'identifiant de la collection.
-     *
-     * @return int|null L'identifiant de la collection.
-     */
-    public function getId(): ?int
-    {
+  
+    //getters and setters
+    //get id
+    public function getId(): ?int{
         return $this->id;
     }
-
-    public function getType(): ?TypeCollection
-    {
-        return $this->type;
-    }
-
-    /**
-     * Récupère le nom de la collection.
-     *
-     * @return string|null Le nom de la collection.
-     */
-    public function getNom(): ?string
-    {
-        return $this->nom;
-    }
-
-    /**
-     * Récupère le lien de l'affiche de la collection.
-     *
-     * @return string|null Le lien de l'affiche de la collection.
-     */
-    public function getLienAffiche(): ?string
-    {
-        return $this->lienAffiche;
-    }
-
-    /**
-     * Définit l'identifiant de la collection.
-     *
-     * @param int|null $id L'identifiant de la collection.
-     */
-    public function setId(?int $id): void
-    {
+    // set id
+    public function setId(?int $id): void{
         $this->id = $id;
     }
 
-    /**
-     * Définit le type de la collection.
-     *
-     * @param TypeCollection|null $type Le type de la collection.
-     */
-
-    public function setType(?TypeCollection $type): void
-    {
-        $this->type = $type;
+    //get titre
+    public function getTitreCollection(): ?string{
+        return $this->titreCollection;
+    }
+    // set titre
+    public function setTitreCollection(?string $titreCollection): void{
+        $this->titreCollection = $titreCollection;
     }
 
-    /**
-     * Définit le nom de la collection.
-     *
-     * @param string|null $nom Le nom de la collection.
-     */
-    public function setNom(?string $nom): void
-    {
-        $this->nom = $nom;
+    //get date
+    public function getDate() : ?DateTime{
+        return $this->date;
     }
-
-    /**
-     * Définit le lien de l'affiche de la collection.
-     *
-     * @param string|null $lienAffiche Le lien de l'affiche de la collection.
-     */
-    public function setLienAffiche(?string $lienAffiche): void
-    {
+    // set date
+    public function setDate(?DateTime $date): void{
+        $this->date = $date;
+    }
+    //get description
+    public function getDescription(): ?string{
+        return $this->description;
+    }
+    // set description
+    public function setDescription(?string $description): void{
+        $this->description = $description;
+    }
+    //get lienAffiche
+    public function getLienAffiche(): ?string{
+        return $this->lienAffiche;
+    }
+    // set lienAffiche
+    public function setLienAffiche(?string $lienAffiche): void{
         $this->lienAffiche = $lienAffiche;
+    }
+    //get durée
+    public function getNombreFilms(): ?int{
+        return $this->nombreFilms;
+    }
+    // set durée
+    public function setNombreFilms(?int $nombreFilms): void{
+        $this->nombreFilms = $nombreFilms;
     }
 }

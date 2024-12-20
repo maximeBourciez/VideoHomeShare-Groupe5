@@ -75,8 +75,14 @@ class MessageDAO
         $message->setDateC(!empty($row['dateC']) ? new DateTime($row['dateC']) : null);
 
         $message->setIdMessageParent($row['idMessageParent']);
-        $message->setNbLikes($row['like_count']);
-        $message->setNbDislikes($row['dislike_count']);
+        $message->setIdFil($row['idFil']);
+        if (isset($row['like_count'])){
+            $message->setNbLikes($row['like_count']);
+        }
+        if (isset($row['dislike_count'])){
+            $message->setNbDislikes($row['dislike_count']);
+        }
+        
 
         // Hydratation de l'utilisateur associé
         $user = new Utilisateur();
@@ -114,6 +120,9 @@ class MessageDAO
                 $parentId = $message->getIdMessageParent();
                 if (isset($messages[$parentId])) {
                     $messages[$parentId]->addReponse($message);
+                }else{
+                    // Si le parent n'existe pas, on ajoute le message comme message principal
+                    $messagesParents[] = $message;
                 }
             }
         }

@@ -149,12 +149,12 @@ class ThemeDAO {
     }
 
     /**
-    * Focntion pour associer un thème à un contenu
+    * Fonction pour associer un thème à un contenu
     *
     * @param int $themeId Identifiant du thème
     * @param int $contenuId Identifiant du contenu
     *
-    * @return bool Indicateut de fonctionnement de la méthode
+    * @return bool Indicateur de fonctionnement de la méthode
     */
     public function associateThemeWithContenu(int $themeId, int $contenuId): bool {
         $sql = "INSERT INTO " . DB_PREFIX . "caracteriserContenu (idTheme, idContenu) 
@@ -165,6 +165,44 @@ class ThemeDAO {
             'themeId' => $themeId,
             'contenuId' => $contenuId
         ]);
+    }
+
+    /**Fonction pour associer un thème à une collection
+     * 
+     * @param int $themeId Identifiant du thème
+     * @param int $collectionId Identifiant de la collection
+     * 
+     * @return bool Indicateur de fonctionnement de la méthode
+     */
+    public function associateThemeWithCollection(int $themeId, int $collectionId): bool {
+        $sql = "INSERT INTO " . DB_PREFIX . "caracteriserCollection (idTheme, idCollection) 
+                VALUES (:themeId, :collectionId)";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            'themeId' => $themeId,
+            'collectionId' => $collectionId
+        ]);
+    }
+
+    /**
+     * Méthode de récupération des thèmes pour une collection par son id
+     * 
+     * @param int $collectionId Identifiant de la collection concernée
+     * 
+     * @return array Liste des thèmes de la collection
+     */
+    public function findThemesByCollectionId(int $collectionId): array {
+        $sql = "SELECT t.* 
+                FROM " . DB_PREFIX . "theme t
+                INNER JOIN " . DB_PREFIX . "caracteriserCollection cc ON t.idTheme = cc.idTheme
+                WHERE cc.idCollection = :collectionId";
+
+        $pdoStatement = $this->pdo->prepare($sql);
+        $pdoStatement->execute(['collectionId' => $collectionId]);
+        $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Theme');
+        $themes = $pdoStatement->fetchAll();
+
+        return $themes;
     }
 }
 
