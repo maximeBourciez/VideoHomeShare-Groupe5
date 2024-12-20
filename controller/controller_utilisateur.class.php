@@ -51,11 +51,15 @@ class ControllerUtilisateur extends Controller
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
         $message = "";
         // vérification des informations saisies
-        if (Utilitaires::comprisEntre($mail, 320, 6, "le mail doit contenir", $message)) {
+        $verficationTailleMail = Utilitaires::comprisEntre($mail, 320, 6, "le mail doit contenir", $message);
+        if ($verficationTailleMail) {
             $utilisateur = $managerutilisateur->findByMail($mail);
             // vérification que l'utilisateur existe et que le mot de passe est correct
-            if (Utilitaires::utilisateurExiste($utilisateur, $message ) && !Utilitaires::isBruteForce($utilisateur->getId(), $message ) && 
-                Utilitaires::motDePasseCorrect($mdp, $utilisateur->getMdp(), $utilisateur , $message) && Utilitaires::verifUtiliateurverifier($utilisateur->getId(), $message, $managerutilisateur)) {
+            $verficationUtilisateurExiste = Utilitaires::utilisateurExiste($utilisateur, $message);
+            $verficationBruteForce = Utilitaires::isBruteForce($utilisateur->getId(), $message);
+            $verficationMotDePasse = Utilitaires::motDePasseCorrect($mdp, $utilisateur->getMdp(), $utilisateur, $message);
+            $verficationUtiliateurverifier = Utilitaires::verifUtiliateurverifier($utilisateur->getId(), $message, $managerutilisateur);
+            if ($verficationUtilisateurExiste && $verficationMotDePasse && $verficationUtiliateurverifier && !$verficationBruteForce)  {
                
                 $utilisateur->setMdp(null);
                 Utilitaires::resetBrutForce($utilisateur->getId());
@@ -102,18 +106,26 @@ class ControllerUtilisateur extends Controller
 
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
 
-        
-
-
-
         $message = "";
-        // vérification des informations saisies lors de l'inscription 
-        if (
-            Utilitaires::comprisEntre($id, 20, 3, "L'identifiant doit contenir ", $message ) && Utilitaires::comprisEntre($pseudo, 50, 3, "Le pseudo doit contenir ", $message ) &&
-            Utilitaires::comprisEntre($mail, 50, 3, "Le mail doit contenir ", $message ) && Utilitaires::comprisEntre($nom, 50, 3, "Le nom doit contenir ", $message ) &&
-            Utilitaires::comprisEntre($mdp, null, 8, "Le mot de passe doit contenir ", $message) && Utilitaires::comprisEntre($vmdp, null, 8, "Le mot de passe de confirmation doit contenir ", $message)
-            && Utilitaires::estRobuste($mdp, $message ) && Utilitaires::ageCorrect($date, 13,$message) && Utilitaires::mailCorrectExistePas($mail, $message,  $managerutilisateur) && Utilitaires::egale($mdp, $vmdp, "Les mots de passe", $message)
-            && Utilitaires::idExistePas($id, $message, $managerutilisateur ) && !Utilitaires::verificationDeNom($id, "l'Identifiant ",$message ) && !Utilitaires::verificationDeNom($pseudo, "le pseudo",$message) && !Utilitaires::verificationDeNom($nom, "le nom",$message)
+        // vérification des informations saisies lors de l'inscription
+        $verficationTailleMail = Utilitaires::comprisEntre($mail, 320, 6, "le mail doit contenir", $message);
+        $verficationTailleId = Utilitaires::comprisEntre($id, 20, 3, "l'identifiant doit contenir", $message);
+        $verficationTaillePseudo = Utilitaires::comprisEntre($pseudo, 50, 3, "le pseudo doit contenir", $message);
+        $verficationTailleNom = Utilitaires::comprisEntre($nom, 50, 3, "le nom doit contenir", $message);
+        $verficationTailleMdp = Utilitaires::comprisEntre($mdp, null, 8, "le mot de passe doit contenir", $message);
+        $verficationTailleVmdp = Utilitaires::comprisEntre($vmdp, null, 8, "le mot de passe de confirmation doit contenir", $message);
+        $verficationRobuste = Utilitaires::estRobuste($mdp, $message);
+        $verficationAge = Utilitaires::ageCorrect($date, 13, $message);
+        $verficationMailExistePas = Utilitaires::mailCorrectExistePas($mail, $message, $managerutilisateur);
+        $verficationEgale = Utilitaires::egale($mdp, $vmdp, "Les mots de passe", $message);
+        $verficationIdExistePas = Utilitaires::idExistePas($id, $message, $managerutilisateur);
+        $verficationProfaniteId = !Utilitaires::verificationDeNom($id, "l'Identifiant ",$message );
+        $verficationProfanitePseudo = !Utilitaires::verificationDeNom($pseudo, "le pseudo",$message);
+        $verficationProfaniteNom = !Utilitaires::verificationDeNom($nom, "le nom",$message);
+
+        if ($verficationTailleMail && $verficationTailleId && $verficationTaillePseudo && $verficationTailleNom && $verficationTailleMdp && $verficationTailleVmdp &&
+            $verficationRobuste && $verficationAge && $verficationMailExistePas && $verficationEgale && $verficationIdExistePas && $verficationProfaniteId && $verficationProfanitePseudo 
+            && $verficationProfaniteNom
         ) {
 
             //cripter le mot de passe
@@ -161,7 +173,8 @@ class ControllerUtilisateur extends Controller
         $utilisateur = $managerutilisateur->findByMail($mail);
         $messageErreur = "";
         // vérification de l'existence de l'utilisateur
-        if (Utilitaires::utilisateurExiste($utilisateur, $messageErreur)) {
+        $verficationUtilisateurExiste = Utilitaires::utilisateurExiste($utilisateur, $messageErreur);
+        if ($verficationUtilisateurExiste) {
            
             $id = $utilisateur->getId();
              // crypter le id de l'utilisateur
@@ -193,10 +206,12 @@ class ControllerUtilisateur extends Controller
         $tokenUilisateur = Utilitaires::verifyToken($token);
         $messageErreur = "";
         // vérification de l'existence de l'utilisateur
-        if (Utilitaires::nonNull($tokenUilisateur,$messageErreur )) {
+        $verficationTokenNoNull = Utilitaires::nonNull($tokenUilisateur,$messageErreur );
+        if ($verficationTokenNoNull) {
             $utilisateur = $managerutilisateur->find($tokenUilisateur['id']);
             // vérification de l'existence de l'utilisateur
-            if (Utilitaires::utilisateurExiste($utilisateur, $messageErreur)) {
+            $verficationUtilisateurExiste = Utilitaires::utilisateurExiste($utilisateur, $messageErreur);
+            if ($verficationUtilisateurExiste) {
 
                 // affichage de la page de changement de mot de passe
                 $template = $this->getTwig()->load('changerMDP.html.twig');
@@ -229,11 +244,12 @@ class ControllerUtilisateur extends Controller
         $utilisateur = $managerutilisateur->find($id);
         $messageErreur = "";
         // vérification des informations saisies lors du changement de mot de passe
-        if (
-            Utilitaires::utilisateurExiste($utilisateur, $messageErreur) && Utilitaires::comprisEntre($mdp, null, 8, "Le mot de passe doit contenir ", $messageErreur) &&
-            Utilitaires::comprisEntre($vmdp, null, 8, "Le mot de passe de confirmation doit contenir ", $messageErreur) &&
-            Utilitaires::egale($mdp, $vmdp, "Les mots de passe", $messageErreur) && Utilitaires::estRobuste($mdp, $messageErreur)
-        ) {
+        $verficationTailleMdp = Utilitaires::comprisEntre($mdp, null, 8, "le mot de passe doit contenir", $messageErreur);
+        $verficationTailleVmdp = Utilitaires::comprisEntre($vmdp, null, 8, "le mot de passe de confirmation doit contenir", $messageErreur);
+        $verficationEgale = Utilitaires::egale($mdp, $vmdp, "Les mots de passe", $messageErreur);
+        $verficationRobuste = Utilitaires::estRobuste($mdp, $messageErreur);
+        $verficationUtilisateurExiste = Utilitaires::utilisateurExiste($utilisateur, $messageErreur);
+        if ($verficationTailleMdp && $verficationTailleVmdp && $verficationEgale && $verficationRobuste && $verficationUtilisateurExiste ) {
             //crypter le mot de passe
             $mdp = password_hash($mdp, PASSWORD_DEFAULT);
             $utilisateur->setMdp($mdp);
@@ -282,7 +298,9 @@ class ControllerUtilisateur extends Controller
         //récupération des messages de l'utilisateur
         $messages = $managermesage->listerMessagesParIdUser($id);
         $messageErreur = "";
-        if (Utilitaires::utilisateurExiste($utilisateur, $messageErreur)) {
+        // vérification de l'existence de l'utilisateur
+        $verficationUtilisateurExiste = Utilitaires::utilisateurExiste($utilisateur, $messageErreur);
+        if ($verficationUtilisateurExiste) {
             $template = $this->getTwig()->load('profilUtilisateur.html.twig');
             echo $template->render(array('utilisateur' => $utilisateur, 'messages' => $messages, 'utilisateurConnecter' => $personneConnect));
         }else{
@@ -305,7 +323,8 @@ class ControllerUtilisateur extends Controller
         }
         $messageErreur = "";
         // vérifier si l'utilisateur existe
-        if (Utilitaires::utilisateurExiste($utilisateur, $messageErreur)) {
+        $verficationUtilisateurExiste = Utilitaires::utilisateurExiste($utilisateur, $messageErreur);
+        if ($verficationUtilisateurExiste) {
             // affichage de la page de modification de l'utilisateur
             $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
             echo $template->render(array('utilisateur' => $utilisateur));
@@ -340,13 +359,23 @@ class ControllerUtilisateur extends Controller
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
         $messageErreur = "";
         // vérification des informations saisies lors de la modification
-        if (
-            Utilitaires::comprisEntre($id, 20, 3, "L'identifiant doit contenir ", $messageErreur ) && Utilitaires::comprisEntre($pseudo, 50, 3, "Le pseudo doit contenir ", $messageErreur) &&
-            Utilitaires::comprisEntre($nom, 50, 3, "Le nom doit contenir ", $messageErreur)  && Utilitaires::fichierTropLourd($_FILES['urlImageProfil'], "profil", $messageErreur) &&
-            Utilitaires::fichierTropLourd($_FILES['urlImageBaniere'], "baniere", $messageErreur)&& !Utilitaires::verificationDeNom($id, "l'idantifiant", $messageErreur) && !Utilitaires::verificationDeNom($pseudo, "le pseudo", $messageErreur) && !Utilitaires::verificationDeNom($nom, "le nom", $messageErreur)
-        ) {
+        $verficationUtilisateurExiste = Utilitaires::utilisateurExiste($utilisateur, $messageErreur);
+        $verficationTailleId = Utilitaires::comprisEntre($id, 20, 3, "l'identifiant doit contenir", $messageErreur);
+        $verficationTaillePseudo = Utilitaires::comprisEntre($pseudo, 50, 3, "le pseudo doit contenir", $messageErreur);
+        $verficationTailleNom = Utilitaires::comprisEntre($nom, 50, 3, "le nom doit contenir", $messageErreur);
+        $verficationfichierProfilTropLourd = Utilitaires::fichierTropLourd($_FILES['urlImageProfil'], "profil", $messageErreur);
+        $verficationfichierBaniereTropLourd = Utilitaires::fichierTropLourd($_FILES['urlImageBanniere'], "banniere", $messageErreur);
+        $verficationProfaniteId = !Utilitaires::verificationDeNom($id, "l'Identifiant ",$messageErreur );
+        $verficationProfanitePseudo = !Utilitaires::verificationDeNom($pseudo, "le pseudo",$messageErreur);
+        $verficationProfaniteNom = !Utilitaires::verificationDeNom($nom, "le nom",$messageErreur);
+
+        if ( $verficationUtilisateurExiste && $verficationTailleId && $verficationTaillePseudo && $verficationTailleNom && $verficationfichierProfilTropLourd &&
+             $verficationfichierBaniereTropLourd && $verficationProfaniteId && $verficationProfanitePseudo && $verficationProfaniteNom
+            )
+         {
             // verifier si l'id n'est pas déjà utilisé
-            if ($id == $utilisateur->getId() || Utilitaires::idExistePas($id, $messageErreur, $utilisateur)) {
+            $verficationIdExistePas = Utilitaires::idExistePas($id, $messageErreur, $utilisateur);
+            if ($id == $utilisateur->getId() || $verficationIdExistePas) {
                 //création de l'utilisateur
 
                 $utilisateur->setId($id);
@@ -360,8 +389,8 @@ class ControllerUtilisateur extends Controller
                         Utilitaires::ajourfichier($_FILES['urlImageProfil'], "Profil" ,$messageErreur, $utilisateur);
                     }
                 }
-                if (isset(($_FILES['urlImageBaniere']))) {
-                    Utilitaires::ajourfichier($_FILES['urlImageBaniere'], "Baniere",$messageErreur, $utilisateur);
+                if (isset(($_FILES['urlImageBanniere']))) {
+                    Utilitaires::ajourfichier($_FILES['urlImageBanniere'], "Banniere",$messageErreur, $utilisateur);
                 }
                 // mettre à jour l'utilisateur dans la base de données
                 $utilisateur->setMdp($managerutilisateur->find($utilisateur->getId())->getMdp());
@@ -400,10 +429,11 @@ class ControllerUtilisateur extends Controller
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
         $messageErreur = "";
         // vérifier si les deux mails sont identiques et si le mail est correct
-        if (
-            Utilitaires::comprisEntre($mail, 320, 6, "Le mail doit contenir ", $messageErreur) && Utilitaires::comprisEntre($mail, 320, 6, "Le mail de verification doit contenir ", $messageErreur) &&
-            Utilitaires::egale($mail, $mailconf, "Les mails ", $messageErreur) && Utilitaires::mailCorrectExistePas($mail, $messageErreur, $managerutilisateur)
-        ) {
+        $verficationTailleMail = Utilitaires::comprisEntre($mail, 320, 6, "le mail doit contenir", $messageErreur);
+        $verficationTailleMailConf = Utilitaires::comprisEntre($mailconf, 320, 6, "le mail de verification doit contenir", $messageErreur);
+        $verficationEgale = Utilitaires::egale($mail, $mailconf, "Les mails", $messageErreur);
+        $verficationMailExistePas = Utilitaires::mailCorrectExistePas($mail, $messageErreur, $managerutilisateur);
+        if ( $verficationTailleMail && $verficationTailleMailConf && $verficationEgale && $verficationMailExistePas ) {
             // mettre à jour le mail de l'utilisateur
             $utilisateur->setMail($mail);
             $utilisateur->setMdp($managerutilisateur->find($utilisateur->getId())->getMdp());
@@ -457,10 +487,12 @@ class ControllerUtilisateur extends Controller
         $tokenUilisateur = Utilitaires::verifyToken($token);
         $messageErreur = "";
         // vérification de l'existence de l'utilisateur
-        if (Utilitaires::nonNull($tokenUilisateur,$messageErreur )) {
+        $verficationTokenNoNull = Utilitaires::nonNull($tokenUilisateur,$messageErreur );
+        if ($verficationTokenNoNull) {
             $utilisateur = $managerutilisateur->find($tokenUilisateur['id']);
             // vérification de l'existence de l'utilisateur
-            if (Utilitaires::utilisateurExiste($utilisateur, $messageErreur)) {
+            $verficationUtilisateurExiste = Utilitaires::utilisateurExiste($utilisateur, $messageErreur);
+            if ($verficationUtilisateurExiste) {
                 $utilisateur->setRole(Role::Utilisateur);
                 $managerutilisateur->update($utilisateur);
                 // affichage de la page de connection avec un message de confirmation
