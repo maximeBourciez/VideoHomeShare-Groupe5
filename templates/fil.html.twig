@@ -294,11 +294,10 @@ VHS | Fil
 						<strong>{{ message.getUtilisateur().getPseudo() }}</strong>
 						<p>{{ message.valeur }}</p>
 					</div>
-					<!-- Champ caché pour envoyer l'ID du parent -->
 					<input type="hidden" name="id_fil" value="{{ fil.id }}">
 					<input
 					type="hidden" name="id_message_parent" value="{{ reponse.getIdMessage() }}">
-					<!-- Zone de texte -->
+					<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 					<textarea class="form-control mt-3 bg-mylight text-black p-3" rows="4" name="message" placeholder="Répondre à {{ message.getUtilisateur().getPseudo() }}" maxlength="1000" required></textarea>
 					<div class="text-end mt-2">
 						<span>0 / 1000</span>

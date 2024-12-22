@@ -58,29 +58,27 @@ class ControllerFil extends Controller
      */
     public function afficherFilParId(?int $id = null)
     {
-
-        // Récupérer l'id du fil si il est nul dans le parametre
         if ($id == null) {
             $id = $this->getGet()['id_fil'];
         }
 
-        // Récupérer les infos du fil
         $filDAO = new FilDAO($this->getPdo());
         $fil = $filDAO->findById($id);
 
-        // Récuérer les messages du fil
         $messageDAO = new MessageDAO($this->getPdo());
         $messages = $messageDAO->listerMessagesParFil($id);
 
-        // Récupérer les infos pour les signalements
         $signalements = RaisonSignalement::getAllReasons();
 
-        // Rendre le template avec les infos
+        // Générer un token CSRF
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+
         echo $this->getTwig()->render('fil.html.twig', [
             'messages' => $messages,
             'fil' => $fil,
             'messageSuppr' => VALEUR_MESSAGE_SUPPRIME,
-            'raisonSignalement' => $signalements
+            'raisonSignalement' => $signalements,
+            'csrf_token' => $_SESSION['csrf_token']
         ]);
         exit();
     }
@@ -97,6 +95,15 @@ class ControllerFil extends Controller
     public function repondre()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            // Vérifier le token CSRF
+            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                die("Token CSRF invalide");
+            }
+
+            // Supprimer le token utilisé
+            unset($_SESSION['csrf_token']);
+
             // Récupérer les infos du message
             $idFil = intval($_POST['id_fil']);
             $idMessageParent = intval($_POST['id_message_parent']);
@@ -301,7 +308,7 @@ class ControllerFil extends Controller
             $signalement = new Signalement();
             $signalement->setIdMessage($idMessage);
             $signalement->setIdUtilisateur($idUser);
-            $signalement->setRaison(RaisonSignalement::fromString($raison));            
+            $signalement->setRaison(RaisonSignalement::fromString($raison));
 
             // Insérer le signalement en BD
             $managerSignalement = new SignalementDAO($this->getPdo());
