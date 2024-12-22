@@ -124,7 +124,7 @@ class ControllerFil extends Controller
             $managerMessage->ajouterMessage($idFil, $idMessageParent, $message);
 
             // Rediriger vers le fil
-            $this->genererVue($idFil);
+            header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
             exit();
         } else {
             die("Méthode non autorisée.");
@@ -151,7 +151,7 @@ class ControllerFil extends Controller
             $managerMessage = new MessageDAO($this->getPdo());
             $managerMessage->ajouterMessage($idFil, null, $message);
 
-            $this->genererVue($idFil);
+            header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
             exit();
         } else {
             throw new Exception("Méthode HTTP invalide");
@@ -174,7 +174,7 @@ class ControllerFil extends Controller
         $managerReaction->ajouterReaction($idMessage, false);
 
         // Rediriger vers le fil
-        $this->genererVue($idFil);
+        header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
         exit();
     }
 
@@ -196,7 +196,7 @@ class ControllerFil extends Controller
             $managerReaction->ajouterReaction($idMessage, true);
 
             // Rediriger vers le fil
-            $this->genererVue($idFil);
+            header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
             exit();
         } else {
             throw new Exception("accesInterdit");
@@ -230,28 +230,13 @@ class ControllerFil extends Controller
             $managerFil->addThemes($idFil, $themes);
 
             // Rediriger vers le fil
-            $this->genererVue($idFil);
+            header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
             exit();
         } else {
             throw new Exception("accesInterdit");
         }
     }
 
-    /**
-     * Fonction d'affichage de la vue
-     * 
-     * @param int $idFIl Identifiant BD du fil à charger
-     * 
-     * @return void
-     */
-    private function genererVue(int $idFil)
-    {
-        // Envoyer le script pour le refresh de la requête
-        echo "<script>
-                history.replaceState({}, '', 'index.php?controller=fil&methode=afficherFilParId&id_fil=$idFil');
-                window.location.reload();
-              </script>";
-    }
 
     /**
      * Méthode de suppression d'un message
@@ -281,7 +266,7 @@ class ControllerFil extends Controller
             $managerMessage->purgerReactions($idMessageASuppr);
 
             // Réafficher le fil
-            $this->genererVue($idFil);
+            header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
             exit();
         } else {
             throw new Exception("accesInterdit");
@@ -299,7 +284,7 @@ class ControllerFil extends Controller
             // Récupérer les données du formulaire
             $idMessage = $_POST['id_message'];
             $raison = $_POST['raison'];
-            $idFIl = $_POST['id_fil'];
+            $idFil = $_POST['id_fil'];
 
             // Récupérer les données de l'utilisateur
             $idUser = trim(unserialize($_SESSION['utilisateur'])->getId());
@@ -314,7 +299,7 @@ class ControllerFil extends Controller
             $managerSignalement = new SignalementDAO($this->getPdo());
             $managerSignalement->ajouterSignalement($signalement);
 
-            $this->genererVue($idFIl);
+            header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
             exit();
         } else {
             throw new Exception("accesInterdit");
