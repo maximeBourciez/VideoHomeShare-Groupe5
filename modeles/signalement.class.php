@@ -48,6 +48,23 @@
     public function toString(): string {
         return $this->value;
     }
+
+    /**
+     * Vérifie si une chaîne de caractères est une valeur valide de l'énumération RaisonSignalement.
+     *
+     * @param string $raison
+     * @return bool
+     */
+    public static function isValid(string $raison): bool {
+        foreach (self::cases() as $case) {
+            if ($case->value === $raison) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    
 }
 
 class Signalement{

@@ -15,7 +15,6 @@
  */
 class ControllerFil extends Controller
 {
-
     /**
      * @brief Constructeur de la classe ControllerFil
      * 
@@ -56,7 +55,7 @@ class ControllerFil extends Controller
      *
      * @return void
      */
-    public function afficherFilParId(?int $id = null)
+    public function afficherFilParId(?int $id = null, ?string $messageErreur = null)
     {
         if ($id == null) {
             $id = $this->getGet()['id_fil'];
@@ -70,15 +69,13 @@ class ControllerFil extends Controller
 
         $signalements = RaisonSignalement::getAllReasons();
 
-        // Générer un token CSRF
-        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 
         echo $this->getTwig()->render('fil.html.twig', [
             'messages' => $messages,
             'fil' => $fil,
             'messageSuppr' => VALEUR_MESSAGE_SUPPRIME,
             'raisonSignalement' => $signalements,
-            'csrf_token' => $_SESSION['csrf_token']
+            'messageErreur' => $messageErreur
         ]);
         exit();
     }
@@ -87,48 +84,61 @@ class ControllerFil extends Controller
      * @brief Méthode d'ajout d'un message dans un fil de discussion
      * 
      * @details Récupère les infos du message à ajouter, du message parent et du fil puis l'ajoute dans la base de données
-     * 
-     * @todo Raise exception si user non connecté
      *  
      * @return void
      */
     public function repondre()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-            // Vérifier le token CSRF
-            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-                die("Token CSRF invalide");
-            }
-
-            // Supprimer le token utilisé
-            unset($_SESSION['csrf_token']);
-
-            // Récupérer les infos du message
-            $idFil = intval($_POST['id_fil']);
-            $idMessageParent = intval($_POST['id_message_parent']);
-            $message = htmlspecialchars($_POST['message']);
-            if (isset($_SESSION['utilisateur'])) {
-
-                $personneConnect = unserialize($_SESSION['utilisateur']);
-                $idUtilisateur = $personneConnect->getId();
-            }
-
-            // Validation des données (exemple simple)
-            if (empty($message)) {
-                die("Le message ne peut pas être vide.");
-            }
-
-            // Créer le message
-            $managerMessage = new MessageDAO($this->getPdo());
-            $managerMessage->ajouterMessage($idFil, $idMessageParent, $message);
-
-            // Rediriger vers le fil
-            header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
+        // Vérifier la méthode HTTP
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->afficherFilParId($_POST['id_fil'], "Méthode HTTP invalide");
             exit();
-        } else {
-            die("Méthode non autorisée.");
         }
+
+        // Vérifier que l'utilisateur est connecté
+        if (!isset($_SESSION['utilisateur'])) {
+            $this->afficherFilParId($_POST['id_fil'], "Vous devez être connecté pour répondre à un message");
+            exit();
+        }
+
+        // Vérifier le message
+        $message = htmlspecialchars($_POST['message']);
+
+        $messageErreur = "";
+        $contenuErreur = "Un message doit contenir";
+        $messageOk = Utilitaires::comprisEntre($message, 1024, 10, $contenuErreur, $messageErreur);
+        if (!$messageOk) {
+            $this->afficherFilParId($_POST['id_fil'], $messageErreur);
+            exit();
+        }
+
+        // Vérifier que l'id du fil n'est pas nul
+        $idFil = intval($_POST['id_fil']);
+        if ($idFil == null) {
+            $this->afficherFilParId($_POST['id_fil'], "L'id du fil est invalide");
+            exit();
+        }
+
+        // Récupérer l'id du message parent
+        $idMessageParent = intval($_POST['id_message_parent']);
+        if ($idMessageParent == null) {
+            $this->afficherFilParId($_POST['id_fil'], "Message parent invalide");
+            exit();
+        }
+
+        // Vérifier l'utilisateur
+        if (isset($_SESSION['utilisateur'])) {
+            $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
+        }
+
+        // Créer le message
+        $managerMessage = new MessageDAO($this->getPdo());
+        $managerMessage->ajouterMessage($idFil, $idMessageParent, $message, $idUtilisateur);
+
+        // Rediriger vers le fil
+        header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
+        exit();
+
     }
 
     /**
@@ -140,22 +150,43 @@ class ControllerFil extends Controller
      */
     public function ajouterMessage()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $idFil = isset($_POST['id_fil']) ? intval($_POST['id_fil']) : null;
-            $message = isset($_POST['message']) ? htmlspecialchars($_POST['message']) : null;
+        // Vérifier la méthode HTTP
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->afficherFilParId($_POST['id_fil'], "Méthode HTTP invalide");
+            exit();
+        }
 
-            if (!isset($_SESSION["utilisateur"])) {
-                throw new Exception("Accès interdit");
-            }
-
-            $managerMessage = new MessageDAO($this->getPdo());
-            $managerMessage->ajouterMessage($idFil, null, $message);
-
-            header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
+        // Vérifier que l'utilisateur est connecté
+        if (!isset($_SESSION['utilisateur'])) {
+            $this->afficherFilParId($_POST['id_fil'], "Vous devez être connecté pour répondre à un message");
             exit();
         } else {
-            throw new Exception("Méthode HTTP invalide");
+            $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
         }
+
+        // Vérifier le message
+        $message = htmlspecialchars($_POST['message']);
+
+        $messageErreur = "";
+        $contenuErreur = "Un message doit contenir";
+        $messageOk = Utilitaires::comprisEntre($message, 1024, 10, $contenuErreur, $messageErreur);
+        if (!$messageOk) {
+            $this->afficherFilParId($_POST['id_fil'], $messageErreur);
+            exit();
+        }
+
+        // Vérifier que l'id du fil n'est pas nul
+        $idFil = intval($_POST['id_fil']);
+        if ($idFil == null) {
+            $this->afficherFilParId($_POST['id_fil'], "L'id du fil est invalide");
+            exit();
+        }
+
+        $managerMessage = new MessageDAO($this->getPdo());
+        $managerMessage->ajouterMessage($idFil, null, $message, $idUtilisateur);
+
+        header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
+        exit();
     }
 
     /**
@@ -165,13 +196,27 @@ class ControllerFil extends Controller
      */
     public function dislike()
     {
+        // Vérifier la méthode HTTP
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->afficherFilParId($_POST['id_fil'], "Méthode HTTP invalide");
+            exit();
+        }
+
+        // Vérifier que l'utilisateur est connecté
+        if (!isset($_SESSION['utilisateur'])) {
+            $this->afficherFilParId($_POST['id_fil'], "Vous devez être connecté pour répondre à un message");
+            exit();
+        } else {
+            $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
+        }
+
         // Récupérer les infos du message
         $idMessage = intval($_POST['id_message']);
         $idFil = intval($_POST['id_fil']);
 
         // Ajouter le dislike
         $managerReaction = new MessageDAO($this->getPdo());
-        $managerReaction->ajouterReaction($idMessage, false);
+        $managerReaction->ajouterReaction($idMessage, $idUtilisateur, false);
 
         // Rediriger vers le fil
         header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
@@ -186,21 +231,31 @@ class ControllerFil extends Controller
      */
     public function like()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Récupérer les infos du message
-            $idMessage = intval($_POST['id_message']);
-            $idFil = intval($_POST['id_fil']);
+        // Vérifier la méthode HTTP
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->afficherFilParId($_POST['id_fil'], "Méthode HTTP invalide");
+            exit();
+        }
 
-            // Ajouter le like
-            $managerReaction = new MessageDAO($this->getPdo());
-            $managerReaction->ajouterReaction($idMessage, true);
-
-            // Rediriger vers le fil
-            header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
+        // Vérifier que l'utilisateur est connecté
+        if (!isset($_SESSION['utilisateur'])) {
+            $this->afficherFilParId($_POST['id_fil'], "Vous devez être connecté pour répondre à un message");
             exit();
         } else {
-            throw new Exception("accesInterdit");
+            $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
         }
+
+        // Récupérer les infos du message
+        $idMessage = intval($_POST['id_message']);
+        $idFil = intval($_POST['id_fil']);
+
+        // Ajouter le dislike
+        $managerReaction = new MessageDAO($this->getPdo());
+        $managerReaction->ajouterReaction($idMessage, $idUtilisateur, true);
+
+        // Rediriger vers le fil
+        header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
+        exit();
     }
 
     /** 
@@ -211,30 +266,67 @@ class ControllerFil extends Controller
      */
     public function creerFil()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['utilisateur'])) {
-            // Récupérer les données 
-            $titre = htmlspecialchars($_POST['titre']);
-            $themes = $_POST['themes'];
-            $description = htmlspecialchars($_POST['description']);
-            $premierMessage = htmlspecialchars($_POST['premierMessage']);
+        // Vérifier la méthode HTTP
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->afficherFilParId($_POST['id_fil'], "Méthode HTTP invalide");
+            exit();
+        }
 
-            // Créer le fil
-            $managerFil = new FilDAO($this->getPdo());
-            $idFil = $managerFil->create($titre, $description);
-
-            // Ajouter le premier message
-            $managerMessage = new MessageDAO($this->getPdo());
-            $managerMessage->ajouterMessage($idFil, null, $premierMessage);
-
-            // Ajouter les thèmes
-            $managerFil->addThemes($idFil, $themes);
-
-            // Rediriger vers le fil
-            header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
+        // Vérifier que l'utilisateur est connecté
+        if (!isset($_SESSION['utilisateur'])) {
+            $this->afficherFilParId($_POST['id_fil'], "Vous devez être connecté pour répondre à un message");
             exit();
         } else {
-            throw new Exception("accesInterdit");
+            $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
         }
+
+        // Vérifier le titre
+        $titre = htmlspecialchars($_POST['titre']);
+
+        $messageErreur = "";
+        $contenuErreur = "Un message doit contenir";
+        $messageOk = Utilitaires::comprisEntre($titre, 50, 10, $contenuErreur, $messageErreur);
+        if (!$messageOk) {
+            $this->afficherFilParId($_POST['id_fil'], $messageErreur);
+            exit();
+        }
+
+        // Un fil pouvant avoir 0..* thèmes, on n'a pas besoin de les vérifier. On les récupère simplement
+        $themes = $_POST['themes'];
+
+        // Vérifier le message 
+        $premierMessage = htmlspecialchars($_POST['message']);
+
+        $messageErreur = "";
+        $contenuErreur = "Un message doit contenir";
+        $messageOk = Utilitaires::comprisEntre($premierMessage, 1024, 10, $contenuErreur, $messageErreur);
+        if (!$messageOk) {
+            $this->afficherFilParId($_POST['id_fil'], $messageErreur);
+            exit();
+        }
+
+        // Vérifier la description
+        $description = htmlspecialchars($_POST['description']);
+
+        $messageErreur = "";
+        $contenuErreur = "Une description doit contenir";
+        $messageOk = Utilitaires::comprisEntre($description, 1024, 10, $contenuErreur, $messageErreur);
+
+
+        // Créer le fil
+        $managerFil = new FilDAO($this->getPdo());
+        $idFil = $managerFil->create($titre, $description);
+
+        // Ajouter le premier message
+        $managerMessage = new MessageDAO($this->getPdo());
+        $managerMessage->ajouterMessage($idFil, null, $premierMessage, $idUtilisateur);
+
+        // Ajouter les thèmes
+        $managerFil->addThemes($idFil, $themes);
+
+        // Rediriger vers le fil
+        header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
+        exit();
     }
 
 
@@ -245,32 +337,40 @@ class ControllerFil extends Controller
      */
     public function supprimerMessage()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['utilisateur'])) {
-            // Récupérer les infos depuis le formulaire
-            $idMessageASuppr = $_POST["idMessage"];
-            $idFil = $_POST["id_fil"];
+        // Vérifier la méthode HTTP
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->afficherFilParId($_POST['id_fil'], "Méthode HTTP invalide");
+            exit();
+        }
 
-            // Récupérer l'id de l'utilisateur 
-            $idUser = trim(unserialize($_SESSION["utilisateur"])->getId());
-
-            // Vérifier que le message provient bien de l'utilisateur
-            $managerMessage = new MessageDAO($this->getPdo());
-            $indiquePropriete = $managerMessage->checkProprieteMessage($idMessageASuppr, $idUser);
-
-            if (!$indiquePropriete) {
-                throw new Exception("accesInterdit");
-            }
-
-            // Supprimer le message
-            $managerMessage->supprimerMessage($idMessageASuppr);
-            $managerMessage->purgerReactions($idMessageASuppr);
-
-            // Réafficher le fil
-            header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
+        // Vérifier que l'utilisateur est connecté
+        if (!isset($_SESSION['utilisateur'])) {
+            $this->afficherFilParId($_POST['id_fil'], "Vous devez être connecté pour répondre à un message");
             exit();
         } else {
-            throw new Exception("accesInterdit");
+            $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
         }
+
+        // Récupérer les infos depuis le formulaire
+        $idMessageASuppr = $_POST["idMessage"];
+        $idFil = $_POST["id_fil"];
+
+        // Vérifier que le message provient bien de l'utilisateur
+        $managerMessage = new MessageDAO($this->getPdo());
+        $indiquePropriete = $managerMessage->checkProprieteMessage($idMessageASuppr, $idUtilisateur);
+
+        if (!$indiquePropriete) {
+            $this->afficherFilParId($idFil, "Vous ne pouvez pas supprimer un message qui ne vous appartient pas");
+            exit();
+        }
+
+        // Supprimer le message et ses réactions
+        $managerMessage->supprimerMessage($idMessageASuppr);
+        $managerMessage->purgerReactions($idMessageASuppr);
+
+        // Réafficher le fil
+        header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
+        exit();
     }
 
     /**
@@ -280,29 +380,42 @@ class ControllerFil extends Controller
      */
     public function signalerMessage()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['utilisateur'])) {
-            // Récupérer les données du formulaire
-            $idMessage = $_POST['id_message'];
-            $raison = $_POST['raison'];
-            $idFil = $_POST['id_fil'];
+        // Vérifier la méthode HTTP
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->afficherFilParId($_POST['id_fil'], "Méthode HTTP invalide");
+            exit();
+        }
 
-            // Récupérer les données de l'utilisateur
-            $idUser = trim(unserialize($_SESSION['utilisateur'])->getId());
-
-            // Créer l'objet signalement
-            $signalement = new Signalement();
-            $signalement->setIdMessage($idMessage);
-            $signalement->setIdUtilisateur($idUser);
-            $signalement->setRaison(RaisonSignalement::fromString($raison));
-
-            // Insérer le signalement en BD
-            $managerSignalement = new SignalementDAO($this->getPdo());
-            $managerSignalement->ajouterSignalement($signalement);
-
-            header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
+        // Vérifier que l'utilisateur est connecté
+        if (!isset($_SESSION['utilisateur'])) {
+            $this->afficherFilParId($_POST['id_fil'], "Vous devez être connecté pour répondre à un message");
             exit();
         } else {
-            throw new Exception("accesInterdit");
+            $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
         }
+
+        // Récupérer les données du formulaire
+        $idMessage = $_POST['id_message'];
+        $raison = $_POST['raison'];
+        $idFil = $_POST['id_fil'];
+
+        // Vérifier la raison
+        if (!RaisonSignalement::isValidReason($raison)) {
+            $this->afficherFilParId($idFil, "Raison de signalement invalide");
+            exit();
+        }
+
+        // Créer l'objet signalement
+        $signalement = new Signalement();
+        $signalement->setIdMessage($idMessage);
+        $signalement->setIdUtilisateur($idUtilisateur);
+        $signalement->setRaison(RaisonSignalement::fromString($raison));
+
+        // Insérer le signalement en BD
+        $managerSignalement = new SignalementDAO($this->getPdo());
+        $managerSignalement->ajouterSignalement($signalement);
+
+        header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
+        exit();
     }
 }
