@@ -127,7 +127,7 @@ VHS | Fil
 
 {% block content %}
 <main class="flex-grow-1">
-	<div class="container-fluid bg-mydark text-white p-4 shadow mb-5" style="border-top: 5px solid #F2AC0F;">
+	<div class="container-fluid bg-mydark text-white p-4 shadow " style="border-top: 5px solid #F2AC0F;">
 		<div class="text-center">
 			<h2 class="mb-3">{{ fil.titre }}</h2>
 			<p class="">{{ fil.description }}</p>
@@ -136,6 +136,15 @@ VHS | Fil
 			{% endfor %}
 		</div>
 	</div>
+
+	<!-- Message d'erreur -->
+	{% if messageErreur is not null %}
+		<div class="alert alert-danger alert-dismissible fade show text-center" role="alert" style="background-color: #dc3545; color: white;">
+			{{ messageErreur }}
+			<button type="button" class="btn-close btn-white" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+	{% endif %}
+
 	<div class="container">
 		{% for message in messages %}
 			{% if message.idMessageParent is null %}
@@ -348,6 +357,18 @@ VHS | Fil
         </div>
     </div>
 </div>
+
+<!-- Message d'erreur éventuel -->
+{% if messageErreur is not null %}
+	<div class="toast align-items-center text-bg-danger border-0 show position-fixed top-0 end-0 me-4 mt-5" role="alert" aria-live="assertive" aria-atomic="true" style="z-index: 1050;">
+		<div class="d-flex">
+			<div class="toast-body">
+				{{ messageErreur }}
+			</div>
+			<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+		</div>
+	</div>
+{% endif %}
 
 
 	<script src="js/thread.js"></script>
