@@ -81,70 +81,9 @@ class ControllerFil extends Controller
     }
 
     /**
-     * @brief Méthode d'ajout d'un message dans un fil de discussion
+     * @brief Méthode d'ajout d'un message (avec ou sans message parent) dans un fil de discussion
      * 
-     * @details Récupère les infos du message à ajouter, du message parent et du fil puis l'ajoute dans la base de données
-     *  
-     * @return void
-     */
-    public function repondre()
-    {
-        // Vérifier la méthode HTTP
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->afficherFilParId($_POST['id_fil'], "Méthode HTTP invalide");
-            exit();
-        }
-
-        // Vérifier que l'utilisateur est connecté
-        if (!isset($_SESSION['utilisateur'])) {
-            $this->afficherFilParId($_POST['id_fil'], "Vous devez être connecté pour répondre à un message");
-            exit();
-        }
-
-        // Vérifier le message
-        $message = htmlspecialchars($_POST['message']);
-
-        $messageErreur = "";
-        $contenuErreur = "Un message doit contenir";
-        $messageOk = Utilitaires::comprisEntre($message, 1024, 10, $contenuErreur, $messageErreur);
-        if (!$messageOk) {
-            $this->afficherFilParId($_POST['id_fil'], $messageErreur);
-            exit();
-        }
-
-        // Vérifier que l'id du fil n'est pas nul
-        $idFil = intval($_POST['id_fil']);
-        if ($idFil == null) {
-            $this->afficherFilParId($_POST['id_fil'], "L'id du fil est invalide");
-            exit();
-        }
-
-        // Récupérer l'id du message parent
-        $idMessageParent = intval($_POST['id_message_parent']);
-        if ($idMessageParent == null) {
-            $this->afficherFilParId($_POST['id_fil'], "Message parent invalide");
-            exit();
-        }
-
-        // Vérifier l'utilisateur
-        if (isset($_SESSION['utilisateur'])) {
-            $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
-        }
-
-        // Créer le message
-        $managerMessage = new MessageDAO($this->getPdo());
-        $managerMessage->ajouterMessage($idFil, $idMessageParent, $message, $idUtilisateur);
-
-        // Rediriger vers le fil
-        header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
-        exit();
-
-    }
-
-    /**
-     * @brief Méthode d'ajout d'un message dans un fil de discussion
-     * 
-     * @details Permet la création d'un message sans message parent au sein d'un fil déjà existant
+     * @details Gère l'ajout d'un message dans un fil de discussion, qu'il s'agisse d'une réponse ou d'un message initial.
      * 
      * @return void
      */
@@ -158,33 +97,40 @@ class ControllerFil extends Controller
 
         // Vérifier que l'utilisateur est connecté
         if (!isset($_SESSION['utilisateur'])) {
-            $this->afficherFilParId($_POST['id_fil'], "Vous devez être connecté pour répondre à un message");
+            $this->afficherFilParId($_POST['id_fil'], "Vous devez être connecté pour envoyer un message");
             exit();
-        } else {
-            $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
         }
+        $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
 
-        // Vérifier le message
+        // Vérifier et nettoyer le message
         $message = htmlspecialchars($_POST['message']);
-
         $messageErreur = "";
         $contenuErreur = "Un message doit contenir";
-        $messageOk = Utilitaires::comprisEntre($message, 1024, 10, $contenuErreur, $messageErreur);
-        if (!$messageOk) {
+        $messageEstValide = Utilitaires::comprisEntre($message, 1024, 10, $contenuErreur, $messageErreur);
+        if (!$messageEstValide) {
             $this->afficherFilParId($_POST['id_fil'], $messageErreur);
             exit();
         }
 
-        // Vérifier que l'id du fil n'est pas nul
+        // Vérifier et convertir l'ID du fil
         $idFil = intval($_POST['id_fil']);
-        if ($idFil == null) {
+        if ($idFil === 0) {
             $this->afficherFilParId($_POST['id_fil'], "L'id du fil est invalide");
             exit();
         }
 
-        $managerMessage = new MessageDAO($this->getPdo());
-        $managerMessage->ajouterMessage($idFil, null, $message, $idUtilisateur);
+        // Récupérer l'ID du message parent (si présent)
+        $idMessageParent = isset($_POST['id_message_parent']) ? intval($_POST['id_message_parent']) : null;
+        if (isset($_POST['id_message_parent']) && $idMessageParent === 0) {
+            $this->afficherFilParId($_POST['id_fil'], "Message parent invalide");
+            exit();
+        }
 
+        // Créer le message
+        $managerMessage = new MessageDAO($this->getPdo());
+        $managerMessage->ajouterMessage($idFil, $idMessageParent, $message, $idUtilisateur);
+
+        // Rediriger vers le fil
         header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
         exit();
     }

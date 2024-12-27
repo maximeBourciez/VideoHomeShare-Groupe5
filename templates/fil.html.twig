@@ -141,11 +141,11 @@ VHS | Fil
 	{% if messageErreur is not null %}
 		<div class="alert alert-danger alert-dismissible fade show text-center" role="alert" style="background-color: #dc3545; color: white;">
 			{{ messageErreur }}
-			<button type="button" class="btn-close btn-white" data-bs-dismiss="alert" aria-label="Close"></button>
+			<button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
 		</div>
 	{% endif %}
 
-	<div class="container">
+	<div class="container mt-3">
 		{% for message in messages %}
 			{% if message.idMessageParent is null %}
 				<div id="{{message.getIdMessage()}}" class="card my-4 shadow-sm border-0 rounded-3">
@@ -291,14 +291,13 @@ VHS | Fil
 	<!-- Modal de réponse à un autre message -->
 	<div class="modal fade" id="repondreModal" tabindex="-1" aria-labelledby="repondreModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered modal-lg" style="height: 80vh;">
-			<form action="index.php?controller=fil&methode=repondre" method="POST" class="modal-content popup-content bg-mydark" id="popUpRepondre">
+			<form action="index.php?controller=fil&methode=ajouterMessage" method="POST" class="modal-content popup-content bg-mydark" id="popUpRepondre">
 				<div class="modal-header text-white text-center">
 					<h5 class="modal-title w-100" id="repondreModalLabel">Répondre</h5>
 					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
 				</div>
 				<div
 					class="modal-body text-white">
-					<!-- Message original -->
 					<div class="message-original bg-mylight text-black p-3">
 						<strong>{{ message.getUtilisateur().getPseudo() }}</strong>
 						<p>{{ message.valeur }}</p>
@@ -358,17 +357,7 @@ VHS | Fil
     </div>
 </div>
 
-<!-- Message d'erreur éventuel -->
-{% if messageErreur is not null %}
-	<div class="toast align-items-center text-bg-danger border-0 show position-fixed top-0 end-0 me-4 mt-5" role="alert" aria-live="assertive" aria-atomic="true" style="z-index: 1050;">
-		<div class="d-flex">
-			<div class="toast-body">
-				{{ messageErreur }}
-			</div>
-			<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-		</div>
-	</div>
-{% endif %}
+
 
 
 	<script src="js/thread.js"></script>
