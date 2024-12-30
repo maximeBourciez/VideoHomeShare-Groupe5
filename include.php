@@ -26,6 +26,8 @@ require_once 'modeles/commentaire.dao.php';
 require_once 'modeles/personnalite.dao.php';
 require_once 'modeles/collection.dao.php';
 require_once 'modeles/signalement.dao.php';
+require_once 'modeles/notification.dao.php';
+
 
 // Ajout des modèles
 require_once 'modeles/fil.class.php';
@@ -44,7 +46,8 @@ require_once 'modeles/utilitaires.class.php';
 require_once 'modeles/collection.class.php'; 
 require_once 'modeles/signalement.class.php';
 require_once 'modeles/tmdbCollection.api.php';
-require_once 'modeles/tmdbContenu.api.php';   
+require_once 'modeles/tmdbContenu.api.php'; 
+require_once 'modeles/notification.class.php';  
 
 
 
@@ -56,3 +59,4 @@ require_once 'controller/controller_utilisateur.class.php';
 require_once 'controller/controller_contenu.class.php';
 require_once 'controller/controller_watchlist.class.php';
 require_once 'controller/controller_collection.class.php';
+require_once 'controller/controller_notification.class.php';

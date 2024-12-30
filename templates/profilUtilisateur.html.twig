@@ -20,13 +20,13 @@
 		{% if utilisateurConnecter.getId() == utilisateur.getId() %}
 			<div class="row row-cols-sm-3 row-cols-1 w-75 mx-auto">
 				<div>
-					<a href="index.php?controller=utilisateur&methode=show&id_utilisateur={{utilisateur.getId()}}" class="btn btn-primary w-100 mb-2">A propos</a>
+					<a href="index.php?controller=utilisateur&methode=show" class="btn btn-primary border border-black border-2 w-100 mb-2">A propos</a>
 				</div>
 				<div>
-					<a href="index.php?controller=utilisateur&methode=notification" class="btn btn-primary  w-100 mb-2">Vos notifications</a>
+					<a href="index.php?controller=notification&methode=affishesNotifications" class="btn btn-primary  w-100 mb-2">Vos notifications</a>
 				</div>
 				<div>
-					<a href="index.php?controller=utilisateur&methode=edit" class="btn btn-primary  w-100 mb-2">Modifier mon profil</a>
+					<a href="index.php?controller=utilisateur&methode=edit" class="btn btn-primary   w-100 mb-2">Modifier mon profil</a>
 				</div>
 			</div>
 

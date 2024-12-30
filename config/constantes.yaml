@@ -2,10 +2,10 @@
 
 # Connexion à la base de données pour BV (lakartxela)
 database:
-  host: lakartxela.iutbayonne.univ-pau.fr
-  name: mbourciez_pro
-  user: mbourciez_pro
-  password: mbourciez_pro
+  host: localhost
+  name: sae
+  user: root
+  password: ""
   prefix: vhs_
 
 # Constantes de la vue
