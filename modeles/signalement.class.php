@@ -48,6 +48,16 @@
     public function toString(): string {
         return $this->value;
     }
+
+    /**
+     * Vérifie si la valeur donnée est une raison de signalement valide.
+     *
+     * @param string $value
+     * @return bool
+     */
+    public static function isValidReason(string $value): bool {
+        return in_array($value, self::getAllReasons(), true);
+    }
 }
 
 class Signalement{
