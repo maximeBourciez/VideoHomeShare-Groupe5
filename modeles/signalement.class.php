@@ -50,21 +50,14 @@
     }
 
     /**
-     * Vérifie si une chaîne de caractères est une valeur valide de l'énumération RaisonSignalement.
+     * Vérifie si la valeur donnée est une raison de signalement valide.
      *
-     * @param string $raison
+     * @param string $value
      * @return bool
      */
-    public static function isValid(string $raison): bool {
-        foreach (self::cases() as $case) {
-            if ($case->value === $raison) {
-                return true;
-            }
-        }
-        return false;
+    public static function isValidReason(string $value): bool {
+        return in_array($value, self::getAllReasons(), true);
     }
-
-    
 }
 
 class Signalement{

@@ -298,8 +298,8 @@ class ControllerFil extends Controller
         }
 
         // Récupérer les infos depuis le formulaire
-        $idMessageASuppr = $_POST["idMessage"];
-        $idFil = $_POST["id_fil"];
+        $idMessageASuppr = intval($_POST["idMessage"]);
+        $idFil = intval($_POST["id_fil"]);
 
         // Vérifier que le message provient bien de l'utilisateur
         $managerMessage = new MessageDAO($this->getPdo());

@@ -193,10 +193,15 @@ VHS | Fil
 							<!-- Boutons supprimer/signaler -->
 							<div class="d-flex gap-2">
 								{% if message.getUtilisateur().getId() == utilisateurConnecte.getId() %}
-									<form method="POST" action="index.php?controller=fil&methode=supprimerMessage">
+									<form 
+										method="POST" 
+										action="index.php?controller=fil&methode=supprimerMessage" 
+										onsubmit="return confirmerSuppression('{{ message.getIdMessage() }}');">
 										<input type="hidden" name="idMessage" value="{{ message.getIdMessage() }}">
 										<input type="hidden" name="id_fil" value="{{ fil.id }}">
-										<button class="btn action-btn warning-btn" {% if message.valeur == messageSuppr or utilisateurConnecte is null %}disabled{% endif %}>
+										<button 
+											class="btn action-btn warning-btn" 
+											{% if message.valeur == messageSuppr or utilisateurConnecte is null %}disabled{% endif %}>
 											<i class="bi bi-trash"></i>
 											<span class="btn-text">Supprimer</span>
 										</button>
@@ -296,43 +301,50 @@ VHS | Fil
 
 	<!-- Modal de signalement -->
 	<div class="modal fade" id="signalement" tabindex="-1" aria-labelledby="signalement" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content bg-dark text-white">
-            <div class="modal-header">
-                <h5 class="modal-title" id="nouveauMessageLabel">Signaler un message</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
-            </div>
-            <form action="index.php?controller=fil&methode=signalerMessage" method="POST">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <p style="color: #F2AC0F;">Vous signalez le message :</p>
-                        <span class="message-to-signal " > </span> 
-                    </div>
-                    <p class="mt-2" style="color: #F2AC0F;">Pour la raison :</p>
-                    <select name="raison" class="form-select" required>
-                        <option value="" disabled selected>Choisissez une raison</option>
-                        {% for raison in raisonSignalement %}
-                            <option value="{{ raison }}">{{ raison }}</option>
-                        {% endfor %}
-                    </select>
-                    <input type="hidden" name="id_message" value="" id="id_message_signalement"> 
-					<input type="hidden" name="id_fil" value="{{ fil.id }}">
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-send"></i>
-                        Envoyer
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+			<div class="modal-content bg-dark text-white">
+				<div class="modal-header">
+					<h5 class="modal-title" id="nouveauMessageLabel">Signaler un message</h5>
+					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+				</div>
+				<form action="index.php?controller=fil&methode=signalerMessage" method="POST">
+					<div class="modal-body">
+						<div class="mb-3">
+							<p style="color: #F2AC0F;">Vous signalez le message :</p>
+							<span class="message-to-signal " > </span> 
+						</div>
+						<p class="mt-2" style="color: #F2AC0F;">Pour la raison :</p>
+						<select name="raison" class="form-select" required>
+							<option value="" disabled selected>Choisissez une raison</option>
+							{% for raison in raisonSignalement %}
+								<option value="{{ raison }}">{{ raison }}</option>
+							{% endfor %}
+						</select>
+						<input type="hidden" name="id_message" value="" id="id_message_signalement"> 
+						<input type="hidden" name="id_fil" value="{{ fil.id }}">
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-primary">
+							<i class="bi bi-send"></i>
+							Envoyer
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
 
 
 
 
 	<script src="js/thread.js"></script>
+	<script>
+    function confirmerSuppression(idMessage) {
+        const confirmationMessage = `Êtes-vous sûr de vouloir supprimer ce message ?`;
+        return confirm(confirmationMessage); // Affiche une boîte de confirmation native
+    }
+</script>
 
 
 </main>
