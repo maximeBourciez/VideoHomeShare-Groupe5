@@ -1,65 +1,34 @@
-{% extends 'base_template.html.twig' %}
+{% extends 'templatePageUtilisateur.html.twig' %}
+{% block notif %}	border-black border-2 {% endblock %}
 
+{% block contenue %}
 
-{% block content %}
+	
+	<div class=" container  my-4  bg-mydark text-white rounded">
 
-	<main class="  flex-grow-1">
+			{% if nbNotification == 0 %}
+			<div class="py-2   d-flex align-items-center">
 
-		<img src="{{ utilisateur.urlImageBanniere}}" alt="bannière de l'utilisateur{{utilisateur.pseudo}}" style=" width :100%;  max-height: 13em;  min-height: 3m;">
-		<div class="row mt-3">
-			<div class="col-2  d-flex align-items-center justify-content-center">
-				<img src="{{ utilisateur.urlImageProfil}}" alt="image de profil de l'utilisateur {{utilisateur.pseudo}}" style=" width :100%; max-width: 10em; max-height: 10em; min-width: 3em; min-height: 3m;" class=" rounded-circle ps-2  ">
-			</div>
-			<div class=" row row-cols-1 col px-0">
-				<h2 class=" mt-auto mb-0 ">{{utilisateur.pseudo}}</h2>
-				<h4 class="fw-lighter fst-italic  ">{{utilisateur.nom}}</h4>
-			</div>
-		</div>
-
-
-		{% if utilisateurConnecte.getId() == utilisateur.getId() %}
-			<div class="row row-cols-sm-3 row-cols-1 w-75 mx-auto">
-				<div>
-					<a href="index.php?controller=utilisateur&methode=show" class="btn btn-primary w-100 mb-2">A propos</a>
-				</div>
-				<div>
-					<a href="index.php?controller=notification&methode=affishesNotifications" class="btn btn-primary border border-black border-2 w-100 mb-2">Vos notifications</a>
-				</div>
-				<div>
-					<a href="index.php?controller=utilisateur&methode=edit" class="btn btn-primary  w-100 mb-2">Modifier mon profil</a>
-				</div>
-			</div>
-
-
-		{% endif %}
-
-
-		<div class="container my-4  bg-mydark text-white rounded">
-
-				{% if nbNotification == 0 %}
-				<div class="py-2   d-flex align-items-center">
-
-					<p class="col-7 col-md-9 mb-1 ">Vous avez aucune notifications</p>
-				{% else %}
-					<div class="py-2 border-primary row border-bottom border-1  d-flex align-items-center">
-						<p class="col-7 col-md-9 mb-1 ">Vous avez
-							{{ nbNotification }}
-							notifications</p>
-						<a href="index.php?controller=notification&methode=suprimerTout" class="btn btn-tercary col-4 col-md-2">tout suprimer</a>
+				<p class="col-7 col-md-9 mb-1 ">Vous avez aucune notifications</p>
+			{% else %}
+				<div class="py-2 border-primary row border-bottom border-1  d-flex align-items-center">
+					<p class="col-7 col-md-9 mb-1 ">Vous avez
+						{{ nbNotification }}
+						notifications</p>
+					<a href="index.php?controller=notification&methode=suprimerTout" class="btn btn-tercary col-4 col-md-2">tout suprimer</a>
 				{% endif %}
-				</div>
-				{% for notification in notifications %}
-					<div class=" py-2 ">
-						<form action="index.php?controller=notification&methode=suprimerUneNotification" method="post" class="row">
-							<input type="hidden" name="id" value="{{notification.getIdNotification()}}">
-							<p class="mb-0 col-7 col-md-9">{{notification.getcontenu()}}</p>
-							<input type="submit" class="col-3 col-md-2 bg-dark border-0 p-0" value="🗑️">
-						</form>
-					</div>
-				{% endfor %}
-
 			</div>
-		</main>
+			{% for notification in notifications %}
+				<div class=" py-2 ">
+					<form action="index.php?controller=notification&methode=suprimerUneNotification" method="post" class="row">
+						<input type="hidden" name="id" value="{{notification.getIdNotification()}}">
+						<p class="mb-0 col-7 col-md-9">{{notification.getcontenu()}}</p>
+						<input type="submit" class="col-3 col-md-2 bg-dark border-0 p-0" value="🗑️">
+					</form>
+				</div>
+			{% endfor %}
+
+		</div>
 
 
 	{% endblock %}

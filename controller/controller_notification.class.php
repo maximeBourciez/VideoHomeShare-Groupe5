@@ -12,14 +12,14 @@ class ControllerNotification extends Controller
      * @brief Affiche les notifications de l'utilisateur connecté
      * @return void
      */
-    public function affishesNotifications()
+    public function afficheNotifications()
     {   
         if (isset($_SESSION['utilisateur'])) {
             $utilisateur = unserialize($_SESSION['utilisateur']);
         } else {
             // Redirection vers la page de connexion
-            $controleru = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
-            $controleru->connexion();
+            $managerUtilisateur  = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
 
         }
 
@@ -41,7 +41,7 @@ class ControllerNotification extends Controller
         // Suppression de toutes les notifications
         $manageurnotification->delete($utilisateur->getId());
         // afficher la page de notification
-        $this->affishesNotifications();
+        $this->afficheNotifications();
     }
     /**
      * @brief Supprime une notification de l'utilisateur connecté
@@ -56,6 +56,6 @@ class ControllerNotification extends Controller
         // Suppression de la notification
         $manageurnotification->deleteById($id,$utilisateur->getId());
         // afficher la page de notification
-        $this->affishesNotifications();
+        $this->afficheNotifications();
     }
 }
