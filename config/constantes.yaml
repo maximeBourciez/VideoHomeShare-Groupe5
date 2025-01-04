@@ -3,9 +3,9 @@
 # Connexion à la base de données pour BV (lakartxela)
 database:
   host: localhost
-  name: mbourciez_pro
+  name: sae
   user: root
-  password: 
+  password: ""
   prefix: vhs_
 
 # Constantes de la vue

@@ -302,7 +302,7 @@ class ControllerUtilisateur extends Controller
         $verficationUtilisateurExiste = Utilitaires::utilisateurExiste($utilisateur, $messageErreur);
         if ($verficationUtilisateurExiste) {
             $template = $this->getTwig()->load('profilUtilisateur.html.twig');
-            echo $template->render(array('utilisateur' => $utilisateur, 'messages' => $messages, 'utilisateurConnecter' => $personneConnect));
+            echo $template->render(array('utilisateur' => $utilisateur, 'messages' => $messages ));
         }else{
             $template = $this->getTwig()->load('inscription.html.twig');
             echo $template->render(array('messagederreur' => $messageErreur));
