@@ -1,12 +1,18 @@
 <?php
-
+/**
+ * @brief Classe utilitaires
+ * 
+ * Cette classe contient des méthodes utilitaires qui peuvent être utilisées dans plusieurs classes
+ * 
+ * @file utilitaires.class.php
+ * 
+ * @version 1.0
+ * 
+ * @date Création : 16/12/2024 - Mise à jour : 22/12/2024
+ */
 
 class Utilitaires
-{
-    
-
-
-    
+{    
     /**
      * @bref pemet de verifier si la valeur est compris entre deux valeurs
      * @param string $val la valeur que l'on veut vérifier
