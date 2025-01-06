@@ -61,15 +61,18 @@ class ControllerFil extends Controller
             $id = $this->getGet()['id_fil'];
         }
 
+        // Récupérer le fil
         $filDAO = new FilDAO($this->getPdo());
         $fil = $filDAO->findById($id);
 
+        // récupérer les messages
         $messageDAO = new MessageDAO($this->getPdo());
         $messages = $messageDAO->listerMessagesParFil($id);
 
+        // Récupérer les raisons possibles de signalements
         $signalements = RaisonSignalement::getAllReasons();
 
-
+        // Rendre la vue
         echo $this->getTwig()->render('fil.html.twig', [
             'messages' => $messages,
             'fil' => $fil,
@@ -142,15 +145,19 @@ class ControllerFil extends Controller
      */
     public function dislike()
     {
+        // Récupérer l'id du fil 
+        $idFil = intval($_POST['id_fil']);
+        var_dump($idFil);
+
         // Vérifier la méthode HTTP
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->afficherFilParId($_POST['id_fil'], "Méthode HTTP invalide");
+            $this->afficherFilParId($idFil, "Méthode HTTP invalide");
             exit();
         }
 
         // Vérifier que l'utilisateur est connecté
         if (!isset($_SESSION['utilisateur'])) {
-            $this->afficherFilParId($_POST['id_fil'], "Vous devez être connecté pour répondre à un message");
+            $this->afficherFilParId($idFil, "Vous devez être connecté pour répondre à un message");
             exit();
         } else {
             $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
@@ -158,7 +165,6 @@ class ControllerFil extends Controller
 
         // Récupérer les infos du message
         $idMessage = intval($_POST['id_message']);
-        $idFil = intval($_POST['id_fil']);
 
         // Ajouter le dislike
         $managerReaction = new MessageDAO($this->getPdo());

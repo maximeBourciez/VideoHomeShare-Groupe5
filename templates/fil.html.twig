@@ -36,23 +36,23 @@
 					<!-- Boutons like, dislike, répondre -->
 					<div class="d-flex flex-wrap gap-2">
 						<form method="POST" action="index.php?controller=fil&methode=like">
-							<input type="hidden" name="id_message" value="{{ message.getIdMessage() }}">
-							<input type="hidden" name="id_fil" value="{{ fil.id }}">
-							<button class="btn action-btn" type="submit" {% if message.valeur == messageSuppr or utilisateurConnecte is null %}disabled{% endif %}>
+							<input type="hidden" name="id_message" value="{{ reponse.getIdMessage() }}">
+							<input type="hidden" name="id_fil" value="{{ idFil }}">
+							<button class="btn action-btn" type="submit" {% if reponse.valeur == messageSuppr or utilisateurConnecte is null %}disabled{% endif %}>
 								<i class="bi bi-hand-thumbs-up"></i>
-								{% if message.nbLikes > 0 %}
-									<span class="count">{{ message.nbLikes }}</span>
+								{% if reponse.nbLikes > 0 %}
+									<span class="count">{{ reponse.nbLikes }}</span>
 								{% endif %}
 							</button>
 						</form>
 
 						<form method="POST" action="index.php?controller=fil&methode=dislike">
-							<input type="hidden" name="id_message" value="{{ message.getIdMessage() }}">
-							<input type="hidden" name="id_fil" value="{{ fil.id }}">
-							<button class="btn action-btn" type="submit" {% if message.valeur == messageSuppr or utilisateurConnecte is null %}disabled{% endif %}>
+							<input type="hidden" name="id_message" value="{{ reponse.getIdMessage() }}">
+							<input type="hidden" name="id_fil" value="{{ idFil }}">
+							<button class="btn action-btn" type="submit" {% if reponse.valeur == messageSuppr or utilisateurConnecte is null %}disabled{% endif %}>
 								<i class="bi bi-hand-thumbs-down"></i>
-								{% if message.nbDislikes > 0 %}
-									<span class="count">{{ message.nbDislikes }}</span>
+								{% if reponse.nbDislikes > 0 %}
+									<span class="count">{{ reponse.nbDislikes }}</span>
 								{% endif %}
 							</button>
 						</form>
@@ -60,8 +60,8 @@
 						<button class="btn action-btn" 
 								data-bs-toggle="modal" 
 								data-bs-target="#repondreModal" 
-								data-id-message-parent="{{ message.getIdMessage() }}"
-								{% if message.valeur == messageSuppr or utilisateurConnecte is null %}disabled{% endif %}>
+								data-id-message-parent="{{ reponse.getIdMessage() }}"
+								{% if reponse.valeur == messageSuppr or utilisateurConnecte is null %}disabled{% endif %}>
 							<i class="bi bi-reply"></i>
 							<span class="btn-text">Répondre</span>
 						</button>
@@ -69,11 +69,11 @@
 
 					<!-- Boutons supprimer/signaler -->
 					<div class="d-flex gap-2">
-						{% if message.getUtilisateur().getId() == utilisateurConnecte.getId() %}
+						{% if reponse.getUtilisateur().getId() == utilisateurConnecte.getId() %}
 							<form method="POST" action="index.php?controller=fil&methode=supprimerMessage">
-								<input type="hidden" name="idMessage" value="{{ message.getIdMessage() }}">
-								<input type="hidden" name="id_fil" value="{{ fil.id }}">
-								<button class="btn action-btn warning-btn" {% if message.valeur == messageSuppr or utilisateurConnecte is null %}disabled{% endif %}>
+								<input type="hidden" name="idMessage" value="{{ reponse.getIdMessage() }}">
+								<input type="hidden" name="id_fil" value="{{ idFil }}">
+								<button class="btn action-btn warning-btn" {% if reponse.valeur == messageSuppr or utilisateurConnecte is null %}disabled{% endif %}>
 									<i class="bi bi-trash"></i>
 									<span class="btn-text">Supprimer</span>
 								</button>
@@ -82,8 +82,8 @@
 							<button class="btn action-btn warning-btn"
 									data-bs-toggle="modal"
 									data-bs-target="#signalement"
-									data-id-message="{{ message.getIdMessage() }}"
-									{% if message.valeur == messageSuppr or utilisateurConnecte is null %}disabled{% endif %}>
+									data-id-message="{{ reponse.getIdMessage() }}"
+									{% if reponse.valeur == messageSuppr or utilisateurConnecte is null %}disabled{% endif %}>
 								<i class="bi bi-flag"></i>
 								<span class="btn-text">Signaler</span>
 							</button>
