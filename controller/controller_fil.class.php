@@ -389,6 +389,15 @@ class ControllerFil extends Controller
     }
 
 
+    /**
+     * Méthode permettant de notifier un utilisateur
+     * 
+     * @param string $type Type de notification
+     * @param int $idMessage Identifiant du message 
+     * @param int $idFil Identifiant du fil
+     * 
+     * @return void
+     */
     private function notifierUtilisateur(string $type, int $idMessage, int $idFil){
         // Récupérer l'utilisateur à l'origine de la notif (le connecté)
         $pseudoEmetteur = unserialize($_SESSION['utilisateur'])->getPseudo(); 
