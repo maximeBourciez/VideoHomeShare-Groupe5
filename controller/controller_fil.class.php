@@ -133,6 +133,16 @@ class ControllerFil extends Controller
         $managerMessage = new MessageDAO($this->getPdo());
         $managerMessage->ajouterMessage($idFil, $idMessageParent, $message, $idUtilisateur);
 
+        // Récupérer l'id du message
+        $idMessage = $this->getPdo()->lastInsertId();
+
+        // Notifier l'utilisateur si le message est une réponse
+        if ($idMessageParent !== null) {
+            $this->notifierUtilisateur("reponse", $idMessage, $idFil);
+        }
+
+       
+
         // Rediriger vers le fil
         header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
         exit();
@@ -168,6 +178,9 @@ class ControllerFil extends Controller
         // Ajouter le dislike
         $managerReaction = new MessageDAO($this->getPdo());
         $managerReaction->ajouterReaction($idMessage, $idUtilisateur, false);
+
+        // Notifier l'utilisateur
+        $this->notifierUtilisateur("reaction", $idMessage, $idFil);
 
         // Rediriger vers le fil
         header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
@@ -205,6 +218,9 @@ class ControllerFil extends Controller
         // Ajouter le dislike
         $managerReaction = new MessageDAO($this->getPdo());
         $managerReaction->ajouterReaction($idMessage, $idUtilisateur, true);
+
+        // Notifier l'utilisateur
+        $this->notifierUtilisateur("reaction", $idMessage, $idFil);
 
         // Rediriger vers le fil
         header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
@@ -370,5 +386,30 @@ class ControllerFil extends Controller
 
         header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
         exit();
+    }
+
+
+    private function notifierUtilisateur(string $type, int $idMessage, int $idFil){
+        // Récupérer l'utilisateur à l'origine de la notif (le connecté)
+        $pseudoEmetteur = unserialize($_SESSION['utilisateur'])->getPseudo(); 
+
+        // Réucpérer le nom du fil
+        $managerFil = new FilDAO($this->getPdo());
+        $nomFil = $managerFil->findById($idFil)->getTitre();
+
+        // Récupérer l'id de l'utilisateur à notifier
+        $managerMessage = new MessageDAO($this->getPdo());
+        $idReceveur = $managerMessage->findAuthor($idMessage);
+
+        // Créer le contenu de la notification
+        $contenu = match($type) {
+            "reponse" => "$pseudoEmetteur a répondu à un de vos messages dans le fil : $nomFil",
+            "reaction" => "$pseudoEmetteur a réagi à un de vos messages dans le fil : $nomFil",
+            default => null
+        };
+
+        $managerNotification = new NotificationDAO($this->getPdo()); ;
+        $managerNotification->creation( $contenu , $idReceveur);
+
     }
 }

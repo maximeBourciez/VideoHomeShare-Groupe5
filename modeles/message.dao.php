@@ -158,7 +158,7 @@ class MessageDAO
      */
     public function chercherMessageParId(int $id): ?Message
     {
-        $sql = "SELECT * FROM" . DB_PREFIX . "message  WHERE id = :id";
+        $sql = "SELECT * FROM " . DB_PREFIX . "message  WHERE idMessage = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -355,5 +355,26 @@ class MessageDAO
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':idMessage', $idMessage);
         $stmt->execute();
+    }
+
+
+    /**
+     * Méthode permettant de trouver l'auteur d'un message
+     * 
+     * @param int|null $idMessage Identifiant du message
+     * 
+     * @return string|null Identifiant de l'utilisateur
+     */
+    public function findAuthor(?int $idMessage): ?string
+    {
+        // Préparer la requête
+        $sql = "SELECT idUtilisateur FROM " . DB_PREFIX . "message
+                WHERE idMessage = :idMessage";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':idMessage', $idMessage, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchColumn();
     }
 }
