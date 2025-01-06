@@ -59,28 +59,27 @@ class ControllerUtilisateur extends Controller
             $verficationBruteForce = Utilitaires::isBruteForce($utilisateur->getId(), $message);
             $verficationMotDePasse = Utilitaires::motDePasseCorrect($mdp, $utilisateur->getMdp(), $utilisateur, $message);
             $verficationUtiliateurverifier = Utilitaires::verifUtiliateurverifier($utilisateur->getId(), $message, $managerutilisateur);
-            if ($verficationUtilisateurExiste && $verficationMotDePasse && $verficationUtiliateurverifier && !$verficationBruteForce)  {
-               
+            if ($verficationUtilisateurExiste && $verficationMotDePasse && $verficationUtiliateurverifier && !$verficationBruteForce) {
+
                 $utilisateur->setMdp(null);
                 Utilitaires::resetBrutForce($utilisateur->getId());
                 //création de la variable de session
                 $_SESSION['utilisateur'] = serialize($utilisateur);
+
                 //ajout de l'utilisateur connecté dans les variables globales de twig
-                $this->getTwig()->addGlobal('utilisateurConnecte', $_SESSION['utilisateur']);
+                $this->getTwig()->addGlobal('utilisateurConnecte', unserialize($_SESSION['utilisateur']));
 
                 //Génération de la vue
                 $this->show();
-            }
-            else{
+            } else {
                 // affichage de la page de connection avec un message d'erreur
                 $template = $this->getTwig()->load('connection.html.twig');
                 echo $template->render(array('messagederreur' => $message));
             }
-        }
-        else{
-           // affichage de la page de connection avec un message d'erreur
+        } else {
+            // affichage de la page de connection avec un message d'erreur
             $template = $this->getTwig()->load('connection.html.twig');
-            echo $template->render(array('messagederreur' =>$message));
+            echo $template->render(array('messagederreur' => $message));
         }
     }
     /**
@@ -92,7 +91,7 @@ class ControllerUtilisateur extends Controller
     {
 
         //réccupération des données du formulaire
-        $id = isset($_POST['idantifiant']) ? htmlspecialchars( $_POST['idantifiant']) : null;
+        $id = isset($_POST['idantifiant']) ? htmlspecialchars($_POST['idantifiant']) : null;
         $pseudo = isset($_POST['pseudo']) ?  htmlspecialchars($_POST['pseudo']) : null;
         $mail = isset($_POST['mail']) ?  htmlspecialchars($_POST['mail']) : null;
         $date = isset($_POST['date']) ?  htmlspecialchars($_POST['date']) : null;
@@ -119,12 +118,13 @@ class ControllerUtilisateur extends Controller
         $verficationMailExistePas = Utilitaires::mailCorrectExistePas($mail, $message, $managerutilisateur);
         $verficationEgale = Utilitaires::egale($mdp, $vmdp, "Les mots de passe", $message);
         $verficationIdExistePas = Utilitaires::idExistePas($id, $message, $managerutilisateur);
-        $verficationProfaniteId = !Utilitaires::verificationDeNom($id, "l'Identifiant ",$message );
-        $verficationProfanitePseudo = !Utilitaires::verificationDeNom($pseudo, "le pseudo",$message);
-        $verficationProfaniteNom = !Utilitaires::verificationDeNom($nom, "le nom",$message);
+        $verficationProfaniteId = !Utilitaires::verificationDeNom($id, "l'Identifiant ", $message);
+        $verficationProfanitePseudo = !Utilitaires::verificationDeNom($pseudo, "le pseudo", $message);
+        $verficationProfaniteNom = !Utilitaires::verificationDeNom($nom, "le nom", $message);
 
-        if ($verficationTailleMail && $verficationTailleId && $verficationTaillePseudo && $verficationTailleNom && $verficationTailleMdp && $verficationTailleVmdp &&
-            $verficationRobuste && $verficationAge && $verficationMailExistePas && $verficationEgale && $verficationIdExistePas && $verficationProfaniteId && $verficationProfanitePseudo 
+        if (
+            $verficationTailleMail && $verficationTailleId && $verficationTaillePseudo && $verficationTailleNom && $verficationTailleMdp && $verficationTailleVmdp &&
+            $verficationRobuste && $verficationAge && $verficationMailExistePas && $verficationEgale && $verficationIdExistePas && $verficationProfaniteId && $verficationProfanitePseudo
             && $verficationProfaniteNom
         ) {
 
@@ -133,13 +133,13 @@ class ControllerUtilisateur extends Controller
             //création de l'utilisateur
             $role = Role::Utilisateur;
             $token = Utilitaires::generateToken($id, 24);
-             mail($mail, "Confirmation de votre compte", "Bonjour, \n\n Vous avez créé un compte sur notre plateforme. Pour confirmer votre compte, veuillez cliquer sur le lien suivant : " . WEBSITE_LINK . "index.php?controller=utilisateur&methode=confirmationCompte&token=" . $token . " \n\n Cordialement, \n\n L'équipe de la plateforme de vhs");
+            mail($mail, "Confirmation de votre compte", "Bonjour, \n\n Vous avez créé un compte sur notre plateforme. Pour confirmer votre compte, veuillez cliquer sur le lien suivant : " . WEBSITE_LINK . "index.php?controller=utilisateur&methode=confirmationCompte&token=" . $token . " \n\n Cordialement, \n\n L'équipe de la plateforme de vhs");
             $newUtilisateur = new Utilisateur($id, $pseudo, $nom, $mail, $mdp, $role, "images/Profil_de_base.svg", "images/Baniere_de_base.png");
             $managerutilisateur->create($newUtilisateur);
             //Génération de la vue
             $template = $this->getTwig()->load('connection.html.twig');
             echo $template->render(array('message' => "un mail vous a été envoyé pour confirmer votre compte veuillez cliquer sur le lien dans le mail"));
-        }else{
+        } else {
             // affichage de la page d'inscription avec un message d'erreur
             $template = $this->getTwig()->load('inscription.html.twig');
             echo $template->render(array('messagederreur' => $message));
@@ -169,15 +169,15 @@ class ControllerUtilisateur extends Controller
         // supprimer les espaces
         $mail = str_replace(' ', '', $mail);
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
-        
+
         $utilisateur = $managerutilisateur->findByMail($mail);
         $messageErreur = "";
         // vérification de l'existence de l'utilisateur
         $verficationUtilisateurExiste = Utilitaires::utilisateurExiste($utilisateur, $messageErreur);
         if ($verficationUtilisateurExiste) {
-           
+
             $id = $utilisateur->getId();
-             // crypter le id de l'utilisateur
+            // crypter le id de l'utilisateur
             $token = Utilitaires::generateToken($id, 6);
             //envoie du mail
             $message = "Bonjour, \n\n Vous avez demandé à réinitialiser votre mot de passe.\n Voici votre lien pour changer de mot de passe : " . WEBSITE_LINK . "index.php?controller=utilisateur&methode=afficherchangerMDP&token=" . $token . " \n\n Cordialement, \n\n L'équipe de la plateforme de vhs";
@@ -185,8 +185,7 @@ class ControllerUtilisateur extends Controller
             // affichage de la page de connection avec un message de confirmation
             $template = $this->getTwig()->load('connection.html.twig');
             echo $template->render(array('message' => "Un mail vous a été envoyé pour changer votre mot de passe"));
-        }
-        else{
+        } else {
             // affichage de la page de mot de passe oublié avec un message d'erreur
             $template = $this->getTwig()->load('inscription.html.twig');
             echo $template->render(array('message' => $messageErreur));
@@ -206,7 +205,7 @@ class ControllerUtilisateur extends Controller
         $tokenUilisateur = Utilitaires::verifyToken($token);
         $messageErreur = "";
         // vérification de l'existence de l'utilisateur
-        $verficationTokenNoNull = Utilitaires::nonNull($tokenUilisateur,$messageErreur );
+        $verficationTokenNoNull = Utilitaires::nonNull($tokenUilisateur, $messageErreur);
         if ($verficationTokenNoNull) {
             $utilisateur = $managerutilisateur->find($tokenUilisateur['id']);
             // vérification de l'existence de l'utilisateur
@@ -216,12 +215,12 @@ class ControllerUtilisateur extends Controller
                 // affichage de la page de changement de mot de passe
                 $template = $this->getTwig()->load('changerMDP.html.twig');
                 echo $template->render(array('id' => $utilisateur->getId()));
-            }else{
+            } else {
                 // affichage de la page d'inscription avec un message d'erreur
                 $template = $this->getTwig()->load('inscription.html.twig');
                 echo $template->render(array('messagederreur' => $messageErreur));
             }
-        }else{
+        } else {
             // affichage de la page d'inscription avec un message d'erreur
             $template = $this->getTwig()->load('inscription.html.twig');
             echo $template->render(array('messagederreur' => $messageErreur));
@@ -239,7 +238,7 @@ class ControllerUtilisateur extends Controller
         $id = isset($_POST['id']) ?  htmlspecialchars($_POST['id']) : null;
         $mdp = isset($_POST['mdp']) ?  htmlspecialchars($_POST['mdp']) : null;
         $vmdp = isset($_POST['vmdp']) ?  htmlspecialchars($_POST['vmdp']) : null;
-        
+
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
         $utilisateur = $managerutilisateur->find($id);
         $messageErreur = "";
@@ -249,7 +248,7 @@ class ControllerUtilisateur extends Controller
         $verficationEgale = Utilitaires::egale($mdp, $vmdp, "Les mots de passe", $messageErreur);
         $verficationRobuste = Utilitaires::estRobuste($mdp, $messageErreur);
         $verficationUtilisateurExiste = Utilitaires::utilisateurExiste($utilisateur, $messageErreur);
-        if ($verficationTailleMdp && $verficationTailleVmdp && $verficationEgale && $verficationRobuste && $verficationUtilisateurExiste ) {
+        if ($verficationTailleMdp && $verficationTailleVmdp && $verficationEgale && $verficationRobuste && $verficationUtilisateurExiste) {
             //crypter le mot de passe
             $mdp = password_hash($mdp, PASSWORD_DEFAULT);
             $utilisateur->setMdp($mdp);
@@ -259,7 +258,7 @@ class ControllerUtilisateur extends Controller
             // affichage de la page de connection avec un message de confirmation
             $template = $this->getTwig()->load('connection.html.twig');
             echo $template->render(array('message' => "Votre mot de passe a bien été changé"));
-        }else{
+        } else {
             // affichage de la page de changement de mot de passe avec un message d'erreur
             $template = $this->getTwig()->load('changerMDP.html.twig');
             echo $template->render(array('id' => $id, 'messagederreur' => $messageErreur));
@@ -302,8 +301,8 @@ class ControllerUtilisateur extends Controller
         $verficationUtilisateurExiste = Utilitaires::utilisateurExiste($utilisateur, $messageErreur);
         if ($verficationUtilisateurExiste) {
             $template = $this->getTwig()->load('profilUtilisateur.html.twig');
-            echo $template->render(array('utilisateur' => $utilisateur, 'messages' => $messages ));
-        }else{
+            echo $template->render(array('utilisateur' => $utilisateur, 'messages' => $messages));
+        } else {
             $template = $this->getTwig()->load('inscription.html.twig');
             echo $template->render(array('messagederreur' => $messageErreur));
         }
@@ -328,8 +327,7 @@ class ControllerUtilisateur extends Controller
             // affichage de la page de modification de l'utilisateur
             $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
             echo $template->render(array('utilisateur' => $utilisateur));
-        }
-        else{
+        } else {
             // affichage de la page d'inscription avec un message d'erreur
             $template = $this->getTwig()->load('inscription.html.twig');
             echo $template->render(array('messagederreur' => $messageErreur));
@@ -365,19 +363,19 @@ class ControllerUtilisateur extends Controller
         $verficationTailleNom = Utilitaires::comprisEntre($nom, 50, 3, "le nom doit contenir", $messageErreur);
         $verficationfichierProfilTropLourd = Utilitaires::fichierTropLourd($_FILES['urlImageProfil'], "profil", $messageErreur);
         $verficationfichierBaniereTropLourd = Utilitaires::fichierTropLourd($_FILES['urlImageBanniere'], "banniere", $messageErreur);
-        $verficationProfaniteId = !Utilitaires::verificationDeNom($id, "l'Identifiant ",$messageErreur );
-        $verficationProfanitePseudo = !Utilitaires::verificationDeNom($pseudo, "le pseudo",$messageErreur);
-        $verficationProfaniteNom = !Utilitaires::verificationDeNom($nom, "le nom",$messageErreur);
+        $verficationProfaniteId = !Utilitaires::verificationDeNom($id, "l'Identifiant ", $messageErreur);
+        $verficationProfanitePseudo = !Utilitaires::verificationDeNom($pseudo, "le pseudo", $messageErreur);
+        $verficationProfaniteNom = !Utilitaires::verificationDeNom($nom, "le nom", $messageErreur);
 
-        if ( $verficationUtilisateurExiste && $verficationTailleId && $verficationTaillePseudo && $verficationTailleNom && $verficationfichierProfilTropLourd &&
-             $verficationfichierBaniereTropLourd && $verficationProfaniteId && $verficationProfanitePseudo && $verficationProfaniteNom
-            )
-         {
+        if (
+            $verficationUtilisateurExiste && $verficationTailleId && $verficationTaillePseudo && $verficationTailleNom && $verficationfichierProfilTropLourd &&
+            $verficationfichierBaniereTropLourd && $verficationProfaniteId && $verficationProfanitePseudo && $verficationProfaniteNom
+        ) {
             // verifier si l'id n'est pas déjà utilisé
-            $verficationIdExistePas = Utilitaires::idExistePas($id, $messageErreur, $utilisateur);
+            $verficationIdExistePas = Utilitaires::idExistePas($id, $messageErreur, $managerutilisateur);
             if ($id == $utilisateur->getId() || $verficationIdExistePas) {
                 //création de l'utilisateur
-
+               
                 $utilisateur->setId($id);
                 $utilisateur->setPseudo($pseudo);
                 $utilisateur->setNom($nom);
@@ -386,14 +384,17 @@ class ControllerUtilisateur extends Controller
 
                     if ($_FILES['urlImageProfil']['name'] != '') {
                         //supprimer l'ancienne image
-                        Utilitaires::ajourfichier($_FILES['urlImageProfil'], "Profil" ,$messageErreur, $utilisateur);
+                        Utilitaires::ajourfichier($_FILES['urlImageProfil'], "Profil", $messageErreur, $utilisateur);
                     }
                 }
                 if (isset(($_FILES['urlImageBanniere']))) {
-                    Utilitaires::ajourfichier($_FILES['urlImageBanniere'], "Banniere",$messageErreur, $utilisateur);
+                    if ($_FILES['urlImageBanniere']['name'] != '') {
+                        Utilitaires::ajourfichier($_FILES['urlImageBanniere'], "Banniere", $messageErreur, $utilisateur);
+                    }
                 }
                 // mettre à jour l'utilisateur dans la base de données
                 $utilisateur->setMdp($managerutilisateur->find($utilisateur->getId())->getMdp());
+                
                 $managerutilisateur->update($utilisateur);
                 $utilisateur->setMdp(null);
                 $_SESSION['utilisateur'] = serialize($utilisateur);
@@ -401,12 +402,12 @@ class ControllerUtilisateur extends Controller
                 $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
                 echo $template->render(array('utilisateur' => $utilisateur, 'message' => "Vos informations ont bien été modifiées"));
                 return;
-            }else{
+            } else {
                 // affichage de la page de modification de l'utilisateur avec un message d'erreur
                 $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
                 echo $template->render(array('utilisateur' => $utilisateur, 'messagederreur' => $messageErreur));
             }
-        }else{
+        } else {
             // affichage de la page de modification de l'utilisateur avec un message d'erreur
             $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
             echo $template->render(array('utilisateur' => $utilisateur, 'messagederreur' => $messageErreur));
@@ -433,7 +434,7 @@ class ControllerUtilisateur extends Controller
         $verficationTailleMailConf = Utilitaires::comprisEntre($mailconf, 320, 6, "le mail de verification doit contenir", $messageErreur);
         $verficationEgale = Utilitaires::egale($mail, $mailconf, "Les mails", $messageErreur);
         $verficationMailExistePas = Utilitaires::mailCorrectExistePas($mail, $messageErreur, $managerutilisateur);
-        if ( $verficationTailleMail && $verficationTailleMailConf && $verficationEgale && $verficationMailExistePas ) {
+        if ($verficationTailleMail && $verficationTailleMailConf && $verficationEgale && $verficationMailExistePas) {
             // mettre à jour le mail de l'utilisateur
             $utilisateur->setMail($mail);
             $utilisateur->setMdp($managerutilisateur->find($utilisateur->getId())->getMdp());
@@ -444,11 +445,10 @@ class ControllerUtilisateur extends Controller
             // affichage de la page de modification de l'utilisateur
             $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
             echo $template->render(array('utilisateur' => $utilisateur));
-        }else{
+        } else {
             $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
             echo $template->render(array('utilisateur' => $utilisateur, 'messagederreur' => $messageErreur));
         }
-       
     }
     /**
      * @bref affiche le notification de l'utilisateur
@@ -473,7 +473,7 @@ class ControllerUtilisateur extends Controller
         $template = $this->getTwig()->load('connection.html.twig');
         echo $template->render(array('message' => "Vous avez bien été déconnecté"));
     }
-  
+
     /**
      * @brief permet de confirmer le compte de l'utilisateur
      * 
@@ -487,7 +487,7 @@ class ControllerUtilisateur extends Controller
         $tokenUilisateur = Utilitaires::verifyToken($token);
         $messageErreur = "";
         // vérification de l'existence de l'utilisateur
-        $verficationTokenNoNull = Utilitaires::nonNull($tokenUilisateur,$messageErreur );
+        $verficationTokenNoNull = Utilitaires::nonNull($tokenUilisateur, $messageErreur);
         if ($verficationTokenNoNull) {
             $utilisateur = $managerutilisateur->find($tokenUilisateur['id']);
             // vérification de l'existence de l'utilisateur
@@ -498,16 +498,15 @@ class ControllerUtilisateur extends Controller
                 // affichage de la page de connection avec un message de confirmation
                 $template = $this->getTwig()->load('connection.html.twig');
                 echo $template->render(array('message' => "Votre compte a bien été confirmé"));
-            }else{
+            } else {
                 // affichage de la page d'inscription avec un message d'erreur
                 $template = $this->getTwig()->load('inscription.html.twig');
                 echo $template->render(array('messagederreur' => $messageErreur));
             }
-        }else{
+        } else {
             // affichage de la page d'inscription avec un message d'erreur
             $template = $this->getTwig()->load('inscription.html.twig');
             echo $template->render(array('messagederreur' => $messageErreur));
         }
     }
-
 }
