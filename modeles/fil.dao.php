@@ -110,10 +110,6 @@ class FilDAO
             $fil = new Fil($id, $titre, $dateCreation, $description, $user, $themes);
             return $fil;
         }
-
-
-        // Créer le fil
-        return new Fil();
     }
 
     /**
@@ -150,9 +146,9 @@ class FilDAO
     {
         $sql = "
             SELECT DISTINCT f.*,
-            u.idUtilisateur,
-            u.pseudo,
-            u.urlImageProfil,
+            u.idUtilisateur AS idUtilisateur,
+            u.pseudo AS pseudo,
+            u.urlImageProfil AS urlImageProfil,
             t.idTheme AS theme_id,
             t.nom AS theme_nom
             FROM " . DB_PREFIX . "fil AS f
