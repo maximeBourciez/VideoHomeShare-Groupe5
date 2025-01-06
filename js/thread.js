@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const messageToSignal = document.querySelector(`.message[data-id-message="${messageId}"]`);
             var hiddenInputIdMessage = document.getElementById("id_message_signalement");
             
-
+            // Mettre à jour le contenu de la modale
             if (messageToSignal) {
                 // Mettre les données à jour
                 const messageText = messageToSignal.querySelector('.message-text').innerText;

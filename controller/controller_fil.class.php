@@ -61,15 +61,18 @@ class ControllerFil extends Controller
             $id = $this->getGet()['id_fil'];
         }
 
+        // Récupérer le fil
         $filDAO = new FilDAO($this->getPdo());
         $fil = $filDAO->findById($id);
 
+        // récupérer les messages
         $messageDAO = new MessageDAO($this->getPdo());
         $messages = $messageDAO->listerMessagesParFil($id);
 
+        // Récupérer les raisons possibles de signalements
         $signalements = RaisonSignalement::getAllReasons();
 
-
+        // Rendre la vue
         echo $this->getTwig()->render('fil.html.twig', [
             'messages' => $messages,
             'fil' => $fil,
@@ -130,6 +133,16 @@ class ControllerFil extends Controller
         $managerMessage = new MessageDAO($this->getPdo());
         $managerMessage->ajouterMessage($idFil, $idMessageParent, $message, $idUtilisateur);
 
+        // Récupérer l'id du message
+        $idMessage = $this->getPdo()->lastInsertId();
+
+        // Notifier l'utilisateur si le message est une réponse
+        if ($idMessageParent !== null) {
+            $this->notifierUtilisateur("reponse", $idMessage, $idFil);
+        }
+
+       
+
         // Rediriger vers le fil
         header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
         exit();
@@ -142,15 +155,18 @@ class ControllerFil extends Controller
      */
     public function dislike()
     {
+        // Récupérer l'id du fil 
+        $idFil = intval($_POST['id_fil']);
+
         // Vérifier la méthode HTTP
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->afficherFilParId($_POST['id_fil'], "Méthode HTTP invalide");
+            $this->afficherFilParId($idFil, "Méthode HTTP invalide");
             exit();
         }
 
         // Vérifier que l'utilisateur est connecté
         if (!isset($_SESSION['utilisateur'])) {
-            $this->afficherFilParId($_POST['id_fil'], "Vous devez être connecté pour répondre à un message");
+            $this->afficherFilParId($idFil, "Vous devez être connecté pour répondre à un message");
             exit();
         } else {
             $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
@@ -158,11 +174,13 @@ class ControllerFil extends Controller
 
         // Récupérer les infos du message
         $idMessage = intval($_POST['id_message']);
-        $idFil = intval($_POST['id_fil']);
 
         // Ajouter le dislike
         $managerReaction = new MessageDAO($this->getPdo());
         $managerReaction->ajouterReaction($idMessage, $idUtilisateur, false);
+
+        // Notifier l'utilisateur
+        $this->notifierUtilisateur("reaction", $idMessage, $idFil);
 
         // Rediriger vers le fil
         header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
@@ -177,15 +195,18 @@ class ControllerFil extends Controller
      */
     public function like()
     {
+        // Récupérer l'id du fil 
+        $idFil = intval($_POST['id_fil']);
+
         // Vérifier la méthode HTTP
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->afficherFilParId($_POST['id_fil'], "Méthode HTTP invalide");
+            $this->afficherFilParId($idFil, "Méthode HTTP invalide");
             exit();
         }
 
         // Vérifier que l'utilisateur est connecté
         if (!isset($_SESSION['utilisateur'])) {
-            $this->afficherFilParId($_POST['id_fil'], "Vous devez être connecté pour répondre à un message");
+            $this->afficherFilParId($idFil, "Vous devez être connecté pour répondre à un message");
             exit();
         } else {
             $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
@@ -193,11 +214,13 @@ class ControllerFil extends Controller
 
         // Récupérer les infos du message
         $idMessage = intval($_POST['id_message']);
-        $idFil = intval($_POST['id_fil']);
 
         // Ajouter le dislike
         $managerReaction = new MessageDAO($this->getPdo());
         $managerReaction->ajouterReaction($idMessage, $idUtilisateur, true);
+
+        // Notifier l'utilisateur
+        $this->notifierUtilisateur("reaction", $idMessage, $idFil);
 
         // Rediriger vers le fil
         header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
@@ -241,7 +264,7 @@ class ControllerFil extends Controller
         $themes = $_POST['themes'];
 
         // Vérifier le message 
-        $premierMessage = htmlspecialchars($_POST['message']);
+        $premierMessage = htmlspecialchars($_POST['premierMessage']);
 
         $messageErreur = "";
         $contenuErreur = "Un message doit contenir";
@@ -341,9 +364,9 @@ class ControllerFil extends Controller
         }
 
         // Récupérer les données du formulaire
-        $idMessage = $_POST['id_message'];
+        $idMessage = intval($_POST['id_message']);
         $raison = $_POST['raison'];
-        $idFil = $_POST['id_fil'];
+        $idFil = intval($_POST['id_fil']);
 
         // Vérifier la raison
         if (!RaisonSignalement::isValidReason($raison)) {
@@ -363,5 +386,39 @@ class ControllerFil extends Controller
 
         header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
         exit();
+    }
+
+
+    /**
+     * Méthode permettant de notifier un utilisateur
+     * 
+     * @param string $type Type de notification
+     * @param int $idMessage Identifiant du message 
+     * @param int $idFil Identifiant du fil
+     * 
+     * @return void
+     */
+    private function notifierUtilisateur(string $type, int $idMessage, int $idFil){
+        // Récupérer l'utilisateur à l'origine de la notif (le connecté)
+        $pseudoEmetteur = unserialize($_SESSION['utilisateur'])->getPseudo(); 
+
+        // Réucpérer le nom du fil
+        $managerFil = new FilDAO($this->getPdo());
+        $nomFil = $managerFil->findById($idFil)->getTitre();
+
+        // Récupérer l'id de l'utilisateur à notifier
+        $managerMessage = new MessageDAO($this->getPdo());
+        $idReceveur = $managerMessage->findAuthor($idMessage);
+
+        // Créer le contenu de la notification
+        $contenu = match($type) {
+            "reponse" => "$pseudoEmetteur a répondu à un de vos messages dans le fil : $nomFil",
+            "reaction" => "$pseudoEmetteur a réagi à un de vos messages dans le fil : $nomFil",
+            default => null
+        };
+
+        $managerNotification = new NotificationDAO($this->getPdo()); ;
+        $managerNotification->creation( $contenu , $idReceveur);
+
     }
 }
