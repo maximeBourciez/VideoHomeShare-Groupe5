@@ -9,8 +9,16 @@
 			{% if nbNotification == 0 %}
 			<div class="py-2   d-flex align-items-center">
 
-				<p class="col-7 col-md-9 mb-1 ">Vous avez aucune notifications</p>
+				<p class="col-7 col-md-9 mb-1 ">Vous n'avez aucune notification</p>
+			{% elseif nbNotification == 1 %} 
+			 	<div class="py-2 border-primary row border-bottom border-1  d-flex align-items-center">
+					<p class="col-7 col-md-9 mb-1 ">Vous avez
+						{{ nbNotification }}
+						notification</p>
+					<a href="index.php?controller=notification&methode=suprimerTout" class="btn btn-tercary col-4 col-md-2">tout suprimer</a>
+				
 			{% else %}
+				
 				<div class="py-2 border-primary row border-bottom border-1  d-flex align-items-center">
 					<p class="col-7 col-md-9 mb-1 ">Vous avez
 						{{ nbNotification }}

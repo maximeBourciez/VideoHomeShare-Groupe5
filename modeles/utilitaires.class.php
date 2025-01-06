@@ -59,7 +59,7 @@ class Utilitaires
         // si les deux valeurs ne sont pas identiques
         if ($val1 != $val2) {
             
-            $messageErreur = $contenu . "ne sont pas identiques";
+            $messageErreur = $contenu . " ne sont pas identiques";
             $valretour = false;
         }
         return $valretour;
@@ -308,7 +308,7 @@ class Utilitaires
      * @param string $type le type de fichier que l'on veut mettre à jour
      * @param Utilisateur $utilisateur l'utilisateur sur lequel on veut mettre à jour l'image
      */
-    public static function ajourfichier($fichier, $type, &$messageErreur , $utilisateur)
+    public static function ajourfichier( $fichier, $type, string &$messageErreur , Utilisateur  $utilisateur)
     {
         if ($fichier['name'] != '') {
             //supprimer l'ancienne image
@@ -317,7 +317,7 @@ class Utilitaires
                     case "Profil":
                         unlink($utilisateur->getUrlImageProfil());
                         break;
-                    case "Baniere":
+                    case "Banniere":
                         unlink($utilisateur->getUrlImageBanniere());
                         break;
                 }
@@ -332,10 +332,11 @@ class Utilitaires
                     case "Profil":
                         $utilisateur->setUrlImageProfil($fichier['name']);
                         break;
-                    case "Baniere":
+                    case "Banniere":
                         $utilisateur->setUrlImageBanniere($fichier['name']);
                         break;
                 }
+               
             } else {
 
                 
@@ -415,12 +416,41 @@ class Utilitaires
     public static function verificationDeNom($text , string $contenu , string  &$messageErreur) : bool {
 
         $profanity_list = json_decode(file_get_contents("config/nomincorect.json"), true); // Vous pouvez ajouter d'autres mots
+        
+
+        // transformer le texte en texte contenant que des minuscules et sans accents et sans caractères spéciaux
+        $textbien = strtolower(html_entity_decode($text)); // Mettre le texte en minuscule
+       
+        $textbien = preg_replace('/\s+/', '', $textbien); // Supprimer les espaces
+        $textbien = preg_replace('/!/', 'i', $textbien); // Remplacer "!" par "i"
+        $textbien = preg_replace('/@/', 'a', $textbien); // Remplacer "@" par "a"
+        $textbien = preg_replace('/#/', 'h', $textbien); // Remplacer "#" par "h"
+        $textbien = preg_replace('/\$/', 's', $textbien); // Remplacer "$" par "s"
+        $textbien = preg_replace('/%/', 'p', $textbien); // Remplacer "%" par "p"
+        
+        $textbien = str_replace( array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ'), 
+        array('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y' ), $textbien); // Remplacer les accents
+       
+        $textbien = preg_replace('/0/', 'o', $textbien); // Remplacer "0" par "o"
+        $textbien = preg_replace('/1/', 'i', $textbien); // Remplacer "1" par "i"
+        $textbien = preg_replace('/2/', 'z', $textbien); // Remplacer "2" par "z"
+        $textbien = preg_replace('/3/', 'e', $textbien); // Remplacer "3" par "e"
+        $textbien = preg_replace('/4/', 'a', $textbien); // Remplacer "4" par "a"
+        $textbien = preg_replace('/5/', 's', $textbien); // Remplacer "5" par "s"
+        $textbien = preg_replace('/6/', 'g', $textbien); // Remplacer "6" par "g"
+        $textbien = preg_replace('/7/', 't', $textbien); // Remplacer "7" par "t"
+        $textbien = preg_replace('/8/', 'b', $textbien); // Remplacer "8" par "b"
+        $textbien = preg_replace('/9/', 'g', $textbien); // Remplacer "9" par "g"
+        
+        
+        
         // On parcourt chaque mot de profanité
         foreach ($profanity_list['nom'] as $word) {
             // Expression régulière pour détecter le mot de profanité avec des chiffres ou autres caractères spéciaux
             $pattern = '/' . preg_quote($word, '/') . '[0-9]*/i';  
-            if (preg_match($pattern, $text)) {
-                
+
+            if (preg_match($pattern, $textbien)) {
+                 
                 $messageErreur = "$contenu contient de la profanité";
                 return true; // Le texte contient de la profanité
             }
