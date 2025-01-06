@@ -3,7 +3,7 @@
 # Connexion à la base de données pour BV (lakartxela)
 database:
   host: localhost
-  name: sae
+  name: mbourciez_pro
   user: root
   password: ""
   prefix: vhs_

@@ -241,7 +241,7 @@ class ControllerFil extends Controller
         $themes = $_POST['themes'];
 
         // Vérifier le message 
-        $premierMessage = htmlspecialchars($_POST['message']);
+        $premierMessage = htmlspecialchars($_POST['premierMessage']);
 
         $messageErreur = "";
         $contenuErreur = "Un message doit contenir";
