@@ -110,10 +110,6 @@ class FilDAO
             $fil = new Fil($id, $titre, $dateCreation, $description, $user, $themes);
             return $fil;
         }
-
-
-        // Créer le fil
-        return new Fil();
     }
 
     /**
