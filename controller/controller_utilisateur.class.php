@@ -494,6 +494,7 @@ class ControllerUtilisateur extends Controller
             $verficationUtilisateurExiste = Utilitaires::utilisateurExiste($utilisateur, $messageErreur);
             if ($verficationUtilisateurExiste) {
                 $utilisateur->setRole(Role::Utilisateur);
+                $utilisateur->setEstValider(true);
                 $managerutilisateur->update($utilisateur);
                 // affichage de la page de connection avec un message de confirmation
                 $template = $this->getTwig()->load('connection.html.twig');
