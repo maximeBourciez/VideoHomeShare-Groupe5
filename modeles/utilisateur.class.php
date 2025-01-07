@@ -22,17 +22,54 @@ enum Role {
 
 class Utilisateur{
     // Attributs
+    /**
+     * @brief L'identifiant de l'utilisateur
+     * @var string|null $id L'identifiant de l'utilisateur
+     */
     private ?string $id;
+    /**
+     * @brief Le pseudo de l'utilisateur
+     * @var string|null $pseudo Le pseudo de l'utilisateur
+     */
     private ?string $pseudo;
+    /**
+     * @brief Le nom de l'utilisateur
+     * @var string|null $nom Le nom de l'utilisateur
+     */
     private ?string $nom;
+    /**
+     * @brief L'adresse mail de l'utilisateur
+     * @var string|null $mail L'adresse mail de l'utilisateur
+     */
     private ?string $mail;
+    /**
+     * @brief Le mot de passe de l'utilisateur
+     * @var string|null $mdp Le mot de passe de l'utilisateur
+     */
     private ?string $mdp;
+    /**
+     * @brief Le rôle de l'utilisateur
+     * @var Role|null $role Le rôle de l'utilisateur
+     */
     private ?Role $role;
+    /**
+     * @brief L'URL de l'image de profil de l'utilisateur
+     * @var string|null $urlImageProfil L'URL de l'image de profil de l'utilisateur
+     */
     private ?string $urlImageProfil;
+    /**
+     * @brief L'URL de l'image de bannière de l'utilisateur
+     * @var string|null $urlImageBanniere L'URL de l'image de bannière de l'utilisateur
+     */
     private ?string $urlImageBanniere;
+    /**
+     * @brief indique si l'utilisateur est validé
+     * @var bool|null $estValider indique si l'utilisateur est validé
+     */
+    private ?bool $estValider;
     
     // Constructeur
-    function __construct(?string $id = null, ?string $pseudo = null, ?string $nom = null, ?string $mail = null, ?string $mdp = null, ?Role $role = null, ?string $urlImageProfil = null, ?string $urlImageBanniere = null){
+    function __construct(?string $id = null, ?string $pseudo = null, ?string $nom = null, ?string $mail = null, ?string $mdp = null, ?Role $role = null, ?string $urlImageProfil = null, ?string $urlImageBanniere = null, ?bool $estValider = null) {
         $this->id = $id;
         $this->pseudo = $pseudo;
         $this->nom = $nom;
@@ -41,6 +78,8 @@ class Utilisateur{
         $this->role = $role;
         $this->urlImageProfil = $urlImageProfil;
         $this->urlImageBanniere = $urlImageBanniere;
+        $this->estValider = $estValider;
+
     }
 
     // Encapsulation
@@ -119,6 +158,15 @@ class Utilisateur{
         return $this->urlImageBanniere;
     }
 
+    /**
+     * Get the value of estValider
+     * @return bool
+     */
+    public function getEstValider(): ?bool
+    {
+        return $this->estValider;
+    }
+
     // Setters
 
     /**
@@ -190,6 +238,15 @@ class Utilisateur{
     public function setUrlImageBanniere(?string $urlImageBanniere = null): void
     {
         $this->urlImageBanniere = $urlImageBanniere;
+    }
+
+    /**
+     * Set the value of estValider
+     * @return void
+     */
+    public function setEstValider(?bool $estValider = null): void
+    {
+        $this->estValider = $estValider;
     }
 
     // Méthodes 

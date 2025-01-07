@@ -44,7 +44,7 @@ class UtilisateurDAO
     function update(Utilisateur $utilisateur): bool
     {
 
-        $pdo = $this->pdo->prepare("UPDATE " . DB_PREFIX . "utilisateur SET  pseudo = :pseudo, vraiNom = :nom, mail = :mail, mdp = :mdp,  urlImageProfil = :urlImageProfil, urlImageBanniere = :urlImageBaniere WHERE idUtilisateur = :id");
+        $pdo = $this->pdo->prepare("UPDATE " . DB_PREFIX . "utilisateur SET  pseudo = :pseudo, vraiNom = :nom, mail = :mail, mdp = :mdp,  urlImageProfil = :urlImageProfil, urlImageBanniere = :urlImageBaniere, estValider = :estValider WHERE idUtilisateur = :id");
 
         $id = $utilisateur->getId();
         $pseudo = $utilisateur->getPseudo();
@@ -53,6 +53,7 @@ class UtilisateurDAO
         $mdp = $utilisateur->getMdp();
         $urlImageProfil = $utilisateur->getUrlImageProfil();
         $urlImageBaniere = $utilisateur->getUrlImageBanniere();
+        $estValider = $utilisateur->getEstValider();
         $pdo->bindParam(":id", $id);
         $pdo->bindParam(":pseudo", $pseudo);
         $pdo->bindParam(":nom", $nom);
@@ -60,6 +61,8 @@ class UtilisateurDAO
         $pdo->bindParam(":mdp", $mdp);
         $pdo->bindParam(":urlImageProfil", $urlImageProfil);
         $pdo->bindParam(":urlImageBaniere", $urlImageBaniere);
+        $pdo->bindParam(":estValider", $estValider);
+
         return $pdo->execute();
     }
 
@@ -79,6 +82,7 @@ class UtilisateurDAO
         $mail = $row['mail'];
         $mdp = $row['mdp'];
         $role = $row['role'];
+       
 
 
         // Transformer le role
@@ -89,9 +93,9 @@ class UtilisateurDAO
 
         $urlImageProfil = $row['urlImageProfil'];
         $urlImageBanniere = $row['urlImageBanniere'];
-
+        $estValider = $row['estValider'];
         // Retourner l'utilisateur
-        return new Utilisateur($id, $pseudo, $nom, $mail, $mdp, $role, $urlImageProfil, $urlImageBanniere);
+        return new Utilisateur($id, $pseudo, $nom, $mail, $mdp, $role, $urlImageProfil, $urlImageBanniere, $estValider);
 
     }
 
