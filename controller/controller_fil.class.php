@@ -138,7 +138,7 @@ class ControllerFil extends Controller
 
         // Notifier l'utilisateur si le message est une réponse
         if ($idMessageParent !== null) {
-            $this->notifierUtilisateur("reponse", $idMessage, $idFil);
+            $this->notifierUtilisateur("reponse", $idMessageParent, $idFil);
         }
 
        
