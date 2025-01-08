@@ -61,34 +61,10 @@ class Controller
      */
     public function call(string $methode): mixed
     {
-
-        // try {
-            if (!method_exists($this, $methode)) {
-                throw new Exception("methodeInexistante");
-            }
-            return $this->$methode();
-            
-        // } catch (Exception $e) {
-        //     // Traiter l'exception levée
-        //     switch ($e->getMessage()) {
-        //         case "methodeInexistante":
-        //             $this->twig->render("404.html.twig");
-        //             break;
-        //         case "accesInterdit":
-        //             $this->twig->render("403.html.twig");
-        //             break;
-        //         case "enConstruction":
-        //             $this->twig->render("construction.html.twig");
-        //             break;
-        //         default:
-        //             $this->twig->render("500.html.twig");
-        //             break;
-        //     }
-        //     return null;
-        // }
-
-
-
+        if (!method_exists($this, $methode)) {
+            throw new Exception("methodeInexistante");
+        }
+        return $this->$methode();
     }
 
 

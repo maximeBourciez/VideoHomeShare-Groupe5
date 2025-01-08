@@ -20,19 +20,16 @@ class ControllerIndex extends Controller
         $tmdbApi = new TmdbAPIContenu(TMDB_API_KEY);
         $trends = $tmdbApi->getTrendingMovies();
 
-        // Récupérer les notes et le nombre de notes de chaque film
-        // $commentaireDAO = new CommentaireDAO($this->getPdo());
-        // foreach($trends as $trend) {
-        //     $notes = $commentaireDAO->getMoyenneEtTotalNotesContenu($trend->getId());
-        //     $trend->setMoyenne($notes['moyenne']);
-        //     $trend->setTotal($notes['total']);
-        // }
+        // Transformation du tableau
+        $tendances = $this->addNotesToContenus($trends);
 
         // Récupérer les films d'action (genre ID 28)
         $actionMovies = $tmdbApi->getPopularMoviesByGenre(28, 20);
+        $actionMovies = $this->addNotesToContenus($actionMovies);
 
         // Récupérer les films d'aventure (genre ID 12)
         $adventureMovies = $tmdbApi->getPopularMoviesByGenre(12, 20);
+        $adventureMovies = $this->addNotesToContenus($adventureMovies);
 
         // Récupérer les 3 fils les plus likés de la semaine
         $filDAO = new FilDAO($this->getPdo());
@@ -40,10 +37,30 @@ class ControllerIndex extends Controller
 
         // Afficher le template avec les données
         echo $this->getTwig()->render('index.html.twig', [
-            'trends' => $trends,
+            'trends' => $tendances,
             'actionMovies' => $actionMovies,
             'adventureMovies' => $adventureMovies,
-            //'fils' => $fils
+            //'fils' => $fils,
+            'test' => $tendances
         ]);
+    }
+
+    /**
+     * @brief Méthode permettant de modifier un tableau de contenus pour lui ajouter les infos pour les notes
+     * 
+     * @param array<Contenu> $contenus Tableau de contenus
+     * 
+     * @return array<Contenu> Tableau de contenus avec les infos pour les notes 
+     */
+    private function addNotesToContenus(array $contenus): array{
+        $commentaire = new CommentaireDAO($this->getPdo());
+        $tendances = [];
+        for($i = 1; $i < count($contenus); $i++) {
+            // Ajouter une clé moyenne et nbAvis à chaque film
+            $tendances[$i][0] = $contenus[$i];
+            $tendances[$i][1]["moyenne"] = $commentaire->getMoyenneEtTotalNotesContenu($contenus[$i]->getId())["moyenne"];
+            $tendances[$i][1]["nbAvis"] = $commentaire->getMoyenneEtTotalNotesContenu($contenus[$i]->getId())["total"];
+        }
+        return $tendances;
     }
 }

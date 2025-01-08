@@ -110,7 +110,7 @@ class TmdbAPIContenu
             : null;
 
         $contenu = new Contenu(
-            null,
+            $movieData['id'],    // id
             $movieData['title'], // titre
             null,
             $descriptionCourte,
