@@ -238,7 +238,7 @@ class CollectionDAO {
         }
 
         return new Collection(
-            null,
+            $collectionData['id'],
             $collectionData['name'],
             $date,
             $this->formatDescription($collectionData),
