@@ -475,4 +475,15 @@ class Utilitaires
     
    }
 
+   public static function verifiecasecocher( $case, string &$messageErreur , string $type) : bool {
+        $valretour = true;
+        // si la case n'est pas cochée
+        if ($case == null) {
+            
+            $messageErreur = "Vous devez cocher  $type";
+            $valretour = false;
+        }
+        return $valretour;
+   }
+
 }
