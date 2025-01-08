@@ -3,11 +3,188 @@
 
 {% block content %}
 	
-	<main class="content row flex-grow-1">
-    
-    
-    
-    </main>
+    <style>
+        body {
+            background-color: #fef8e5;
+        }
+        .watchlist-section {
+            margin: 20px 0;
+            background-color: #1b0c3d;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            width: 100vw;
+            margin-left: calc(-50vw + 50%);
+        }
+        .watchlist-section .container {
+            max-width: 1140px;
+            margin: 0 auto;
+        }
+        .watchlist-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        .card {
+            background-color: white;
+            color: black;
+            border: none;
+        }
+        .card img {
+            height: 200px;
+            object-fit: cover;
+        }
+        .browse-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            background-color: #1b0c3d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .browse-button:hover {
+            background-color: #310b5f;
+        }
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            filter: invert(1);
+        }
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 5%;
+        }
+    </style>
+
+<div class="container">
+    <h1 class="text-dark">Vos WatchLists :</h1>
+</div>
+
+<div class="watchlist-section">
+    <div class="container">
+        <h2 class="watchlist-title">Favoris</h2>
+        <div id="carouselFavoris" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="card">
+                                <img src="https://via.placeholder.com/150" class="card-img-top" alt="Avengers">
+                                <div class="card-body">
+                                    <h5 class="card-title">Avengers INFINITY WAR</h5>
+                                    <p class="card-text">8.3 ★</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="card">
+                                <img src="https://via.placeholder.com/150" class="card-img-top" alt="Blade Runner">
+                                <div class="card-body">
+                                    <h5 class="card-title">Blade Runner 2049</h5>
+                                    <p class="card-text">8.1 ★</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="card">
+                                <img src="https://via.placeholder.com/150" class="card-img-top" alt="Mad Max">
+                                <div class="card-body">
+                                    <h5 class="card-title">MAD MAX Fury Road</h5>
+                                    <p class="card-text">7.6 ★</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="card">
+                                <img src="https://via.placeholder.com/150" class="card-img-top" alt="Spider-Man">
+                                <div class="card-body">
+                                    <h5 class="card-title">SPIDER-MAN No Way Home</h5>
+                                    <p class="card-text">8.2 ★</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselFavoris" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselFavoris" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="watchlist-section">
+    <div class="container">
+        <h2 class="watchlist-title">MonNomDeWatchList <a href="#" data-bs-toggle="modal" data-bs-target="#linkModal">🔗</a></h2>
+        <!-- Same structure as above -->
+    </div>
+</div>
+
+<div class="container">
+    <h1 class="text-dark">WatchLists enregistrées :</h1>
+</div>
+
+<div class="watchlist-section">
+    <div class="container">
+        <h2 class="watchlist-title">NomDeWatchList</h2>
+        <!-- Same structure as above -->
+    </div>
+</div>
+
+<div class="container">
+    <button class="browse-button">Parcourir les watchlists de la communauté</button>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="linkModal" tabindex="-1" aria-labelledby="linkModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background-color: #1b0c3d; color: white;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="linkModalLabel">Lien de la watchlist</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="background-color: white;"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control mb-3" placeholder="Lien de la watchlist" style="background-color: #1b0c3d; color: white; border: 1px solid white;">
+                <h6>Utilisateurs autorisés :</h6>
+                <div class="row">
+                    <div class="col-6">
+                        <ul>
+                            <li>user1</li>
+                            <li>user2</li>
+                            <li>user3</li>
+                            <li>user4</li>
+                            <li>user5</li>
+                            <li>user6</li>
+                        </ul>
+                    </div>
+                    <div class="col-6">
+                        <ul>
+                            <li>user7</li>
+                            <li>user8</li>
+                            <li>user9</li>
+                            <li>user10</li>
+                            <li>user11</li>
+                            <li>user12</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Terminé</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
+{% endblock %}
+
+{% block script %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 {% endblock %}
