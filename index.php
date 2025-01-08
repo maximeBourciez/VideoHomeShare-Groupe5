@@ -19,8 +19,8 @@ try  {
 
     //Gestion de la page d'accueil par défaut
     if ($controllerName == '' && $methode ==''){
-        $controllerName='fil';
-        $methode='listerThreads';
+        $controllerName='index';
+        $methode='index';
     }
 
     if ($controllerName == '' ){

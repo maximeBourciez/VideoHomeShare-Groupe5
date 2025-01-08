@@ -302,4 +302,46 @@ class FilDAO
             $stmt->execute();
         }
     }
+
+    /**
+     * @brief Méthode pour récupérer les fils les plus likés
+     * 
+     * @param int $limit Nombre de fils à récupérer
+     * 
+     * @return array<Fil> Tableau d'objets Fil
+     */
+    public function getFilsLesPlusLikes(int $limit): array
+    {
+        $sql = "
+                SELECT f.*, 
+                    u.idUtilisateur, 
+                    u.urlImageProfil
+                FROM " . DB_PREFIX . "fil AS f
+                LEFT JOIN (
+                    SELECT m.idFil, COUNT(l.idMessage) AS likes
+                    FROM " . DB_PREFIX . "message AS m
+                    LEFT JOIN " . DB_PREFIX . "reagir AS l ON m.idMessage = l.idMessage
+                    GROUP BY m.idFil
+                ) AS likes ON f.idFil = likes.idFil
+                LEFT JOIN (
+                    SELECT m.idFil, MIN(m.dateC) AS firstDate
+                    FROM " . DB_PREFIX . "message AS m
+                    GROUP BY m.idFil
+                ) AS first_message ON f.idFil = first_message.idFil
+                LEFT JOIN " . DB_PREFIX . "message AS m 
+                    ON f.idFil = m.idFil AND m.dateC = first_message.firstDate
+                LEFT JOIN " . DB_PREFIX . "utilisateur AS u 
+                    ON m.idUtilisateur = u.idUtilisateur
+                LEFT JOIN " . DB_PREFIX . "parlerdeTheme AS p 
+                    ON f.idFil = p.idFil
+                LEFT JOIN " . DB_PREFIX . "theme AS t 
+                    ON p.idTheme = t.idTheme
+                ORDER BY likes.likes DESC
+                LIMIT :limit
+            ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $this->hydrateAll($stmt->fetchAll());
+    }
 }

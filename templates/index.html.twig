@@ -1,1 +1,105 @@
 {% extends 'base_template.html.twig' %}
+
+{% block title %}Video Home Share{% endblock %}
+
+{% block content %}
+<pre>
+</pre>
+    <main class="flex-grow-1">
+        <div class="mt-4">
+            <!-- Films tendances -->
+            <div id="filmCarousel" class="carousel carousel-dark slide d-flex flex-row justify-content-between" data-bs-ride="carousel">
+                <button class="carousel-control-prev position-static" type="button" data-bs-target="#filmCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Précédent</span>
+                </button>
+                
+                <!-- Conteneur des diapositives -->
+                <div class="carousel-inner mb-4">
+                    {% for film in trends %}
+                        <div class="carousel-item {% if loop.first %}active{% endif %} container">
+                            <div class="row align-items-center">
+                                <!-- Image du film -->
+                                <div class="col-md-6">
+                                    <img src="{{ film.lienAfficheReduite }}" class="img-fluid rounded" alt="{{ film.titre }}">
+                                </div>
+                                <!-- Description du film -->
+                                <div class="col-md-6">
+                                    <div class="card-body">
+                                        <h5 class="card-title 
+                                            {% if film.isNew %}
+                                                text-danger
+                                            {% endif %}">
+                                            {{ film.titre }}
+                                        </h5>
+                                        <p class="card-text">{{ film.description }}</p>
+                                        <p class="card-text">
+                                            <strong>Note :</strong> {{ film.note }}/10<br>
+                                            <small class="text-muted">{{ film.nombreAvis }} avis</small>
+                                        </p>
+                                        <!-- Boutons d'action -->
+                                        <a href="index.php?controller=contenu&methode=affcherConteniu&tmdb_id={{ film.tmdb_id }}" class="btn btn-primary">
+                                            Voir le film
+                                        </a>
+                                        <a href="#" class="btn btn-secondary">
+                                            <i class="bi bi-chat-dots"></i> Commentaires
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                
+                <button class="carousel-control-next position-static" type="button" data-bs-target="#filmCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Suivant</span>
+                </button>
+            </div>
+        </div>
+    
+
+        <!-- Films récents d'action -->
+        <div class="container mt-4">
+            <h2>Films récents d'action</h2>
+            <div id="actionCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% for film in actionMovies %}
+                        {% if loop.index0 % 4 == 0 %}
+                            <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                <div class="row row-cols-1 row-cols-md-4 g-4">
+                        {% endif %}
+                                    <div class="col">
+                                        <div class="card h-100">
+                                            <div class="card-body">
+                                                <img src="{{ film.lienAfficheReduite }}" class="card-img-top" alt="{{ film.titre }}">
+                                            </div>
+                                            <div class="card-footer d-flex flex-column">
+                                                <h5 class="card-title">{{ film.titre }}</h5>
+                                                <a href="index.php?controller=contenu&methode=affcherConteniu&tmdb_id={{ film.tmdb_id }}" class="btn btn-primary mt-auto">
+                                                    Plus d'informations
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                        {% if loop.index0 % 4 == 3 or loop.last %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#actionCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Précédent</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#actionCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Suivant</span>
+                </button>
+            </div>
+        </div>
+
+                                
+    </main>
+{% endblock %}
