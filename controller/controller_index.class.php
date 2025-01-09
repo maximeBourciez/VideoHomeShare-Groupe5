@@ -33,14 +33,14 @@ class ControllerIndex extends Controller
 
         // Récupérer les 3 fils les plus likés de la semaine
         $filDAO = new FilDAO($this->getPdo());
-        // $fils = $filDAO->getFilsLesPlusLikes(3);
+        $fils = $filDAO->getFilsLesPlusLikes(3);
 
         // Afficher le template avec les données
         echo $this->getTwig()->render('index.html.twig', [
             'trends' => $tendances,
             'actionMovies' => $actionMovies,
             'adventureMovies' => $adventureMovies,
-            //'fils' => $fils,
+            'fils' => $fils,
             'test' => $tendances
         ]);
     }

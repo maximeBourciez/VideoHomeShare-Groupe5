@@ -141,6 +141,28 @@
             </div>
         </div>
 
+
+        <!-- Thread les plus likés -->
+        <div class="container">
+            <div class="row">
+                {% for thread in fils %}
+                    <div class="col-md-4">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <img src="{{ thread.getUtilisateur().getUrlImageProfil() }}" class="rounded-circle" style="width: 30px; height: 30px;" alt="{{ thread.getUtilisateur().getPseudo() }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ thread.titre }}</h5>
+                                <p class="card-text">{{ thread.description }}</p>
+                                <p class="caerd-text">Nombre de likes : {{ thread.nbLikes }}</p>
+                                <a href="index.php?controller=fil&methode=afficherFilParId&id_fil={{ thread.id }}" class="btn btn-primary">Voir le thread</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </div>
+        </div>
+
                                 
     </main>
 {% endblock %}

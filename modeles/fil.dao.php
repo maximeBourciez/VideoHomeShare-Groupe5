@@ -313,9 +313,12 @@ class FilDAO
     public function getFilsLesPlusLikes(int $limit): array
     {
         $sql = "
-                SELECT f.*, 
+                SELECT DISTINCT f.*, 
                     u.idUtilisateur, 
-                    u.urlImageProfil
+                    u.pseudo, 
+                    u.urlImageProfil, 
+                    t.idTheme AS theme_id, 
+                    t.nom AS theme_nom
                 FROM " . DB_PREFIX . "fil AS f
                 LEFT JOIN (
                     SELECT m.idFil, COUNT(l.idMessage) AS likes
@@ -336,6 +339,7 @@ class FilDAO
                     ON f.idFil = p.idFil
                 LEFT JOIN " . DB_PREFIX . "theme AS t 
                     ON p.idTheme = t.idTheme
+                GROUP BY f.idFil
                 ORDER BY likes.likes DESC
                 LIMIT :limit
             ";
