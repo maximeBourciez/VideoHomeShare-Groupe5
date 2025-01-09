@@ -80,9 +80,20 @@ class ControllerIndex extends Controller
         $tmdbApi = new TmdbAPIContenu(TMDB_API_KEY);
         $contenus = $tmdbApi->searchMoviesByName($recherche);
 
+        // Récupérer les collections
+        // En attente du travail sur les colections
+
+        // Récupérer les sagas
+        // En attente du travail sur les sagas
+
+        // Récupérer les threads (fils)
+        $filDAO = new FilDAO($this->getPdo());
+        $fils = $filDAO->searchFils($recherche);
+
         // Rendre la vue
         echo $this->getTwig()->render('resultatRecherche.html.twig', [
             'contenus' => $contenus,
+            'fils' => $fils,
             'recherche' => $recherche
         ]);
     }

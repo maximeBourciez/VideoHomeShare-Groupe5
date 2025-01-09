@@ -352,4 +352,45 @@ class FilDAO
         $stmt->execute();
         return $this->hydrateAll($stmt->fetchAll());
     }
+
+    /**
+     * @brief Méthode pour récupérer les fils résulatnts d'une recherche
+     * 
+     * @param string $search Recherche
+     * 
+     * @return array<Fil> Tableau d'objets Fil
+     */
+    public function searchFils(string $search): array
+    {
+        $sql = "
+            SELECT DISTINCT f.*, 
+                u.idUtilisateur, 
+                u.pseudo, 
+                u.urlImageProfil, 
+                t.idTheme AS theme_id, 
+                t.nom AS theme_nom
+            FROM " . DB_PREFIX . "fil AS f
+            LEFT JOIN (
+                SELECT m.idFil, MIN(m.dateC) AS firstDate
+                FROM " . DB_PREFIX . "message AS m
+                GROUP BY m.idFil
+            ) AS first_message ON f.idFil = first_message.idFil
+            LEFT JOIN " . DB_PREFIX . "message AS m 
+                ON f.idFil = m.idFil AND m.dateC = first_message.firstDate
+            LEFT JOIN " . DB_PREFIX . "utilisateur AS u 
+                ON m.idUtilisateur = u.idUtilisateur
+            LEFT JOIN " . DB_PREFIX . "parlerdeTheme AS p 
+                ON f.idFil = p.idFil
+            LEFT JOIN " . DB_PREFIX . "theme AS t 
+                ON p.idTheme = t.idTheme
+            WHERE f.titre LIKE :search
+            OR f.description LIKE :search
+            OR t.nom LIKE :search
+            ORDER BY f.idFil DESC
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':search', '%' . $search . '%', PDO::PARAM_STR);
+        $stmt->execute();
+        return $this->hydrateAll($stmt->fetchAll());
+    }
 }
