@@ -233,8 +233,7 @@ class TmdbAPIContenu
 
         if ($moviesData === null || !isset($moviesData['results'])) {
             return null;
-        }
-        else{
+        } else {
             // Convertir les films en objets Contenu
             $contenus = [];
             foreach ($moviesData['results'] as $movieData) {
@@ -264,8 +263,7 @@ class TmdbAPIContenu
 
         if ($moviesData === null || !isset($moviesData['results'])) {
             return null;
-        }
-        else{
+        } else {
             // Convertir les films en objets Contenu
             $contenus = [];
             foreach ($moviesData['results'] as $movieData) {
@@ -273,6 +271,41 @@ class TmdbAPIContenu
             }
             return array_slice($contenus, 0, $limit);
         }
+    }
+
+
+    /**
+     * @brief Méthode de recherche de films dans l'api TMDB
+     * 
+     * @param string $query La recherche à effectuer
+     * 
+     * @return array|null Liste des films trouvés ou null en cas d'erreur 
+     */
+    public function searchMoviesByName(string $query): ?array
+    {
+        // Construire l'URL pour la recherche par nom
+        $url = "https://api.themoviedb.org/3/search/movie?api_key={$this->apiKey}&language=fr-FR&query=" . urlencode($query);
+
+        // Récupérer les résultats
+        $response = file_get_contents($url);
+        if ($response === false) {
+            return null; // En cas d'erreur, retourner null
+        }
+
+        $moviesData = json_decode($response, true);
+
+        // Vérifier si les résultats sont valides
+        if ($moviesData === null || !isset($moviesData['results'])) {
+            return null; // Si pas de résultats, retourner null
+        } else {
+            // Convertir les films en objets Contenu
+            $contenus = [];
+            foreach ($moviesData['results'] as $movieData) {
+                $contenus[] = $this->convertToContenuLight($movieData);
+            }
+            return $contenus;
+        }
+
     }
 
 }

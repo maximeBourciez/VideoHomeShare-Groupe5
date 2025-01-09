@@ -63,4 +63,27 @@ class ControllerIndex extends Controller
         }
         return $tendances;
     }
+
+
+    /**
+     * @brief Méthode permettant la recherche de contenu
+     * 
+     * @details méthode recherchant, films, séries, saga, fils et quizz par rapport à une recherche
+     * 
+     * @return void
+     */
+    public function rechercher(){
+        // Récupérer le terme de recherche
+        $recherche = $_POST['recherche'];
+
+        // Récupérer les contenus
+        $tmdbApi = new TmdbAPIContenu(TMDB_API_KEY);
+        $contenus = $tmdbApi->searchMoviesByName($recherche);
+
+        // Rendre la vue
+        echo $this->getTwig()->render('resultatRecherche.html.twig', [
+            'contenus' => $contenus,
+            'recherche' => $recherche
+        ]);
+    }
 }
