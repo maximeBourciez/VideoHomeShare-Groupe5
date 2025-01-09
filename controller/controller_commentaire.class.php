@@ -48,8 +48,8 @@ class ControllerCommentaire extends Controller {
 
         // Validation des données
         $message = "";
-        if (!Utilitaires::comprisEntre($titre, 100, 3, "Le titre doit contenir", $message) ||
-            !Utilitaires::comprisEntre($commentaireTexte, 1000, 10, "Le commentaire doit contenir", $message)) {
+        if (!Utilitaires::comprisEntre($titre, 100, 0, "Le titre doit contenir", $message) ||
+            !Utilitaires::comprisEntre($commentaireTexte, 1000, 0, "Le commentaire doit contenir", $message)) {
             
             // Redirection vers la page du film avec message d'erreur
             $controllerContenu = new ControllerContenu($this->getTwig(), $this->getLoader());
@@ -59,14 +59,6 @@ class ControllerCommentaire extends Controller {
         }
 
         try {
-            // Vérification des données avant la création de l'objet
-            echo '<pre>';
-            echo "ID Utilisateur: " . $utilisateur->getId() . "\n";
-            echo "Titre: " . $titre . "\n";
-            echo "Note: " . $note . "\n";
-            echo "Texte du commentaire: " . $commentaireTexte . "\n";
-            echo '</pre>';
-
             // Création de l'objet commentaire
             $commentaire = new Commentaire(
                 $utilisateur->getId(),
@@ -76,11 +68,6 @@ class ControllerCommentaire extends Controller {
                 $note >= 3,
                 $idTmdbContenu
             );
-
-            // Affichage du contenu de l'objet commentaire
-            echo '<pre>';
-            print_r($commentaire);
-            echo '</pre>';
 
             // Sauvegarde dans la base de données
             $commentaireDAO = new CommentaireDAO($this->getPdo());
@@ -102,7 +89,7 @@ class ControllerCommentaire extends Controller {
     /**
      * @brief Crée un nouveau commentaire pour une collection
      * 
-     * Cette méthode traite la soumission d'un nouveau commentaire :
+     * Cette méthode traite la soumission d'un nouveau commentaire pour une collection :
      * - Récupère les données du formulaire
      * - Crée un nouvel objet Commentaire
      * - Sauvegarde le commentaire dans la base de données
@@ -128,10 +115,10 @@ class ControllerCommentaire extends Controller {
 
         // Validation des données
         $message = "";
-        if (!Utilitaires::comprisEntre($titre, 100, 3, "Le titre doit contenir", $message) ||
-            !Utilitaires::comprisEntre($commentaireTexte, 1000, 10, "Le commentaire doit contenir", $message)) {
+        if (!Utilitaires::comprisEntre($titre, 100, 0, "Le titre doit contenir", $message) ||
+            !Utilitaires::comprisEntre($commentaireTexte, 1000, 0, "Le commentaire doit contenir", $message)) {
             
-            // Redirection vers la page du film avec message d'erreur
+            // Redirection vers la page de la collection avec message d'erreur
             $controllerCollection = new ControllerCollection($this->getTwig(), $this->getLoader());
             $_GET['tmdb_id'] = $idTmdbCollection;
             $controllerCollection->afficherCollection(['messagederreur' => $message]);
@@ -146,22 +133,13 @@ class ControllerCommentaire extends Controller {
                 $note,
                 $commentaireTexte,
                 $note >= 3,
-                $idTmdbCollection
+                null, // Pas d'ID de contenu, car c'est pour une collection
+                $idTmdbCollection // Utilisation de l'ID de la collection
             );
-
-            // Affichage du contenu de l'objet commentaire
-            echo '<pre>';
-            print_r($commentaire);
-            echo '</pre>';
 
             // Sauvegarde dans la base de données
             $commentaireDAO = new CommentaireDAO($this->getPdo());
             $commentaireDAO->createCommentaireCollection($commentaire);
-
-            // Vérification de l'insertion
-            if (!$commentaireDAO->createCommentaireCollection($commentaire)) {
-                throw new Exception("Erreur lors de l'insertion du commentaire.");
-            }
 
             // Redirection vers la page de la collection avec message de succès
             $controllerCollection = new ControllerCollection($this->getTwig(), $this->getLoader());
@@ -176,3 +154,4 @@ class ControllerCommentaire extends Controller {
         }
     }
 }
+

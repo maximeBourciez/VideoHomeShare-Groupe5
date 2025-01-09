@@ -28,6 +28,9 @@ class Commentaire {
     /** @var int|null Identifiant TMDB du contenu commenté */
     private ?int $idContenuTmdb;
 
+    /** @var int|null Identifiant TMDB de la collection commentée */
+    private ?int $idCollectionTmdb;
+
     /**
      * @brief Constructeur de la classe Commentaire
      * 
@@ -37,6 +40,7 @@ class Commentaire {
      * @param string|null $avis Contenu du commentaire
      * @param bool|null $estPositif Indicateur de positivité
      * @param int|null $idContenuTmdb Identifiant du contenu TMDB
+     * @param int|null $idCollectionTmdb Identifiant de la collection TMDB
      */
     public function __construct(
         ?string $idUtilisateur = null,
@@ -44,7 +48,8 @@ class Commentaire {
         ?int $note = null,
         ?string $avis = null,
         ?bool $estPositif = null,
-        ?int $idContenuTmdb = null
+        ?int $idContenuTmdb = null,
+        ?int $idCollectionTmdb = null
     ) {
         $this->idUtilisateur = $idUtilisateur;
         $this->titre = $titre;
@@ -52,6 +57,7 @@ class Commentaire {
         $this->avis = $avis;
         $this->estPositif = $estPositif;
         $this->idContenuTmdb = $idContenuTmdb;
+        $this->idCollectionTmdb = $idCollectionTmdb;
     }
 
     /**
@@ -159,6 +165,24 @@ class Commentaire {
      */
     public function setIdContenuTmdb($idContenuTmdb): self {
         $this->idContenuTmdb = $idContenuTmdb;
+        return $this;
+    }
+
+    /**
+     * @brief Récupère l'identifiant TMDB de la collection commentée
+     * @return int|null L'identifiant TMDB de la collection
+     */
+    public function getIdCollectionTmdb(): ?int {
+        return $this->idCollectionTmdb;
+    }
+
+    /**
+     * @brief Définit l'identifiant TMDB de la collection commentée
+     * @param int|null $idCollectionTmdb Le nouvel identifiant de la collection
+     * @return self
+     */
+    public function setIdCollectionTmdb(?int $idCollectionTmdb): self {
+        $this->idCollectionTmdb = $idCollectionTmdb;
         return $this;
     }
 }

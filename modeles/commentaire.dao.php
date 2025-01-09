@@ -195,6 +195,39 @@ class CommentaireDAO {
     }
 
     /**
+     * @brief Crée un nouveau commentaire pour une collection
+     * 
+     * @param Commentaire $commentaire Le commentaire à créer
+     * @throws Exception Si l'utilisateur a déjà commenté
+     */
+    public function createCommentaireCollection(Commentaire $commentaire): void {
+        // Vérification si l'utilisateur a déjà commenté
+        if ($this->aDejaCommente($commentaire->getIdUtilisateur(), $commentaire->getIdCollectionTmdb())) {
+            throw new Exception("Désolé mais vous avez déjà commenté et noté cette collection.");
+        }
+
+        $sql = 'INSERT INTO vhs_commenterCollection (idCollectionTmdb, idUtilisateur, titre, note, avis, estPositif) 
+                VALUES (:idCollectionTmdb, :idUtilisateur, :titre, :note, :avis, :estPositif)';
+        
+        $stmt = $this->pdo->prepare($sql);
+        
+        $idCollectionTmdb = $commentaire->getIdCollectionTmdb(); // Utilisation de l'ID de collection
+        $idUtilisateur = $commentaire->getIdUtilisateur();
+        $titre = $commentaire->getTitre();
+        $note = $commentaire->getNote();
+        $avis = $commentaire->getAvis();
+        $estPositif = $commentaire->getEstPositif();
+        
+        $stmt->bindParam(':idCollectionTmdb', $idCollectionTmdb, PDO::PARAM_INT);
+        $stmt->bindParam(':idUtilisateur', $idUtilisateur, PDO::PARAM_STR);
+        $stmt->bindParam(':titre', $titre, PDO::PARAM_STR);
+        $stmt->bindParam(':note', $note, PDO::PARAM_INT);
+        $stmt->bindParam(':avis', $avis, PDO::PARAM_STR);
+        $stmt->bindParam(':estPositif', $estPositif, PDO::PARAM_BOOL);
+        $stmt->execute();
+    }
+
+    /**
      * @brief Hydrate un commentaire à partir d'un tableau de données
      * 
      * @param array $tableauAssaus Données du commentaire
@@ -210,39 +243,7 @@ class CommentaireDAO {
         );
     }
 
-
     /**
-     * @brief Crée un nouveau commentaire pour une collection
-     * 
-     * @param Commentaire $commentaire Le commentaire à créer
-     * @throws Exception Si une erreur se produit lors de l'insertion
-     */
-    public function createCommentaireCollection(Commentaire $commentaire): void {
-        $sql = 'INSERT INTO vhs_commenterCollection (idCollectionTmdb, idUtilisateur, titre, note, avis, estPositif) 
-                VALUES (:idCollectionTmdb, :idUtilisateur, :titre, :note, :avis, :estPositif)';
-
-        $stmt = $this->pdo->prepare($sql);
-
-        $idCollectionTmdb = $commentaire->getIdCollectionTmdb(); // Assurez-vous que cette méthode existe dans votre classe Commentaire
-        $idUtilisateur = $commentaire->getIdUtilisateur();
-        $titre = $commentaire->getTitre();
-        $note = $commentaire->getNote();
-        $avis = $commentaire->getAvis();
-        $estPositif = $commentaire->getEstPositif();
-
-        $stmt->bindParam(':idCollectionTmdb', $idCollectionTmdb, PDO::PARAM_STR);
-        $stmt->bindParam(':idUtilisateur', $idUtilisateur, PDO::PARAM_STR);
-        $stmt->bindParam(':titre', $titre, PDO::PARAM_STR);
-        $stmt->bindParam(':note', $note, PDO::PARAM_INT);
-        $stmt->bindParam(':avis', $avis, PDO::PARAM_STR);
-        $stmt->bindParam(':estPositif', $estPositif, PDO::PARAM_BOOL);
-
-        if (!$stmt->execute()) {
-            throw new Exception("Erreur lors de l'insertion du commentaire : " . implode(", ", $stmt->errorInfo()));
-        }
-    }
-
-       /**
      * @brief Hydrate plusieurs commentaires à partir d'un tableau de données
      * 
      * @param array $tableauAssaus Tableau de données des commentaires
