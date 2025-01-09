@@ -107,7 +107,10 @@ class FilDAO
             $theme = new Theme($row['theme_id'], $row['theme_nom']);
             $themes[] = $theme;
 
-            $fil = new Fil($id, $titre, $dateCreation, $description, $user, $themes);
+            // Ajout des likes dans les cas ou ils existent
+            $nbLikes = $row['likes'] ?? 0;
+
+            $fil = new Fil($id, $titre, $dateCreation, $description, $user, $themes, $nbLikes);
             return $fil;
         }
     }
@@ -318,7 +321,8 @@ class FilDAO
                     u.pseudo, 
                     u.urlImageProfil, 
                     t.idTheme AS theme_id, 
-                    t.nom AS theme_nom
+                    t.nom AS theme_nom,
+                    likes.likes AS likes
                 FROM " . DB_PREFIX . "fil AS f
                 LEFT JOIN (
                     SELECT m.idFil, COUNT(l.idMessage) AS likes
