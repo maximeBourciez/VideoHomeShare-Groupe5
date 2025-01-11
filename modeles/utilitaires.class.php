@@ -27,14 +27,14 @@ class Utilitaires
     {
         $valretour = true;
         // si la valeur est plus petite que la valeur minimal
-        if (strlen($val) <= $valmin) {
+        if (strlen($val) < $valmin) {
 
             
             $messageErreur = $contenu . " au moins " . $valmin . " caractères" ;
             $valretour = false;
         }
         // si la valeur est plus grande que la valeur maximal
-        if (strlen($val) >= $valmax and $valmax != null) {
+        if (strlen($val) > $valmax and $valmax != null) {
 
             
             $messageErreur = $contenu . " au maximum " . $valmax . " caractères";

@@ -351,7 +351,7 @@ class ControllerUtilisateur extends Controller
     public function modificationprofil(): void
     {
         // récupération des données du formulaire
-        $id = isset($_POST['id']) ?  htmlspecialchars($_POST['id']) : null;
+        
         $pseudo = isset($_POST['pseudo']) ?  htmlspecialchars($_POST['pseudo']) : null;
         $nom = isset($_POST['nom']) ?  htmlspecialchars($_POST['nom']) : null;
 
@@ -359,7 +359,7 @@ class ControllerUtilisateur extends Controller
         $utilisateur = unserialize($_SESSION['utilisateur']);
 
         //supprimer les espaces
-        $id = str_replace(' ', '', $id);
+       
         $pseudo = str_replace(' ', '', $pseudo);
 
 
@@ -367,25 +367,19 @@ class ControllerUtilisateur extends Controller
         $messageErreur = "";
         // vérification des informations saisies lors de la modification
         $verficationUtilisateurExiste = Utilitaires::utilisateurExiste($utilisateur, $messageErreur);
-        $verficationTailleId = Utilitaires::comprisEntre($id, 20, 3, "l'identifiant doit contenir", $messageErreur);
         $verficationTaillePseudo = Utilitaires::comprisEntre($pseudo, 50, 3, "le pseudo doit contenir", $messageErreur);
         $verficationTailleNom = Utilitaires::comprisEntre($nom, 50, 3, "le nom doit contenir", $messageErreur);
         $verficationfichierProfilTropLourd = Utilitaires::fichierTropLourd($_FILES['urlImageProfil'], "profil", $messageErreur);
         $verficationfichierBaniereTropLourd = Utilitaires::fichierTropLourd($_FILES['urlImageBanniere'], "banniere", $messageErreur);
-        $verficationProfaniteId = !Utilitaires::verificationDeNom($id, "l'Identifiant ", $messageErreur);
         $verficationProfanitePseudo = !Utilitaires::verificationDeNom($pseudo, "le pseudo", $messageErreur);
         $verficationProfaniteNom = !Utilitaires::verificationDeNom($nom, "le nom", $messageErreur);
 
         if (
-            $verficationUtilisateurExiste && $verficationTailleId && $verficationTaillePseudo && $verficationTailleNom && $verficationfichierProfilTropLourd &&
-            $verficationfichierBaniereTropLourd && $verficationProfaniteId && $verficationProfanitePseudo && $verficationProfaniteNom
+            $verficationUtilisateurExiste  && $verficationTaillePseudo && $verficationTailleNom && $verficationfichierProfilTropLourd &&
+            $verficationfichierBaniereTropLourd  && $verficationProfanitePseudo && $verficationProfaniteNom
         ) {
-            // verifier si l'id n'est pas déjà utilisé
-            $verficationIdExistePas = Utilitaires::idExistePas($id, $messageErreur, $managerutilisateur);
-            if ($id == $utilisateur->getId() || $verficationIdExistePas) {
-                //création de l'utilisateur
-               
-                $utilisateur->setId($id);
+                       
+                // mettre à jour les informations de l'utilisateur
                 $utilisateur->setPseudo($pseudo);
                 $utilisateur->setNom($nom);
                 // récupérer les fichiers images  de profil
@@ -402,20 +396,17 @@ class ControllerUtilisateur extends Controller
                     }
                 }
                 // mettre à jour l'utilisateur dans la base de données
-                $utilisateur->setMdp($managerutilisateur->find($utilisateur->getId())->getMdp());
+                $utilisateur->setMdp($managerutilisateur->findByMail($utilisateur->getMail())->getMdp());
                 
-                $managerutilisateur->update($utilisateur);
+                print($managerutilisateur->update($utilisateur));
                 $utilisateur->setMdp(null);
                 $_SESSION['utilisateur'] = serialize($utilisateur);
+                $this->getTwig()->addGlobal('utilisateurConnecte', unserialize($_SESSION['utilisateur']));
                 // affichage de la page de modification de l'utilisateur avec un message de confirmation
                 $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
                 echo $template->render(array('utilisateur' => $utilisateur, 'message' => "Vos informations ont bien été modifiées"));
                 return;
-            } else {
-                // affichage de la page de modification de l'utilisateur avec un message d'erreur
-                $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
-                echo $template->render(array('utilisateur' => $utilisateur, 'messagederreur' => $messageErreur));
-            }
+            
         } else {
             // affichage de la page de modification de l'utilisateur avec un message d'erreur
             $template = $this->getTwig()->load('modifierUtilisateur.html.twig');
