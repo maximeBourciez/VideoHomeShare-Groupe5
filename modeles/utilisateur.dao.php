@@ -13,8 +13,8 @@ class UtilisateurDAO
     {
         // Préparation de la requête
         $pdo = $this->pdo->prepare("INSERT INTO " . DB_PREFIX . "utilisateur 
-        (idUtilisateur, pseudo, vraiNom, mail, mdp, role, urlImageProfil, urlImageBanniere) 
-        VALUES (:idUtilisateur, :pseudo, :nom , :mail, :mdp, :role, :urlImageProfil, :urlImageBaniere)");
+        (idUtilisateur, pseudo, vraiNom, mail, mdp, role, urlImageProfil, urlImageBanniere , dateI  ,estValider) 
+        VALUES (:idUtilisateur, :pseudo, :nom , :mail, :mdp, :role, :urlImageProfil, :urlImageBanniere , NOW() , 0)");
       
         // Récupération des valeurs
         $id = $utilisateur->getId();
@@ -22,7 +22,7 @@ class UtilisateurDAO
         $nom = $utilisateur->getNom();
         $mail = $utilisateur->getMail();
         $mdp = $utilisateur->getMdp();
-        $role = $utilisateur->getRole();
+        $role = $utilisateur->getRole()->toString();
         $urlImageProfil = $utilisateur->getUrlImageProfil();
         $urlImageBanniere = $utilisateur->getUrlImageBanniere();
 
@@ -32,6 +32,7 @@ class UtilisateurDAO
         $pdo->bindValue(":nom", $nom);
         $pdo->bindValue(":mail", $mail);
         $pdo->bindValue(":mdp", $mdp);
+        
         $pdo->bindValue(":role", $role);
         $pdo->bindValue(":urlImageProfil", $urlImageProfil);
         $pdo->bindValue(":urlImageBanniere", $urlImageBanniere);
@@ -43,7 +44,7 @@ class UtilisateurDAO
     function update(Utilisateur $utilisateur): bool
     {
 
-        $pdo = $this->pdo->prepare("UPDATE " . DB_PREFIX . "utilisateur SET  pseudo = :pseudo, vraiNom = :nom, mail = :mail, mdp = :mdp,  urlImageProfil = :urlImageProfil, urlImageBanniere = :urlImageBaniere WHERE idUtilisateur = :id");
+        $pdo = $this->pdo->prepare("UPDATE " . DB_PREFIX . "utilisateur SET  pseudo = :pseudo, vraiNom = :nom, mail = :mail, mdp = :mdp,  urlImageProfil = :urlImageProfil, urlImageBanniere = :urlImageBaniere, estValider = :estValider WHERE idUtilisateur = :id");
 
         $id = $utilisateur->getId();
         $pseudo = $utilisateur->getPseudo();
@@ -52,6 +53,7 @@ class UtilisateurDAO
         $mdp = $utilisateur->getMdp();
         $urlImageProfil = $utilisateur->getUrlImageProfil();
         $urlImageBaniere = $utilisateur->getUrlImageBanniere();
+        $estValider = $utilisateur->getEstValider();
         $pdo->bindParam(":id", $id);
         $pdo->bindParam(":pseudo", $pseudo);
         $pdo->bindParam(":nom", $nom);
@@ -59,6 +61,8 @@ class UtilisateurDAO
         $pdo->bindParam(":mdp", $mdp);
         $pdo->bindParam(":urlImageProfil", $urlImageProfil);
         $pdo->bindParam(":urlImageBaniere", $urlImageBaniere);
+        $pdo->bindParam(":estValider", $estValider);
+
         return $pdo->execute();
     }
 
@@ -78,6 +82,8 @@ class UtilisateurDAO
         $mail = $row['mail'];
         $mdp = $row['mdp'];
         $role = $row['role'];
+       
+
 
         // Transformer le role
         $roleEnum = Role::fromString($role);
@@ -87,9 +93,9 @@ class UtilisateurDAO
 
         $urlImageProfil = $row['urlImageProfil'];
         $urlImageBanniere = $row['urlImageBanniere'];
-
+        $estValider = $row['estValider'];
         // Retourner l'utilisateur
-        return new Utilisateur($id, $pseudo, $nom, $mail, $mdp, $role, $urlImageProfil, $urlImageBaniere);
+        return new Utilisateur($id, $pseudo, $nom, $mail, $mdp, $role, $urlImageProfil, $urlImageBanniere, $estValider);
 
     }
 
@@ -148,5 +154,22 @@ class UtilisateurDAO
             return $this->hydrate($row);
         }
         return null;
+    }
+
+    public function deleteUtilisateurnonconfirme(): bool
+    {
+        $sql = "DELETE FROM " . DB_PREFIX . "utilisateur WHERE (NOW()-dateI)/3600 >= 24 and estValider = 0";
+        $pdo = $this->pdo->prepare($sql);
+        return $pdo->execute();
+    }
+
+    public function verificationUtilisateurValide(String $id): bool
+    { 
+        $sql = "select estValider from " . DB_PREFIX . "utilisateur WHERE idUtilisateur = :id";
+        $pdo = $this->pdo->prepare($sql);
+        $pdo->bindValue(':id', $id, PDO::PARAM_STR);
+        $pdo->execute();
+        $row = $pdo->fetch();
+        return $row["estValider"];
     }
 }

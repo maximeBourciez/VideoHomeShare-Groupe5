@@ -1,0 +1,42 @@
+{% extends 'templatePageUtilisateur.html.twig' %}
+{% block notif %}	border-black border-2 {% endblock %}
+
+{% block contenue %}
+
+	
+	<div class=" container  my-4  bg-mydark text-white rounded">
+
+			{% if nbNotification == 0 %}
+			<div class="py-2   d-flex align-items-center">
+
+				<p class="col-7 col-md-9 mb-1 ">Vous n'avez aucune notification</p>
+			{% elseif nbNotification == 1 %} 
+			 	<div class="py-2 border-primary row border-bottom border-1  d-flex align-items-center">
+					<p class="col-7 col-md-9 mb-1 ">Vous avez
+						{{ nbNotification }}
+						notification</p>
+					<a href="index.php?controller=notification&methode=suprimerTout" class="btn btn-tercary col-4 col-md-2">tout suprimer</a>
+				
+			{% else %}
+				
+				<div class="py-2 border-primary row border-bottom border-1  d-flex align-items-center">
+					<p class="col-7 col-md-9 mb-1 ">Vous avez
+						{{ nbNotification }}
+						notifications</p>
+					<a href="index.php?controller=notification&methode=suprimerTout" class="btn btn-tercary col-4 col-md-2">tout suprimer</a>
+				{% endif %}
+			</div>
+			{% for notification in notifications %}
+				<div class=" py-2 ">
+					<form action="index.php?controller=notification&methode=suprimerUneNotification" method="post" class="row">
+						<input type="hidden" name="id" value="{{notification.getIdNotification()}}">
+						<p class="mb-0 col-7 col-md-9">{{notification.getcontenu()}}</p>
+						<input type="submit" class="col-3 col-md-2 bg-dark border-0 p-0" value="🗑️">
+					</form>
+				</div>
+			{% endfor %}
+
+		</div>
+
+
+	{% endblock %}

@@ -70,11 +70,19 @@ class MessageDAO
         $message = new Message();
         $message->setIdMessage($row['idMessage']);
         $message->setValeur($row['valeur']);
-        $message->setDateC(new DateTime($row['dateC']));
+
+        // Gestion sécurisée de la date
+        $message->setDateC(!empty($row['dateC']) ? new DateTime($row['dateC']) : null);
+
         $message->setIdMessageParent($row['idMessageParent']);
         $message->setIdFil($row['idFil']);
-        $message->setNbLikes($row['like_count']);
-        $message->setNbDislikes($row['dislike_count']);
+        if (isset($row['like_count'])) {
+            $message->setNbLikes($row['like_count']);
+        }
+        if (isset($row['dislike_count'])) {
+            $message->setNbDislikes($row['dislike_count']);
+        }
+
 
         // Hydratation de l'utilisateur associé
         $user = new Utilisateur();
@@ -112,7 +120,7 @@ class MessageDAO
                 $parentId = $message->getIdMessageParent();
                 if (isset($messages[$parentId])) {
                     $messages[$parentId]->addReponse($message);
-                }else{
+                } else {
                     // Si le parent n'existe pas, on ajoute le message comme message principal
                     $messagesParents[] = $message;
                 }
@@ -150,7 +158,7 @@ class MessageDAO
      */
     public function chercherMessageParId(int $id): ?Message
     {
-        $sql = "SELECT * FROM" . DB_PREFIX . "message  WHERE id = :id";
+        $sql = "SELECT * FROM " . DB_PREFIX . "message  WHERE idMessage = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -195,18 +203,21 @@ class MessageDAO
 
     public function listerMessagesParFil(int $idFil): array
     {
-        $sql = "SELECT m.*, u.*, like_count, dislike_count
-                FROM vhs_message m
+        $sql = "SELECT m.*, 
+                        u.*, 
+                        ld1.like_count, 
+                        ld1.dislike_count
+                FROM " . DB_PREFIX . "message m
                 LEFT JOIN (
-                                SELECT
-                                    idMessage,
-                                    SUM(CASE WHEN `reaction` = true THEN 1 ELSE 0 END) AS like_count,
-                                    SUM(CASE WHEN `reaction` = false THEN 1 ELSE 0 END) AS dislike_count
-                                FROM vhs_reagir
-                                GROUP BY idMessage
-                            ) AS ld1 ON m.idMessage = ld1.idMessage
-                LEFT JOIN vhs_utilisateur u ON m.idUtilisateur = u.idUtilisateur
-                WHERE m.idFil = :idFil;";
+                    SELECT idMessage,
+                            SUM(CASE WHEN reaction = true THEN 1 ELSE 0 END) AS like_count,
+                            SUM(CASE WHEN reaction = false THEN 1 ELSE 0 END) AS dislike_count
+                    FROM " . DB_PREFIX . "reagir
+                    GROUP BY idMessage
+                ) AS ld1 ON m.idMessage = ld1.idMessage
+                LEFT JOIN " . DB_PREFIX . "utilisateur u ON m.idUtilisateur = u.idUtilisateur
+                WHERE m.idFil = :idFil
+                ORDER BY m.dateC DESC;";
 
 
         $stmt = $this->pdo->prepare($sql);
@@ -225,14 +236,12 @@ class MessageDAO
      * @param int|null $idFil Identifiant du fil
      * @param int|null $idMessageParent Identifiant du message parent
      * @param string|null $message Contenu du message
+     * @param string|null $idUser Identifiant de l'utilisateur
      * 
      * @return void
      */
-    public function ajouterMessage(?int $idFil, ?int $idMessageParent, ?string $message): void
+    public function ajouterMessage(?int $idFil, ?int $idMessageParent, ?string $message, ?string $idUser): void
     {
-        // Récupération de l'id de l'utilisateur 
-        $idUser = trim(unserialize($_SESSION["utilisateur"])->getId());
-
         // Requête d'insertion
         $sql = "INSERT INTO " . DB_PREFIX . "message ( valeur, dateC, idMessageParent, idFil, idUtilisateur) VALUES ( :valeur, NOW(), :idMessageParent, :idFil, :idUtilisateur)";
         $stmt = $this->pdo->prepare($sql);
@@ -249,36 +258,123 @@ class MessageDAO
      * @details Méthode permettant d'ajouter une réaction à un message. AJout d'un like ou d'un dislike selon la valeur de $reaction. Si jamais l'utilisateur a déjà réagi, la réaction est mise à jour.
      * 
      * @param int $idMessage Identifiant du message
+     * @param string $idUtilisateur Identifiant de l'utilisateur
      * @param bool $reaction Réaction (true = like, false = dislike)
+     * 
      */
-    public function ajouterReaction(int $idMessage, bool $reaction): void
+    public function ajouterReaction(int $idMessage, string $idUtilisateur, bool $reaction): void
     {
-        // Récupérer l'ID de l'utilisateur depuis la session
-        if (!isset($_SESSION['utilisateur'])) {
-            echo "Erreur : l'utilisateur n'est pas connecté.";
-            return;
-        }
-
-        $idUtilisateur = trim(unserialize($_SESSION['utilisateur'])->getId());
-
-        try {
-            // Préparer la requête SQL
-            $sql = "INSERT INTO " . DB_PREFIX . "reagir (idMessage, idUtilisateur, reaction) 
+        // Préparer la requête SQL
+        $sql = "INSERT INTO " . DB_PREFIX . "reagir (idMessage, idUtilisateur, reaction) 
                 VALUES (:idMessage, :idUtilisateur, :reaction) 
-                ON DUPLICATE KEY UPDATE reaction = :reaction"; 
+                ON DUPLICATE KEY UPDATE reaction = :reaction";
 
-            $stmt = $this->pdo->prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
 
-            // Lier les valeurs
-            $stmt->bindValue(':idMessage', $idMessage, PDO::PARAM_INT);
-            $stmt->bindValue(':idUtilisateur', $idUtilisateur, PDO::PARAM_STR);
-            $stmt->bindValue(':reaction', $reaction ? 1 : 0, PDO::PARAM_INT);
+        // Lier les valeurs
+        $stmt->bindValue(':idMessage', $idMessage, PDO::PARAM_INT);
+        $stmt->bindValue(':idUtilisateur', $idUtilisateur, PDO::PARAM_STR);
+        $stmt->bindValue(':reaction', $reaction ? 1 : 0, PDO::PARAM_INT);
 
-            // Exécuter la requête
-            $stmt->execute();
-        } catch (PDOException $e) {
-            echo "Erreur lors de l'insertion : " . $e->getMessage();
-        }
+        // Exécuter la requête
+        $stmt->execute();
+
     }
 
+    /**
+     * Méthode qui retourne si le message appartient bien à l'utilisateur
+     * 
+     * @param int|null $idMessage Message à supprimer
+     * @param string|null $idUser Identifiant de l'utilisateur qui veut supprimer le message
+     * 
+     * @return bool 
+     */
+    public function checkProprieteMessage(?int $idMessage, ?string $idUser)
+    {
+        // Préparer la requête
+        $sql = "SELECT * FROM " . DB_PREFIX . "message M
+                WHERE idMessage = :idMessage
+                AND idUtilisateur = :idUser";
+
+        $stmt = $this->pdo->prepare($sql);
+
+        // Lier les valeurs
+        $stmt->bindValue(':idMessage', $idMessage, PDO::PARAM_INT);
+        $stmt->bindValue(':idUser', $idUser, PDO::PARAM_STR);
+
+        // Exécuter la requête
+        $stmt->execute();
+
+        // Récupérer le résultat
+        $count = $stmt->fetchColumn();
+
+        // Retourner vrai si le message appartient à l'utilisateur
+        return $count > 0;
+    }
+
+    /**
+     * Méthode de suppression d'un message
+     * 
+     * @param int|null $idMessage identifiant du message à supprimer
+     * 
+     * @return void
+     */
+    public function supprimerMessage(?int $idMessage): void
+    {
+        // Préparer la requête SQL
+        $sql = "UPDATE " . DB_PREFIX . "message
+            SET valeur = :valeurMessageSupprime, 
+                idUtilisateur = :valeurUtilisateurSupprime
+            WHERE idMessage = :idMessage";
+
+        // Préparer la requête
+        $stmt = $this->pdo->prepare($sql);
+
+        // Lier les valeurs
+        $stmt->bindValue(':valeurMessageSupprime', VALEUR_MESSAGE_SUPPRIME, PDO::PARAM_STR);
+        $stmt->bindValue(':valeurUtilisateurSupprime', VALEUR_UTILISATEUR_MESSAGE_SUPPRIME, PDO::PARAM_NULL);
+        $stmt->bindValue(':idMessage', $idMessage, PDO::PARAM_INT);
+
+        // Exécuter la requête
+        $stmt->execute();
+    }
+
+    /**
+     * Méthode permettant de supprimer toutes les réactions à un message lors de sa suppression
+     * 
+     * @param int|null $idMessage Identifiant du message dont les réactions sont à purger
+     * 
+     * @return void
+     */
+    public function purgerReactions(?int $idMessage): void
+    {
+        // Préparer la requête
+        $sql = "DELETE FROM " . DB_PREFIX . "reagir
+               WHERE idMessage = :idMessage";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':idMessage', $idMessage);
+        $stmt->execute();
+    }
+
+
+    /**
+     * Méthode permettant de trouver l'auteur d'un message
+     * 
+     * @param int|null $idMessage Identifiant du message
+     * 
+     * @return string|null Identifiant de l'utilisateur
+     */
+    public function findAuthor(?int $idMessage): ?string
+    {
+        // Préparer la requête
+        $sql = "SELECT idUtilisateur FROM " . DB_PREFIX . "message
+                WHERE idMessage = :idMessage";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':idMessage', $idMessage, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchColumn();
+    }
 }

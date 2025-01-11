@@ -45,9 +45,9 @@
 				</div>
 
 				<!-- Section centrale (barre de recherche) -->
-				<form class="search-form-container flex-grow-1">
+				<form class="search-form-container flex-grow-1" method="POST" action="index.php?controller=index&methode=rechercher">
 					<div class="input-group">
-						<input class="form-control fw-light" type="search" placeholder="Barre de recherche" aria-label="Search">
+						<input class="form-control fw-light" type="search" placeholder="Barre de recherche" aria-label="Search" name="recherche">
 						<button class="btn bg-myprimary" type="submit">
 							<i class="bi bi-search"></i>
 						</button>
@@ -86,7 +86,7 @@
 						<a href="#">
 							<button class="btn btn-myprimary">Watch2Gether</button>
 						</a>
-						<a href="#">
+						<a href="index.php?controller=whatchlist&methode=accueil">
 							<button class="btn btn-myprimary">WatchList</button>
 						</a>
 						<a href="#">

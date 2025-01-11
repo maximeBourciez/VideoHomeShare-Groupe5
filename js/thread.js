@@ -61,9 +61,36 @@ document.addEventListener("DOMContentLoaded", function () {
             inputIdMessageParent.value = idMessageParent;
         }
     });
+   
 
 
-    
+
+    /**
+     * @brief Maj dynamique de la modal de signalement à chaque ouverture
+     * 
+     * @param {Event} event
+     */
+    // Écouteur d'événements pour les boutons "Signaler"
+    const signalerButtons = document.querySelectorAll('[data-bs-target="#signalement"]');
+        
+    signalerButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            // Récupérer les données
+            const messageId = this.getAttribute('data-id-message');
+            const messageToSignal = document.querySelector(`.message[data-id-message="${messageId}"]`);
+            var hiddenInputIdMessage = document.getElementById("id_message_signalement");
+            
+            // Mettre à jour le contenu de la modale
+            if (messageToSignal) {
+                // Mettre les données à jour
+                const messageText = messageToSignal.querySelector('.message-text').innerText;
+                document.querySelector('#signalement .message-to-signal').innerText = messageText;
+                hiddenInputIdMessage.value = messageId;
+            } else {
+                console.log("Message Introuvable");
+            }
+        });
+    });
 });
 
 
