@@ -43,7 +43,13 @@ class CollectionDAO {
      */
     public function getCollectionFromTMDB(int $tmdbId): ?Collection {
         $url = "{$this->baseUrl}/collection/{$tmdbId}?api_key={$this->apiKey}&language=fr-FR&append_to_response=keywords,credits,reviews";
-        $collectionData = $this->makeRequest($url);
+        $response = file_get_contents($url);
+
+        if ($response === false) {
+            return null; // En cas d'erreur, retourner null
+        }
+
+        $collectionData = json_decode($response, true);
         
         if ($collectionData && !($collectionData['adult'] ?? false)) {
             return $this->convertToCollection($collectionData);
@@ -142,22 +148,7 @@ class CollectionDAO {
         return $movies;
     }
 
-    /**
-     * @brief Sauvegarde une collection dans la base de données
-     * 
-     * @param Collection $collection Collection à sauvegarder
-     * @return Collection|null Collection sauvegardée ou null si échec
-     */
-    private function saveCollection(Collection $collection): ?Collection {
-        $existingCollection = $this->getCollectionById($collection->getId() ?? -1);
-        
-        if ($existingCollection) {
-            return $this->updateCollection($collection) ? $collection : null;
-        } else {
-            return $this->createCollection($collection) ? $collection : null;
-        }
-    }
-
+    
     /**
      * @brief Récupère une collection par son identifiant
      * 
@@ -282,7 +273,7 @@ class CollectionDAO {
     public function searchByName(?string $query): ?array {
         $url = "{$this->baseUrl}/search/collection?api_key={$this->apiKey}&query=" . urlencode($query) . "&language=fr-FR";
         $response = file_get_contents($url);
-        
+
         if ($response === false) {
             return null; // En cas d'erreur, retourner null
         }
