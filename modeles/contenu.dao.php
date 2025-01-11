@@ -10,16 +10,17 @@
  * @author François Barlic <<francois.barlic57@gmail.com>>
  * @version 1.0
  */
-class ContenuDAO {
+class ContenuDAO
+{
     /** @var PDO|null Instance de connexion à la base de données */
     private ?PDO $pdo;
-    
+
     /** @var string Clé d'API pour l'accès à TMDB */
     private string $apiKey;
-    
+
     /** @var string URL de base de l'API TMDB */
     private string $baseUrl;
-    
+
     /** @var string URL de base pour les images TMDB */
     private string $imageBaseUrl;
 
@@ -29,7 +30,8 @@ class ContenuDAO {
      * @param PDO|null $pdo Instance de connexion à la base de données
      * @param string $apiKey Clé API TMDB
      */
-    public function __construct(?PDO $pdo = null, string $apiKey = TMDB_API_KEY) {
+    public function __construct(?PDO $pdo = null, string $apiKey = TMDB_API_KEY)
+    {
         $this->pdo = $pdo;
         $this->apiKey = $apiKey;
         $this->baseUrl = TMDB_BASE_URL;
@@ -46,15 +48,23 @@ class ContenuDAO {
      * @param int $tmdbId Identifiant TMDB du film
      * @return Contenu|null Le contenu trouvé ou null si non trouvé ou filtré
      */
-    public function getContentFromTMDB(int $tmdbId): ?Contenu {
+    public function getContentFromTMDB(int $tmdbId): ?Contenu
+    {
         $url = "{$this->baseUrl}/movie/{$tmdbId}?api_key={$this->apiKey}&language=fr-FR&append_to_response=keywords,credits,reviews";
-        $movieData = $this->makeRequest($url);
-        
-        if ($movieData && !($movieData['adult'] ?? false)) {
-            return $this->convertToContenu($movieData);
+        // Récupérer les résultats
+        $response = file_get_contents($url);
+        if ($response === false) {
+            return null;
         }
-        
-        return null;
+
+        $moviesData = json_decode($response, true);
+
+        if ($moviesData === null ) {
+            return null;
+        } else {
+            // Convertir les films en objets Contenu
+            return $this->convertToContenu($moviesData);
+        }
     }
 
     /**
@@ -66,9 +76,10 @@ class ContenuDAO {
      * @param array $movieData Données brutes du film depuis TMDB
      * @return array Liste des objets Personnalite
      */
-    public function getPersonnalites(array $movieData): array {
+    public function getPersonnalites(array $movieData): array
+    {
         $personnalites = [];
-        
+
         // Ajouter les réalisateurs
         foreach ($movieData['credits']['crew'] as $crew) {
             if ($crew['job'] === 'Director') {
@@ -76,14 +87,14 @@ class ContenuDAO {
                     null,
                     $crew['name'], // nom
                     '', // prenom
-                    !empty($crew['profile_path']) 
-                        ? $this->imageBaseUrl . $crew['profile_path'] 
-                        : null,
+                    !empty($crew['profile_path'])
+                    ? $this->imageBaseUrl . $crew['profile_path']
+                    : null,
                     'Réalisateur'
                 );
             }
         }
-    
+
         // Ajouter les acteurs principaux
         $actors = array_slice($movieData['credits']['cast'], 0, 17);
         foreach ($actors as $actor) {
@@ -91,9 +102,9 @@ class ContenuDAO {
                 null,
                 $actor['name'], // nom
                 '', // prenom
-                !empty($actor['profile_path']) 
-                    ? $this->imageBaseUrl . $actor['profile_path'] 
-                    : null,
+                !empty($actor['profile_path'])
+                ? $this->imageBaseUrl . $actor['profile_path']
+                : null,
                 'Acteur'
             );
         }
@@ -108,7 +119,8 @@ class ContenuDAO {
      * @param array $movieData Données brutes du film depuis TMDB
      * @return array Liste des objets Theme
      */
-    public function getGenres(array $movieData): array {
+    public function getGenres(array $movieData): array
+    {
         $themes = [];
         if (isset($movieData['genres'])) {
             foreach ($movieData['genres'] as $genre) {
@@ -131,23 +143,24 @@ class ContenuDAO {
      * @param array $movieData Données brutes du film
      * @return Contenu L'objet Contenu créé
      */
-    private function convertToContenu(array $movieData): Contenu {
+    private function convertToContenu(array $movieData): Contenu
+    {
         $date = new DateTime($movieData['release_date']);
-        
+
         // Description courte : utiliser overview
         $descriptionCourte = $movieData['overview'] ?? '';
-        
+
         // Description longue : combiner plusieurs éléments
         $descriptionLongue = '';
-        
+
         // Ajouter le tagline s'il existe
         if (!empty($movieData['tagline'])) {
             $descriptionLongue .= $movieData['tagline'] . "\n\n";
         }
-        
+
         // Ajouter l'overview
         $descriptionLongue .= $movieData['overview'] . "\n\n";
-        
+
         // Ajouter des informations supplémentaires si disponibles
         if (isset($movieData['reviews']['results']) && !empty($movieData['reviews']['results'])) {
             $descriptionLongue .= "Critiques :\n";
@@ -155,21 +168,21 @@ class ContenuDAO {
                 $descriptionLongue .= "- " . $review['content'] . "\n\n";
             }
         }
-        
+
         // Ajouter des informations sur la production
         if (!empty($movieData['production_companies'])) {
             $descriptionLongue .= "Production : ";
-            $companies = array_map(function($company) {
+            $companies = array_map(function ($company) {
                 return $company['name'];
             }, $movieData['production_companies']);
             $descriptionLongue .= implode(', ', $companies) . "\n\n";
         }
-        
+
         // Création des liens d'images avec différentes tailles
-        $lienAffiche = !empty($movieData['poster_path']) 
+        $lienAffiche = !empty($movieData['poster_path'])
             ? "https://image.tmdb.org/t/p/original" . $movieData['poster_path']
             : null;
-        
+
         $lienAfficheReduite = !empty($movieData['poster_path'])
             ? "https://image.tmdb.org/t/p/w185" . $movieData['poster_path']
             : null;
@@ -185,7 +198,7 @@ class ContenuDAO {
             'Film',                // type
             $lienAfficheReduite    // lienAfficheReduite
         );
-        
+
         // Ajouter l'ID TMDB
         $contenu->setTmdbId($movieData['id']);
 
@@ -193,7 +206,8 @@ class ContenuDAO {
     }
 
 
-    public function convertToContenuLight($movieData): Contenu {  
+    public function convertToContenuLight($movieData): Contenu
+    {
         // Description courte : utiliser overview
         $descriptionCourte = $movieData['overview'] ?? '';
 
@@ -205,7 +219,7 @@ class ContenuDAO {
             $movieData['id'], // id
             $movieData['title'], // titre
             null,
-            $descriptionCourte, 
+            $descriptionCourte,
             null,
             null,
             null,
@@ -216,7 +230,7 @@ class ContenuDAO {
         return $contenu;
     }
 
-        /**
+    /**
      * @brief Effectue une requête HTTP vers l'API TMDB
      * 
      * Gère la communication avec l'API TMDB et le décodage de la réponse.
@@ -224,21 +238,15 @@ class ContenuDAO {
      * @param string $url URL complète de la requête API
      * @return array|null Données décodées ou null en cas d'erreur
      */
-    private function makeRequest(string $url): ?array {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        
-        curl_close($ch);
-
-        if ($httpCode === 200) {
-            return json_decode($response, true);
+    private function makeRequest(string $url): ?array
+    {
+        // Récupérer les résultats
+        $response = file_get_contents($url);
+        if ($response === false) {
+            return null;
         }
-        
-        return null;
+
+        return json_decode($response, true);
     }
 
     /**
@@ -249,7 +257,8 @@ class ContenuDAO {
      * @param int $minutes Nombre de minutes
      * @return string Durée formatée (ex: "02h15")
      */
-    private function convertRuntime(int $minutes): string {
+    private function convertRuntime(int $minutes): string
+    {
         $hours = floor($minutes / 60);
         $mins = $minutes % 60;
         return sprintf("%02dh%02d", $hours, $mins);
@@ -264,12 +273,13 @@ class ContenuDAO {
      * @param int $tmdbId Identifiant TMDB du film
      * @return array|null Les données brutes du film ou null si non trouvé
      */
-    public function getMovieData(int $tmdbId): ?array {
+    public function getMovieData(int $tmdbId): ?array
+    {
         $url = "{$this->baseUrl}/movie/{$tmdbId}?api_key={$this->apiKey}&language=fr-FR&append_to_response=keywords,credits,reviews";
         return $this->makeRequest($url);
     }
 
-     /**
+    /**
      * Récupère les films tendance du moment
      * 
      * @param string $timeWindow Peut être "day" ou "week" (par défaut : "day")

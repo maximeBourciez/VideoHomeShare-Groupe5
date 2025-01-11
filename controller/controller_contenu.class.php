@@ -33,7 +33,7 @@ class ControllerContenu extends Controller {
         if ($tmdbId) {
             // Récupérer les données du film via le DAO
             $contenu = $this->contenuDAO->getContentFromTMDB($tmdbId);
-            
+
             if ($contenu) {
                 // Récupérer les personnalités via le DAO
                 $movieData = $this->contenuDAO->getMovieData($tmdbId);
@@ -70,8 +70,5 @@ class ControllerContenu extends Controller {
                 return;
             }
         }
-
-        // Redirection vers la page d'accueil si pas de contenu trouvé
-        echo $this->getTwig()->render('index.html.twig');
     }
 } 
