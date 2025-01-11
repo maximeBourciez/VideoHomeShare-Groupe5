@@ -61,4 +61,5 @@ require_once 'controller/controller_commentaire.class.php';
 require_once 'controller/controller_notification.class.php';
 require_once 'controller/controller_index.class.php';
 require_once 'controller/controller_signalement.class.php';
+require_once 'controller/controller_watch2gether.class.php';
 
