@@ -204,6 +204,7 @@ class FilDAO
                 LEFT JOIN " . DB_PREFIX . "theme AS t 
                     ON p.idTheme = t.idTheme
                 WHERE f.idFil = :id
+                GROUP BY f.idFil, t.idTheme
         ";
 
         $stmt = $this->pdo->prepare($sql);
