@@ -25,6 +25,7 @@ L’objectif de VHS est de recréer la convivialité des soirées cinéma entre 
 
 ### Quiz
 - Testez vos connaissances sur les films et séries via des quiz créés par la communauté.
+- Créez des quiz pour mettre au défi la communauté
 
 <br>
 <br>
