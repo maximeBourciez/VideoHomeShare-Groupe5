@@ -126,4 +126,22 @@ class ControllerQuizz extends Controller
         return $tabReponses;
     }
 
+    public function creerQuizz() : void
+    {
+        $idUtilisateur = $_GET['idUtilisateur']; 
+
+        echo $this->getTwig()->render('creationQuizz.html.twig', [
+            'idUtilisateur' => $idUtilisateur
+        ]);
+    }
+
+    public function creerQuestion() : void
+    {
+        $idQuizz = $_GET['idQuizz']; 
+
+        echo $this->getTwig()->render('creationQuestion.html.twig', [
+            'idQuizz' => $idQuizz
+        ]);
+    }
+
 }

@@ -1,0 +1,48 @@
+{% extends 'base_template.html.twig' %}
+
+{% block title %}
+    VHS | Quizz
+{% endblock %}
+
+{% block content %}
+<main class="container min-vh-100">
+    <br>
+    <h1>Création d'un quizz</h1>
+    <br>
+    <form id="quizzForm" action="" method="get">
+        <div class="row">
+            <label for="image">Ajouter une image : </label>
+            <input type="file" name="image" id="image"/>
+        </div>
+        <br>
+        <div class="row">
+            <label for="titre">Titre de la question : </label>
+            <textarea name="titre" id="titre" required></textarea>
+        </div>
+        <br>
+        <div id="reponsesContainer">
+        </div>
+        <br>
+        <div class="row">
+            <button type="button" class="btn btn-primary" id="addReponseBtn">+ Ajouter une réponse</button>
+        </div>
+        <br>
+        <br>
+        <div class="row text-center">
+            <div class="col">
+                <a href="index.php?controller=quizz&methode=listeQuizz" class="btn btn-primary">
+                    Annuler
+                </a>
+            </div>
+            <div class="col">
+                <a href="index.php?controller=quizz&methode=listeQuizz" class="btn btn-primary">
+                    Finir
+                </a>
+            </div>
+        </div>
+    </form>
+</main>
+
+<script src="js/quizz.js"></script>
+
+{% endblock %}
