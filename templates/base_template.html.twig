@@ -6,13 +6,17 @@
 		<link rel="icon" href="{{ constant('WEBSITE_LOGO') }}">
 		<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
 		<link rel="stylesheet" href="CSS/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
 		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
 		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-		<title>{% block title %} {{ constant('WEBSITE_TITLE_LONG')}} {% endblock %}</title>
+		<title>
+			{% block title %}
+				{{ constant('WEBSITE_TITLE_LONG')}}
+			{% endblock %}
+		</title>
 		<style>
 			html,
 			body {
@@ -22,7 +26,6 @@
 			}
 		</style>
 
-		
 
 	</head>
 	<body class="d-flex flex-column min-vh-100 bg-mylight">
@@ -53,7 +56,7 @@
 						</button>
 					</div>
 				</form>
-        
+
 				<!-- Section droite -->
 				<div class="navbar-end d-flex align-items-center gap-3 me-lg-4">
 					{% if utilisateurConnecte is null %}
@@ -92,15 +95,17 @@
 						<a href="#">
 							<button class="btn btn-myprimary">Quizz</button>
 						</a>
-						{% if utilisateurConnecte is null %}
-							<a href="index.php?controller=utilisateur&methode=show">
-								<button class="btn btn-myprimary">Profil</button>
-							</a>
-						{% else %}
-							<a href="index.php?controller=utilisateur&methode=show">
-								<button class="btn btn-myprimary">Profil</button>
+
+						<a href="index.php?controller=utilisateur&methode=show">
+							<button class="btn btn-myprimary">Profil</button>
+						</a>
+
+						{% if utilisateurConnecte is not null and utilisateurConnecte.getgetRole().toString() == "Moderateur" %}
+							<a href="index.php?controller=signalement&methode=afficheSignalements">
+								<button class="btn btn-myprimary">signalement</button>
 							</a>
 						{% endif %}
+
 					</div>
 				</div>
 			</div>

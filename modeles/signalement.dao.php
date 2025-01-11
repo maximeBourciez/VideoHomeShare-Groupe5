@@ -174,6 +174,15 @@ class SignalementDAO{
         $stmt->execute();
         return $this->pdo->lastInsertId();
     }
+
+    public function findAllMessageSignaleAssoc() : ?array{
+        $sql = "SELECT s.idMessage , m.valeur  COUNT(s.idMessage) AS nbSignalement FROM ".DB_PREFIX."signalement  s join ".DB_PREFIX."message m on s.idMessage = m.idMessage GROUP BY s.idMessage; ";
+        $pdoStatement = $this->pdo->prepare($sql);
+        $pdoStatement->execute();
+        $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
+        $signalements = $pdoStatement->fetchAll();
+        return $signalements;
+    }
 }
 
 ?>
