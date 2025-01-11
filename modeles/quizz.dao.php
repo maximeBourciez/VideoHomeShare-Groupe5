@@ -21,7 +21,7 @@ class QuizzDAO{
 
     // Constructeur
     /**
-     * @brief Constructeur de la classe FilDAO
+     * @brief Constructeur de la classe QuizzDAO
      * 
      * @param PDO|null $pdo Connexion à la base de données
      */
@@ -78,7 +78,7 @@ class QuizzDAO{
      */
     function update(Quizz $quizz): bool{
         $req = $this->pdo->prepare("UPDATE Quizz SET titre = :titre, description = :description, difficulte = :difficulte, dateC = :dateC WHERE id = :id, idUtilisateur = :idUtilisateur");
-        $req->bindParam(":id", $quizz->getId());
+        $req->bindParam(":idQuizz", $quizz->getId());
         $req->bindParam(":titre", $quizz->getTitre());
         $req->bindParam(":description", $quizz->getDescription());
         $req->bindParam(":difficulte", $quizz->getDifficulte());
@@ -91,12 +91,12 @@ class QuizzDAO{
     /**
      * @brief Méthode de suppression d'un quizz
      * 
-     * @param id //identifiant du quizz
+     * @param idQuizz //identifiant du quizz
      * @return bool
      */
-    function delete(int $id): bool{
-        $req = $this->pdo->prepare("DELETE FROM Quizz WHERE id = :id");
-        $req->bindParam(":id", $id);
+    function delete(int $idQuizz): bool{
+        $req = $this->pdo->prepare("DELETE FROM Quizz WHERE idQuizz = :idQuizz");
+        $req->bindParam(":idQuizz", $idQuizz);
 
         return $req->execute();
     }
@@ -141,12 +141,10 @@ class QuizzDAO{
      * @param $id //identifiant du quizz
      * @return Quizz
      */
-    function find(int $id): ?Quizz{
-        $sql = "SELECT Q.*, U.pseudo 
-                FROM Quizz Q JOIN Utilisateur U ON Q.idUtilisateur = U.idUtilisateur
-                WHERE idQuizz = :id";
+    function find(int $idQuizz): ?Quizz{
+        $sql = "SELECT Q.*, U.pseudo FROM " .DB_PREFIX. "quizz Q JOIN " .DB_PREFIX. "utilisateur U ON Q.idUtilisateur = U.idUtilisateur WHERE idQuizz = :idQuizz";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->bindValue(':idQuizz', $idQuizz, PDO::PARAM_INT);
         $stmt->execute();
         $row = $stmt->fetch();
         if ($row == null){
@@ -162,8 +160,7 @@ class QuizzDAO{
      * @return array
      */
     function findAll(): array{
-        $sql = "SELECT Q.*, U.pseudo
-                FROM " .DB_PREFIX. "quizz Q JOIN " .DB_PREFIX. "utilisateur U ON Q.idUtilisateur = U.idUtilisateur";
+        $sql = "SELECT Q.*, U.pseudo FROM " .DB_PREFIX. "quizz Q JOIN " .DB_PREFIX. "utilisateur U ON Q.idUtilisateur = U.idUtilisateur";
         $stmt = $this->pdo->query($sql);
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
 

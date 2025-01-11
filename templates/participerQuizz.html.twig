@@ -1,11 +1,45 @@
 {% extends 'base_template.html.twig' %}
 
 {% block title %}
-	VHS | Quizz
+    VHS | Quizz
 {% endblock %}
 
-
 {% block content %}
+<main class="container min-vh-100">
+    <br>
+    <h2>{{ quizz.titre }}</h2>
+    <br>
+	{% set bonnesReponses = 0 %}
 
-
+    {% for question in questions %}
+        <div class="row">
+            <img src="images/{{ question.urlImage }}" alt="Image de la question">
+        </div>
+		<h4 class="row">Question n°{{ question.rang }}</h4>
+		<div class="row">
+			<div class="card">
+				<div class="card-body">
+					{{ question.valeur }}
+				</div>
+			</div>
+        </div>
+		{% for reponse in reponses %}
+			{% if loop.index is even %}
+        		<div class="row">
+    		{% endif %}
+			<div class="col-md-6">
+				<div class="card">
+					<div class="card-body">
+					Réponse n°{{ reponse.rang }} :<br>
+						{{ reponse.valeur }}
+					</div>
+					{% if reponse.estVraie %}
+                        {% set bonnesReponses = bonnesReponses + 1 %}
+                    {% endif %}
+				</div>
+        	</div>
+			<br>
+		{% endfor %}
+    {% endfor %}
+</main>
 {% endblock %}

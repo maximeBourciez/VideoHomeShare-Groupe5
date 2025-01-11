@@ -63,16 +63,67 @@ class ControllerQuizz extends Controller
         ]);
     }
 
+    /**
+     * @brief Méthode qui affiche les quizz de l'utilisateur connecté
+     * 
+     * @details Méthode permettant d'afficher les quizz de l'utilisateur connecté avec la possibilité de les gérer (modifier ou supprimer)
+     *
+     * @return void
+     */
     public function gererQuizzUtilisateur(): void
     {
-        $idUtilisateur = unserialize($_SESSION['utilisateur']);
-        $managerQuizz = new QuizzDAO($this->getPdo());
-        $quizz = $managerQuizz->findAll();
+        if (isset($_SESSION['utilisateur'])){
+            $idUtilisateur = unserialize($_SESSION['utilisateur']);
+            $managerQuizz = new QuizzDAO($this->getPdo());
+            $quizz = $managerQuizz->findAll();
 
-        echo $this->getTwig()->render('listeQuizz.html.twig', [
-            'idUtilisateur' => $idUtilisateur,
-            'quizz' => $quizz
-        ]);
+            echo $this->getTwig()->render('listeQuizz.html.twig', [
+                'idUtilisateur' => $idUtilisateur,
+                'quizz' => $quizz
+            ]);
+        }
+        else{
+            echo "Vous devez être connecté pour avoir accès aux quizz. <br>";
+            $this->listeQuizz();
+        }
+    }
+
+    public function jouerQuizz() : void
+    {
+        if (isset($_SESSION['utilisateur'])){
+            $idUtilisateur = unserialize($_SESSION['utilisateur']);
+
+            $managerQuizz = new QuizzDAO($this->getPdo());
+            $idQuizz = $_GET['idQuizz'];
+            $quizz = $managerQuizz->find($idQuizz);
+
+            $managerQuestion = new QuestionDAO($this->getPdo());
+            $questions = $managerQuestion->findByQuizzId($idQuizz);
+
+            $reponses = $this->reponsesDuneQuestion($questions);
+
+            echo $this->getTwig()->render('participerQuizz.html.twig', [
+                'idUtilisateur' => $idUtilisateur,
+                'quizz' => $quizz,
+                'questions' => $questions,
+                'reponses' => $reponses
+            ]);
+        }
+        else{
+            echo "Vous devez être connecté pour pouvoir jouer aux quizz. <br>";
+            $this->listeQuizz();
+        }  
+    }
+
+    public function reponsesDuneQuestion(Question $questions) : array
+    {
+        $tabReponses = [];
+        foreach ($questions as $question){
+            $managerReponse = new ReponseDAO($this->getPdo());
+            $tabReponses[] = $managerReponse->findByQuestionId($question.getIdQuestion());
+        };
+
+        return $tabReponses;
     }
 
 }

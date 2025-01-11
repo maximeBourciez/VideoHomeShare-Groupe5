@@ -3,15 +3,19 @@
 class Question{
 
     // Attributs
-    private ?int $id;
+    private ?int $idQuestion;
     private ?string $valeur;
+    private ?float $rang;
     private ?string $urlImage;
+    private ?int $idQuizz;
 
     // Constructeur
-    public function __construct(?int $id = null, ?string $valeur = null, ?string $urlImage = null) {
-        $this->id = $id;
+    public function __construct(?int $idQuestion = null, ?string $valeur = null, ?int $rang = null, ?string $urlImage = null, ?int $idQuizz = null) {
+        $this->idQuestion = $idQuestion;
         $this->valeur = $valeur;
+        $this->rang = $rang;
         $this->urlImage = $urlImage;
+        $this->idQuizz = $idQuizz;
     }
 
     // Encapsulation
@@ -19,12 +23,12 @@ class Question{
     // Getters
 
     /**
-     * Get the value of id
+     * Get the value of idQuestion
      * @return int
      */
-    public function getId(): ?int
+    public function getIdQuestion(): ?int
     {
-        return $this->id;
+        return $this->idQuestion;
     }
 
     /**
@@ -37,6 +41,15 @@ class Question{
     }
 
     /**
+     * Get the value of rang
+     * @return float
+     */
+    public function getRang(): ?float
+    {
+        return $this->rang;
+    }
+
+    /**
      * Get the value of urlImage
      * @return string
      */
@@ -45,16 +58,25 @@ class Question{
         return $this->urlImage;
     }
 
+    /**
+     * Get the value of idQuizz
+     * @return int
+     */
+    public function getIdQuizz(): ?int
+    {
+        return $this->idQuizz;
+    }
+
     // Setters
 
     /**
-     * Set the value of id
-     * @param int $id
+     * Set the value of idQuestion
+     * @param int $idQuestion
      * @return void
      */
-    public function setId(?int $id): void
+    public function setIdQuestion(?int $idQuestion): void
     {
-        $this->id = $id;
+        $this->idQuestion = $idQuestion;
     }
 
     /**
@@ -68,6 +90,16 @@ class Question{
     }
 
     /**
+     * Set the value of rang
+     * @param float $rang
+     * @return void
+     */
+    public function setRang(?float $rang): void
+    {
+        $this->rang = $rang;
+    }
+
+    /**
      * Set the value of urlImage
      * @param string $urlImage
      * @return void
@@ -77,6 +109,14 @@ class Question{
         $this->urlImage = $urlImage;
     }
 
-    // Méthodes
+    /**
+     * Set the value of idQuizz
+     * @param int $idQuizz
+     * @return void
+     */
+    public function setIdQuizz(?int $idQuizz): void
+    {
+        $this->idQuizz = $idQuizz;
+    }
 
 }
