@@ -100,7 +100,7 @@
 							<button class="btn btn-myprimary">Profil</button>
 						</a>
 
-						{% if utilisateurConnecte is not null and utilisateurConnecte.getgetRole().toString() == "Moderateur" %}
+						{% if utilisateurConnecte is not null and utilisateurConnecte.getRole().toString() == "Moderateur" %}
 							<a href="index.php?controller=signalement&methode=afficheSignalements">
 								<button class="btn btn-myprimary">signalement</button>
 							</a>

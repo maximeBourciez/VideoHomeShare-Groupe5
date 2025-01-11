@@ -50,11 +50,11 @@ class ControllerSignalement extends Controller
 
         // Récupération des signalements
         $managerSignalement = new SignalementDAO($this->getPdo());
-        $signalements = $managerSignalement->findAll();
+        $signalements = $managerSignalement->findAllMessageSignaleAssoc();
 
         // Affichage de la page des signalements
         $template = $this->getTwig()->load('signalement.html.twig');
-        echo $template->render(array("signalements" => $signalements, "utilisateur" => $utilisateur, "nbSignalement" => count($signalements)));
+        echo $template->render(array("signalements" => $signalements));
     }
 
 }
