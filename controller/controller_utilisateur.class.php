@@ -56,6 +56,7 @@ class ControllerUtilisateur extends Controller
             $utilisateur = $managerutilisateur->findByMail($mail);
             // vérification que l'utilisateur existe et que le mot de passe est correct
             $verficationUtilisateurExiste = Utilitaires::utilisateurExiste($utilisateur, $message);
+            if($verficationUtilisateurExiste){
             $verficationBruteForce = Utilitaires::isBruteForce($utilisateur->getId(), $message);
             $verficationMotDePasse = Utilitaires::motDePasseCorrect($mdp, $utilisateur->getMdp(), $utilisateur, $message);
             $verficationUtiliateurverifier = Utilitaires::verifUtiliateurverifier($utilisateur->getId(), $message, $managerutilisateur);
@@ -76,6 +77,11 @@ class ControllerUtilisateur extends Controller
                 $template = $this->getTwig()->load('connection.html.twig');
                 echo $template->render(array('messagederreur' => $message));
             }
+        }else{
+            // affichage de la page de connection avec un message d'erreur
+            $template = $this->getTwig()->load('inscription.html.twig');
+            echo $template->render(array('messagederreur' => $message));
+        }
         } else {
             // affichage de la page de connection avec un message d'erreur
             $template = $this->getTwig()->load('connection.html.twig');
@@ -98,6 +104,8 @@ class ControllerUtilisateur extends Controller
         $mdp = isset($_POST['mdp']) ?  htmlspecialchars($_POST['mdp']) : null;
         $vmdp = isset($_POST['vmdp']) ?  htmlspecialchars($_POST['vmdp']) : null;
         $nom = isset($_POST['nom']) ?  htmlspecialchars($_POST['nom']) : null;
+        $CGU = isset($_POST['conditions']) ?  htmlspecialchars($_POST['conditions']) : null;
+        
         //supprimer les espaces
 
         $id = str_replace(' ', '', $id);
@@ -121,11 +129,12 @@ class ControllerUtilisateur extends Controller
         $verficationProfaniteId = !Utilitaires::verificationDeNom($id, "l'Identifiant ", $message);
         $verficationProfanitePseudo = !Utilitaires::verificationDeNom($pseudo, "le pseudo", $message);
         $verficationProfaniteNom = !Utilitaires::verificationDeNom($nom, "le nom", $message);
+        $verficationCGURcocher = Utilitaires::verifiecasecocher($CGU, $message, " les conditions générales d'utilisation");
 
         if (
             $verficationTailleMail && $verficationTailleId && $verficationTaillePseudo && $verficationTailleNom && $verficationTailleMdp && $verficationTailleVmdp &&
             $verficationRobuste && $verficationAge && $verficationMailExistePas && $verficationEgale && $verficationIdExistePas && $verficationProfaniteId && $verficationProfanitePseudo
-            && $verficationProfaniteNom
+            && $verficationProfaniteNom && $verficationCGURcocher
         ) {
 
             //cripter le mot de passe
