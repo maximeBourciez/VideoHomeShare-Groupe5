@@ -32,6 +32,7 @@ try  {
     }
 
 
+
     
     if ( isset($_SESSION['utilisateur'])) {
         $twig->addGlobal('utilisateurConnecte', unserialize($_SESSION['utilisateur']));
