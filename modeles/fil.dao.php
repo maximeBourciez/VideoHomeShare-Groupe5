@@ -63,80 +63,6 @@ class FilDAO
      * @param array $row Ligne de la base de données
      * @return Fil Objet Fil hydraté
      */
-    // public function hydrate(array $row): Fil
-    // {
-    //     $fil = new Fil();
-    //     // Création de l'objet Theme
-    //     $themes = [];
-
-    //     if (isset($row[0]) && is_array($row[0])) {
-    //         // Création de l'objet Utilisateur
-    //         $user = new Utilisateur();
-    //         $user->setId($row[0]['idUtilisateur']);
-    //         $user->setPseudo($row[0]['pseudo']);
-    //         $user->setUrlImageProfil($row[0]['urlImageProfil']);
-
-    //         // Création de l'objet Fil 
-    //         $id = $row[0]['idFil'];
-    //         $titre = $row[0]['titre'];
-    //         $dateCreation = new DateTime($row[0]['dateC']);
-    //         $description = $row[0]['description'];
-
-    //         foreach ($row as $element) {
-    //             if ($element['idFil'] == $id) {
-    //                 $theme = new Theme($element['theme_id'], $element['theme_nom']);
-    //                 $themes[] = $theme;
-    //             }
-    //         }
-
-    //         $fil = new Fil($id, $titre, $dateCreation, $description, $user, $themes);
-    //         return $fil;
-    //     } else {
-    //         // Création de l'objet Utilisateur
-    //         $user = new Utilisateur();
-    //         $user->setId($row['idUtilisateur']);
-    //         $user->setPseudo($row['pseudo']);
-    //         $user->setUrlImageProfil($row['urlImageProfil']);
-
-    //         // Création de l'objet Fil 
-    //         $id = $row['idFil'];
-    //         $titre = $row['titre'];
-    //         $dateCreation = new DateTime($row['dateC']);
-    //         $description = $row['description'];
-
-    //         $theme = new Theme($row['theme_id'], $row['theme_nom']);
-    //         $themes[] = $theme;
-
-    //         // Ajout des likes dans les cas ou ils existent
-    //         $nbLikes = $row['likes'] ?? 0;
-
-    //         $fil = new Fil($id, $titre, $dateCreation, $description, $user, $themes, $nbLikes);
-    //         return $fil;
-    //     }
-    // }
-
-    // /**
-    //  * @brief Méthode d'hydratation de tous les fils
-    //  * 
-    //  * @param array $rows Tableau de lignes de la base de données
-    //  * @return array<Fil> Tableau d'objets Fil hydratés
-    //  */
-    // function hydrateAll(array $rows): array
-    // {
-    //     $fils = [];
-    //     foreach ($rows as $row) {
-    //         if (isset($fils[$row['idFil']])) {
-    //             // Ajout du thème au fil
-    //             $theme = new Theme($row['theme_id'], $row['theme_nom']);
-    //             $fils[$row['idFil']]->ajouterTheme($theme);
-    //         }
-    //         // Sinon
-    //         else {
-    //             $fils[$row['idFil']] = $this->hydrate($row);
-    //         }
-    //     }
-    //     return $fils;
-    // }
     public function hydrate(array $row): Fil
     {
         $themes = [];
@@ -144,49 +70,55 @@ class FilDAO
         $user->setId($row['idUtilisateur']);
         $user->setPseudo($row['pseudo']);
         $user->setUrlImageProfil($row['urlImageProfil']);
-    
+
         $theme = new Theme($row['theme_id'], $row['theme_nom']);
         $themes[] = $theme;
-    
+
         $id = $row['idFil'];
         $titre = $row['titre'];
         $dateCreation = new DateTime($row['dateC']);
         $description = $row['description'];
         $nbLikes = $row['likes'] ?? 0;
-    
+
         return new Fil($id, $titre, $dateCreation, $description, $user, $themes, $nbLikes);
     }
 
+    /**
+     * @brief Méthode d'hydratation de tous les fils
+     * 
+     * @param array $rows Tableau de lignes de la base de données
+     * @return array Tableau d'objets Fil hydratés
+     */
     public function hydrateAll(array $rows): array
-{
-    $fils = [];
-    foreach ($rows as $row) {
-        $idFil = $row['idFil'];
+    {
+        $fils = [];
+        foreach ($rows as $row) {
+            $idFil = $row['idFil'];
 
-        if (!isset($fils[$idFil])) {
-            $fils[$idFil] = $this->hydrate($row);
+            if (!isset($fils[$idFil])) {
+                $fils[$idFil] = $this->hydrate($row);
+            }
+
+            // Ajout du thème si non existant
+            $theme = new Theme($row['theme_id'], $row['theme_nom']);
+            if (!$this->themeExisteDeja($fils[$idFil]->getThemes(), $theme)) {
+                $fils[$idFil]->ajouterTheme($theme);
+            }
         }
 
-        // Ajout du thème si non existant
-        $theme = new Theme($row['theme_id'], $row['theme_nom']);
-        if (!$this->themeExisteDeja($fils[$idFil]->getThemes(), $theme)) {
-            $fils[$idFil]->ajouterTheme($theme);
-        }
+        return array_values($fils);
     }
 
-    return array_values($fils);
-}
-
-// Méthode pour vérifier si un thème existe déjà
-private function themeExisteDeja(array $themes, Theme $theme): bool
-{
-    foreach ($themes as $t) {
-        if ($t->getId() === $theme->getId()) {
-            return true;
+    // Méthode pour vérifier si un thème existe déjà
+    private function themeExisteDeja(array $themes, Theme $theme): bool
+    {
+        foreach ($themes as $t) {
+            if ($t->getId() === $theme->getId()) {
+                return true;
+            }
         }
+        return false;
     }
-    return false;
-}
 
     // Méthodes de recherche 
     /**
@@ -198,12 +130,12 @@ private function themeExisteDeja(array $themes, Theme $theme): bool
     public function findAll(): array
     {
         $sql = "
-            SELECT DISTINCT f.*,
-            u.idUtilisateur AS idUtilisateur,
-            u.pseudo AS pseudo,
-            u.urlImageProfil AS urlImageProfil,
-            t.idTheme AS theme_id,
-            t.nom AS theme_nom
+            SELECT f.*, 
+                    MAX(u.idUtilisateur) AS idUtilisateur,
+                    MAX(u.pseudo) AS pseudo,
+                    MAX(u.urlImageProfil) AS urlImageProfil,
+                    t.idTheme AS theme_id,
+                    t.nom AS theme_nom
             FROM " . DB_PREFIX . "fil AS f
             LEFT JOIN (
                 SELECT m.idFil, MIN(m.dateC) AS firstDate
@@ -215,7 +147,7 @@ private function themeExisteDeja(array $themes, Theme $theme): bool
             LEFT JOIN " . DB_PREFIX . "parlerdeTheme AS p ON f.idFil = p.idFil
             LEFT JOIN " . DB_PREFIX . "theme AS t ON p.idTheme = t.idTheme
             GROUP BY f.idFil, t.idTheme
-            ORDER BY f.idFil DESC";
+            ORDER BY f.idFil DESC;";
 
         $stmt = $this->pdo->query($sql);
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
@@ -230,38 +162,38 @@ private function themeExisteDeja(array $themes, Theme $theme): bool
      * @param integer $id Identifiant du fil
      * @return Fil|null
      */
-    public function findById(int $id): ?Fil
+    public function findById(int $id)
     {
         $sql = "
-            SELECT DISTINCT f.*, 
-               u.idUtilisateur, 
-               u.pseudo, 
-               u.urlImageProfil, 
-               t.idTheme AS theme_id, 
-               t.nom AS theme_nom
-                FROM " . DB_PREFIX . "fil AS f
-                LEFT JOIN (
-                    SELECT m.idFil, MIN(m.dateC) AS firstDate
-                    FROM " . DB_PREFIX . "message AS m
-                    GROUP BY m.idFil
-                ) AS first_message ON f.idFil = first_message.idFil
-                LEFT JOIN " . DB_PREFIX . "message AS m 
-                    ON f.idFil = m.idFil AND m.dateC = first_message.firstDate
-                LEFT JOIN " . DB_PREFIX . "utilisateur AS u 
-                    ON m.idUtilisateur = u.idUtilisateur
-                LEFT JOIN " . DB_PREFIX . "parlerdeTheme AS p 
-                    ON f.idFil = p.idFil
-                LEFT JOIN " . DB_PREFIX . "theme AS t 
-                    ON p.idTheme = t.idTheme
-                WHERE f.idFil = :id
-                GROUP BY f.idFil, t.idTheme
+        SELECT DISTINCT f.*, 
+        u.idUtilisateur AS idUtilisateur, 
+        u.pseudo AS pseudo, 
+        u.urlImageProfil AS urlImageProfil, 
+        t.idTheme AS theme_id, 
+        t.nom AS theme_nom
+            FROM " . DB_PREFIX . "fil AS f
+            LEFT JOIN (
+            SELECT m.idFil, MIN(m.dateC) AS firstDate
+            FROM " . DB_PREFIX . "message AS m
+            GROUP BY m.idFil
+            ) AS first_message ON f.idFil = first_message.idFil
+            LEFT JOIN " . DB_PREFIX . "message AS m 
+            ON f.idFil = m.idFil AND m.dateC = first_message.firstDate
+            LEFT JOIN " . DB_PREFIX . "utilisateur AS u 
+            ON m.idUtilisateur = u.idUtilisateur
+            LEFT JOIN " . DB_PREFIX . "parlerdeTheme AS p 
+            ON f.idFil = p.idFil
+            LEFT JOIN " . DB_PREFIX . "theme AS t 
+            ON p.idTheme = t.idTheme
+            WHERE f.idFil = :id
+            GROUP BY f.idFil, u.idUtilisateur,  t.idTheme;
         ";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
-        return $this->hydrate($stmt->fetchAll());
+        return $this->hydrateAll($stmt->fetchAll());
     }
 
 
@@ -415,7 +347,8 @@ private function themeExisteDeja(array $themes, Theme $theme): bool
      * 
      * @return array<Fil> Tableau d'objets Fil
      */
-    public function searchFils(string $search): array{
+    public function searchFils(string $search): array
+    {
         // Cherhcer par nom OU thème et concaténer les résultats
         $filsByName = $this->searchFilsByName($search);
         $filsByTheme = $this->searchFilsByTheme($search);
@@ -429,7 +362,8 @@ private function themeExisteDeja(array $themes, Theme $theme): bool
      * 
      * @return array<Fil> Tableau d'objets Fil
      */
-    private function searchFilsByTheme(string $search): array{
+    private function searchFilsByTheme(string $search): array
+    {
         $sql = "
             SELECT DISTINCT f.*, 
                 u.idUtilisateur, 
