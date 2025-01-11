@@ -4,7 +4,37 @@
 
 <main class="  flex-grow-1">
 
+<div class=" container  my-4  bg-mydark text-white rounded">
 
+            {% if signalements  is null %}
+			<div class="py-2   d-flex align-items-center">
+
+				<p class="col-7 col-md-9 mb-1 ">il y a aucun sigalemen</p>
+            </div>
+            {% else %}
+                
+                <div class="py-2 border-primary row border-bottom border-1  d-flex align-items-center">
+                    <p class="col-7 col-md-9 mb-1 ">il y a {{ nbSignalements }} signalements</p>
+                    
+                </div>
+                <div class="py-2 row border-primary border-bottom border-1  d-flex align-items-center">
+                    <p class="mb-0 col-6 col-md-8 border-primary border-end border-1"> contenu du message </p>
+                    <p class="mb-0 col-2 ">nombre de signalement </p>
+                    
+                </div>
+
+                {% for signalement in signalements %}
+                    <div class=" py-2 ">
+                        <form action="index.php?controller=signalement&methode=supprimerMessageSignale" method="post" class="row">
+                            <input type="hidden" name="idMessage" value="{{signalement.idMessage}}">
+                            <p class="mb-0 col-6 col-md-8  border-primary border-end border-1">{{signalement.valeur}}</p>
+                            <p class="mb-0 col-2 ">{{signalement.nbSignalement}}</p>
+                            <input type="submit" class="col-3 col-md-2 bg-dark border-0 p-0" value="🗑️">
+                        </form>
+                    </div>
+                {% endfor %}
+            {% endif %}
+</div>  
 
 </main>
 

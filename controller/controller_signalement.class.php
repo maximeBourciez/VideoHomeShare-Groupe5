@@ -54,7 +54,45 @@ class ControllerSignalement extends Controller
 
         // Affichage de la page des signalements
         $template = $this->getTwig()->load('signalement.html.twig');
-        echo $template->render(array("signalements" => $signalements));
+        echo $template->render(array("signalements" => $signalements , "nbSignalements" => count($signalements)));
+    }
+
+    /**
+     * @brief Supprime un message signalé
+     * 
+     * @return void
+     */
+    public function supprimerMessageSignale() : void
+    {
+        // Vérification de la session
+        if (isset($_SESSION['utilisateur'])) {
+            $utilisateur = unserialize($_SESSION['utilisateur']);
+            // Vérification  si l'utilisateur est un modérateur
+            if ($utilisateur->getRole()->toString() != "Moderateur") {
+                // Redirection vers la page d'accueil
+                $managerAccueil = new ControllerIndex($this->getTwig(), $this->getLoader());
+                $managerAccueil->index();
+            }
+
+        } else {
+            // Redirection vers la page de connexion
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
+        }
+
+        // Récupération de l'identifiant du message signalé
+        $idMessage = htmlspecialchars($_POST['idMessage']);
+
+        // Suppression du message signalé
+        $managerMessage = new MessageDAO($this->getPdo());
+        $managerMessage->supprimerMessage($idMessage);
+        $managerMessage->purgerReactions($idMessage);
+        //suppression des signalements associés
+        $managerSignalement = new SignalementDAO($this->getPdo());
+        $managerSignalement->supprimerSignalementMessage($idMessage);
+
+        // Redirection vers la page des signalements
+        $this->afficheSignalements();
     }
 
 }

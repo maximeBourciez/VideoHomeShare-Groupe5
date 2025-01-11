@@ -176,12 +176,19 @@ class SignalementDAO{
     }
 
     public function findAllMessageSignaleAssoc() : ?array{
-        $sql = "SELECT s.idMessage , m.valeur  COUNT(s.idMessage) AS nbSignalement FROM ".DB_PREFIX."signalement  s join ".DB_PREFIX."message m on s.idMessage = m.idMessage GROUP BY s.idMessage; ";
+        $sql = "SELECT s.idMessage , m.valeur ,  COUNT(s.idMessage) AS nbSignalement FROM ".DB_PREFIX."signalement  s join ".DB_PREFIX."message m on s.idMessage = m.idMessage GROUP BY s.idMessage Order By nbSignalement  DESC; ";
         $pdoStatement = $this->pdo->prepare($sql);
         $pdoStatement->execute();
         $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
         $signalements = $pdoStatement->fetchAll();
         return $signalements;
+    }
+
+    public function supprimerSignalementMessage(int $idMessage): bool{
+        $sql = "DELETE FROM ".DB_PREFIX."signalement WHERE idMessage = :idMessage";
+        $pdoStatement = $this->pdo->prepare($sql);
+        $pdoStatement->bindValue(':idMessage', $idMessage, PDO::PARAM_INT);
+        return $pdoStatement->execute();
     }
 }
 
