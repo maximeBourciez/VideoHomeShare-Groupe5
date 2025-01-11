@@ -276,4 +276,53 @@ class TmdbAPICollection {
 
         return $movies;
     }
+
+    /**
+     * Méthode permettant de rechercher des collections par nom
+     * 
+     * @param string|null $query Terme de recherche
+     * 
+     * @return array<Collection>|null Collections trouvées
+     */
+    public function searchCollectionsByName(?string $query){
+        // Encodage du nom pour l'URL
+        $encodedName = urlencode($query);
+        $url = "https://api.themoviedb.org/3/search/collection?api_key={$this->apiKey}&language=fr-FR&query={$encodedName}";
+        
+        // Récupération des données
+        $response = @file_get_contents($url);
+        if ($response === false) {
+            // Gérer l'erreur si l'API ne répond pas
+            return null;
+        }
+
+        $collectionData = json_decode($response, true);
+        if ($collectionData === null || isset($collectionData['status_code'])) {
+            // Vérification si la réponse est invalide ou s'il y a une erreur API
+            return null;
+        }
+
+        // Vérification si la collection est marquée comme "adult"
+        if (isset($collectionData['adult']) && $collectionData['adult'] === true) {
+            return null;
+        }
+
+        // Convertir les données en objet Collection
+        return $this->convertToMultipleCollection($collectionData);
+    }
+
+    /**
+     * Convertit les données TMDB en tableau d'objets Collection
+     * 
+     * @param array $collectionData Données TMDB
+     * 
+     * @return array<Collection> Tableau d'objets Collection
+     */
+    private function convertToMultipleCollection(array $collectionData): array {
+        $collections = [];
+        foreach ($collectionData as $collection) {
+            $collections[] = $this->convertToCollection($collection);
+        }
+        return $collections;
+    }
 }

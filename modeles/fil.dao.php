@@ -107,7 +107,10 @@ class FilDAO
             $theme = new Theme($row['theme_id'], $row['theme_nom']);
             $themes[] = $theme;
 
-            $fil = new Fil($id, $titre, $dateCreation, $description, $user, $themes);
+            // Ajout des likes dans les cas ou ils existent
+            $nbLikes = $row['likes'] ?? 0;
+
+            $fil = new Fil($id, $titre, $dateCreation, $description, $user, $themes, $nbLikes);
             return $fil;
         }
     }
@@ -161,6 +164,7 @@ class FilDAO
             LEFT JOIN " . DB_PREFIX . "utilisateur AS u ON m.idUtilisateur = u.idUtilisateur
             LEFT JOIN " . DB_PREFIX . "parlerdeTheme AS p ON f.idFil = p.idFil
             LEFT JOIN " . DB_PREFIX . "theme AS t ON p.idTheme = t.idTheme
+            GROUP BY f.idFil, t.idTheme
             ORDER BY f.idFil DESC";
 
         $stmt = $this->pdo->query($sql);
@@ -200,6 +204,7 @@ class FilDAO
                 LEFT JOIN " . DB_PREFIX . "theme AS t 
                     ON p.idTheme = t.idTheme
                 WHERE f.idFil = :id
+                GROUP BY f.idFil, t.idTheme
         ";
 
         $stmt = $this->pdo->prepare($sql);
@@ -301,5 +306,150 @@ class FilDAO
             $stmt->bindValue(':idTheme', intval($theme), PDO::PARAM_INT);
             $stmt->execute();
         }
+    }
+
+    /**
+     * @brief Méthode pour récupérer les fils les plus likés
+     * 
+     * @param int $limit Nombre de fils à récupérer
+     * 
+     * @return array<Fil> Tableau d'objets Fil
+     */
+    public function getFilsLesPlusLikes(int $limit): array
+    {
+        $sql = "
+                SELECT DISTINCT f.*, 
+                    u.idUtilisateur, 
+                    u.pseudo, 
+                    u.urlImageProfil, 
+                    t.idTheme AS theme_id, 
+                    t.nom AS theme_nom,
+                    likes.likes AS likes
+                FROM " . DB_PREFIX . "fil AS f
+                LEFT JOIN (
+                    SELECT m.idFil, COUNT(l.idMessage) AS likes
+                    FROM " . DB_PREFIX . "message AS m
+                    LEFT JOIN " . DB_PREFIX . "reagir AS l ON m.idMessage = l.idMessage
+                    GROUP BY m.idFil
+                ) AS likes ON f.idFil = likes.idFil
+                LEFT JOIN (
+                    SELECT m.idFil, MIN(m.dateC) AS firstDate
+                    FROM " . DB_PREFIX . "message AS m
+                    GROUP BY m.idFil
+                ) AS first_message ON f.idFil = first_message.idFil
+                LEFT JOIN " . DB_PREFIX . "message AS m 
+                    ON f.idFil = m.idFil AND m.dateC = first_message.firstDate
+                LEFT JOIN " . DB_PREFIX . "utilisateur AS u 
+                    ON m.idUtilisateur = u.idUtilisateur
+                LEFT JOIN " . DB_PREFIX . "parlerdeTheme AS p 
+                    ON f.idFil = p.idFil
+                LEFT JOIN " . DB_PREFIX . "theme AS t 
+                    ON p.idTheme = t.idTheme
+                GROUP BY f.idFil
+                ORDER BY likes.likes DESC
+                LIMIT :limit
+            ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $this->hydrateAll($stmt->fetchAll());
+    }
+
+
+
+    /**
+     * @brief Méthode pour récupérer les fils résulatnts d'une recherche
+     * 
+     * @param string $search Recherche
+     * 
+     * @return array<Fil> Tableau d'objets Fil
+     */
+    public function searchFils(string $search): array{
+        // Cherhcer par nom OU thème et concaténer les résultats
+        $filsByName = $this->searchFilsByName($search);
+        $filsByTheme = $this->searchFilsByTheme($search);
+        return array_merge($filsByName, $filsByTheme);
+    }
+
+    /**
+     * Méthode pour récupérer les fils résulatnts d'une recherche par nom OU thème
+     * 
+     * @param string $search Recherche
+     * 
+     * @return array<Fil> Tableau d'objets Fil
+     */
+    private function searchFilsByTheme(string $search): array{
+        $sql = "
+            SELECT DISTINCT f.*, 
+                u.idUtilisateur, 
+                u.pseudo, 
+                u.urlImageProfil, 
+                t.idTheme AS theme_id, 
+                t.nom AS theme_nom
+            FROM " . DB_PREFIX . "fil AS f
+            LEFT JOIN (
+                SELECT m.idFil, MIN(m.dateC) AS firstDate
+                FROM " . DB_PREFIX . "message AS m
+                GROUP BY m.idFil
+            ) AS first_message ON f.idFil = first_message.idFil
+            LEFT JOIN " . DB_PREFIX . "message AS m 
+                ON f.idFil = m.idFil AND m.dateC = first_message.firstDate
+            LEFT JOIN " . DB_PREFIX . "utilisateur AS u 
+                ON m.idUtilisateur = u.idUtilisateur
+            LEFT JOIN " . DB_PREFIX . "parlerdeTheme AS p 
+                ON f.idFil = p.idFil
+            LEFT JOIN " . DB_PREFIX . "theme AS t 
+                ON p.idTheme = t.idTheme
+            WHERE t.nom LIKE :search
+            GROUP BY f.idFil, t.idTheme
+            ORDER BY f.idFil DESC
+        ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':search', '%' . $search . '%', PDO::PARAM_STR);
+        $stmt->execute();
+        return $this->hydrateAll($stmt->fetchAll());
+    }
+
+
+    /**
+     * @brief Méthode pour récupérer les fils résulatnts d'une recherche
+     * 
+     * @param string $search Recherche
+     * 
+     * @return array<Fil> Tableau d'objets Fil
+     */
+    private function searchFilsByName(string $search): array
+    {
+        $sql = "
+            SELECT DISTINCT f.*, 
+                u.idUtilisateur, 
+                u.pseudo, 
+                u.urlImageProfil, 
+                t.idTheme AS theme_id, 
+                t.nom AS theme_nom
+            FROM " . DB_PREFIX . "fil AS f
+            LEFT JOIN (
+                SELECT m.idFil, MIN(m.dateC) AS firstDate
+                FROM " . DB_PREFIX . "message AS m
+                GROUP BY m.idFil
+            ) AS first_message ON f.idFil = first_message.idFil
+            LEFT JOIN " . DB_PREFIX . "message AS m 
+                ON f.idFil = m.idFil AND m.dateC = first_message.firstDate
+            LEFT JOIN " . DB_PREFIX . "utilisateur AS u 
+                ON m.idUtilisateur = u.idUtilisateur
+            LEFT JOIN " . DB_PREFIX . "parlerdeTheme AS p 
+                ON f.idFil = p.idFil
+            LEFT JOIN " . DB_PREFIX . "theme AS t 
+                ON p.idTheme = t.idTheme
+            WHERE f.titre LIKE :search
+            OR f.description LIKE :search
+            GROUP BY f.idFil, t.idTheme
+            ORDER BY f.idFil DESC
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':search', '%' . $search . '%', PDO::PARAM_STR);
+        $stmt->execute();
+        return $this->hydrateAll($stmt->fetchAll());
     }
 }

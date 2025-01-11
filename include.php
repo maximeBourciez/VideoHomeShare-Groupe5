@@ -60,3 +60,4 @@ require_once 'controller/controller_contenu.class.php';
 require_once 'controller/controller_watchlist.class.php';
 require_once 'controller/controller_collection.class.php';
 require_once 'controller/controller_notification.class.php';
+require_once 'controller/controller_index.class.php';
