@@ -77,11 +77,12 @@ class ControllerIndex extends Controller
         $recherche = $_POST['recherche'];
 
         // Récupérer les contenus
-        $tmdbApi = new ContenuDAO($this->getPdo());
-        $contenus = $tmdbApi->searchMoviesByName($recherche);
+        $managerContenu = new ContenuDAO($this->getPdo());
+        $contenus = $managerContenu->searchMoviesByName($recherche);
 
         // Récupérer les collections
-        // En attente du travail sur les colections
+        $managerCollection = new CollectionDAO($this->getPdo());
+        $collections = $managerCollection->searchByName($recherche);
 
         // Récupérer les sagas
         // En attente du travail sur les sagas
@@ -94,6 +95,7 @@ class ControllerIndex extends Controller
         echo $this->getTwig()->render('resultatRecherche.html.twig', [
             'contenus' => $contenus,
             'fils' => $fils,
+            'collections' => $collections,
             'recherche' => $recherche
         ]);
     }

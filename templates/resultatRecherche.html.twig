@@ -3,6 +3,10 @@
 {% block title %}Résultat de la recherche{% endblock %}
 
 {% block content %}
+    <pre>
+        {{ dump(collections) }}
+    </pre>
+
     <h2 class="text-center mt-5">Résultat de la recherche "{{ recherche }}"</h2>
 
     <!-- Films correspondants -->
@@ -68,7 +72,7 @@
         </div>       
     </section>
 
-    {# <!-- Collections correspondantes -->
+    <!-- Collections correspondantes -->
     <section class="my-5 bg-dark py-5">
         <!-- Informations -->
         <div class="d-flex flex-row container">
@@ -93,7 +97,7 @@
                                     {% if collection != '' %} 
                                         <div class="col">
                                             <div class="card">
-                                                <img src="{{ collection.lienAfficheReduite }}" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;" alt="{{ collection.titre }}">
+                                                <img src="{{ collection.lienAffiche }}" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;" alt="{{ collection.titre }}">
                                                 <div class="card-body">
                                                     <div class="card-body">
                                                         <h5 class="card-title
@@ -103,7 +107,7 @@
                                                         <p class="card-text">{{ collection.description|slice(0, 50) ~ '...' }}</p>
                                                     </div>
                                                     <div class="card-footer">
-                                                        <a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ collection.id }}" class="btn btn-myprimary">Voir la collection</a>
+                                                        <a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ collection.id }}" class="btn btn-myprimary w-100">Voir la collection</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -129,7 +133,7 @@
                 {% endfor %}
             </div>
         </div>       
-    </section> #}
+    </section>
 
     <!-- Fils de discussion correspondants -->
     <section class="my-5 bg-dark py-5">

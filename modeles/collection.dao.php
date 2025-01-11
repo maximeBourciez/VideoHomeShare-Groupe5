@@ -53,22 +53,6 @@ class CollectionDAO {
     }
 
     /**
-     * @brief Récupère une collection complète (API + DB)
-     * 
-     * @param int $tmdbId Identifiant TMDB de la collection
-     * @return Collection|null La collection trouvée et sauvegardée
-     */
-    public function getCompleteCollection(int $tmdbId): ?Collection {
-        $collection = $this->getCollectionFromTMDB($tmdbId);
-        
-        if ($collection) {
-            return $this->saveCollection($collection);
-        }
-        
-        return null;
-    }
-
-    /**
      * @brief Récupère les personnalités d'une collection
      * 
      * @param int|Collection $collection ID ou objet Collection
@@ -287,4 +271,38 @@ class CollectionDAO {
         return $uniquePersonnalites;
     }
 
+
+    /**
+     * Methode de recherche d'une collection par son nom
+     * 
+     * @param string $nom Recherhche de la collection par son nom
+     * 
+     * @return array<Collection>|null La collection trouvée ou null si non trouvée
+     */
+    public function searchByName(?string $query): ?array {
+        $url = "{$this->baseUrl}/search/collection?api_key={$this->apiKey}&query=" . urlencode($query) . "&language=fr-FR";
+        $response = file_get_contents($url);
+        
+        if ($response === false) {
+            return null; // En cas d'erreur, retourner null
+        }
+
+        $collectionData = json_decode($response, true);
+        
+        if ($collectionData) {
+            $collections = [];
+            foreach ($collectionData['results'] as $result) {
+                $collections[] = new Collection(
+                    $result['id'],
+                    $result['name'], // Correspond au titre de la collection
+                    null, // Date non disponible dans l'API
+                    $result['overview'] ?? null,
+                    $result['poster_path'] ? "https://image.tmdb.org/t/p/w500" . $result['poster_path'] : null,
+                    null // Nombre de films non fourni par l'API
+                );
+            }
+            return $collections;
+        }
+        return null;
+    }
 }
