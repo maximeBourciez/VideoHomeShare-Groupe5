@@ -1,6 +1,11 @@
 {% extends 'base_template.html.twig' %}
 
 {% block content %}
+    {% if messagederreur is defined %}
+        <div class="alert alert-danger" role="alert">
+            {{ messagederreur }}
+        </div>
+    {% endif %}
     <main class="movie-page container d-flex flex-column justify-content-center align-items-center flex-grow-1">
         <div class="movie-content d-flex">
             <!-- Section Affiche -->
@@ -154,7 +159,7 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="index.php?controller=commentaire&methode=createCommentaireCollection" method="POST">
+                    <form action="index.php?controller=commentaire&methode=createCommentaire" method="POST">
                         <input type="hidden" name="idCollection" value="{{ collection.id }}">
                         <div class="mb-3">
                             <label for="titre" class="form-label">Titre de votre avis</label>
@@ -163,15 +168,17 @@
                                    maxlength="100">
                         </div>
                         <div class="mb-3">
-                            <label for="note" class="form-label">Note</label>
-                            <select class="form-select" id="note" name="note" required>
-                                <option value="1">1/5</option>
-                                <option value="2">2/5</option>
-                                <option value="3">3/5</option>
-                                <option value="4">4/5</option>
-                                <option value="5">5/5</option>
-                            </select>
+                            <label for="note" class="form-label">Note : <span id="sliderValue">3</span></label>
+                            <input type="range" class="form-range" id="note" name="note" min="1" max="5" step="1" value="3" required>
                         </div>
+
+                        <script>
+                            const slider = document.getElementById('note');
+                            const sliderValue = document.getElementById('sliderValue');
+                            slider.addEventListener('input', () => {
+                                sliderValue.textContent = slider.value;
+                            });
+                        </script>
                         <div class="mb-3">
                             <label for="commentaire" class="form-label">Votre commentaire</label>
                             <textarea class="form-control" id="commentaire" name="commentaire" rows="4" required 
