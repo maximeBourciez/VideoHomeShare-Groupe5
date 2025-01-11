@@ -63,80 +63,130 @@ class FilDAO
      * @param array $row Ligne de la base de données
      * @return Fil Objet Fil hydraté
      */
+    // public function hydrate(array $row): Fil
+    // {
+    //     $fil = new Fil();
+    //     // Création de l'objet Theme
+    //     $themes = [];
+
+    //     if (isset($row[0]) && is_array($row[0])) {
+    //         // Création de l'objet Utilisateur
+    //         $user = new Utilisateur();
+    //         $user->setId($row[0]['idUtilisateur']);
+    //         $user->setPseudo($row[0]['pseudo']);
+    //         $user->setUrlImageProfil($row[0]['urlImageProfil']);
+
+    //         // Création de l'objet Fil 
+    //         $id = $row[0]['idFil'];
+    //         $titre = $row[0]['titre'];
+    //         $dateCreation = new DateTime($row[0]['dateC']);
+    //         $description = $row[0]['description'];
+
+    //         foreach ($row as $element) {
+    //             if ($element['idFil'] == $id) {
+    //                 $theme = new Theme($element['theme_id'], $element['theme_nom']);
+    //                 $themes[] = $theme;
+    //             }
+    //         }
+
+    //         $fil = new Fil($id, $titre, $dateCreation, $description, $user, $themes);
+    //         return $fil;
+    //     } else {
+    //         // Création de l'objet Utilisateur
+    //         $user = new Utilisateur();
+    //         $user->setId($row['idUtilisateur']);
+    //         $user->setPseudo($row['pseudo']);
+    //         $user->setUrlImageProfil($row['urlImageProfil']);
+
+    //         // Création de l'objet Fil 
+    //         $id = $row['idFil'];
+    //         $titre = $row['titre'];
+    //         $dateCreation = new DateTime($row['dateC']);
+    //         $description = $row['description'];
+
+    //         $theme = new Theme($row['theme_id'], $row['theme_nom']);
+    //         $themes[] = $theme;
+
+    //         // Ajout des likes dans les cas ou ils existent
+    //         $nbLikes = $row['likes'] ?? 0;
+
+    //         $fil = new Fil($id, $titre, $dateCreation, $description, $user, $themes, $nbLikes);
+    //         return $fil;
+    //     }
+    // }
+
+    // /**
+    //  * @brief Méthode d'hydratation de tous les fils
+    //  * 
+    //  * @param array $rows Tableau de lignes de la base de données
+    //  * @return array<Fil> Tableau d'objets Fil hydratés
+    //  */
+    // function hydrateAll(array $rows): array
+    // {
+    //     $fils = [];
+    //     foreach ($rows as $row) {
+    //         if (isset($fils[$row['idFil']])) {
+    //             // Ajout du thème au fil
+    //             $theme = new Theme($row['theme_id'], $row['theme_nom']);
+    //             $fils[$row['idFil']]->ajouterTheme($theme);
+    //         }
+    //         // Sinon
+    //         else {
+    //             $fils[$row['idFil']] = $this->hydrate($row);
+    //         }
+    //     }
+    //     return $fils;
+    // }
     public function hydrate(array $row): Fil
     {
-        $fil = new Fil();
-        // Création de l'objet Theme
         $themes = [];
+        $user = new Utilisateur();
+        $user->setId($row['idUtilisateur']);
+        $user->setPseudo($row['pseudo']);
+        $user->setUrlImageProfil($row['urlImageProfil']);
+    
+        $theme = new Theme($row['theme_id'], $row['theme_nom']);
+        $themes[] = $theme;
+    
+        $id = $row['idFil'];
+        $titre = $row['titre'];
+        $dateCreation = new DateTime($row['dateC']);
+        $description = $row['description'];
+        $nbLikes = $row['likes'] ?? 0;
+    
+        return new Fil($id, $titre, $dateCreation, $description, $user, $themes, $nbLikes);
+    }
 
-        if (isset($row[0]) && is_array($row[0])) {
-            // Création de l'objet Utilisateur
-            $user = new Utilisateur();
-            $user->setId($row[0]['idUtilisateur']);
-            $user->setPseudo($row[0]['pseudo']);
-            $user->setUrlImageProfil($row[0]['urlImageProfil']);
+    public function hydrateAll(array $rows): array
+{
+    $fils = [];
+    foreach ($rows as $row) {
+        $idFil = $row['idFil'];
 
-            // Création de l'objet Fil 
-            $id = $row[0]['idFil'];
-            $titre = $row[0]['titre'];
-            $dateCreation = new DateTime($row[0]['dateC']);
-            $description = $row[0]['description'];
+        if (!isset($fils[$idFil])) {
+            $fils[$idFil] = $this->hydrate($row);
+        }
 
-            foreach ($row as $element) {
-                if ($element['idFil'] == $id) {
-                    $theme = new Theme($element['theme_id'], $element['theme_nom']);
-                    $themes[] = $theme;
-                }
-            }
-
-            $fil = new Fil($id, $titre, $dateCreation, $description, $user, $themes);
-            return $fil;
-        } else {
-            // Création de l'objet Utilisateur
-            $user = new Utilisateur();
-            $user->setId($row['idUtilisateur']);
-            $user->setPseudo($row['pseudo']);
-            $user->setUrlImageProfil($row['urlImageProfil']);
-
-            // Création de l'objet Fil 
-            $id = $row['idFil'];
-            $titre = $row['titre'];
-            $dateCreation = new DateTime($row['dateC']);
-            $description = $row['description'];
-
-            $theme = new Theme($row['theme_id'], $row['theme_nom']);
-            $themes[] = $theme;
-
-            // Ajout des likes dans les cas ou ils existent
-            $nbLikes = $row['likes'] ?? 0;
-
-            $fil = new Fil($id, $titre, $dateCreation, $description, $user, $themes, $nbLikes);
-            return $fil;
+        // Ajout du thème si non existant
+        $theme = new Theme($row['theme_id'], $row['theme_nom']);
+        if (!$this->themeExisteDeja($fils[$idFil]->getThemes(), $theme)) {
+            $fils[$idFil]->ajouterTheme($theme);
         }
     }
 
-    /**
-     * @brief Méthode d'hydratation de tous les fils
-     * 
-     * @param array $rows Tableau de lignes de la base de données
-     * @return array<Fil> Tableau d'objets Fil hydratés
-     */
-    function hydrateAll(array $rows): array
-    {
-        $fils = [];
-        foreach ($rows as $row) {
-            if (isset($fils[$row['idFil']])) {
-                // Ajout du thème au fil
-                $theme = new Theme($row['theme_id'], $row['theme_nom']);
-                $fils[$row['idFil']]->ajouterTheme($theme);
-            }
-            // Sinon
-            else {
-                $fils[$row['idFil']] = $this->hydrate($row);
-            }
+    return array_values($fils);
+}
+
+// Méthode pour vérifier si un thème existe déjà
+private function themeExisteDeja(array $themes, Theme $theme): bool
+{
+    foreach ($themes as $t) {
+        if ($t->getId() === $theme->getId()) {
+            return true;
         }
-        return $fils;
     }
+    return false;
+}
 
     // Méthodes de recherche 
     /**
@@ -345,7 +395,8 @@ class FilDAO
                     ON f.idFil = p.idFil
                 LEFT JOIN " . DB_PREFIX . "theme AS t 
                     ON p.idTheme = t.idTheme
-                GROUP BY f.idFil
+                    GROUP BY f.idFil, u.idUtilisateur, u.pseudo, u.urlImageProfil, t.idTheme, t.nom, likes.likes
+
                 ORDER BY likes.likes DESC
                 LIMIT :limit
             ";
@@ -401,7 +452,7 @@ class FilDAO
             LEFT JOIN " . DB_PREFIX . "theme AS t 
                 ON p.idTheme = t.idTheme
             WHERE t.nom LIKE :search
-            GROUP BY f.idFil, t.idTheme
+            GROUP BY f.idFil, u.idUtilisateur, u.pseudo, u.urlImageProfil, t.idTheme, t.nom
             ORDER BY f.idFil DESC
         ";
 
@@ -444,7 +495,7 @@ class FilDAO
                 ON p.idTheme = t.idTheme
             WHERE f.titre LIKE :search
             OR f.description LIKE :search
-            GROUP BY f.idFil, t.idTheme
+            GROUP BY f.idFil, u.idUtilisateur, u.pseudo, u.urlImageProfil, t.idTheme, t.nom
             ORDER BY f.idFil DESC
         ";
         $stmt = $this->pdo->prepare($sql);
