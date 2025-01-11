@@ -17,7 +17,7 @@ class ControllerIndex extends Controller
     public function index()
     {
         // Récupérer les films de la semaine
-        $tmdbApi = new TmdbAPIContenu(TMDB_API_KEY);
+        $tmdbApi = new ContenuDAO($this->getPdo());
         $trends = $tmdbApi->getTrendingMovies();
 
         // Transformation du tableau
@@ -77,7 +77,7 @@ class ControllerIndex extends Controller
         $recherche = $_POST['recherche'];
 
         // Récupérer les contenus
-        $tmdbApi = new TmdbAPIContenu(TMDB_API_KEY);
+        $tmdbApi = new ContenuDAO($this->getPdo());
         $contenus = $tmdbApi->searchMoviesByName($recherche);
 
         // Récupérer les collections
