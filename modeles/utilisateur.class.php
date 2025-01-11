@@ -141,6 +141,15 @@ class Utilisateur{
     }
 
     /**
+     * Get the value of role as a string
+     * @return string
+     */
+    public function getRoleAsString(): ?string
+    {
+        return $this->role->toString();
+    }
+
+    /**
      * Get the value of urlImagePofil
      * @return string
      */

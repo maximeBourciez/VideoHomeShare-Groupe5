@@ -71,7 +71,7 @@
 
 					<!-- Boutons supprimer/signaler -->
 					<div class="d-flex gap-2">
-						{% if reponse.getUtilisateur().getId() == utilisateurConnecte.getId() %}
+						{% if (reponse.getUtilisateur().getId() == utilisateurConnecte.getId()) or (utilisateurConnecte.getRoleAsString() == "Moderateur") %}
 							<form method="POST" action="index.php?controller=fil&methode=supprimerMessage">
 								<input type="hidden" name="idMessage" value="{{ reponse.getIdMessage() }}">
 								<input type="hidden" name="id_fil" value="{{ idFil }}">
@@ -194,7 +194,7 @@ VHS | Fil
 
 							<!-- Boutons supprimer/signaler -->
 							<div class="d-flex gap-2">
-								{% if message.getUtilisateur().getId() == utilisateurConnecte.getId() %}
+								{% if (message.getUtilisateur().getId() == utilisateurConnecte.getId()) or (utilisateurConnecte.getRoleAsString() == "Moderateur")  %}
 									<form 
 										method="POST" 
 										action="index.php?controller=fil&methode=supprimerMessage" 
