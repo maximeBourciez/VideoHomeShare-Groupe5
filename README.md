@@ -37,13 +37,26 @@ L’objectif de VHS est de recréer la convivialité des soirées cinéma entre 
 
 ## Architecture technique
 ### Frontend
-HTML, CSS, TWIG, JavaScript
+- **HTML**, **CSS**, **SCSS**, **Bootstrap**
+- **JavaScript**
+- **Twig** pour la gestion des templates
+
 ### Backend
-PHP, JavaScript
+- **PHP**
+- Modèle de conception **MVC**
+
 ### Base de données
-SQL
+- **MySQL**
+
 ### API
-TMDb
+- **The Movie Database (TMDb)** pour obtenir les données de films et séries.
+
+### Sécurité
+- **OpenSSL** pour la protection des données.
+- **OAuth2** pour la gestion des connexions sécurisées.
+
+### Hébergement et journalisation
+- Hébergé via **phpMyAdmin**.
 <br>
 <br>
 
