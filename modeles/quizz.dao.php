@@ -1,72 +1,172 @@
 <?php
-
+/**
+ * @file quizz.dao.php
+ * 
+ * @brief Classe QuizzDAO
+ * 
+ * @details Classe permettant de gérer les accès à la base de données pour les quizz
+ * 
+ * @date 11/1/2025
+ * 
+ * @version 2.0
+ * 
+ * @author Marylou Lohier
+ */
 class QuizzDAO{
-
     // Attributs
+    /**
+     * @var PDO|null $pdo Connexion à la base de données
+     */
     private $pdo;
 
     // Constructeur
+    /**
+     * @brief Constructeur de la classe FilDAO
+     * 
+     * @param PDO|null $pdo Connexion à la base de données
+     */
     function __construct(?PDO $pdo = null){
         $this->pdo = $pdo;
     }
 
-    // Méthodes
+    // Encapsulation
+    // Getter
+    /**
+     * @brief Getter de la connexion à la base de données
+     * @return PDO|null Connexion à la base de données
+     */
+    public function getPdo(): ?PDO
+    {
+        return $this->pdo;
+    }
 
+    // Setter
+    /**
+     * @brief Setter de la connexion à la base de données
+     * @param PDO $pdo Connexion à la base de données
+     * @return self
+     */
+    public function setPdo(PDO $pdo): self
+    {
+        $this->pdo = $pdo;
+        return $this;
+    }
+
+    // Méthodes
+    /**
+     * @brief Méthode de création d'un quizz
+     * 
+     * @param quizz
+     * @return bool
+     */
     function create(Quizz $quizz): bool{
-        $req = $this->pdo->prepare("INSERT INTO Quizz (titre, description, difficulte, date) VALUES (:titre, :description, :difficulte, :date)");
+        $req = $this->pdo->prepare("INSERT INTO Quizz (titre, description, difficulte, dateC) VALUES (:titre, :description, :difficulte, :dateC)");
         $req->bindParam(":titre", $quizz->getTitre());
         $req->bindParam(":description", $quizz->getDescription());
         $req->bindParam(":difficulte", $quizz->getDifficulte());
-        $req->bindParam(":date", $quizz->getDate());
+        $req->bindParam(":dateC", $quizz->getDate());
+        $req->bindParam(":idUtilisateur", $quizz->getIdUtilisateur());
+
         return $req->execute();
     }
 
+    /**
+     * @brief Méthode de mise à jour d'un quizz
+     * 
+     * @param quizz
+     * @return bool
+     */
     function update(Quizz $quizz): bool{
-        $req = $this->pdo->prepare("UPDATE Quizz SET titre = :titre, description = :description, difficulte = :difficulte, date = :date WHERE id = :id");
+        $req = $this->pdo->prepare("UPDATE Quizz SET titre = :titre, description = :description, difficulte = :difficulte, dateC = :dateC WHERE id = :id, idUtilisateur = :idUtilisateur");
         $req->bindParam(":id", $quizz->getId());
         $req->bindParam(":titre", $quizz->getTitre());
         $req->bindParam(":description", $quizz->getDescription());
         $req->bindParam(":difficulte", $quizz->getDifficulte());
-        $req->bindParam(":date", $quizz->getDate());
+        $req->bindParam(":dateC", $quizz->getDate());
+        $req->bindParam(":idUtilisateur", $quizz->getIdUtilisateur());
+
         return $req->execute();
     }
 
+    /**
+     * @brief Méthode de suppression d'un quizz
+     * 
+     * @param id //identifiant du quizz
+     * @return bool
+     */
     function delete(int $id): bool{
         $req = $this->pdo->prepare("DELETE FROM Quizz WHERE id = :id");
         $req->bindParam(":id", $id);
+
         return $req->execute();
     }
 
+    /**
+     * @brief Méthode d'hydratation d'un quizz
+     * 
+     * @param array //tableau des attributs du quizz
+     * @return Quizz
+     */
     function hydrate(array $row): Quizz{
         // Récupération des valeurs
-        $id = $row['id'];
+        $id = $row['idQuizz'];
         $titre = $row['titre'];
         $description = $row['description'];
         $difficulte = $row['difficulte'];
-        $date = $row['date'];
+        $dateC = $row['dateC'];
+        $pseudo = $row['pseudo'];
 
         // Retourner le Quizz
-        return new Quizz($id, $titre, $description, $difficulte, $date);
+        return new Quizz($id, $titre, $description, $difficulte, $dateC, $pseudo);
     }
 
+    /**
+     * @brief Méthode d'hydratation de tous les quizz
+     * 
+     * @param array //tableau des attributs des quizz
+     * @return array
+     */
     function hydrateAll(array $rows): array{
-        $quizzs = [];
+        $quizz = [];
         foreach($rows as $row){
-            $quizz = $this->hydrate($row);
-            array_push($quizzs, $quizz);  // Ajout du Quizz au tableau 
+            $quiz = $this->hydrate($row);
+            array_push($quizz, $quiz);  // Ajout du Quizz au tableau 
         }
-        return $quizzs;
+        return $quizz;
     }
 
+    /**
+     * @brief Méthode pour récupérer les attributs d'un quizz
+     * 
+     * @param $id //identifiant du quizz
+     * @return Quizz
+     */
     function find(int $id): ?Quizz{
-        $sql = "SELECT * FROM Quizz WHERE id = :id";
+        $sql = "SELECT Q.*, U.pseudo 
+                FROM Quizz Q JOIN Utilisateur U ON Q.idUtilisateur = U.idUtilisateur
+                WHERE idQuizz = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $row = $stmt->fetch();
-        if($row == null){
+        if ($row == null){
             return null;
         }
+
         return $this->hydrate($row);
+    }
+
+    /**
+     * @brief Méthode pour récupérer les attributs des quizz
+     * 
+     * @return array
+     */
+    function findAll(): array{
+        $sql = "SELECT Q.*, U.pseudo
+                FROM " .DB_PREFIX. "quizz Q JOIN " .DB_PREFIX. "utilisateur U ON Q.idUtilisateur = U.idUtilisateur";
+        $stmt = $this->pdo->query($sql);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+
+        return $this->hydrateAll($stmt->fetchAll());
     }
 }
