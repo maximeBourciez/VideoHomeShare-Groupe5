@@ -9,29 +9,32 @@
     <br>
     <h1>Création d'un quizz</h1>
     <br>
-    <form id="quizzForm" action="" method="get">
-        <!-- Champ Image -->
-        <div class="row">
-            <label for="image">Ajouter une image : </label>
-            <input type="file" name="image" id="image"/>
-        </div>
-        <br>
-        <!-- Champ Titre -->
-        <div class="row">
-            <label for="titre">Titre de la question : </label>
-            <textarea name="titre" id="titre" required></textarea>
-        </div>
-        <br>
-        <!-- Champ des réponses -->
-        <div id="reponsesContainer">
-        </div>
-        <br>
-        <!-- Bouton d'ajout de réponses -->
-        <div class="row">
-            <button type="button" class="btn btn-primary" id="addReponseBtn">+ Ajouter une réponse</button>
-        </div>
-        <br>
-        <br>
+    {{% for numQuestion in nbQuestions %}}
+        <form id="quizzForm" action="" method="get">
+            <!-- Champ Image -->
+            <div class="row">
+                <label for="image_{{ numQuestion }}">Ajouter une image : </label>
+                <input type="file" name="image_{{ numQuestion }}" id="image"/>
+            </div>
+            <br>
+            <!-- Champ Titre -->
+            <div class="row">
+                <label for="titre_{{ numQuestion }}">Titre de la question : </label>
+                <textarea name="titre_{{ numQuestion }}" id="titre" required></textarea>
+            </div>
+            <br>
+            <!-- Champ des réponses -->
+            <div id="reponsesContainer">
+            </div>
+            <br>
+            <!-- Bouton d'ajout de réponses -->
+            <div class="row">
+                <button type="button" class="btn btn-primary" id="addReponseBtn">+ Ajouter une réponse</button>
+            </div>
+            <br>
+            <br>
+    {{% endfor %}}
+
         <!-- Boutons de manipulation de la page -->
         <div class="row text-center">
             <div class="col">

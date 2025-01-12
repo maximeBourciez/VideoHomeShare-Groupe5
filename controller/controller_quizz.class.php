@@ -157,10 +157,22 @@ class ControllerQuizz extends Controller
      */
     public function creerQuestion() : void
     {
-        $idQuizz = $_GET['idQuizz']; 
+        //Récupération des informations
+        $idQuizz = $_GET['idQuizz'];
+        $titre = $_GET['titre'];
+        $description = $_GET['description'];
+        $difficulte = $_GET['difficulte'];
+        $nbQuestions = range(1,$_GET['nbQuestions']);
+        $idUtilisateur = $_GET['idUtilisateur'];
+
+        //Création de l'objet Quizz
+        $managerQuizz = new QuizzDAO($this->getPdo());
+        $newQuizz = new Quizz($idQuizz,$titre,$description,$difficulte,$idUtilisateur);
+        $managerQuizz->create($newQuizz);
 
         echo $this->getTwig()->render('creationQuestion.html.twig', [
-            'idQuizz' => $idQuizz
+            'idQuizz' => $idQuizz,
+            'nbQuestions' => $nbQuestions
         ]);
     }
 
