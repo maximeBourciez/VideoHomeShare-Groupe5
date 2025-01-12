@@ -1,69 +1,48 @@
 {% extends 'base_template.html.twig' %}
 
 {% block content %}
-    <main class="watchlists-page container">
-        <!-- Section Favoris -->
+    <main class="watchlists-page container flex-grow-1">
+        <!-- Section "Vos Watchlists" -->
         <section class="watchlist-section mb-5">
-            <h2 class="watchlist-section__title">Favoris</h2>
-            <div class="watchlist-carousel position-relative">
-                <button class="carousel-control-prev" type="button">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                </button>
-                <div class="watchlist-grid d-flex overflow-hidden">
-                    {% if favoris is not empty %}
-                        {% for film in favoris %}
-                            <div class="movie-card me-3">
-                                <img 
-                                    src="{{ film.affiche }}" 
-                                    alt="{{ film.nom }}" 
-                                    class="movie-card__image shadow rounded"
-                                    style="width: 200px; height: 300px; object-fit: cover;"
-                                >
-                                <div class="movie-card__rating mt-2">{{ film.note }}/5</div>
-                                <div class="movie-card__title">{{ film.nom }}</div>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <p class="text-center">Aucun favori pour le moment</p>
-                    {% endif %}
-                </div>
-                <button class="carousel-control-next" type="button">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="watchlist-section__title mb-0">Vos Watchlists</h2>
+                <button class="btn btn-myprimary" data-bs-toggle="modal" data-bs-target="#createWatchlistModal">
+                    <i class="bi bi-plus-lg me-2"></i>Créer une watchlist
                 </button>
             </div>
-        </section>
-
-        <!-- Section Ma Watchlist -->
-        {% for watchlist in watchlistsPerso %}
-            <section class="watchlist-section mb-5">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h2 class="watchlist-section__title">{{ watchlist.nom }}</h2>
-                    <button class="btn btn-myprimary" data-bs-toggle="modal" data-bs-target="#editWatchlistModal">
-                        <i class="bi bi-pencil"></i>
-                    </button>
-                </div>
-                <div class="watchlist-carousel position-relative">
-                    <div class="watchlist-grid d-flex overflow-hidden">
-                        {% if watchlist.contenus is not empty %}
-                            {% for contenu in watchlist.contenus %}
-                                <div class="movie-card me-3">
-                                    <img 
-                                        src="{{ contenu.affiche }}" 
-                                        alt="{{ contenu.nom }}" 
-                                        class="movie-card__image shadow rounded"
-                                        style="width: 200px; height: 300px; object-fit: cover;"
-                                    >
-                                    <div class="movie-card__rating mt-2">{{ contenu.note }}/5</div>
-                                    <div class="movie-card__title">{{ contenu.nom }}</div>
-                                </div>
-                            {% endfor %}
-                        {% else %}
-                            <p class="text-center">Aucun contenu dans cette watchlist</p>
-                        {% endif %}
+            {% if watchlistsPerso is not empty %}
+                {% for watchlist in watchlistsPerso %}
+                    <div class="watchlist-container mb-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h3 class="watchlist-name">{{ watchlist.nom }}</h3>
+                            <button class="btn btn-myprimary" data-bs-toggle="modal" data-bs-target="#editWatchlistModal">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                        </div>
+                        <div class="watchlist-grid d-flex overflow-hidden">
+                            {% if watchlist.contenus is not empty %}
+                                {% for contenu in watchlist.contenus %}
+                                    <div class="movie-card me-3">
+                                        <img 
+                                            src="{{ contenu.affiche }}" 
+                                            alt="{{ contenu.nom }}" 
+                                            class="movie-card__image shadow rounded"
+                                            style="width: 200px; height: 300px; object-fit: cover;"
+                                        >
+                                        <div class="movie-card__rating mt-2">{{ contenu.note }}/5</div>
+                                        <div class="movie-card__title">{{ contenu.nom }}</div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <p class="text-center">Aucun contenu dans cette watchlist</p>
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
-            </section>
-        {% endfor %}
+                {% endfor %}
+            {% else %}
+                <p class="text-center">Vous n'avez pas encore de watchlists.</p>
+            {% endif %}
+        </section>
 
         <!-- Bouton Parcourir -->
         <div class="text-center mb-5">
@@ -82,7 +61,7 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/watchlist/edit" method="POST">
+                    <form action="index.php?controller=whatchlist&methode=creerWatchlist" method="POST">
                         <div class="mb-3">
                             <label for="watchlistName" class="form-label">Nom de la watchlist</label>
                             <input type="text" class="form-control" id="watchlistName" name="nom" required>
@@ -98,6 +77,38 @@
                         <div class="modal-footer border-0">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                             <button type="submit" class="btn btn-myprimary">Enregistrer</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modale Création Watchlist -->
+    <div class="modal fade" id="createWatchlistModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content bg-mydark text-white">
+                <div class="modal-header">
+                    <h5 class="modal-title">Créer une nouvelle watchlist</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="index.php?controller=whatchlist&methode=creerWatchlist" method="POST">
+                        <div class="mb-3">
+                            <label for="newWatchlistName" class="form-label">Nom de la watchlist</label>
+                            <input type="text" class="form-control" id="newWatchlistName" name="nom" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newWatchlistDesc" class="form-label">Description</label>
+                            <textarea class="form-control" id="newWatchlistDesc" name="description" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="newWatchlistPublic" name="estPublique">
+                            <label class="form-check-label" for="newWatchlistPublic">Watchlist publique</label>
+                        </div>
+                        <div class="modal-footer border-0">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                            <button type="submit" class="btn btn-myprimary">Créer</button>
                         </div>
                     </form>
                 </div>

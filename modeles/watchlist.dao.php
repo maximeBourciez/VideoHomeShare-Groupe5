@@ -7,20 +7,31 @@ class WatchlistDAO {
         $this->pdo = $pdo;
     }
 
-    public function createWatchlist(Watchlist $watchlist): ?int {
-        $sql = "INSERT INTO " . DB_PREFIX . "watchlist (nom, description, estPublique, date, idUtilisateur) 
-                VALUES (:nom, :description, :estPublique, :date, :idUtilisateur)";
+    /**
+     * @brief Méthode pour créer une nouvelle watchlist
+     * 
+     * @param string $nom Nom de la watchlist
+     * @param string $description Description de la watchlist
+     * @param bool $estPublique Statut public/privé de la watchlist
+     * @param string $idUtilisateur Identifiant de l'utilisateur créateur
+     * 
+     * @return int Identifiant de la watchlist créée
+     */
+    public function create(string $nom, string $description, bool $estPublique, string $idUtilisateur): int
+    {
+        $sql = "
+            INSERT INTO " . DB_PREFIX . "watchlist (nom, description, estPublique, dateC, idUtilisateur)
+            VALUES (:nom, :description, :estPublique, NOW(), :idUtilisateur)
+        ";
         
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([
-            ':nom' => $watchlist->getNom(),
-            ':description' => $watchlist->getDescription(),
-            ':estPublique' => $watchlist->isEstPublique(),
-            ':date' => $watchlist->getDate()->format('Y-m-d H:i:s'),  // Format de la date
-            ':idUtilisateur' => $watchlist->getIdUtilisateur()
-        ]);
-
-        return $this->pdo->lastInsertId();
+        $stmt->bindValue(':nom', $nom, PDO::PARAM_STR);
+        $stmt->bindValue(':description', $description, PDO::PARAM_STR);
+        $stmt->bindValue(':estPublique', $estPublique, PDO::PARAM_BOOL);
+        $stmt->bindValue(':idUtilisateur', $idUtilisateur, PDO::PARAM_STR);
+        
+        $stmt->execute();
+        return intval($this->pdo->lastInsertId());
     }
 
     public function findByUser(string $userId): array {
@@ -85,5 +96,7 @@ class WatchlistDAO {
         }
         return $watchlists;
     }
+
+
 
 }

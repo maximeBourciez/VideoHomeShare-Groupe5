@@ -26,7 +26,7 @@ class ControllerWhatchlist  extends Controller {
         }
     
         // Afficher le template avec les données
-        echo $this->getTwig()->render('watchlists.html.twig', [
+        echo $this->getTwig()->render('whatchlists.html.twig', [
             'watchlistsPerso' => $watchlistsPerso,
         ]);
     }
@@ -56,20 +56,21 @@ class ControllerWhatchlist  extends Controller {
             $managerUtilisateur->connexion();
             return;
         }
-
-        $watchlist = new Watchlist(
-            null,
-            $_POST['nom'],
-            $_POST['description'] ?? '',
-            isset($_POST['estPublique']),
-            null,
-            $_SESSION['user_id']
-        );
-
+    
+        $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
+        $nom = $_POST['nom'];
+        $description = $_POST['description'] ?? '';
+        $estPublique = isset($_POST['estPublique']);
+    
         $watchlistDAO = new WatchlistDAO($this->getPdo());
-        $watchlistDAO->createWatchlist($watchlist);
-
-        // Rediriger vers la page des watchlists
-        echo $this->getTwig()->render('watchlists.html.twig');
+        $idWatchlist = $watchlistDAO->create($nom, $description, $estPublique, $idUtilisateur);
+    
+        // Récupérer les watchlists mises à jour pour l'affichage
+        $watchlistsPerso = $watchlistDAO->findByUser($idUtilisateur);
+    
+        // Rediriger vers la page des watchlists avec les données mises à jour
+        echo $this->getTwig()->render('watchlists.html.twig', [
+            'watchlistsPerso' => $watchlistsPerso
+        ]);
     }
 }
