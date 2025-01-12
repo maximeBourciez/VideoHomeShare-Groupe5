@@ -1,17 +1,19 @@
 <?php
 
-class ControllerWatchlist extends Controller {
+class ControllerWhatchlist  extends Controller {
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader) {
         parent::__construct($twig, $loader);
     }
 
     public function afficherWatchlists(): void {
-        if (!isset($_SESSION['user_id'])) {
-            header('Location: /login');
+        if (!isset($_SESSION['utilisateur'])) {
+            // Remplacer header() par le gestionnaire de connexion
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
             return;
         }
     
-        $userId = $_SESSION['user_id'];
+        $userId = $_SESSION['utilisateur']->getId();
         $watchlistDAO = new WatchlistDAO($this->getPdo());
     
         // Récupérer les watchlists de l'utilisateur
@@ -32,7 +34,9 @@ class ControllerWatchlist extends Controller {
 
     public function ajouterAWatchlist(): void {
         if (!isset($_SESSION['user_id']) || !isset($_POST['watchlistId']) || !isset($_POST['contenuId'])) {
-            header('HTTP/1.1 400 Bad Request');
+            // Remplacer header() par le gestionnaire de connexion
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
             return;
         }
 
@@ -42,12 +46,15 @@ class ControllerWatchlist extends Controller {
             intval($_POST['contenuId'])
         );
 
-        header('Location: /watchlists');
+        // Rediriger vers la page des watchlists
+        echo $this->getTwig()->render('watchlists.html.twig');
     }
 
     public function creerWatchlist(): void {
         if (!isset($_SESSION['user_id']) || !isset($_POST['nom'])) {
-            header('Location: /watchlists');
+            // Remplacer header() par le gestionnaire de connexion
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
             return;
         }
 
@@ -63,6 +70,7 @@ class ControllerWatchlist extends Controller {
         $watchlistDAO = new WatchlistDAO($this->getPdo());
         $watchlistDAO->createWatchlist($watchlist);
 
-        header('Location: /watchlists');
+        // Rediriger vers la page des watchlists
+        echo $this->getTwig()->render('watchlists.html.twig');
     }
 }
