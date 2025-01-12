@@ -31,7 +31,7 @@ class ControllerFil extends Controller
      * 
      * @return void
      */
-    public function listerThreads()
+    public function listerThreads(?string $messageErreur = null )
     {
         // Récupérer les fils de discussion
         $managerFil = new FilDAO($this->getPdo());
@@ -43,7 +43,8 @@ class ControllerFil extends Controller
 
         echo $this->getTwig()->render('forum.html.twig', [
             'fils' => $threads,
-            'themes' => $themes
+            'themes' => $themes,
+            'messageErreur' => $messageErreur
         ]);
         exit();
     }
@@ -100,7 +101,7 @@ class ControllerFil extends Controller
 
         // Vérifier que l'utilisateur est connecté
         if (!isset($_SESSION['utilisateur'])) {
-            $this->afficherFilParId($_POST['id_fil'], "Vous devez être connecté pour envoyer un message");
+            $this->afficherFilParId(intval($_POST['id_fil']), "Vous devez être connecté pour envoyer/répondre à un message");
             exit();
         }
         $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
@@ -166,7 +167,7 @@ class ControllerFil extends Controller
 
         // Vérifier que l'utilisateur est connecté
         if (!isset($_SESSION['utilisateur'])) {
-            $this->afficherFilParId($idFil, "Vous devez être connecté pour répondre à un message");
+            $this->afficherFilParId($idFil, "Vous devez être connecté pour réagir à un message");
             exit();
         } else {
             $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
@@ -206,7 +207,7 @@ class ControllerFil extends Controller
 
         // Vérifier que l'utilisateur est connecté
         if (!isset($_SESSION['utilisateur'])) {
-            $this->afficherFilParId($idFil, "Vous devez être connecté pour répondre à un message");
+            $this->afficherFilParId($idFil, "Vous devez être connecté pour réagir à un message");
             exit();
         } else {
             $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
@@ -237,13 +238,13 @@ class ControllerFil extends Controller
     {
         // Vérifier la méthode HTTP
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->afficherFilParId($_POST['id_fil'], "Méthode HTTP invalide");
+            $this->listerThreads("Méthode HTTP invalide");
             exit();
         }
 
         // Vérifier que l'utilisateur est connecté
         if (!isset($_SESSION['utilisateur'])) {
-            $this->afficherFilParId($_POST['id_fil'], "Vous devez être connecté pour répondre à un message");
+            $this->listerThreads("Vous devez être connecté pour créer un fil");
             exit();
         } else {
             $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
@@ -256,7 +257,7 @@ class ControllerFil extends Controller
         $contenuErreur = "Un message doit contenir";
         $messageOk = Utilitaires::comprisEntre($titre, 50, 10, $contenuErreur, $messageErreur);
         if (!$messageOk) {
-            $this->afficherFilParId($_POST['id_fil'], $messageErreur);
+            $this->listerThreads($messageErreur);
             exit();
         }
 
@@ -270,7 +271,7 @@ class ControllerFil extends Controller
         $contenuErreur = "Un message doit contenir";
         $messageOk = Utilitaires::comprisEntre($premierMessage, 1024, 10, $contenuErreur, $messageErreur);
         if (!$messageOk) {
-            $this->afficherFilParId($_POST['id_fil'], $messageErreur);
+            $this->listerThreads($messageErreur);
             exit();
         }
 
@@ -314,7 +315,7 @@ class ControllerFil extends Controller
 
         // Vérifier que l'utilisateur est connecté
         if (!isset($_SESSION['utilisateur'])) {
-            $this->afficherFilParId($_POST['id_fil'], "Vous devez être connecté pour répondre à un message");
+            $this->afficherFilParId($_POST['id_fil'], "Vous devez être connecté pour supprimer un message");
             exit();
         } else {
             $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
@@ -349,15 +350,18 @@ class ControllerFil extends Controller
      */
     public function signalerMessage()
     {
+        // Récupérer l'id du fil
+        $idFil = intval($_POST['id_fil']);
+
         // Vérifier la méthode HTTP
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->afficherFilParId($_POST['id_fil'], "Méthode HTTP invalide");
+            $this->afficherFilParId($idFil, "Méthode HTTP invalide");
             exit();
         }
 
         // Vérifier que l'utilisateur est connecté
         if (!isset($_SESSION['utilisateur'])) {
-            $this->afficherFilParId($_POST['id_fil'], "Vous devez être connecté pour répondre à un message");
+            $this->afficherFilParId($idFil, "Vous devez être connecté pour signaler un message");
             exit();
         } else {
             $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
@@ -366,7 +370,7 @@ class ControllerFil extends Controller
         // Récupérer les données du formulaire
         $idMessage = intval($_POST['id_message']);
         $raison = $_POST['raison'];
-        $idFil = intval($_POST['id_fil']);
+        
 
         // Vérifier la raison
         if (!RaisonSignalement::isValidReason($raison)) {

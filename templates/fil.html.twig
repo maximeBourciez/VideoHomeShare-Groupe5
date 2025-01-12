@@ -162,7 +162,7 @@ VHS | Fil
 							<div class="d-flex flex-wrap gap-2">
 								<form method="POST" action="index.php?controller=fil&methode=like">
 									<input type="hidden" name="id_message" value="{{ message.getIdMessage() }}">
-									<input type="hidden" name="id_fil" value="{{ fil.id }}">
+									<input type="hidden" name="id_fil" value="{{ fil.0.getId() }}">
 									<button class="btn action-btn" type="submit" {% if message.valeur == messageSuppr or utilisateurConnecte is null %}disabled{% endif %}>
 										<i class="bi bi-hand-thumbs-up"></i>
 										{% if message.nbLikes > 0 %}
@@ -173,7 +173,7 @@ VHS | Fil
 
 								<form method="POST" action="index.php?controller=fil&methode=dislike">
 									<input type="hidden" name="id_message" value="{{ message.getIdMessage() }}">
-									<input type="hidden" name="id_fil" value="{{ fil.id }}">
+									<input type="hidden" name="id_fil" value="{{ fil.0.getId() }}">
 									<button class="btn action-btn" type="submit" {% if message.valeur == messageSuppr or utilisateurConnecte is null %}disabled{% endif %}>
 										<i class="bi bi-hand-thumbs-down"></i>
 										{% if message.nbDislikes > 0 %}
@@ -200,7 +200,7 @@ VHS | Fil
 										action="index.php?controller=fil&methode=supprimerMessage" 
 										onsubmit="return confirmerSuppression('{{ message.getIdMessage() }}');">
 										<input type="hidden" name="idMessage" value="{{ message.getIdMessage() }}">
-										<input type="hidden" name="id_fil" value="{{ fil.id }}">
+										<input type="hidden" name="id_fil" value="{{ fil.0.getId() }}">
 										<button 
 											class="btn action-btn warning-btn" 
 											{% if message.valeur == messageSuppr or utilisateurConnecte is null %}disabled{% endif %}>
@@ -224,7 +224,7 @@ VHS | Fil
 				</div>
 
 				{% if message.reponses is not empty %}
-					{{ macros.afficherReponses(message.reponses, message.getUtilisateur().getId(), message.getUtilisateur().getPseudo(), fil.id, messageSuppr) }}
+					{{ macros.afficherReponses(message.reponses, message.getUtilisateur().getId(), message.getUtilisateur().getPseudo(), fil.0.getId(), messageSuppr) }}
 				{% endif %}
 
 
@@ -254,7 +254,7 @@ VHS | Fil
 						<p>Votre message :</p>
 						<span>0 / 1000</span>
 					</div>
-					<input type="hidden" name="id_fil" value="{{ fil.id }}">
+					<input type="hidden" name="id_fil" value="{{ fil.0.getId() }}">
 					<textarea name="message" class="form-control mt-1 bg-mylight text-black p-3" rows="4" placeholder="Exprimez-vous..." maxlength="1000" required></textarea>
 					<div class="modal-footer">
 						<button type="submit" class="btn btn-xs btn-myprimary">
@@ -281,7 +281,7 @@ VHS | Fil
 						<strong>{{ message.getUtilisateur().getPseudo() }}</strong>
 						<p>{{ message.valeur }}</p>
 					</div>
-					<input type="hidden" name="id_fil" value="{{ fil.id }}">
+					<input type="hidden" name="id_fil" value="{{ fil.0.getId() }}">
 					<input
 					type="hidden" name="id_message_parent" value="{{ reponse.getIdMessage() }}">
 					<textarea class="form-control mt-3 bg-mylight text-black p-3" rows="4" name="message" placeholder="Répondre à {{ message.getUtilisateur().getPseudo() }}" maxlength="1000" required></textarea>
@@ -323,7 +323,7 @@ VHS | Fil
 							{% endfor %}
 						</select>
 						<input type="hidden" name="id_message" value="" id="id_message_signalement"> 
-						<input type="hidden" name="id_fil" value="{{ fil.id }}">
+						<input type="hidden" name="id_fil" value="{{ fil.0.getId() }}">
 					</div>
 					<div class="modal-footer">
 						<button type="submit" class="btn btn-primary">
