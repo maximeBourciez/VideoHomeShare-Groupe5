@@ -8,7 +8,7 @@
 <main class="container min-vh-100">
 	{# Bouton créer un quizz collé en bas à droite de la fenêtre #}
 	{# Redirige vers creationQuizz.html.twig avec l'identifiant de l'utilisateur #}
-	<a href="index.php?controller=quizz&methode=creerQuizz&idUtilisateur" class="btn btn-primary position-fixed bottom-0 end-0 me-4 mb-4 px-6 d-flex align-items-center justify-content-center" style="border-radius: 50px; white-space: nowrap; min-width: 200px;">
+	<a href="index.php?controller=quizz&methode=creerQuizz&{{ idUtilisateur }}" class="btn btn-primary position-fixed bottom-0 end-0 me-4 mb-4 px-6 d-flex align-items-center justify-content-center" style="border-radius: 50px; white-space: nowrap; min-width: 200px;">
 		<i class="bi bi-pencil" style="font-size: 1.3rem; margin-right: 0.2 rem;"></i>
 		<b>Créer un quizz</b>
     </a>
@@ -19,7 +19,7 @@
             <a href="index.php?controller=quizz&methode=listeQuizz" class="btn btn-primary"><b>Voir les quizz</b></a>
         </div>
         <div class="col mb-2">
-            <a href="index.php?controller=quizz&methode=gererQuizzUtilisateur&idUtilisateur" class="btn btn-primary"><b>Gérer mes quizz</b></a>
+            <a href="index.php?controller=quizz&methode=gererQuizzUtilisateur&{{ idUtilisateur }}" class="btn btn-primary"><b>Gérer mes quizz</b></a>
         </div>
     </div>
     <br>

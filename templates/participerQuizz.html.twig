@@ -46,7 +46,7 @@
 			<br>
 		{% endfor %}
     {% endfor %}
-	<a href="index.php?controller=quizz&methode=afficherResultats&idUtilisateur&idQuizz={{ quizz.id }}&bonnesReponses" class="btn btn-primary">
+	<a href="index.php?controller=quizz&methode=afficherResultats&{{ idUtilisateur }}&idQuizz={{ quizz.id }}&{{ bonnesReponses }}" class="btn btn-primary">
 		Voir les résultats
 	</a>
 </main>
