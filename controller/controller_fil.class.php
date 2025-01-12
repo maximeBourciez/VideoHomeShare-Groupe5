@@ -408,7 +408,7 @@ class ControllerFil extends Controller
 
         // Réucpérer le nom du fil
         $managerFil = new FilDAO($this->getPdo());
-        $nomFil = $managerFil->findById($idFil)->getTitre();
+        $nomFil = $managerFil->findById($idFil)[0]->getTitre();
 
         // Récupérer l'id de l'utilisateur à notifier
         $managerMessage = new MessageDAO($this->getPdo());
