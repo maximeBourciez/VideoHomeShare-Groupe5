@@ -7,6 +7,7 @@ class Watchlist {
     private bool $estPublique;
     private DateTime $date;
     private string $idUtilisateur;
+    private array $contenus = []; // Liste des contenus associés à la watchlist
 
     public function __construct(
         int $id,
@@ -14,7 +15,8 @@ class Watchlist {
         string $description,
         bool $estPublique,
         DateTime $date,
-        string $idUtilisateur
+        string $idUtilisateur,
+        array $contenus = []
     ) {
         $this->id = $id;
         $this->nom = $nom;
@@ -50,6 +52,10 @@ class Watchlist {
         return $this->idUtilisateur;
     }
 
+    public function getContenus(): array {
+        return $this->contenus;
+    }
+
     // Setters
 
     public function setId(int $id): void {
@@ -75,4 +81,9 @@ class Watchlist {
     public function setIdUtilisateur(string $idUtilisateur): void {
         $this->idUtilisateur = $idUtilisateur;
     }
+
+    public function setContenus(array $contenus): void {
+        $this->contenus = $contenus;
+    }
+
 }

@@ -42,16 +42,29 @@ class WatchlistDAO {
     }
 
     public function getWatchlistContent(int $watchlistId): array {
-        $sql = "SELECT c.* FROM " . DB_PREFIX . "contenu c 
-                JOIN " . DB_PREFIX . "contenircontenu co ON c.id = co.idContenu 
-                WHERE co.idWatchlist = :watchlistId";
-        
+        // 1. Récupérer les IDs de contenus liés à la watchlist
+        $sql = "SELECT idContenu FROM " . DB_PREFIX . "contenircontenu WHERE idWatchlist = :watchlistId";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':watchlistId' => $watchlistId]);
-        
-        $contenuDAO = new ContenuDAO($this->pdo);
-        return $contenuDAO->hydrateAll($stmt->fetchAll(PDO::FETCH_ASSOC));
+        $contentIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    
+        if (empty($contentIds)) {
+            return []; // Aucun contenu trouvé pour la watchlist
+        }
+    
+        // 2. Utiliser l'API pour récupérer les détails de chaque contenu
+        $contenuDAO = new ContenuDAO($this->pdo); // Assurez-vous que cette classe gère l'accès à l'API
+        $contents = [];
+        foreach ($contentIds as $id) {
+            $content = $contenuDAO->getContentFromTMDB($id); // Méthode pour récupérer les détails d'un contenu via l'API
+            if ($content) {
+                $contents[] = $content;
+            }
+        }
+    
+        return $contents;
     }
+    
 
     public function addContenuToWatchlist(int $watchlistId, int $contenuId): bool {
         $sql = "INSERT INTO " . DB_PREFIX . "contenir (idWatchlist, idContenu) VALUES (:watchlistId, :contenuId)";
