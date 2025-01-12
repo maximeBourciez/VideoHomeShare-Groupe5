@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 class WatchlistDAO {
     private ?PDO $pdo;
@@ -10,22 +10,22 @@ class WatchlistDAO {
     // Méthodes existantes...
 
     public function createWatchlist(Watchlist $watchlist): ?int {
-        $sql = "INSERT INTO " . DB_PREFIX . "watchlist (nom, description, estPublique, date, idUtilisateur) 
-                VALUES (:nom, :description, :estPublique, NOW(), :idUtilisateur)";
+        $sql = "INSERT INTO " . DB_PREFIX . "watchlist (nom, description, estPublique, date, id) 
+                VALUES (:nom, :description, :estPublique, NOW(), :id)";
         
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
             ':nom' => $watchlist->getNom(),
-            ':description' => $watchlist->getDesc(),
-            ':estPublique' => $watchlist->getPublicite(),
-            ':idUtilisateur' => $watchlist->getIdUtilisateur()
+            ':description' => $watchlist->getDescription(),
+            ':estPublique' => $watchlist->isEstPublique(),
+            ':id' => $watchlist->getId()
         ]);
 
         return $this->pdo->lastInsertId();
     }
 
     public function findByUser(int $userId): array {
-        $sql = "SELECT * FROM " . DB_PREFIX . "watchlist WHERE idUtilisateur = :userId";
+        $sql = "SELECT * FROM " . DB_PREFIX . "watchlist WHERE id = :userId";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':userId' => $userId]);
         return $this->hydrateAll($stmt->fetchAll(PDO::FETCH_ASSOC));
@@ -33,7 +33,7 @@ class WatchlistDAO {
 
     public function getWatchlistContent(int $watchlistId): array {
         $sql = "SELECT c.* FROM " . DB_PREFIX . "contenu c 
-                JOIN " . DB_PREFIX . "contenir co ON c.idContenu = co.idContenu 
+                JOIN " . DB_PREFIX . "contenir co ON c.id = co.idContenu 
                 WHERE co.idWatchlist = :watchlistId";
         
         $stmt = $this->pdo->prepare($sql);
@@ -63,8 +63,8 @@ class WatchlistDAO {
 
     public function getFavoris(int $userId): array {
         $sql = "SELECT c.* FROM " . DB_PREFIX . "contenu c 
-                JOIN " . DB_PREFIX . "favori f ON c.idContenu = f.idContenu 
-                WHERE f.idUtilisateur = :userId";
+                JOIN " . DB_PREFIX . "favori f ON c.id = f.idContenu 
+                WHERE f.id = :userId";
         
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':userId' => $userId]);

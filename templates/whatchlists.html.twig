@@ -14,13 +14,13 @@
                         {% for film in favoris %}
                             <div class="movie-card me-3">
                                 <img 
-                                    src="{{ film.lienAffiche }}" 
-                                    alt="{{ film.titre }}" 
+                                    src="{{ film.affiche }}" 
+                                    alt="{{ film.nom }}" 
                                     class="movie-card__image shadow rounded"
                                     style="width: 200px; height: 300px; object-fit: cover;"
                                 >
                                 <div class="movie-card__rating mt-2">{{ film.note }}/5</div>
-                                <div class="movie-card__title">{{ film.titre }}</div>
+                                <div class="movie-card__title">{{ film.nom }}</div>
                             </div>
                         {% endfor %}
                     {% else %}
@@ -36,7 +36,7 @@
         <!-- Section Ma Watchlist -->
         <section class="watchlist-section mb-5">
             <div class="d-flex justify-content-between align-items-center">
-                <h2 class="watchlist-section__title">MonNomDeWatchList</h2>
+                <h2 class="watchlist-section__title">{{ watchlist.nom }}</h2>
                 <button class="btn btn-myprimary" data-bs-toggle="modal" data-bs-target="#editWatchlistModal">
                     <i class="bi bi-pencil"></i>
                 </button>
@@ -53,11 +53,15 @@
                 {% for watchlist in watchlists %}
                     <div class="watchlist-block mb-4">
                         <h3 class="watchlist-block__title">{{ watchlist.nom }}</h3>
+                        <p class="watchlist-block__description">{{ watchlist.description }}</p>
+                        <p class="watchlist-block__date">Créée le : {{ watchlist.date|date('d/m/Y') }}</p>
                         <div class="watchlist-carousel position-relative">
                             <!-- Structure similaire pour chaque watchlist -->
                         </div>
                     </div>
                 {% endfor %}
+            {% else %}
+                <p class="text-center">Aucune watchlist enregistrée</p>
             {% endif %}
         </section>
 
