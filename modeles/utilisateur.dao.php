@@ -1,14 +1,37 @@
 <?php
+/**
+ * @file utilisateur.dao.php
+ * 
+ * @brief Utilisateur Data Access Object
+ * 
+ * @details Data Access Object de la classe Utilisateur
+ * 
+ * @version 1.0
+ * 
+ * @date 18/12/2024
+ * 
+ * @author Sylvain Trouilh <strouilh@iutbayonne.univ-pau.fr>
+ */
 
 class UtilisateurDAO
 {
+    /** @var PDO|null Instance de connexion à la base de données */
     private $pdo;
 
+    /**
+     * @brief Constructeur de la classe UtilisateurDAO
+     * 
+     * @param PDO|null $pdo Instance PDO pour l'accès à la base de données
+     */
     function __construct(?PDO $pdo = null)
     {
         $this->pdo = $pdo;
     }
-
+    /**
+     * @brief crée un utilisateur dans la base de données
+     * @param Utilisateur $utilisateur L'utilisateur que l'on souhaite créer
+     * @return bool true si l'utilisateur a été créé, false sinon
+     */
     function create(Utilisateur $utilisateur): bool
     {
         // Préparation de la requête
@@ -41,6 +64,11 @@ class UtilisateurDAO
         return $pdo->execute();
     }
 
+    /**
+     * @brief Met à jour un utilisateur dans la base de données
+     * @param Utilisateur $utilisateur L'utilisateur que l'on souhaite mettre à jour
+     * @return bool true si l'utilisateur a été mis à jour, false sinon
+     */
     function update(Utilisateur $utilisateur): bool
     {
 
@@ -66,6 +94,11 @@ class UtilisateurDAO
         return $pdo->execute();
     }
 
+    /**
+     * @brief Supprime un utilisateur de la base de données
+     * @param int $id L'identifiant de l'utilisateur à supprimer
+     * @return bool true si l'utilisateur a été supprimé, false sinon
+     */
     function delete(int $id): bool
     {
         $req = $this->pdo->prepare("DELETE FROM " . DB_PREFIX . "utilisateur WHERE id = :id");
@@ -73,6 +106,11 @@ class UtilisateurDAO
         return $req->execute();
     }
 
+    /**
+     * @brief Hydrate un utilisateur à partir d'un tableau associatif
+     * @param array $row Tableau associatif contenant les données de l'utilisateur
+     * @return Utilisateur L'utilisateur hydraté
+     */
     function hydrate(array $row): Utilisateur
     {
         // Récupération des valeurs
@@ -98,7 +136,12 @@ class UtilisateurDAO
         return new Utilisateur($id, $pseudo, $nom, $mail, $mdp, $role, $urlImageProfil, $urlImageBanniere, $estValider);
 
     }
-
+    
+    /**
+     * @brief Hydrate tous les utilisateurs à partir d'un tableau de tableaux associatifs
+     * @param array $rows Tableau de tableaux associatifs contenant les données des utilisateurs
+     * @return Utilisateur[] Tableau d'utilisateurs hydratés
+     */
     function hydrateAll(array $rows): array
     {
         $utilisateurs = [];
@@ -109,6 +152,11 @@ class UtilisateurDAO
         return $utilisateurs;
     }
 
+    /**
+     * @brief Recherche un utilisateur dans la base de données à partir de son identifiant
+     * @param string|null $id L'identifiant de l'utilisateur à rechercher
+     * @return Utilisateur|null L'utilisateur trouvé, null sinon
+     */
     function find(?string $id): ?Utilisateur
     {
         $sql = "SELECT * FROM " . DB_PREFIX . "utilisateur WHERE idUtilisateur = :id";
@@ -123,6 +171,10 @@ class UtilisateurDAO
         return null;
     }
 
+    /**
+     * @brief Recherche tous les utilisateurs dans la base de données
+     * @return Utilisateur[] Tableau d'utilisateurs trouvés
+     */
     function findAll(): array
     {
         $sql = "SELECT * FROM " . DB_PREFIX . "utilisateur";
@@ -132,6 +184,12 @@ class UtilisateurDAO
     }
 
 
+    /**
+     * @brief Recherche un utilisateur dans la base de données à partir de son mail et de son mot de passe
+     * @param string $mail L'adresse mail de l'utilisateur à rechercher
+     * @param string $MDP Le mot de passe de l'utilisateur à rechercher
+     * @return int Le nombre d'utilisateurs trouvés
+     */
     public function findByMailandPWD(String  $mail, String $MDP): int
     {
         $sql = "SELECT count(idUtilisateur) FROM " . DB_PREFIX . "utilisateur WHERE mail = :mail AND mdp = :mdp";
@@ -142,6 +200,11 @@ class UtilisateurDAO
         return $pdo->fetch()["count(idUtilisateur)"];
     }
 
+    /**
+     * @brief Recherche un utilisateur dans la base de données à partir de son mail
+     * @param string $mail L'adresse mail de l'utilisateur à rechercher
+     * @return Utilisateur|null L'utilisateur trouvé, null sinon
+     */
     public function findByMail(String  $mail): ?Utilisateur
     {
         $sql = "SELECT * FROM " . DB_PREFIX . "utilisateur WHERE mail = :mail";
@@ -156,6 +219,11 @@ class UtilisateurDAO
         return null;
     }
 
+    /**
+     * @brief suprime les utilisateurs non confirmés au bout de 24h
+     * @param string $pseudo Le pseudo de l'utilisateur à rechercher
+     * @return Utilisateur|null L'utilisateur trouvé, null sinon
+     */
     public function deleteUtilisateurnonconfirme(): bool
     {
         $sql = "DELETE FROM " . DB_PREFIX . "utilisateur WHERE (NOW()-dateI)/3600 >= 24 and estValider = 0";
@@ -163,6 +231,11 @@ class UtilisateurDAO
         return $pdo->execute();
     }
 
+    /**
+     * @brief Vérifie si un utilisateur est validé
+     * @param string $id L'identifiant de l'utilisateur à vérifier
+     * @return bool true si l'utilisateur est validé, false sinon
+     */
     public function verificationUtilisateurValide(String $id): bool
     { 
         $sql = "select estValider from " . DB_PREFIX . "utilisateur WHERE idUtilisateur = :id";
