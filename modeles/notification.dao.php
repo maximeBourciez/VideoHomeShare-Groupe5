@@ -1,5 +1,18 @@
 <?php
 
+/**
+ * @file notification.dao.php
+ * 
+ * @brief Notification Data Access Object
+ * 
+ * @details Data Access Object de la classe Notification
+ * 
+ * @version 1.0
+ * 
+ * @date 30/12/2024
+ * 
+ * @author Sylvain Trouilh
+ */
 
 
 class NotificationDAO {

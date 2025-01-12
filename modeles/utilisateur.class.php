@@ -1,4 +1,17 @@
 <?php
+/**
+ * @file utilisateur.class.php
+ * 
+ * @brief Utilisateur
+ * 
+ * @details Classe pour gérer les utilisateurs
+ * 
+ * @version 1.0
+ * 
+ * @date 18/12/2024
+ * 
+ * @author Sylvain Trouilh
+ */
 
 enum Role {
     case Utilisateur;
