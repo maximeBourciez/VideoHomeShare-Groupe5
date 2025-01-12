@@ -88,6 +88,13 @@ class ControllerQuizz extends Controller
         }
     }
 
+    /**
+     * @brief Méthode qui permet de jouer au quizz
+     * 
+     * @details Méthode permettant d'afficher les questions et réponses du associés au quizz
+     *
+     * @return void
+     */
     public function jouerQuizz() : void
     {
         if (isset($_SESSION['utilisateur'])){
@@ -115,6 +122,13 @@ class ControllerQuizz extends Controller
         }  
     }
 
+    /**
+     * @brief Méthode qui retourne toutes les réponses d'une question
+     * 
+     * @details Méthode permettant de retourner toutes les réponses d'une question sous forme de tableau
+     *
+     * @return array
+     */
     public function reponsesDuneQuestion(Question $questions) : array
     {
         $tabReponses = [];
@@ -135,6 +149,13 @@ class ControllerQuizz extends Controller
         ]);
     }
 
+    /**
+     * @brief Méthode permettant de créer une question
+     * 
+     * @details Méthode qui redirige l'utilisateur vers la page des questions pour créer ou modifier sa question
+     *
+     * @return array
+     */
     public function creerQuestion() : void
     {
         $idQuizz = $_GET['idQuizz']; 
