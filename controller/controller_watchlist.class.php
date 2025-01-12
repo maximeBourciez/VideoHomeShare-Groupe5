@@ -28,7 +28,6 @@ class ControllerWhatchlist  extends Controller {
         // Afficher le template avec les données
         echo $this->getTwig()->render('watchlists.html.twig', [
             'watchlistsPerso' => $watchlistsPerso,
-            'favoris' => $this->getFavoris($userId) // Assure-toi de récupérer les favoris de l'utilisateur
         ]);
     }
 
