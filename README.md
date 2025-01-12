@@ -56,37 +56,10 @@ L’objectif de VHS est de recréer la convivialité des soirées cinéma entre 
 - **OAuth2** pour la gestion des connexions sécurisées.
 
 ### Hébergement et journalisation
-- Hébergé via **phpMyAdmin**.
+- Hébergé via **phpMyAdmin** sur serveur local fermé au public.
 <br>
 <br>
 
-## Sécurité
-OpenSSL
-<br>
-OAUTH2
-<br>
-<br>
 
-## Hébergement
-phpMyAdmin
-<br>
-<br>
 
-## Journalisation (suivi des activités, logs)
-ELK Stack
-<br>
-<br>
 
-## Technologies utilisées
-HTML, CSS, SCSS, PHP, JSON, YAML, TWIG, BOOTSTRAP, JavaScript
-<br>
-<br>
-
-## Instructions pour l'installation et l'utilisation
-### Installer
-<br>
-<br>
-
-### Utiliser
-<br>
-<br>
