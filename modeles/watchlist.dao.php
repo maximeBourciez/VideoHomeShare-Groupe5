@@ -43,7 +43,7 @@ class WatchlistDAO {
 
     public function getWatchlistContent(int $watchlistId): array {
         $sql = "SELECT c.* FROM " . DB_PREFIX . "contenu c 
-                JOIN " . DB_PREFIX . "contenir co ON c.id = co.idContenu 
+                JOIN " . DB_PREFIX . "contenircontenu co ON c.id = co.idContenu 
                 WHERE co.idWatchlist = :watchlistId";
         
         $stmt = $this->pdo->prepare($sql);
@@ -80,15 +80,15 @@ class WatchlistDAO {
 
     private function hydrate(array $data): Watchlist {
         return new Watchlist(
-            intval($data['id']),
+            intval($data['idWatchlist']),
             $data['nom'],
             $data['description'],
             (bool) $data['estPublique'],
-            new DateTime($data['date']),
+            new DateTime($data['dateC']),
             $data['idUtilisateur']
         );
     }
-
+    
     public function hydrateAll(array $dataArray): array {
         $watchlists = [];
         foreach ($dataArray as $data) {
@@ -96,7 +96,4 @@ class WatchlistDAO {
         }
         return $watchlists;
     }
-
-
-
 }

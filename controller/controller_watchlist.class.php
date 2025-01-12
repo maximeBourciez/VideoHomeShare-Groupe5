@@ -51,7 +51,6 @@ class ControllerWhatchlist  extends Controller {
 
     public function creerWatchlist(): void {
         if (!isset($_SESSION['utilisateur']) || !isset($_POST['nom'])) {
-            // Remplacer header() par le gestionnaire de connexion
             $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
             $managerUtilisateur->connexion();
             return;
@@ -65,12 +64,17 @@ class ControllerWhatchlist  extends Controller {
         $watchlistDAO = new WatchlistDAO($this->getPdo());
         $idWatchlist = $watchlistDAO->create($nom, $description, $estPublique, $idUtilisateur);
     
-        // Récupérer les watchlists mises à jour pour l'affichage
+        // Récupérer les watchlists mises à jour
         $watchlistsPerso = $watchlistDAO->findByUser($idUtilisateur);
     
-        // Rediriger vers la page des watchlists avec les données mises à jour
-        echo $this->getTwig()->render('watchlists.html.twig', [
-            'watchlistsPerso' => $watchlistsPerso
-        ]);
+        // S'assurer que le chemin du template est correct
+        try {
+            echo $this->getTwig()->render('pages/watchlists.html.twig', [
+                'watchlistsPerso' => $watchlistsPerso
+            ]);
+        } catch (\Twig\Error\LoaderError $e) {
+            // Log l'erreur ou affichez un message d'erreur approprié
+            echo "Erreur lors du chargement du template : " . $e->getMessage();
+        }
     }
 }
