@@ -13,7 +13,7 @@ class ControllerWhatchlist  extends Controller {
             return;
         }
     
-        $userId = $_SESSION['utilisateur']->getId();
+        $userId = unserialize($_SESSION['utilisateur'])->getId();
         $watchlistDAO = new WatchlistDAO($this->getPdo());
     
         // Récupérer les watchlists de l'utilisateur
@@ -33,7 +33,7 @@ class ControllerWhatchlist  extends Controller {
     }
 
     public function ajouterAWatchlist(): void {
-        if (!isset($_SESSION['user_id']) || !isset($_POST['watchlistId']) || !isset($_POST['contenuId'])) {
+        if (!isset($_SESSION['utilisateur']) || !isset($_POST['watchlistId']) || !isset($_POST['contenuId'])) {
             // Remplacer header() par le gestionnaire de connexion
             $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
             $managerUtilisateur->connexion();
@@ -51,7 +51,7 @@ class ControllerWhatchlist  extends Controller {
     }
 
     public function creerWatchlist(): void {
-        if (!isset($_SESSION['user_id']) || !isset($_POST['nom'])) {
+        if (!isset($_SESSION['utilisateur']) || !isset($_POST['nom'])) {
             // Remplacer header() par le gestionnaire de connexion
             $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
             $managerUtilisateur->connexion();

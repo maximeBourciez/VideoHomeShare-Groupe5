@@ -66,4 +66,24 @@ class WatchlistDAO {
         $stmt->execute();
         return $this->hydrateAll($stmt->fetchAll(PDO::FETCH_ASSOC));
     }
+
+    private function hydrate(array $data): Watchlist {
+        return new Watchlist(
+            intval($data['id']),
+            $data['nom'],
+            $data['description'],
+            (bool) $data['estPublique'],
+            new DateTime($data['date']),
+            $data['idUtilisateur']
+        );
+    }
+
+    public function hydrateAll(array $dataArray): array {
+        $watchlists = [];
+        foreach ($dataArray as $data) {
+            $watchlists[] = $this->hydrate($data);
+        }
+        return $watchlists;
+    }
+
 }
