@@ -1,0 +1,595 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.12.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>VideoHomeShare: Référence de la classe ContenuDAO</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">VideoHomeShare
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Généré par Doxygen 1.12.0 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() { codefold.init(0); });
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Recherche',false);
+  $(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){ initResizable(false); });
+/* @license-end */
+</script>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Chargement...</div>
+<div class="SRStatus" id="Searching">Recherche...</div>
+<div class="SRStatus" id="NoMatches">Aucune correspondance</div>
+</div>
+</div>
+</div>
+</div>
+
+</div><!-- top -->
+<div id="doc-content">
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Fonctions membres publiques</a> &#124;
+<a href="#pri-methods">Fonctions membres privées</a> &#124;
+<a href="#pri-attribs">Attributs privés</a>  </div>
+  <div class="headertitle"><div class="title">Référence de la classe ContenuDAO</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Classe d'accès aux données pour les contenus.  
+ <a href="#details">Plus de détails...</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Fonctions membres publiques</h2></td></tr>
+<tr class="memitem:a2e7ff27ab8591b818c2581d94f5ae7bf" id="r_a2e7ff27ab8591b818c2581d94f5ae7bf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2e7ff27ab8591b818c2581d94f5ae7bf">__construct</a> (?PDO $pdo=null, string $apiKey=TMDB_API_KEY)</td></tr>
+<tr class="memdesc:a2e7ff27ab8591b818c2581d94f5ae7bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructeur de <a class="el" href="class_contenu_d_a_o.html" title="Classe d&#39;accès aux données pour les contenus.">ContenuDAO</a>.  <br /></td></tr>
+<tr class="separator:a2e7ff27ab8591b818c2581d94f5ae7bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2969fec4b5a866ce0515552006f1a62" id="r_ab2969fec4b5a866ce0515552006f1a62"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab2969fec4b5a866ce0515552006f1a62">getContentFromTMDB</a> (int $tmdbId)</td></tr>
+<tr class="memdesc:ab2969fec4b5a866ce0515552006f1a62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Récupère un contenu depuis TMDB par son ID.  <br /></td></tr>
+<tr class="separator:ab2969fec4b5a866ce0515552006f1a62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56359b4a211f881c0ca026e8d04aeb27" id="r_a56359b4a211f881c0ca026e8d04aeb27"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a56359b4a211f881c0ca026e8d04aeb27">getPersonnalites</a> (array $movieData)</td></tr>
+<tr class="memdesc:a56359b4a211f881c0ca026e8d04aeb27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Récupère les personnalités associées à un contenu.  <br /></td></tr>
+<tr class="separator:a56359b4a211f881c0ca026e8d04aeb27"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a7271cf58bc911057b53cff873f9a71" id="r_a9a7271cf58bc911057b53cff873f9a71"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9a7271cf58bc911057b53cff873f9a71">getGenres</a> (array $movieData)</td></tr>
+<tr class="memdesc:a9a7271cf58bc911057b53cff873f9a71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Récupère les genres d'un contenu.  <br /></td></tr>
+<tr class="separator:a9a7271cf58bc911057b53cff873f9a71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5cdbfe67a3747283fd6218eed9d8fbb" id="r_ab5cdbfe67a3747283fd6218eed9d8fbb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab5cdbfe67a3747283fd6218eed9d8fbb">convertToContenuLight</a> ($movieData)</td></tr>
+<tr class="separator:ab5cdbfe67a3747283fd6218eed9d8fbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a29c6b538abdac760a332b5fc4b14b8" id="r_a6a29c6b538abdac760a332b5fc4b14b8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6a29c6b538abdac760a332b5fc4b14b8">getMovieData</a> (int $tmdbId)</td></tr>
+<tr class="memdesc:a6a29c6b538abdac760a332b5fc4b14b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Récupère les données brutes d'un film depuis TMDB.  <br /></td></tr>
+<tr class="separator:a6a29c6b538abdac760a332b5fc4b14b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f5afa34ce0b954e9b727410209f354f" id="r_a1f5afa34ce0b954e9b727410209f354f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1f5afa34ce0b954e9b727410209f354f">getTrendingMovies</a> (string $timeWindow='day')</td></tr>
+<tr class="separator:a1f5afa34ce0b954e9b727410209f354f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a23e255819caad823565bc90135df1e" id="r_a3a23e255819caad823565bc90135df1e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3a23e255819caad823565bc90135df1e">getPopularMoviesByGenre</a> (int $genreId, int $limit=20)</td></tr>
+<tr class="separator:a3a23e255819caad823565bc90135df1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb38cc50e99c1cb02f3d9bc82338b4f2" id="r_abb38cc50e99c1cb02f3d9bc82338b4f2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abb38cc50e99c1cb02f3d9bc82338b4f2">searchMoviesByName</a> (string $query)</td></tr>
+<tr class="memdesc:abb38cc50e99c1cb02f3d9bc82338b4f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode de recherche de films dans l'api TMDB.  <br /></td></tr>
+<tr class="separator:abb38cc50e99c1cb02f3d9bc82338b4f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
+Fonctions membres privées</h2></td></tr>
+<tr class="memitem:aea8699b0ac8d0cc69619778afa8f0e49" id="r_aea8699b0ac8d0cc69619778afa8f0e49"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aea8699b0ac8d0cc69619778afa8f0e49">convertToContenu</a> (array $movieData)</td></tr>
+<tr class="memdesc:aea8699b0ac8d0cc69619778afa8f0e49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convertit les données TMDB en objet <a class="el" href="class_contenu.html" title="Classe représentant un contenu multimédia.">Contenu</a>.  <br /></td></tr>
+<tr class="separator:aea8699b0ac8d0cc69619778afa8f0e49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bfd8b4fb056eeb197ce8766a22a963a" id="r_a0bfd8b4fb056eeb197ce8766a22a963a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0bfd8b4fb056eeb197ce8766a22a963a">makeRequest</a> (string $url)</td></tr>
+<tr class="memdesc:a0bfd8b4fb056eeb197ce8766a22a963a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Effectue une requête HTTP vers l'API TMDB.  <br /></td></tr>
+<tr class="separator:a0bfd8b4fb056eeb197ce8766a22a963a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14fbc5f5e21d92e59373e2a2c8b1ee20" id="r_a14fbc5f5e21d92e59373e2a2c8b1ee20"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a14fbc5f5e21d92e59373e2a2c8b1ee20">convertRuntime</a> (int $minutes)</td></tr>
+<tr class="memdesc:a14fbc5f5e21d92e59373e2a2c8b1ee20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convertit une durée en minutes en format lisible.  <br /></td></tr>
+<tr class="separator:a14fbc5f5e21d92e59373e2a2c8b1ee20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
+Attributs privés</h2></td></tr>
+<tr class="memitem:a9db61e1721b616500bce6ed60491752a" id="r_a9db61e1721b616500bce6ed60491752a"><td class="memItemLeft" align="right" valign="top">PDO&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9db61e1721b616500bce6ed60491752a">$pdo</a></td></tr>
+<tr class="separator:a9db61e1721b616500bce6ed60491752a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0707e50f6aa68ca0d9df2fa62e203362" id="r_a0707e50f6aa68ca0d9df2fa62e203362"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0707e50f6aa68ca0d9df2fa62e203362">$apiKey</a></td></tr>
+<tr class="separator:a0707e50f6aa68ca0d9df2fa62e203362"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a333c94aac4b67d6dc1ec3d31a87294f4" id="r_a333c94aac4b67d6dc1ec3d31a87294f4"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a333c94aac4b67d6dc1ec3d31a87294f4">$baseUrl</a></td></tr>
+<tr class="separator:a333c94aac4b67d6dc1ec3d31a87294f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adfe05faf88f6c217d8596e0032e4a8b0" id="r_adfe05faf88f6c217d8596e0032e4a8b0"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adfe05faf88f6c217d8596e0032e4a8b0">$imageBaseUrl</a></td></tr>
+<tr class="separator:adfe05faf88f6c217d8596e0032e4a8b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Description détaillée</h2>
+<div class="textblock"><p>Classe d'accès aux données pour les contenus. </p>
+<p>Cette classe gère toutes les opérations de lecture et d'écriture des contenus, que ce soit depuis la base de données ou l'API TMDB. Elle centralise l'accès aux données des contenus multimédias.</p>
+<dl class="section author"><dt>Auteur</dt><dd>François Barlic &lt;<a href="#" onclick="location.href='mai'+'lto:'+'fra'+'nc'+'ois'+'.b'+'arl'+'ic'+'57@'+'gm'+'ail'+'.c'+'om'; return false;">franc<span class="obfuscator">.nosp@m.</span>ois.<span class="obfuscator">.nosp@m.</span>barli<span class="obfuscator">.nosp@m.</span>c57@<span class="obfuscator">.nosp@m.</span>gmail<span class="obfuscator">.nosp@m.</span>.com</a>&gt; </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>1.0 </dd></dl>
+</div><h2 class="groupheader">Documentation des constructeurs et destructeur</h2>
+<a id="a2e7ff27ab8591b818c2581d94f5ae7bf" name="a2e7ff27ab8591b818c2581d94f5ae7bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e7ff27ab8591b818c2581d94f5ae7bf">&#9670;&#160;</a></span>__construct()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">__construct </td>
+          <td>(</td>
+          <td class="paramtype">?PDO</td>          <td class="paramname"><span class="paramname"><em>$pdo</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$apiKey</em></span><span class="paramdefsep"> = </span><span class="paramdefval">TMDB_API_KEY</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Constructeur de <a class="el" href="class_contenu_d_a_o.html" title="Classe d&#39;accès aux données pour les contenus.">ContenuDAO</a>. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">PDO&#160;|&#160;null</td><td class="paramname">$pdo</td><td>Instance de connexion à la base de données </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$apiKey</td><td>Clé API TMDB </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Documentation des fonctions membres</h2>
+<a id="a14fbc5f5e21d92e59373e2a2c8b1ee20" name="a14fbc5f5e21d92e59373e2a2c8b1ee20"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a14fbc5f5e21d92e59373e2a2c8b1ee20">&#9670;&#160;</a></span>convertRuntime()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">convertRuntime </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$minutes</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Convertit une durée en minutes en format lisible. </p>
+<p>Transforme une durée en minutes en format "HHhMM"</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$minutes</td><td>Nombre de minutes </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>string Durée formatée (ex: "02h15") </dd></dl>
+
+</div>
+</div>
+<a id="aea8699b0ac8d0cc69619778afa8f0e49" name="aea8699b0ac8d0cc69619778afa8f0e49"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea8699b0ac8d0cc69619778afa8f0e49">&#9670;&#160;</a></span>convertToContenu()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">convertToContenu </td>
+          <td>(</td>
+          <td class="paramtype">array</td>          <td class="paramname"><span class="paramname"><em>$movieData</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Convertit les données TMDB en objet <a class="el" href="class_contenu.html" title="Classe représentant un contenu multimédia.">Contenu</a>. </p>
+<p>Transforme les données brutes de l'API en un objet <a class="el" href="class_contenu.html" title="Classe représentant un contenu multimédia.">Contenu</a> structuré en incluant les descriptions, images et métadonnées.</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">array</td><td class="paramname">$movieData</td><td>Données brutes du film </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd><a class="el" href="class_contenu.html" title="Classe représentant un contenu multimédia.">Contenu</a> L'objet <a class="el" href="class_contenu.html" title="Classe représentant un contenu multimédia.">Contenu</a> créé </dd></dl>
+
+</div>
+</div>
+<a id="ab5cdbfe67a3747283fd6218eed9d8fbb" name="ab5cdbfe67a3747283fd6218eed9d8fbb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5cdbfe67a3747283fd6218eed9d8fbb">&#9670;&#160;</a></span>convertToContenuLight()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">convertToContenuLight </td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>$movieData</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab2969fec4b5a866ce0515552006f1a62" name="ab2969fec4b5a866ce0515552006f1a62"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab2969fec4b5a866ce0515552006f1a62">&#9670;&#160;</a></span>getContentFromTMDB()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">getContentFromTMDB </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$tmdbId</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Récupère un contenu depuis TMDB par son ID. </p>
+<p>Cette méthode interroge l'API TMDB pour obtenir les informations détaillées d'un film et les convertit en objet <a class="el" href="class_contenu.html" title="Classe représentant un contenu multimédia.">Contenu</a>. Les films pour adultes sont automatiquement filtrés.</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$tmdbId</td><td>Identifiant TMDB du film </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>Contenu|null Le contenu trouvé ou null si non trouvé ou filtré </dd></dl>
+
+</div>
+</div>
+<a id="a9a7271cf58bc911057b53cff873f9a71" name="a9a7271cf58bc911057b53cff873f9a71"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a7271cf58bc911057b53cff873f9a71">&#9670;&#160;</a></span>getGenres()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">getGenres </td>
+          <td>(</td>
+          <td class="paramtype">array</td>          <td class="paramname"><span class="paramname"><em>$movieData</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Récupère les genres d'un contenu. </p>
+<p>Convertit les genres TMDB en objets <a class="el" href="class_theme.html" title="Classe représentant un thème dans l&#39;application.">Theme</a> locaux.</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">array</td><td class="paramname">$movieData</td><td>Données brutes du film depuis TMDB </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>array Liste des objets <a class="el" href="class_theme.html" title="Classe représentant un thème dans l&#39;application.">Theme</a> </dd></dl>
+
+</div>
+</div>
+<a id="a6a29c6b538abdac760a332b5fc4b14b8" name="a6a29c6b538abdac760a332b5fc4b14b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a29c6b538abdac760a332b5fc4b14b8">&#9670;&#160;</a></span>getMovieData()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">getMovieData </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$tmdbId</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Récupère les données brutes d'un film depuis TMDB. </p>
+<p>Cette méthode fait une requête à l'API TMDB pour obtenir toutes les données brutes d'un film</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$tmdbId</td><td>Identifiant TMDB du film </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>array|null Les données brutes du film ou null si non trouvé </dd></dl>
+
+</div>
+</div>
+<a id="a56359b4a211f881c0ca026e8d04aeb27" name="a56359b4a211f881c0ca026e8d04aeb27"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a56359b4a211f881c0ca026e8d04aeb27">&#9670;&#160;</a></span>getPersonnalites()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">getPersonnalites </td>
+          <td>(</td>
+          <td class="paramtype">array</td>          <td class="paramname"><span class="paramname"><em>$movieData</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Récupère les personnalités associées à un contenu. </p>
+<p>Extrait les acteurs et réalisateurs des données TMDB et les convertit en objets <a class="el" href="class_personnalite.html" title="Classe représentant une personnalité du cinéma.">Personnalite</a>.</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">array</td><td class="paramname">$movieData</td><td>Données brutes du film depuis TMDB </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>array Liste des objets <a class="el" href="class_personnalite.html" title="Classe représentant une personnalité du cinéma.">Personnalite</a> </dd></dl>
+
+</div>
+</div>
+<a id="a3a23e255819caad823565bc90135df1e" name="a3a23e255819caad823565bc90135df1e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a23e255819caad823565bc90135df1e">&#9670;&#160;</a></span>getPopularMoviesByGenre()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">getPopularMoviesByGenre </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$genreId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$limit</em></span><span class="paramdefsep"> = </span><span class="paramdefval">20</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Récupère les films populaires pour un genre spécifique.</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$genreId</td><td>ID du genre à filtrer (par exemple, 28 pour Action, 12 pour Aventure) </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$limit</td><td>Nombre de films à récupérer (par défaut 20) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>array|null Liste des films populaires ou null en cas d'erreur </dd></dl>
+
+</div>
+</div>
+<a id="a1f5afa34ce0b954e9b727410209f354f" name="a1f5afa34ce0b954e9b727410209f354f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f5afa34ce0b954e9b727410209f354f">&#9670;&#160;</a></span>getTrendingMovies()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">getTrendingMovies </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$timeWindow</em></span><span class="paramdefsep"> = </span><span class="paramdefval">'day'</span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Récupère les films tendance du moment</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$timeWindow</td><td>Peut être "day" ou "week" (par défaut : "day") </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>array|null Liste des films tendance ou null si une erreur se produit </dd></dl>
+
+</div>
+</div>
+<a id="a0bfd8b4fb056eeb197ce8766a22a963a" name="a0bfd8b4fb056eeb197ce8766a22a963a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0bfd8b4fb056eeb197ce8766a22a963a">&#9670;&#160;</a></span>makeRequest()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">makeRequest </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$url</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Effectue une requête HTTP vers l'API TMDB. </p>
+<p>Gère la communication avec l'API TMDB et le décodage de la réponse.</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$url</td><td>URL complète de la requête API </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>array|null Données décodées ou null en cas d'erreur </dd></dl>
+
+</div>
+</div>
+<a id="abb38cc50e99c1cb02f3d9bc82338b4f2" name="abb38cc50e99c1cb02f3d9bc82338b4f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb38cc50e99c1cb02f3d9bc82338b4f2">&#9670;&#160;</a></span>searchMoviesByName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">searchMoviesByName </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$query</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Méthode de recherche de films dans l'api TMDB. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$query</td><td>La recherche à effectuer</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>array|null Liste des films trouvés ou null en cas d'erreur </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Documentation des champs</h2>
+<a id="a0707e50f6aa68ca0d9df2fa62e203362" name="a0707e50f6aa68ca0d9df2fa62e203362"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0707e50f6aa68ca0d9df2fa62e203362">&#9670;&#160;</a></span>$apiKey</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string $apiKey</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a333c94aac4b67d6dc1ec3d31a87294f4" name="a333c94aac4b67d6dc1ec3d31a87294f4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a333c94aac4b67d6dc1ec3d31a87294f4">&#9670;&#160;</a></span>$baseUrl</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string $baseUrl</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adfe05faf88f6c217d8596e0032e4a8b0" name="adfe05faf88f6c217d8596e0032e4a8b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adfe05faf88f6c217d8596e0032e4a8b0">&#9670;&#160;</a></span>$imageBaseUrl</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string $imageBaseUrl</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9db61e1721b616500bce6ed60491752a" name="a9db61e1721b616500bce6ed60491752a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9db61e1721b616500bce6ed60491752a">&#9670;&#160;</a></span>$pdo</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">PDO $pdo</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>La documentation de cette classe a été générée à partir du fichier suivant :<ul>
+<li>modeles/<a class="el" href="contenu_8dao_8php.html">contenu.dao.php</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Généré par&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+</small></address>
+</div><!-- doc-content -->
+</body>
+</html>
