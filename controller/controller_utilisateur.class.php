@@ -398,7 +398,7 @@ class ControllerUtilisateur extends Controller
                 // mettre à jour l'utilisateur dans la base de données
                 $utilisateur->setMdp($managerutilisateur->findByMail($utilisateur->getMail())->getMdp());
                 
-                print($managerutilisateur->update($utilisateur));
+                $managerutilisateur->update($utilisateur);
                 $utilisateur->setMdp(null);
                 $_SESSION['utilisateur'] = serialize($utilisateur);
                 $this->getTwig()->addGlobal('utilisateurConnecte', unserialize($_SESSION['utilisateur']));
