@@ -89,7 +89,7 @@ class FilDAO
      * @param array $rows Tableau de lignes de la base de données
      * @return array Tableau d'objets Fil hydratés
      */
-    public function hydrateAll(array $rows): array
+    public function hydrateAll(array $rows, ?int $limit = null): array
     {
         $fils = [];
         foreach ($rows as $row) {
@@ -328,14 +328,11 @@ class FilDAO
                 LEFT JOIN " . DB_PREFIX . "theme AS t 
                     ON p.idTheme = t.idTheme
                     GROUP BY f.idFil, u.idUtilisateur, u.pseudo, u.urlImageProfil, t.idTheme, t.nom, likes.likes
-
                 ORDER BY likes.likes DESC
-                LIMIT :limit
             ";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
-        return $this->hydrateAll($stmt->fetchAll());
+        return $this->hydrateAll($stmt->fetchAll(),3);
     }
 
 
