@@ -262,7 +262,7 @@ class ControllerFil extends Controller
         }
 
         // Un fil pouvant avoir 0..* thèmes, on n'a pas besoin de les vérifier. On les récupère simplement
-        $themes = $_POST['themes'];
+        $themes = isset($_POST['themes']) ? $_POST['themes'] : [];
 
         // Vérifier le message 
         $premierMessage = htmlspecialchars($_POST['premierMessage']);
