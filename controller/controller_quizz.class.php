@@ -131,7 +131,6 @@ class ControllerQuizz extends Controller
      */
     public function reponsesDuneQuestion(Question $questions) : array
     {
-        $tabReponses = [];
         foreach ($questions as $question){
             $managerReponse = new ReponseDAO($this->getPdo());
             $tabReponses[] = $managerReponse->findByQuestionId($question.getIdQuestion());
@@ -162,6 +161,47 @@ class ControllerQuizz extends Controller
 
         echo $this->getTwig()->render('creationQuestion.html.twig', [
             'idQuizz' => $idQuizz
+        ]);
+    }
+
+    /**
+     * @brief Méthode permettant d'afficher la page des résultats
+     * 
+     * @details Méthode qui redirige l'utilisateur vers la page des résultats
+     *
+     * @return void
+     */
+    public function afficherResultats(): void
+    {
+        //Récupération des infos
+        $scoreUser = $_GET['bonnesReponses'];
+        $idQuizz = $_GET['idQuizz'];
+        $idUtilisateur = $_GET['idUtilisateur'];
+
+        //Manipulation de l'objet Jouer
+        $managerJouer = new JouerDAO($this->getPdo());
+        if ($managerJouer->verifScoreUser($idQuizz, $idUtilisateur)){
+            $newScore = new Jouer($idUtilisateur,$idQuizz,$scoreUser);
+            $managerReponse->update($newScore);
+        }
+        else{
+            $newScore = new Jouer($idUtilisateur,$idQuizz,$scoreUser);
+            $managerReponse->create($newScore);
+        }
+
+        //Manipulation du tableau des scores
+        $tabScores[] = $managerReponse->findAllByQuizz($idQuizz);
+        //Trie le tableau par ordre décroissant de scores
+        usort($tabScores, function($utilisateur1, $utilisateur2) {
+            return $utilisateur2['score'] <=> $utilisateur1['score'];
+        });
+        $nbScores = range(1, sizeof($tabScores));
+
+
+        echo $this->getTwig()->render('pageResultats.html.twig', [
+            'idQuizz' => $idQuizz,
+            'scores' => $tabScores,
+            'nbScores' => $nbScores
         ]);
     }
 
