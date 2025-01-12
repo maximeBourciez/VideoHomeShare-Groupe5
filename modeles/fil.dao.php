@@ -65,6 +65,7 @@ class FilDAO
      */
     public function hydrate(array $row): Fil
     {
+        // Vérifier si j'ai un seul ou plusieurs tableau 
         $themes = [];
         $user = new Utilisateur();
         $user->setId($row['idUtilisateur']);
@@ -107,6 +108,8 @@ class FilDAO
         }
 
         return array_values($fils);
+
+
     }
 
     // Méthode pour vérifier si un thème existe déjà
@@ -160,9 +163,9 @@ class FilDAO
      * @details Méthode permettant de trouver un fil par son id - Sert à afficher un fil de discussion et ses messages sous-jacents
      *
      * @param integer $id Identifiant du fil
-     * @return Fil|null
+     * @return array
      */
-    public function findById(int $id)
+    public function findById(int $id)   
     {
         $sql = "
         SELECT DISTINCT f.*, 
