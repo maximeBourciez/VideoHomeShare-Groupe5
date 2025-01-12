@@ -1,4 +1,4 @@
-<?php 
+<?php  
 
 class WatchlistDAO {
     private ?PDO $pdo;
@@ -7,25 +7,24 @@ class WatchlistDAO {
         $this->pdo = $pdo;
     }
 
-    // Méthodes existantes...
-
     public function createWatchlist(Watchlist $watchlist): ?int {
-        $sql = "INSERT INTO " . DB_PREFIX . "watchlist (nom, description, estPublique, date, id) 
-                VALUES (:nom, :description, :estPublique, NOW(), :id)";
+        $sql = "INSERT INTO " . DB_PREFIX . "watchlist (nom, description, estPublique, date, idUtilisateur) 
+                VALUES (:nom, :description, :estPublique, :date, :idUtilisateur)";
         
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
             ':nom' => $watchlist->getNom(),
             ':description' => $watchlist->getDescription(),
             ':estPublique' => $watchlist->isEstPublique(),
-            ':id' => $watchlist->getId()
+            ':date' => $watchlist->getDate()->format('Y-m-d H:i:s'),  // Format de la date
+            ':idUtilisateur' => $watchlist->getIdUtilisateur()
         ]);
 
         return $this->pdo->lastInsertId();
     }
 
-    public function findByUser(int $userId): array {
-        $sql = "SELECT * FROM " . DB_PREFIX . "watchlist WHERE id = :userId";
+    public function findByUser(string $userId): array {
+        $sql = "SELECT * FROM " . DB_PREFIX . "watchlist WHERE idUtilisateur = :userId";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':userId' => $userId]);
         return $this->hydrateAll($stmt->fetchAll(PDO::FETCH_ASSOC));
@@ -59,18 +58,6 @@ class WatchlistDAO {
             ':watchlistId' => $watchlistId,
             ':contenuId' => $contenuId
         ]);
-    }
-
-    public function getFavoris(int $userId): array {
-        $sql = "SELECT c.* FROM " . DB_PREFIX . "contenu c 
-                JOIN " . DB_PREFIX . "favori f ON c.id = f.idContenu 
-                WHERE f.id = :userId";
-        
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':userId' => $userId]);
-        
-        $contenuDAO = new ContenuDAO($this->pdo);
-        return $contenuDAO->hydrateAll($stmt->fetchAll(PDO::FETCH_ASSOC));
     }
 
     public function getPublicWatchlists(): array {
