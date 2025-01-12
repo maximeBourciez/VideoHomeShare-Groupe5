@@ -71,7 +71,7 @@
 
 					<!-- Boutons supprimer/signaler -->
 					<div class="d-flex gap-2">
-						{% if reponse.getUtilisateur().getId() == utilisateurConnecte.getId() %}
+						{% if (reponse.getUtilisateur().getId() == utilisateurConnecte.getId()) or (utilisateurConnecte.getRoleAsString() == "Moderateur") %}
 							<form method="POST" action="index.php?controller=fil&methode=supprimerMessage">
 								<input type="hidden" name="idMessage" value="{{ reponse.getIdMessage() }}">
 								<input type="hidden" name="id_fil" value="{{ idFil }}">
@@ -115,9 +115,9 @@ VHS | Fil
 <main class="flex-grow-1">
 	<div class="container-fluid bg-mydark text-white p-4 shadow " style="border-top: 5px solid #F2AC0F;">
 		<div class="text-center">
-			<h2 class="mb-3">{{ fil.titre }}</h2>
-			<p class="">{{ fil.description }}</p>
-			{% for theme in fil.getThemes() %}
+			<h2 class="mb-3">{{ fil.0.titre }}</h2>
+			<p class="">{{ fil.0.description }}</p>
+			{% for theme in fil.0.getThemes() %}
 				<span class="badge bg-myprimary text-dark me-2 mb-2 p-2">{{ theme.getNom() }}</span>
 			{% endfor %}
 		</div>
@@ -194,7 +194,7 @@ VHS | Fil
 
 							<!-- Boutons supprimer/signaler -->
 							<div class="d-flex gap-2">
-								{% if message.getUtilisateur().getId() == utilisateurConnecte.getId() %}
+								{% if (message.getUtilisateur().getId() == utilisateurConnecte.getId()) or (utilisateurConnecte.getRoleAsString() == "Moderateur")  %}
 									<form 
 										method="POST" 
 										action="index.php?controller=fil&methode=supprimerMessage" 

@@ -5,7 +5,7 @@
  * 
  * @details Classe permettant de gérer les actions liées aux fils de discussion du forum
  * 
- * @date 13/11/2020
+ * @date Création 13/11/2024 Dernière modification 11/01/2025
  * 
  * @version 1.0
  * 

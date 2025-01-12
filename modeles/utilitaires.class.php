@@ -27,14 +27,14 @@ class Utilitaires
     {
         $valretour = true;
         // si la valeur est plus petite que la valeur minimal
-        if (strlen($val) <= $valmin) {
+        if (strlen($val) < $valmin) {
 
             
             $messageErreur = $contenu . " au moins " . $valmin . " caractères" ;
             $valretour = false;
         }
         // si la valeur est plus grande que la valeur maximal
-        if (strlen($val) >= $valmax and $valmax != null) {
+        if (strlen($val) > $valmax and $valmax != null) {
 
             
             $messageErreur = $contenu . " au maximum " . $valmax . " caractères";
@@ -473,6 +473,17 @@ class Utilitaires
         }
         return $valretour;
     
+   }
+
+   public static function verifiecasecocher( $case, string &$messageErreur , string $type) : bool {
+        $valretour = true;
+        // si la case n'est pas cochée
+        if ($case == null) {
+            
+            $messageErreur = "Vous devez cocher  $type";
+            $valretour = false;
+        }
+        return $valretour;
    }
 
 }
