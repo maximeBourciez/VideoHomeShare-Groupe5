@@ -83,7 +83,6 @@
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Précédent</span>
                 </button>
-                
                 <!-- Slides -->
                 <div class="carousel-inner">
                     {% for collectionBatch in collections|batch(3, '') %}
@@ -93,13 +92,13 @@
                                     {% if collection != '' %} 
                                         <div class="col">
                                             <div class="card">
-                                                <img src="{{ collection.lienAffiche }}" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;" alt="{{ collection.titre }}">
+                                                <img src="{{ collection.lienAffiche }}" class="card-img-top img-fluid" style="height: 200px; object-fit: cover;" alt="{{ collection.titreCollection }}">
                                                 <div class="card-body">
                                                     <div class="card-body">
                                                         <h5 class="card-title
-                                                        {% if collection.titre|length > 20 %}
+                                                        {% if collection.titreCollection|length > 20 %}
                                                             fs-6
-                                                        {% endif %}">{{ collection.titre }}</h5>
+                                                        {% endif %}">{{ collection.titreCollection }}</h5>
                                                         <p class="card-text">{{ collection.description|slice(0, 50) ~ '...' }}</p>
                                                     </div>
                                                     <div class="card-footer">

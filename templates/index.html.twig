@@ -29,7 +29,7 @@
                                         </h5>
                                         <p class="card-text">{{ film.0.description }}</p>
                                         <p class="card-text">
-                                            <strong>Note :</strong> {{ film.1.moyenne }}/10<br>
+                                            <strong>Note :</strong> {{ film.1.moyenne }}/5<br>
                                             <small class="text-muted">{{ film.1.nbAvis }} avis</small>
                                         </p>
                                         <!-- Boutons d'action -->
@@ -75,7 +75,7 @@
                                             <div class="card-body">
                                                 
                                                 <img src="{{ film.0.lienAfficheReduite }}" class="card-img-top mb-2" alt="{{ film.0.titre }}">
-                                                <p>{{ film.1.moyenne }}</p>
+                                                <p>{{ film.1.moyenne }} <i class="bi bi-star-fill"></i></p>
                                                 <h5 class="card-title mb-2">{{ film.0.titre }}</h5>
                                                 <a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ film.0.id }}" class="btn btn-primary mt-auto">
                                                     Plus d'informations
@@ -117,7 +117,7 @@
                                             <div class="card-body">
                                                 
                                                 <img src="{{ film.0.lienAfficheReduite }}" class="card-img-top mb-2" alt="{{ film.0.titre }}">
-                                                <p>{{ film.1.moyenne }}</p>
+                                                <p>{{ film.1.moyenne }} <i class="bi bi-star-fill"></i></p>
                                                 <h5 class="card-title mb-2">{{ film.0.titre }}</h5>
                                                 <a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ film.0.id }}" class="btn btn-primary mt-auto">
                                                     Plus d'informations
@@ -156,7 +156,7 @@
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title">{{ thread.titre }}</h5>
                                 <p class="card-text">{{ thread.description }}</p>
-                                <p class="card-text mt-auto">Nombre de likes : {{ thread.nbLikes }}</p>
+                                <p class="card-text mt-auto">{{ thread.nbLikes }} <i class="bi bi-heart-fill"></i></p>
                                 <a href="index.php?controller=fil&methode=afficherFilParId&id_fil={{ thread.id }}" 
                                 class="btn btn-primary mt-2">Voir le thread</a>
                             </div>
