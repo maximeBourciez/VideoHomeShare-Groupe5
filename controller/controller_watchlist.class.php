@@ -14,31 +14,16 @@ class  ControllerWhatchlist extends Controller {
 
         $userId = $_SESSION['user_id'];
         $watchlistDAO = new WatchlistDAO($this->getPdo());
-        
-        // Récupérer les favoris
-        $favoris = $watchlistDAO->getFavoris($userId);
-        
-        // Récupérer la watchlist personnelle
-        $watchlistsPerso = $watchlistDAO->findByUser($userId);
-        
+              
         // Pour chaque watchlist, récupérer ses contenus
         foreach ($watchlistsPerso as $watchlist) {
-            $contenus = $watchlistDAO->getWatchlistContent($watchlist->getId());
-            $watchlist->setContenus($contenus);
-        }
-        
-        // Récupérer les watchlists publiques
-        $watchlistsPubliques = $watchlistDAO->getPublicWatchlists();
-        foreach ($watchlistsPubliques as $watchlist) {
             $contenus = $watchlistDAO->getWatchlistContent($watchlist->getId());
             $watchlist->setContenus($contenus);
         }
 
         // Afficher le template avec les données
         echo $this->getTwig()->render('watchlists.html.twig', [
-            'favoris' => $favoris,
             'watchlistsPerso' => $watchlistsPerso,
-            'watchlistsPubliques' => $watchlistsPubliques
         ]);
     }
 
