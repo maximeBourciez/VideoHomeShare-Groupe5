@@ -34,6 +34,22 @@ class WatchlistDAO {
         return intval($this->pdo->lastInsertId());
     }
 
+    public function update(int $idWatchlist, string $nom, string $description, bool $estPublique): bool {
+        $sql = "UPDATE " . DB_PREFIX . "watchlist 
+                SET nom = :nom, 
+                    description = :description, 
+                    estPublique = :estPublique 
+                WHERE idWatchlist = :idWatchlist";
+        
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':idWatchlist' => $idWatchlist,
+            ':nom' => $nom,
+            ':description' => $description,
+            ':estPublique' => $estPublique
+        ]);
+    }
+
     public function findByUser(string $userId): array {
         $sql = "SELECT * FROM " . DB_PREFIX . "watchlist WHERE idUtilisateur = :userId";
         $stmt = $this->pdo->prepare($sql);

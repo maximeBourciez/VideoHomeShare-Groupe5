@@ -1,6 +1,6 @@
 <?php
 
-class ControllerWhatchlist  extends Controller {
+class ControllerWatchlist  extends Controller {
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader) {
         parent::__construct($twig, $loader);
     }
@@ -26,7 +26,7 @@ class ControllerWhatchlist  extends Controller {
         }
     
         // Afficher le template avec les données
-        echo $this->getTwig()->render('whatchlists.html.twig', [
+        echo $this->getTwig()->render('watchlists.html.twig', [
             'watchlistsPerso' => $watchlistsPerso,
         ]);
     }
@@ -69,12 +69,62 @@ class ControllerWhatchlist  extends Controller {
     
         // S'assurer que le chemin du template est correct
         try {
-            echo $this->getTwig()->render('pages/watchlists.html.twig', [
+            echo $this->getTwig()->render('watchlists.html.twig', [
                 'watchlistsPerso' => $watchlistsPerso
             ]);
         } catch (\Twig\Error\LoaderError $e) {
             // Log l'erreur ou affichez un message d'erreur approprié
             echo "Erreur lors du chargement du template : " . $e->getMessage();
         }
+    }
+
+    // Méthode pour modifier une watchlist
+    public function modifierWatchlist(): void {
+        if (!isset($_SESSION['utilisateur']) || !isset($_POST['id']) || !isset($_POST['nom'])) {
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
+            return;
+        }
+    
+        $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
+        $idWatchlist = intval($_POST['id']);
+        $nom = $_POST['nom'];
+        $description = $_POST['description'] ?? '';
+        $estPublique = isset($_POST['estPublique']);
+    
+        $watchlistDAO = new WatchlistDAO($this->getPdo());
+        
+        // Vérifier que la watchlist appartient bien à l'utilisateur
+        $watchlists = $watchlistDAO->findByUser($idUtilisateur);
+        $watchlistAppartientUtilisateur = false;
+        
+        foreach ($watchlists as $watchlist) {
+            if ($watchlist->getId() === $idWatchlist) {
+                $watchlistAppartientUtilisateur = true;
+                break;
+            }
+        }
+    
+        if (!$watchlistAppartientUtilisateur) {
+            // Rediriger avec un message d'erreur
+            $watchlistsPerso = $watchlistDAO->findByUser($idUtilisateur);
+            echo $this->getTwig()->render('watchlists.html.twig', [
+                'watchlistsPerso' => $watchlistsPerso,
+                'error' => 'Vous n\'avez pas les droits pour modifier cette watchlist'
+            ]);
+            return;
+        }
+    
+        // Effectuer la modification
+        $success = $watchlistDAO->update($idWatchlist, $nom, $description, $estPublique);
+    
+        // Récupérer les watchlists mises à jour
+        $watchlistsPerso = $watchlistDAO->findByUser($idUtilisateur);
+    
+        // Ajouter un message de succès ou d'erreur
+        echo $this->getTwig()->render('watchlists.html.twig', [
+            'watchlistsPerso' => $watchlistsPerso,
+            'message' => $success ? 'Watchlist modifiée avec succès' : 'Erreur lors de la modification'
+        ]);
     }
 }
