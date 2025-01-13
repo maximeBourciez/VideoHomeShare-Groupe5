@@ -81,15 +81,17 @@
                 <div class="movie-actions mr-5">
                     <div class="movie-actions__buttons d-flex justify-content-right mb-5">
                         {% if utilisateurConnecte is not null %}
+                            <button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
                             <form action="index.php?controller=watchlist&methode=ajouterContenuAWatchlist" method="POST" class="me-4">
                                 <input type="hidden" name="idContenu" value="{{ contenu.tmdbId|escape('html_attr') }}">
                                 <button type="button" class="movie-actions__watchlist-btn btn btn-myprimary fw-normal bi bi-plus" data-bs-toggle="modal" data-bs-target="#choisirWatchlist">
-                                    Ajouter à la Watchlist
+                                    Ajouter à sa Watchlist
                                 </button>
                             </form>
 
                         {% else %}
                             <button class="movie-actions__watchlist-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Ajouter à la Watchlist</button>
+                            <button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Laisser un avis</button>
                         {% endif %}
                     </div>
                 </div>
