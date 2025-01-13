@@ -1,0 +1,23 @@
+{% extends 'base_template.html.twig' %}
+
+{% block title %}
+	VHS | Page des résultats
+{% endblock %}
+
+{% block content %}
+<main class="container min-vh-100">
+    <div class="row">
+        <h1>Classement :</h1>
+    </div>
+    {% for score in scores and nbScore in nbScores %}
+        <div class="row">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ nbScore }} - {{ score.score }}</h5>
+                    <h6 class="card-subtitle mb-2 text-body-secondary">{{ score.idUtilisateur }}</h6>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</main>
+{% endblock %}

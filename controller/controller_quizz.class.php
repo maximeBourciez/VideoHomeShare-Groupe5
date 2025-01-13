@@ -88,10 +88,18 @@ class ControllerQuizz extends Controller
         }
     }
 
+    /**
+     * @brief Méthode qui permet de jouer au quizz
+     * 
+     * @details Méthode permettant d'afficher les questions et réponses du associés au quizz
+     *
+     * @return void
+     */
     public function jouerQuizz() : void
     {
         if (isset($_SESSION['utilisateur'])){
-            $idUtilisateur = unserialize($_SESSION['utilisateur']);
+            $utilisateur = unserialize($_SESSION['utilisateur']);
+            $idUtilisateur = $utilisateur->getId();
 
             $managerQuizz = new QuizzDAO($this->getPdo());
             $idQuizz = $_GET['idQuizz'];
@@ -115,6 +123,13 @@ class ControllerQuizz extends Controller
         }  
     }
 
+    /**
+     * @brief Méthode qui retourne toutes les réponses d'une question
+     * 
+     * @details Méthode permettant de retourner toutes les réponses d'une question sous forme de tableau
+     *
+     * @return array
+     */
     public function reponsesDuneQuestion(Question $questions) : array
     {
         $tabReponses = [];
@@ -135,12 +150,72 @@ class ControllerQuizz extends Controller
         ]);
     }
 
+    /**
+     * @brief Méthode permettant de créer une question
+     * 
+     * @details Méthode qui redirige l'utilisateur vers la page des questions pour créer ou modifier sa question
+     *
+     * @return array
+     */
     public function creerQuestion() : void
     {
+        //Récupération des informations
         $idQuizz = $_GET['idQuizz'];
+        $titre = $_GET['titre'];
+        $description = $_GET['description'];
+        $difficulte = $_GET['difficulte'];
+        $nbQuestions = range(1,$_GET['nbQuestions']);
+        $idUtilisateur = $_GET['idUtilisateur'];
+
+        //Création de l'objet Quizz
+        $managerQuizz = new QuizzDAO($this->getPdo());
+        $newQuizz = new Quizz($idQuizz,$titre,$description,$difficulte,$idUtilisateur);
+        $managerQuizz->create($newQuizz);
 
         echo $this->getTwig()->render('creationQuestion.html.twig', [
-            'idQuizz' => $idQuizz
+            'idQuizz' => $idQuizz,
+            'nbQuestions' => $nbQuestions
+        ]);
+    }
+
+    /**
+     * @brief Méthode permettant d'afficher la page des résultats
+     * 
+     * @details Méthode qui redirige l'utilisateur vers la page des résultats
+     *
+     * @return void
+     */
+    public function afficherResultats(): void
+    {
+        //Récupération des infos
+        $scoreUser = $_GET['bonnesReponses'];
+        $idQuizz = $_GET['idQuizz'];
+        $idUtilisateur = $_GET['idUtilisateur'];
+
+        //Manipulation de l'objet Jouer
+        $managerJouer = new JouerDAO($this->getPdo());
+        if ($managerJouer->verifScoreUser($idQuizz, $idUtilisateur)){
+            $newScore = new Jouer($idUtilisateur,$idQuizz,$scoreUser);
+            $managerReponse->update($newScore);
+        }
+        else{
+            $newScore = new Jouer($idUtilisateur,$idQuizz,$scoreUser);
+            $managerReponse->create($newScore);
+        }
+
+        //Manipulation du tableau des scores
+        $tabScores[] = $managerReponse->findAllByQuizz($idQuizz);
+        //Trie le tableau par ordre décroissant de scores
+        usort($tabScores, function($utilisateur1, $utilisateur2) {
+            return $utilisateur2['score'] <=> $utilisateur1['score'];
+        });
+        $nbScores = range(1, sizeof($tabScores));
+
+
+        echo $this->getTwig()->render('pageResultats.html.twig', [
+            'idQuizz' => $idQuizz,
+            'scores' => $tabScores,
+            'nbScores' => $nbScores
         ]);
     }
 

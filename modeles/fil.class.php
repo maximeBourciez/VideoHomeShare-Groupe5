@@ -36,6 +36,10 @@ class Fil{
      * @var null|Theme[] $themes Thèmes associés au fil
      */
     private ?array $themes;
+    /**
+     * @var int|null $nbLikes Nombre de likes du fil
+     */
+    private ?int $nbLikes;
 
 
     // Constructeur
@@ -49,13 +53,14 @@ class Fil{
      * @param Utilisateur|null $utilisateur Utilisateur qui a créé le fil
      * @param Theme[]|null $themes Thèmes associés au fil
      */
-    public function __construct(?int $id = null, ?string $titre = null, ?DateTime $dateCreation = null, ?string $description = null, ?Utilisateur $utilisateur = null, ?array $themes = null){
+    public function __construct(?int $id = null, ?string $titre = null, ?DateTime $dateCreation = null, ?string $description = null, ?Utilisateur $utilisateur = null, ?array $themes = null, ?int $nbLikes = null){
         $this->id = $id;
         $this->titre = $titre;
         $this->dateCreation = $dateCreation;
         $this->description = $description;
         $this->utilisateur = $utilisateur;
         $this->themes = $themes;
+        $this->nbLikes = $nbLikes;
     }
 
 
@@ -107,6 +112,14 @@ class Fil{
      */
     public function getThemes(): ?array{
         return $this->themes;
+    }
+
+    /**
+     * @brief Getter du nombre de likes du fil
+     * @return integer|null Nombre de likes du fil
+     */
+    public function getNbLikes(): ?int{
+        return $this->nbLikes;
     }
 
 
@@ -166,6 +179,16 @@ class Fil{
         $this->themes = $themes;
     }
 
+    /**
+     * @brief Setter du nombre de likes du fil
+     * 
+     * @return void
+     */
+
+     public function setLikes(?int $nbLikes){
+        $this->nbLikes = $nbLikes;
+    }
+
 
     // Méthodes
     /**
@@ -190,7 +213,4 @@ class Fil{
             unset($this->themes[$key]);
         }
     }
-
-    
-
 }

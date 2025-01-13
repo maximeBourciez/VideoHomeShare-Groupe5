@@ -10,31 +10,34 @@
     <br>
 	<h1>Création d'un quizz</h1>
 	<br>
-	<form action="" method="get">
+	<form action="index.php?controller=quizz&methode=creerQuestion" method="get">
+	<!-- Champ Titre -->
 		<div class="row">
 			<label for="titre"><b>Titre du quizz : </b></label>
     		<input type="text" name="titre" required />
 		</div>
 		<br>
+		<!-- Champ Description -->
 		<div class="row">
 			<label for="description"><b>Description : </b></label>
     		<textarea name="description" required></textarea>
 		</div>
 		<br>
+		<!-- Champ Difficulté -->
 		<div class="row">
 			<label for="difficulte"><b>Difficulté : </b></label>
     		<input type="number" name="difficulte" min="1" max="4" value="1" step="1" style="width: 10%" required></textarea>
 		</div>
 		<br>
+		<!-- Champ Nombre de questions -->
 		<div class="row">
 			<label for="nbQuestions"><b>Nombre de questions : </b></label>
     		<input type="number" name="nbQuestions" min="4" max="8" value="4" step="1" style="width: 10%" required></textarea>
 		</div>
 		<br>
 		<br>
-		<a href="index.php?controller=quizz&methode=creerQuestion&idQuizz" class="row btn btn-primary">
-			Suivant
-		</a>
+		<!-- Bouton pour passer à la création des questions -->
+		<button type="submit" class="row btn btn-primary">Suivant</button>
 	</form>
 </main>
 {% endblock %}

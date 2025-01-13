@@ -1,6 +1,11 @@
 {% extends 'base_template.html.twig' %}
 
 {% block content %}
+    {% if messagederreur is defined %}
+        <div class="alert alert-danger" role="alert">
+            {{ messagederreur }}
+        </div>
+    {% endif %}
     <main class="movie-page container d-flex flex-column justify-content-center align-items-center flex-grow-1">
         <div class="movie-content d-flex">
             <!-- Section Affiche -->
@@ -75,7 +80,11 @@
                 <!-- Boutons d'action -->
                 <div class="movie-actions mr-5">
                     <div class="movie-actions__buttons d-flex justify-content-right mb-5">
-                        <button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
+                        {% if utilisateurConnecte is not null %}
+                            <button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
+                        {% else %}
+                            <button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Laisser un avis</button>
+                        {% endif %}
                         <button class="movie-actions__watchlist-btn btn btn-myprimary fw-normal me-4 bi bi-plus">WatchList</button>
                     </div>
                 </div>
@@ -222,7 +231,11 @@
                     <p class="m-3 fs-3">Aucun commentaire pour ce film. Sois le premier à commenter 😉 </p>
                 </div>
                 <div class="d-flex justify-content-center">
-                    <button class="btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
+                     {% if utilisateurConnecte is not null %}
+                            <button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
+                        {% else %}
+                            <button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Laisser un avis</button>
+                        {% endif %}
                 </div>
             {% endif %}
         </div>
@@ -237,24 +250,31 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="/avis/ajouter/{{ contenu.id }}" method="POST">
+                    <form action="index.php?controller=commentaire&methode=createCommentaire" method="POST">
+                        <input type="hidden" name="idContenu" value="{{ contenu.tmdbId|escape('html_attr') }}"> 
                         <div class="mb-3">
                             <label for="titre" class="form-label">Titre de votre avis</label>
-                            <input type="text" class="form-control" id="titre" name="titre" required placeholder="Ex : J'ai adoré ce film !">
+                            <input type="text" class="form-control" id="titre" name="titre" required 
+                                   placeholder="Ex : J'ai adoré ce film !"
+                                   maxlength="100">
                         </div>
                         <div class="mb-3">
-                            <label for="note" class="form-label">Note</label>
-                            <select class="form-select" id="note" name="note" required>
-                                <option value="1">1/5</option>
-                                <option value="2">2/5</option>
-                                <option value="3">3/5</option>
-                                <option value="4">4/5</option>
-                                <option value="5">5/5</option>
-                            </select>
+                            <label for="note" class="form-label">Note : <span id="sliderValue">3</span></label>
+                            <input type="range" class="form-range" id="note" name="note" min="1" max="5" step="1" value="3" required>
                         </div>
+
+                        <script>
+                            const slider = document.getElementById('note');
+                            const sliderValue = document.getElementById('sliderValue');
+                            slider.addEventListener('input', () => {
+                                sliderValue.textContent = slider.value;
+                            });
+                        </script>
                         <div class="mb-3">
                             <label for="commentaire" class="form-label">Votre commentaire</label>
-                            <textarea class="form-control" id="commentaire" name="commentaire" rows="4" required placeholder="Ex : Ce film est vraiment génial car..."></textarea>
+                            <textarea class="form-control" id="commentaire" name="commentaire" rows="4" required 
+                                      placeholder="Ex : Ce film est vraiment génial car..."
+                                      maxlength="1000"></textarea>
                         </div>
                         <div class="modal-footer border-0">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
@@ -266,6 +286,21 @@
         </div>
     </div>
 
+    <!-- Modal Veuillez vous connecter -->
+    <div class="modal fade" id="veuillezVousConnecter" tabindex="-1" aria-labelledby="modalAvisLabel" aria-hidden="true">   
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-mydark text-white">
+                <div class="modal-body text-center">
+                    <p class="fs-3">Si vous voulez laisser un avis et participer à la communauté, vous devez d'abord vous connecter 😏</p>
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <a href="index.php?controller=utilisateur&methode=connexion">
+                        <button type="button" class="btn btn-myprimary">Connexion</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block script %}

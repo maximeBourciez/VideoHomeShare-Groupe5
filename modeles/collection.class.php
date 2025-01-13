@@ -1,15 +1,43 @@
 <?php 
 
-
+/**
+ * @brief Classe représentant une collection de films
+ * 
+ * Cette classe définit la structure d'une collection de films
+ * avec ses propriétés et méthodes d'accès
+ * 
+ * @author François Barlic <<francois.barlic57@gmail.com>>
+ * @version 1.0
+ */
 class Collection{   
+    /** @var int|null Identifiant unique de la collection */
     private ?int $id;
+    
+    /** @var string|null Titre de la collection */
     private ?string $titreCollection;
+    
+    /** @var DateTime|null Date de création/modification de la collection */
     private ?DateTime $date;
+    
+    /** @var string|null Description détaillée de la collection */
     private ?string $description;
+    
+    /** @var string|null Lien vers l'affiche de la collection */
     private ?string $lienAffiche;
+    
+    /** @var int|null Nombre de films dans la collection */
     private ?int $nombreFilms;
   
-    //constructeur
+    /**
+     * @brief Constructeur de la classe Collection
+     * 
+     * @param int|null $id Identifiant de la collection
+     * @param string|null $titreCollection Titre de la collection
+     * @param DateTime|null $date Date de la collection
+     * @param string|null $description Description de la collection
+     * @param string|null $lienAffiche Lien vers l'affiche
+     * @param int|null $nombreFilms Nombre de films dans la collection
+     */
     public function __construct(?int $id = null, ?string $titreCollection = null, ?DateTime $date = null, ?string $description = null, ?string $lienAffiche = null, ?int $nombreFilms = null){
         $this->id = $id;
         $this->titreCollection = $titreCollection;
@@ -19,54 +47,89 @@ class Collection{
         $this->nombreFilms = $nombreFilms;
     }
   
-    //getters and setters
-    //get id
+    /**
+     * @brief Récupère l'identifiant de la collection
+     * @return int|null L'identifiant de la collection
+     */
     public function getId(): ?int{
         return $this->id;
     }
-    // set id
+    /**
+     * @brief Définit l'identifiant de la collection
+     * @param int|null $id Le nouvel identifiant
+     */
     public function setId(?int $id): void{
         $this->id = $id;
     }
 
-    //get titre
+    /**
+     * @brief Récupère le titre de la collection
+     * @return string|null Le titre de la collection
+     */
     public function getTitreCollection(): ?string{
         return $this->titreCollection;
     }
-    // set titre
+    /**
+     * @brief Définit le titre de la collection
+     * @param string|null $titreCollection Le nouveau titre
+     */
     public function setTitreCollection(?string $titreCollection): void{
         $this->titreCollection = $titreCollection;
     }
 
-    //get date
+    /**
+     * @brief Récupère la date de la collection
+     * @return DateTime|null La date de la collection
+     */
     public function getDate() : ?DateTime{
         return $this->date;
     }
-    // set date
+    /**
+     * @brief Définit la date de la collection
+     * @param DateTime|null $date La nouvelle date
+     */
     public function setDate(?DateTime $date): void{
         $this->date = $date;
     }
-    //get description
+    /**
+     * @brief Récupère la description de la collection
+     * @return string|null La description de la collection
+     */
     public function getDescription(): ?string{
         return $this->description;
     }
-    // set description
+    /**
+     * @brief Définit la description de la collection
+     * @param string|null $description La nouvelle description
+     */
     public function setDescription(?string $description): void{
         $this->description = $description;
     }
-    //get lienAffiche
+    /**
+     * @brief Récupère le lien de l'affiche de la collection
+     * @return string|null Le lien de l'affiche
+     */
     public function getLienAffiche(): ?string{
         return $this->lienAffiche;
     }
-    // set lienAffiche
+    /**
+     * @brief Définit le lien de l'affiche de la collection
+     * @param string|null $lienAffiche Le nouveau lien de l'affiche
+     */
     public function setLienAffiche(?string $lienAffiche): void{
         $this->lienAffiche = $lienAffiche;
     }
-    //get durée
+    /**
+     * @brief Récupère le nombre de films dans la collection
+     * @return int|null Le nombre de films
+     */
     public function getNombreFilms(): ?int{
         return $this->nombreFilms;
     }
-    // set durée
+    /**
+     * @brief Définit le nombre de films dans la collection
+     * @param int|null $nombreFilms Le nouveau nombre de films
+     */
     public function setNombreFilms(?int $nombreFilms): void{
         $this->nombreFilms = $nombreFilms;
     }

@@ -1,48 +1,56 @@
 <?php
 
+/**
+ * @brief Contrôleur gérant l'affichage des contenus
+ * 
+ * Cette classe gère l'affichage des informations détaillées des films
+ * en utilisant le DAO pour accéder aux données
+ * 
+ * @author François Barlic <<francois.barlic57@gmail.com>>
+ * @version 1.0
+ */
 class ControllerContenu extends Controller {
+    /** @var ContenuDAO Instance du DAO pour l'accès aux données des contenus */
+    private ContenuDAO $contenuDAO;
+
+    /**
+     * @brief Constructeur du contrôleur de contenu
+     * 
+     * @param \Twig\Environment $twig L'environnement Twig
+     * @param \Twig\Loader\FilesystemLoader $loader Le chargeur de fichiers Twig
+     */
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader) {
         parent::__construct($twig, $loader);
+        $this->contenuDAO = new ContenuDAO($this->getPdo());
     }
 
     /**
-     * Affiche les informations d'un film depuis TMDB sans l'importer
+     * @brief Affiche les détails d'un film
      */
     public function afficherContenu(): void {
         $tmdbId = isset($_GET['tmdb_id']) ? intval($_GET['tmdb_id']) : null;
+        
         if ($tmdbId) {
-            // Initialiser l'API TMDB
-            $tmdbApi = new TmdbAPIContenu(TMDB_API_KEY);
-            
-            // Récupérer les données du film
-            $movieData = $tmdbApi->getMovieById($tmdbId);
-            if ($movieData === null) {
-                // Si getMovieById retourne null (cas d'un film pour adultes)
-                echo $this->getTwig()->render('index.html.twig');
-                return;
-            }
-            if ($movieData) {
-                // Convertir en objet Contenu sans sauvegarder
-                $contenu = $tmdbApi->convertToContenu($movieData);
-                
-                // Récupérer les personnalités
-                $personnalites = $tmdbApi->getPersonnalitesContenu($movieData);
-                
-                // Récupérer les thèmes
-                $themes = $tmdbApi->getGenresContenu($movieData);
+            // Récupérer les données du film via le DAO
+            $contenu = $this->contenuDAO->getContentFromTMDB($tmdbId);
 
-                //Récupérer les notes et le nombre de notes
+            if ($contenu) {
+                // Récupérer les personnalités via le DAO
+                $movieData = $this->contenuDAO->getMovieData($tmdbId);
+                $personnalites = $this->contenuDAO->getPersonnalites($movieData);
+                
+                // Récupérer les thèmes via le DAO
+                $themes = $this->contenuDAO->getGenres($movieData);
+
+                // Récupérer les notes et commentaires
                 $commentaireDAO = new CommentaireDAO($this->getPdo());
                 $notes = $commentaireDAO->getMoyenneEtTotalNotesContenu($tmdbId);
-
-                //Récupérer les commentaires
                 $commentaires = $commentaireDAO->getCommentairesContenu($tmdbId);
                 
                 // Récupérer les thèmes depuis la BD
                 $themeDAO = new ThemeDAO($this->getPdo());
                 $themesFromDB = [];
                 
-                // Pour chaque thème de TMDB
                 foreach ($themes as $theme) {
                     $themeFromDB = $themeDAO->createIfNotExists($theme);
                     if ($themeFromDB) {
@@ -62,9 +70,5 @@ class ControllerContenu extends Controller {
                 return;
             }
         }
-
-
-        // Si pas d'ID ou contenu non trouvée, rediriger vers la page d'accueil
-        echo $this->getTwig()->render('index.html.twig');
     }
 } 
