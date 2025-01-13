@@ -5,7 +5,7 @@
         <!-- Section "Vos Watchlists" -->
         <section class="watchlist-section mb-5">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="watchlist-section__title mb-0">Vos Watchlists</h2>
+                <h2 class="watchlist-section__title mb-0">Mes Watchlists</h2>
                 <button class="btn btn-myprimary" data-bs-toggle="modal" data-bs-target="#createWatchlistModal">
                     <i class="bi bi-plus-lg me-2"></i>Créer une watchlist
                 </button>
@@ -94,7 +94,7 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="index.php?controller=whatchlist&methode=creerWatchlist" method="POST">
+                    <form action="index.php?controller=watchlist&methode=creerWatchlist" method="POST">
                         <div class="mb-3">
                             <label for="newWatchlistName" class="form-label">Nom de la watchlist</label>
                             <input type="text" class="form-control" id="newWatchlistName" name="nom" required>

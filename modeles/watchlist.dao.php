@@ -14,8 +14,6 @@ class WatchlistDAO {
      * @param string $description Description de la watchlist
      * @param bool $estPublique Statut public/privé de la watchlist
      * @param string $idUtilisateur Identifiant de l'utilisateur créateur
-     * 
-     * @return int Identifiant de la watchlist créée
      */
     public function create(string $nom, string $description, bool $estPublique, string $idUtilisateur): int
     {
@@ -83,7 +81,7 @@ class WatchlistDAO {
     
 
     public function addContenuToWatchlist(int $watchlistId, int $contenuId): bool {
-        $sql = "INSERT INTO " . DB_PREFIX . "contenir (idWatchlist, idContenu) VALUES (:watchlistId, :contenuId)";
+        $sql = "INSERT INTO " . DB_PREFIX . "contenircontenu (idWatchlist, idContenu) VALUES (:watchlistId, :contenuId)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             ':watchlistId' => $watchlistId,
@@ -92,7 +90,7 @@ class WatchlistDAO {
     }
 
     public function removeContenuFromWatchlist(int $watchlistId, int $contenuId): bool {
-        $sql = "DELETE FROM " . DB_PREFIX . "contenir WHERE idWatchlist = :watchlistId AND idContenu = :contenuId";
+        $sql = "DELETE FROM " . DB_PREFIX . "contenircontenu WHERE idWatchlist = :watchlistId AND idContenu = :contenuId";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             ':watchlistId' => $watchlistId,

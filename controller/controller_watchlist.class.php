@@ -32,21 +32,34 @@ class ControllerWatchlist  extends Controller {
     }
 
     public function ajouterAWatchlist(): void {
-        if (!isset($_SESSION['utilisateur']) || !isset($_POST['watchlistId']) || !isset($_POST['contenuId'])) {
-            // Remplacer header() par le gestionnaire de connexion
+        // Vérifier que l'utilisateur est connecté et que les données nécessaires sont présentes
+        if (!isset($_SESSION['utilisateur']) || !isset($_POST['watchlists']) || !isset($_POST['idContenu'])) {
             $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
             $managerUtilisateur->connexion();
             return;
         }
-
+    
         $watchlistDAO = new WatchlistDAO($this->getPdo());
-        $watchlistDAO->addContenuToWatchlist(
-            intval($_POST['watchlistId']),
-            intval($_POST['contenuId'])
-        );
-
-        // Rediriger vers la page des watchlists
-        echo $this->getTwig()->render('watchlists.html.twig');
+        $contenuId = intval($_POST['idContenu']);
+        $watchlists = $_POST['watchlists']; // Array contenant les ID des watchlists sélectionnées
+    
+        // Parcourir les watchlists sélectionnées et y ajouter le contenu
+        foreach ($watchlists as $watchlistId) {
+            $watchlistDAO->addContenuToWatchlist(intval($watchlistId), $contenuId);
+        }
+    
+        // Rediriger vers la page des watchlists mises à jour
+        $userId = unserialize($_SESSION['utilisateur'])->getId();
+        $watchlistsPerso = $watchlistDAO->findByUser($userId);
+    
+        foreach ($watchlistsPerso as $watchlist) {
+            $contenus = $watchlistDAO->getWatchlistContent($watchlist->getId());
+            $watchlist->setContenus($contenus);
+        }
+    
+        // Rediriger
+        $managerUtilisateur = new ControllerWatchlist($this->getTwig(), $this->getLoader());
+        $managerUtilisateur->afficherWatchlists();
     }
 
     public function creerWatchlist(): void {

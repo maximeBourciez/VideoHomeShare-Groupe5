@@ -317,7 +317,7 @@
                     <h5 class="modal-title" id="choisirWatchlistLabel">Choisissez une Watchlist</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="index.php?controller=watchlist&methode=ajouterContenuAWatchlist" method="POST">
+                <form action="index.php?controller=watchlist&methode=ajouterAWatchlist" method="POST">
                     <div class="modal-body">
                         <input type="hidden" name="idContenu" value="{{ contenu.tmdbId|escape('html_attr') }}">
                         {% if watchlists is not empty %}
