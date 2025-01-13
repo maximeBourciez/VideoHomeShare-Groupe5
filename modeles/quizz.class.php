@@ -6,16 +6,18 @@ class Quizz {
     private ?int $id;
     private ?string $titre;
     private ?string $description;
-    private ?Difficulte $difficulte; //Prend une valeur entière entre 1 à 4
-    private ?string $date;
+    private ?int $difficulte; //Prend une valeur entière entre 1 à 4
+    private ?string $dateC;
+    private ?string $idUtilisateur;
 
     // Constructeur
-    function __construct(?int $id = null, ?string $titre = null, ?string $description = null, ?Difficulte $difficulte = null, ?string $date = null){
+    function __construct(?int $id = null, ?string $titre = null, ?string $description = null, ?int $difficulte = null, ?string $dateC = null, ?string $idUtilisateur = null){
         $this->id = $id;
         $this->titre = $titre;
         $this->description = $description;
         $this->difficulte = $difficulte;
-        $this->date = $date;
+        $this->dateC = $dateC;
+        $this->idUtilisateur = $idUtilisateur;
     }
 
     // Encapsulation
@@ -51,9 +53,9 @@ class Quizz {
 
     /**
      * Get the value of difficulte
-     * @return Difficulte
+     * @return int
      */
-    public function getDifficulte(): ?Difficulte
+    public function getDifficulte(): ?int
     {
         return $this->difficulte;
     }
@@ -64,7 +66,7 @@ class Quizz {
      */
     public function getDate(): ?string
     {
-        return $this->date;
+        return $this->dateC;
     }
 
     // Setters
@@ -101,10 +103,10 @@ class Quizz {
 
     /**
      * Set the value of difficulte
-     * @param Difficulte $difficulte
+     * @param int $difficulte
      * @return void
      */
-    public function setDifficulte(Difficulte $difficulte): void
+    public function setDifficulte(int $difficulte): void
     {
         $this->difficulte = $difficulte;
     }
@@ -114,11 +116,19 @@ class Quizz {
      * @param string $date
      * @return void
      */
-    public function setDate(string $date): void
+    public function setDate(string $dateC): void
     {
-        $this->date = $date;
+        $this->date = $dateC;
     }
 
-    // Méthodes
+    /**
+     * Set the value of idUtilisateur
+     * @param string $idUtilisateur
+     * @return void
+     */
+    public function setIdUtilisateur(string $idUtilisateur): void
+    {
+        $this->idUtilisateur = $idUtilisateur;
+    }
 
 }
