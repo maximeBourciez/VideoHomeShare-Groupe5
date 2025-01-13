@@ -180,7 +180,7 @@ class SignalementDAO{
      * @return array
      */
     public function findAllMessageSignaleAssoc() : ?array{
-        $sql = "SELECT s.idMessage , m.valeur ,  COUNT(s.idMessage) AS nbSignalement FROM ".DB_PREFIX."signalement  s join ".DB_PREFIX."message m on s.idMessage = m.idMessage GROUP BY s.idMessage Order By nbSignalement  DESC; ";
+        $sql ="SELECT s.idMessage , m.valeur , GROUP_CONCAT(DISTINCT s.raison SEPARATOR ', ') AS raisons , COUNT(s.idMessage) AS nbSignalement, m.idFil FROM ".DB_PREFIX."signalement s join ".DB_PREFIX."message m on s.idMessage = m.idMessage GROUP BY s.idMessage Order By nbSignalement DESC";
         $pdoStatement = $this->pdo->prepare($sql);
         $pdoStatement->execute();
         $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);

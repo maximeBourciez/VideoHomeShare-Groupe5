@@ -114,8 +114,7 @@ class WatchlistDAO
      * 
      * @return bool Vrai si l'opération a réussi, faux sinon
      */
-    public function addContenuToWatchlist(int $watchlistId, int $contenuId): bool
-    {
+    public function addContenuToWatchlist(int $watchlistId, int $contenuId): bool {
         $sql = "INSERT INTO " . DB_PREFIX . "contenircontenu (idWatchlist, idContenuTmdb) VALUES (:watchlistId, :contenuId)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
@@ -132,8 +131,7 @@ class WatchlistDAO
      * 
      * @return bool Vrai si l'opération a réussi, faux sinon
      */
-    public function removeContenuFromWatchlist(int $watchlistId, int $contenuId): bool
-    {
+    public function removeContenuFromWatchlist(int $watchlistId, int $contenuId): bool {
         $sql = "DELETE FROM " . DB_PREFIX . "contenircontenu WHERE idWatchlist = :watchlistId AND idContenuTmdb = :contenuId";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([

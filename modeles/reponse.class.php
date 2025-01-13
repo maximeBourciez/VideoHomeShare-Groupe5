@@ -6,13 +6,15 @@ class Reponse{
     private ?string $valeur; //Valeur de la reponse
     private ?string $rang; //Rang de la reponse
     private ?bool $estVraie; //Indicateur de vérité d'une réponse
+    private ?int $idQuestion;
 
     // Constructeur
-    public function __construct(?int $id = null, ?string $valeur = null, ?string $rang = null, ?bool $estVraie = null){
+    public function __construct(?int $id = null, ?string $valeur = null, ?string $rang = null, ?bool $estVraie = null, ?int $idQuestion = null){
         $this->id = $id;
         $this->valeur = $valeur;
         $this->rang = $rang;
         $this->estVraie = $estVraie;
+        $this->idQuestion;
     }
     
     // Encapsulation
@@ -29,6 +31,9 @@ class Reponse{
     public function getVerite(): ?bool{
         return $this->estVraie;
     }
+    public function getIdQuestion(): ?int{
+        return $this->idQuestion;
+    }
 
     // Setters
     public function setId(?int $id) : void{
@@ -42,6 +47,9 @@ class Reponse{
     }
     public function setVerite(?bool $estVraie) : void{
         $this->estVraie = $estVraie;
+    }
+    public function setIdQuestion(?int $idQuestion): void{
+        $this->idQuestion = $idQuestion;
     }
 
 }

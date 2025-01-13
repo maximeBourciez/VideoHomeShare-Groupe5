@@ -86,6 +86,17 @@ class ReponseDAO{
         return $reponses;
     }
     //But : Créer les reponses avec les valeurs assignées aux attributs correspondants
+
+    public function findByQuestionId($idQuestion): ?array
+    {
+        $sql="SELECT * FROM ".DB_PREFIX. "reponse WHERE idQuestion = :idQuestion";
+        $pdoStatement = $this->pdo->prepare($sql);
+        $pdoStatement->execute(array("idQuestion"=>$idQuestion));
+        $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Reponse');
+        $reponses = $pdoStatement->fetchAll();
+
+        return $reponses;
+    }
 }
 
 ?>
