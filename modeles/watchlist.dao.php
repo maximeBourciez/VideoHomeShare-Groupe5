@@ -57,7 +57,7 @@ class WatchlistDAO {
 
     public function getWatchlistContent(int $watchlistId): array {
         // 1. Récupérer les IDs de contenus liés à la watchlist
-        $sql = "SELECT idContenu FROM " . DB_PREFIX . "contenircontenu WHERE idWatchlist = :watchlistId";
+        $sql = "SELECT idContenuTmdb FROM " . DB_PREFIX . "contenircontenu WHERE idWatchlist = :watchlistId";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':watchlistId' => $watchlistId]);
         $contentIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
@@ -81,7 +81,7 @@ class WatchlistDAO {
     
 
     public function addContenuToWatchlist(int $watchlistId, int $contenuId): bool {
-        $sql = "INSERT INTO " . DB_PREFIX . "contenircontenu (idWatchlist, idContenu) VALUES (:watchlistId, :contenuId)";
+        $sql = "INSERT INTO " . DB_PREFIX . "contenircontenu (idWatchlist, idContenuTmdb) VALUES (:watchlistId, :contenuId)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             ':watchlistId' => $watchlistId,
@@ -90,7 +90,7 @@ class WatchlistDAO {
     }
 
     public function removeContenuFromWatchlist(int $watchlistId, int $contenuId): bool {
-        $sql = "DELETE FROM " . DB_PREFIX . "contenircontenu WHERE idWatchlist = :watchlistId AND idContenu = :contenuId";
+        $sql = "DELETE FROM " . DB_PREFIX . "contenircontenu WHERE idWatchlist = :watchlistId AND idContenuTmdb = :contenuId";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             ':watchlistId' => $watchlistId,
