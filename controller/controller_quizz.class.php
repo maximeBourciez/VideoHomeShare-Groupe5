@@ -137,7 +137,7 @@ class ControllerQuizz extends Controller
 
     public function creerQuestion() : void
     {
-        $idQuizz = $_GET['idQuizz']; 
+        $idQuizz = $_GET['idQuizz'];
 
         echo $this->getTwig()->render('creationQuestion.html.twig', [
             'idQuizz' => $idQuizz
