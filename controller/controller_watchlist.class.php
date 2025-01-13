@@ -1,38 +1,46 @@
 <?php
-
-class ControllerWatchlist  extends Controller {
+/**
+ * @brief Contrôleur gérant les watchlistss
+ */
+class ControllerWatchlist extends Controller {
+    /**
+     * @brief Constructeur du contrôleur
+     * @param \Twig\Environment $twig Instance de Twig
+     * @param \Twig\Loader\FilesystemLoader $loader Chargeur de fichiers Twig
+     */
     public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader) {
         parent::__construct($twig, $loader);
     }
 
+    /**
+     * @brief Affiche les watchlists de l'utilisateur connecté
+     */
     public function afficherWatchlists(): void {
         if (!isset($_SESSION['utilisateur'])) {
-            // Remplacer header() par le gestionnaire de connexion
             $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
             $managerUtilisateur->connexion();
             return;
         }
     
-        $userId = unserialize($_SESSION['utilisateur'])->getId();
+        $userId = htmlspecialchars(unserialize($_SESSION['utilisateur'])->getId());
         $watchlistDAO = new WatchlistDAO($this->getPdo());
     
-        // Récupérer les watchlists de l'utilisateur
         $watchlistsPerso = $watchlistDAO->findByUser($userId);
     
-        // Pour chaque watchlist, récupérer ses contenus
         foreach ($watchlistsPerso as $watchlist) {
             $contenus = $watchlistDAO->getWatchlistContent($watchlist->getId());
             $watchlist->setContenus($contenus);
         }
     
-        // Afficher le template avec les données
         echo $this->getTwig()->render('watchlists.html.twig', [
             'watchlistsPerso' => $watchlistsPerso,
         ]);
     }
 
+    /**
+     * @brief Ajoute un contenu à une ou plusieurs watchlists
+     */
     public function ajouterAWatchlist(): void {
-        // Vérifier que l'utilisateur est connecté et que les données nécessaires sont présentes
         if (!isset($_SESSION['utilisateur']) || !isset($_POST['watchlists']) || !isset($_POST['idContenu'])) {
             $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
             $managerUtilisateur->connexion();
@@ -40,28 +48,25 @@ class ControllerWatchlist  extends Controller {
         }
     
         $watchlistDAO = new WatchlistDAO($this->getPdo());
-        $contenuId = intval($_POST['idContenu']);
-        $watchlists = $_POST['watchlists']; // Array contenant les ID des watchlists sélectionnées
+        $contenuId = filter_var($_POST['idContenu'], FILTER_VALIDATE_INT);
+        if ($contenuId === false) {
+            throw new Exception("ID de contenu invalide");
+        }
+        
+        $watchlists = array_map('intval', (array)$_POST['watchlists']); // Cast en array et conversion en integers
     
-        // Parcourir les watchlists sélectionnées et y ajouter le contenu
         foreach ($watchlists as $watchlistId) {
-            $watchlistDAO->addContenuToWatchlist(intval($watchlistId), $contenuId);
+            if ($watchlistId > 0) { // Validation basique de l'ID
+                $watchlistDAO->addContenuToWatchlist($watchlistId, $contenuId);
+            }
         }
     
-        // Rediriger vers la page des watchlists mises à jour
-        $userId = unserialize($_SESSION['utilisateur'])->getId();
-        $watchlistsPerso = $watchlistDAO->findByUser($userId);
-    
-        foreach ($watchlistsPerso as $watchlist) {
-            $contenus = $watchlistDAO->getWatchlistContent($watchlist->getId());
-            $watchlist->setContenus($contenus);
-        }
-    
-        // Rediriger
-        $managerUtilisateur = new ControllerWatchlist($this->getTwig(), $this->getLoader());
-        $managerUtilisateur->afficherWatchlists();
+        $this->afficherWatchlists();
     }
 
+    /**
+     * @brief Crée une nouvelle watchlist
+     */
     public function creerWatchlist(): void {
         if (!isset($_SESSION['utilisateur']) || !isset($_POST['nom'])) {
             $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
@@ -69,29 +74,28 @@ class ControllerWatchlist  extends Controller {
             return;
         }
     
-        $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
-        $nom = $_POST['nom'];
-        $description = $_POST['description'] ?? '';
+        $idUtilisateur = htmlspecialchars(unserialize($_SESSION['utilisateur'])->getId());
+        $nom = htmlspecialchars(trim($_POST['nom']));
+        $description = isset($_POST['description']) ? htmlspecialchars(trim($_POST['description'])) : '';
         $estPublique = isset($_POST['estPublique']);
+    
+        if (empty($nom)) {
+            throw new Exception("Le nom de la watchlist est requis");
+        }
     
         $watchlistDAO = new WatchlistDAO($this->getPdo());
         $idWatchlist = $watchlistDAO->create($nom, $description, $estPublique, $idUtilisateur);
     
-        // Récupérer les watchlists mises à jour
-        $watchlistsPerso = $watchlistDAO->findByUser($idUtilisateur);
-    
-        // S'assurer que le chemin du template est correct
-        try {
-            echo $this->getTwig()->render('watchlists.html.twig', [
-                'watchlistsPerso' => $watchlistsPerso
-            ]);
-        } catch (\Twig\Error\LoaderError $e) {
-            // Log l'erreur ou affichez un message d'erreur approprié
-            echo "Erreur lors du chargement du template : " . $e->getMessage();
+        if (!$idWatchlist) {
+            throw new Exception("Erreur lors de la création de la watchlist");
         }
+    
+        $this->afficherWatchlists();
     }
 
-    // Méthode pour modifier une watchlist
+    /**
+     * @brief Modifie une watchlist existante
+     */
     public function modifierWatchlist(): void {
         if (!isset($_SESSION['utilisateur']) || !isset($_POST['id']) || !isset($_POST['nom'])) {
             $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
@@ -99,15 +103,23 @@ class ControllerWatchlist  extends Controller {
             return;
         }
     
-        $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
-        $idWatchlist = intval($_POST['id']);
-        $nom = $_POST['nom'];
-        $description = $_POST['description'] ?? '';
+        $idUtilisateur = htmlspecialchars(unserialize($_SESSION['utilisateur'])->getId());
+        $idWatchlist = filter_var($_POST['id'], FILTER_VALIDATE_INT);
+        if ($idWatchlist === false) {
+            throw new Exception("ID de watchlist invalide");
+        }
+        
+        $nom = htmlspecialchars(trim($_POST['nom']));
+        $description = isset($_POST['description']) ? htmlspecialchars(trim($_POST['description'])) : '';
         $estPublique = isset($_POST['estPublique']);
+    
+        if (empty($nom)) {
+            throw new Exception("Le nom de la watchlist est requis");
+        }
     
         $watchlistDAO = new WatchlistDAO($this->getPdo());
         
-        // Vérifier que la watchlist appartient bien à l'utilisateur
+        // Vérification des droits d'accès
         $watchlists = $watchlistDAO->findByUser($idUtilisateur);
         $watchlistAppartientUtilisateur = false;
         
@@ -119,18 +131,15 @@ class ControllerWatchlist  extends Controller {
         }
     
         if (!$watchlistAppartientUtilisateur) {
-            // Rediriger 
-            $managerUtilisateur = new ControllerWatchlist($this->getTwig(), $this->getLoader());
-            $managerUtilisateur->afficherWatchlists();
-            return;
+            throw new Exception("Vous n'avez pas les droits pour modifier cette watchlist");
         }
     
-        // Effectuer la modification
         $success = $watchlistDAO->update($idWatchlist, $nom, $description, $estPublique);
-
+        
+        if (!$success) {
+            throw new Exception("Erreur lors de la modification de la watchlist");
+        }
     
-        // Rediriger
-        $managerUtilisateur = new ControllerWatchlist($this->getTwig(), $this->getLoader());
-        $managerUtilisateur->afficherWatchlists();
+        $this->afficherWatchlists();
     }
 }
