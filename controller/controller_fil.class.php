@@ -338,6 +338,10 @@ class ControllerFil extends Controller
         $managerMessage->supprimerMessage($idMessageASuppr);
         $managerMessage->purgerReactions($idMessageASuppr);
 
+        // supprimer les signalements associés
+        $managerSignalement = new SignalementDAO($this->getPdo());
+        $managerSignalement->supprimerSignalementMessage($idMessageASuppr);
+
         // Réafficher le fil
         header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
         exit();

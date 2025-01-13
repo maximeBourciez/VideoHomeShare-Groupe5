@@ -18,7 +18,8 @@
                     
                 </div>
                 <div class="py-2 row border-primary border-bottom border-1  d-flex align-items-center">
-                    <p class="mb-0 col-6 col-md-8 border-primary border-end border-1"> contenu du message </p>
+                    <p class="mb-0 col-4 col-md-6 border-primary border-end border-1"> contenu du message </p>
+                    <p class="mb-0 col-2  border-primary border-end border-1">raison(s)</p>
                     <p class="mb-0 col-2 ">nombre de signalement </p>
                     
                 </div>
@@ -27,8 +28,9 @@
                     <div class=" py-2 ">
                         <form action="index.php?controller=signalement&methode=supprimerMessageSignale" method="post" class="row">
                             <input type="hidden" name="idMessage" value="{{signalement.idMessage}}">
-                            <p class="mb-0 col-6 col-md-8  border-primary border-end border-1">{{signalement.valeur}}</p>
-                            <p class="mb-0 col-2 ">{{signalement.nbSignalement}}</p>
+                            <a href="index.php?controller=fil&methode=afficherFilParId&id_fil={{signalement.idFil}}#{{signalement.idMessage}}" class="my-auto col-4 col-md-6  border-primary border-end border-1">{{signalement.valeur}}</a>
+                            <p class="mb-0 col-2  border-primary border-end border-1">{{signalement.raisons}}</p>
+                            <p class="my-auto col-2 ">{{signalement.nbSignalement}}</p>
                             <input type="submit" class="col-3 col-md-2 bg-dark border-0 p-0" value="🗑️">
                         </form>
                     </div>
