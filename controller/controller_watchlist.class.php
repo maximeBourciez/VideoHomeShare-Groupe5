@@ -106,25 +106,18 @@ class ControllerWatchlist  extends Controller {
         }
     
         if (!$watchlistAppartientUtilisateur) {
-            // Rediriger avec un message d'erreur
-            $watchlistsPerso = $watchlistDAO->findByUser($idUtilisateur);
-            echo $this->getTwig()->render('watchlists.html.twig', [
-                'watchlistsPerso' => $watchlistsPerso,
-                'error' => 'Vous n\'avez pas les droits pour modifier cette watchlist'
-            ]);
+            // Rediriger 
+            $managerUtilisateur = new ControllerWatchlist($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->afficherWatchlists();
             return;
         }
     
         // Effectuer la modification
         $success = $watchlistDAO->update($idWatchlist, $nom, $description, $estPublique);
+
     
-        // Récupérer les watchlists mises à jour
-        $watchlistsPerso = $watchlistDAO->findByUser($idUtilisateur);
-    
-        // Ajouter un message de succès ou d'erreur
-        echo $this->getTwig()->render('watchlists.html.twig', [
-            'watchlistsPerso' => $watchlistsPerso,
-            'message' => $success ? 'Watchlist modifiée avec succès' : 'Erreur lors de la modification'
-        ]);
+        // Rediriger
+        $managerUtilisateur = new ControllerWatchlist($this->getTwig(), $this->getLoader());
+        $managerUtilisateur->afficherWatchlists();
     }
 }

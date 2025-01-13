@@ -108,7 +108,7 @@ class WatchlistDAO {
     }
 
     private function hydrate(array $data): Watchlist {
-        return new Watchlist(
+        $watchlist = new Watchlist(
             intval($data['idWatchlist']),
             $data['nom'],
             $data['description'],
@@ -116,6 +116,11 @@ class WatchlistDAO {
             new DateTime($data['dateC']),
             $data['idUtilisateur']
         );
+        
+        // Récupérer et assigner les contenus
+        $watchlist->setContenus($this->getWatchlistContent($data['idWatchlist']));
+        
+        return $watchlist;
     }
     
     public function hydrateAll(array $dataArray): array {

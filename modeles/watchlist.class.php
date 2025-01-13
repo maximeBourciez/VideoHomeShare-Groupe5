@@ -24,6 +24,7 @@ class Watchlist {
         $this->estPublique = $estPublique;
         $this->date = $date;
         $this->idUtilisateur = $idUtilisateur;
+        $this->contenus = $contenus;
     }
 
     // Getters
