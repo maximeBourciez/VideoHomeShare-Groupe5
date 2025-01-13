@@ -15,7 +15,7 @@
                     <div class="watchlist-container mb-4">
                         <div class="d-flex justify-content-between align-items-center">
                             <h3 class="watchlist-name">{{ watchlist.nom }}</h3>
-                            <button class="btn btn-myprimary" data-bs-toggle="modal" data-bs-target="#editWatchlistModal">
+                            <button class="btn btn-myprimary" data-bs-toggle="modal" data-bs-target="#editWatchlistModal" data-watchlist-id="{{ watchlist.id }}">
                                 <i class="bi bi-pencil"></i>
                             </button>
                         </div>
@@ -61,7 +61,8 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="index.php?controller=whatchlist&methode=creerWatchlist" method="POST">
+                    <form action="index.php?controller=watchlist&methode=modifierWatchlist" method="POST">
+                        <input type="hidden" name="id" id="watchlistId">
                         <div class="mb-3">
                             <label for="watchlistName" class="form-label">Nom de la watchlist</label>
                             <input type="text" class="form-control" id="watchlistName" name="nom" required>
