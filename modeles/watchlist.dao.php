@@ -1,11 +1,14 @@
-<?php  
+<?php
+
 /**
  * @brief Classe d'accès aux données pour les watchlists
  */
-class WatchlistDAO {
+class WatchlistDAO
+{
     private ?PDO $pdo;
 
-    public function __construct(?PDO $pdo = null) {
+    public function __construct(?PDO $pdo = null)
+    {
         $this->pdo = $pdo;
     }
 
@@ -23,13 +26,13 @@ class WatchlistDAO {
             INSERT INTO " . DB_PREFIX . "watchlist (nom, description, estPublique, dateC, idUtilisateur)
             VALUES (:nom, :description, :estPublique, NOW(), :idUtilisateur)
         ";
-        
+
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':nom', $nom, PDO::PARAM_STR);
         $stmt->bindValue(':description', $description, PDO::PARAM_STR);
         $stmt->bindValue(':estPublique', $estPublique, PDO::PARAM_BOOL);
         $stmt->bindValue(':idUtilisateur', $idUtilisateur, PDO::PARAM_STR);
-        
+
         $stmt->execute();
         return intval($this->pdo->lastInsertId());
     }
@@ -42,13 +45,14 @@ class WatchlistDAO {
      * @param bool $estPublique Statut public/privé de la watchlist
      * @param string $idUtilisateur Identifiant de l'utilisateur créateur
      */
-    public function update(int $idWatchlist, string $nom, string $description, bool $estPublique): bool {
+    public function update(int $idWatchlist, string $nom, string $description, bool $estPublique): bool
+    {
         $sql = "UPDATE " . DB_PREFIX . "watchlist 
                 SET nom = :nom, 
                     description = :description, 
                     estPublique = :estPublique 
                 WHERE idWatchlist = :idWatchlist";
-        
+
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             ':idWatchlist' => $idWatchlist,
@@ -64,7 +68,8 @@ class WatchlistDAO {
      * @param int $id Identifiant de l'utilisateur
      * @return array Tableau d'objets Watchlist
      */
-    public function findByUser(string $userId): array {
+    public function findByUser(string $userId): array
+    {
         $sql = "SELECT * FROM " . DB_PREFIX . "watchlist WHERE idUtilisateur = :userId";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':userId' => $userId]);
@@ -76,17 +81,18 @@ class WatchlistDAO {
      * @param int $watchlistId Identifiant de la watchlist
      * @return array Tableau d'objets Contenu
      */
-    public function getWatchlistContent(int $watchlistId): array {
+    public function getWatchlistContent(int $watchlistId): array
+    {
         // 1. Récupérer les IDs de contenus liés à la watchlist
         $sql = "SELECT idContenuTmdb FROM " . DB_PREFIX . "contenircontenu WHERE idWatchlist = :watchlistId";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':watchlistId' => $watchlistId]);
         $contentIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
-    
+
         if (empty($contentIds)) {
             return []; // Aucun contenu trouvé pour la watchlist
         }
-    
+
         // 2. Utiliser l'API pour récupérer les détails de chaque contenu
         $contenuDAO = new ContenuDAO($this->pdo); // Assurez-vous que cette classe gère l'accès à l'API
         $contents = [];
@@ -96,10 +102,10 @@ class WatchlistDAO {
                 $contents[] = $content;
             }
         }
-    
+
         return $contents;
     }
-    
+
     /**
      * @brief Méthode pour ajouter un contenu à une watchlist
      * 
@@ -108,7 +114,12 @@ class WatchlistDAO {
      * 
      * @return bool Vrai si l'opération a réussi, faux sinon
      */
+<<<<<<< HEAD
     public function addContenuToWatchlist(int $watchlistId, int $contenuId): bool {
+=======
+    public function addContenuToWatchlist(int $watchlistId, int $contenuId): bool
+    {
+>>>>>>> 32fb8f9f1773a25e3fcbe316510057e417da0cc5
         $sql = "INSERT INTO " . DB_PREFIX . "contenircontenu (idWatchlist, idContenuTmdb) VALUES (:watchlistId, :contenuId)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
@@ -125,7 +136,12 @@ class WatchlistDAO {
      * 
      * @return bool Vrai si l'opération a réussi, faux sinon
      */
+<<<<<<< HEAD
     public function removeContenuFromWatchlist(int $watchlistId, int $contenuId): bool {
+=======
+    public function removeContenuFromWatchlist(int $watchlistId, int $contenuId): bool
+    {
+>>>>>>> 32fb8f9f1773a25e3fcbe316510057e417da0cc5
         $sql = "DELETE FROM " . DB_PREFIX . "contenircontenu WHERE idWatchlist = :watchlistId AND idContenuTmdb = :contenuId";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
@@ -139,7 +155,8 @@ class WatchlistDAO {
      * 
      * @return array Tableau d'objets Watchlist
      */
-    public function getPublicWatchlists(): array {
+    public function getPublicWatchlists(): array
+    {
         $sql = "SELECT * FROM " . DB_PREFIX . "watchlist WHERE estPublique = true ORDER BY date DESC";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
@@ -152,7 +169,8 @@ class WatchlistDAO {
      * @param int $id Identifiant de la watchlist
      * @return Watchlist|null Objet Watchlist ou null si non trouvé
      */
-    private function hydrate(array $data): Watchlist {
+    private function hydrate(array $data): Watchlist
+    {
         $watchlist = new Watchlist(
             intval($data['idWatchlist']),
             $data['nom'],
@@ -161,20 +179,21 @@ class WatchlistDAO {
             new DateTime($data['dateC']),
             $data['idUtilisateur']
         );
-        
+
         // Récupérer et assigner les contenus
         $watchlist->setContenus($this->getWatchlistContent($data['idWatchlist']));
-        
+
         return $watchlist;
     }
-    
+
     /**
      * @brief Méthode pour hydrater un tableau de données en objets Watchlist
      * 
      * @param array $dataArray Tableau de données
      * @return array Tableau d'objets Watchlist
      */
-    public function hydrateAll(array $dataArray): array {
+    public function hydrateAll(array $dataArray): array
+    {
         $watchlists = [];
         foreach ($dataArray as $data) {
             $watchlists[] = $this->hydrate($data);
