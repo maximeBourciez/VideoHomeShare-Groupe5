@@ -7,20 +7,45 @@ class WatchlistDAO {
         $this->pdo = $pdo;
     }
 
-    public function createWatchlist(Watchlist $watchlist): ?int {
-        $sql = "INSERT INTO " . DB_PREFIX . "watchlist (nom, description, estPublique, date, idUtilisateur) 
-                VALUES (:nom, :description, :estPublique, :date, :idUtilisateur)";
+    /**
+     * @brief Méthode pour créer une nouvelle watchlist
+     * 
+     * @param string $nom Nom de la watchlist
+     * @param string $description Description de la watchlist
+     * @param bool $estPublique Statut public/privé de la watchlist
+     * @param string $idUtilisateur Identifiant de l'utilisateur créateur
+     */
+    public function create(string $nom, string $description, bool $estPublique, string $idUtilisateur): int
+    {
+        $sql = "
+            INSERT INTO " . DB_PREFIX . "watchlist (nom, description, estPublique, dateC, idUtilisateur)
+            VALUES (:nom, :description, :estPublique, NOW(), :idUtilisateur)
+        ";
         
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([
-            ':nom' => $watchlist->getNom(),
-            ':description' => $watchlist->getDescription(),
-            ':estPublique' => $watchlist->isEstPublique(),
-            ':date' => $watchlist->getDate()->format('Y-m-d H:i:s'),  // Format de la date
-            ':idUtilisateur' => $watchlist->getIdUtilisateur()
-        ]);
+        $stmt->bindValue(':nom', $nom, PDO::PARAM_STR);
+        $stmt->bindValue(':description', $description, PDO::PARAM_STR);
+        $stmt->bindValue(':estPublique', $estPublique, PDO::PARAM_BOOL);
+        $stmt->bindValue(':idUtilisateur', $idUtilisateur, PDO::PARAM_STR);
+        
+        $stmt->execute();
+        return intval($this->pdo->lastInsertId());
+    }
 
-        return $this->pdo->lastInsertId();
+    public function update(int $idWatchlist, string $nom, string $description, bool $estPublique): bool {
+        $sql = "UPDATE " . DB_PREFIX . "watchlist 
+                SET nom = :nom, 
+                    description = :description, 
+                    estPublique = :estPublique 
+                WHERE idWatchlist = :idWatchlist";
+        
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':idWatchlist' => $idWatchlist,
+            ':nom' => $nom,
+            ':description' => $description,
+            ':estPublique' => $estPublique
+        ]);
     }
 
     public function findByUser(string $userId): array {
@@ -31,19 +56,32 @@ class WatchlistDAO {
     }
 
     public function getWatchlistContent(int $watchlistId): array {
-        $sql = "SELECT c.* FROM " . DB_PREFIX . "contenu c 
-                JOIN " . DB_PREFIX . "contenir co ON c.id = co.idContenu 
-                WHERE co.idWatchlist = :watchlistId";
-        
+        // 1. Récupérer les IDs de contenus liés à la watchlist
+        $sql = "SELECT idContenu FROM " . DB_PREFIX . "contenircontenu WHERE idWatchlist = :watchlistId";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':watchlistId' => $watchlistId]);
-        
-        $contenuDAO = new ContenuDAO($this->pdo);
-        return $contenuDAO->hydrateAll($stmt->fetchAll(PDO::FETCH_ASSOC));
+        $contentIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    
+        if (empty($contentIds)) {
+            return []; // Aucun contenu trouvé pour la watchlist
+        }
+    
+        // 2. Utiliser l'API pour récupérer les détails de chaque contenu
+        $contenuDAO = new ContenuDAO($this->pdo); // Assurez-vous que cette classe gère l'accès à l'API
+        $contents = [];
+        foreach ($contentIds as $id) {
+            $content = $contenuDAO->getContentFromTMDB($id); // Méthode pour récupérer les détails d'un contenu via l'API
+            if ($content) {
+                $contents[] = $content;
+            }
+        }
+    
+        return $contents;
     }
+    
 
     public function addContenuToWatchlist(int $watchlistId, int $contenuId): bool {
-        $sql = "INSERT INTO " . DB_PREFIX . "contenir (idWatchlist, idContenu) VALUES (:watchlistId, :contenuId)";
+        $sql = "INSERT INTO " . DB_PREFIX . "contenircontenu (idWatchlist, idContenu) VALUES (:watchlistId, :contenuId)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             ':watchlistId' => $watchlistId,
@@ -52,7 +90,7 @@ class WatchlistDAO {
     }
 
     public function removeContenuFromWatchlist(int $watchlistId, int $contenuId): bool {
-        $sql = "DELETE FROM " . DB_PREFIX . "contenir WHERE idWatchlist = :watchlistId AND idContenu = :contenuId";
+        $sql = "DELETE FROM " . DB_PREFIX . "contenircontenu WHERE idWatchlist = :watchlistId AND idContenu = :contenuId";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             ':watchlistId' => $watchlistId,
@@ -65,5 +103,29 @@ class WatchlistDAO {
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
         return $this->hydrateAll($stmt->fetchAll(PDO::FETCH_ASSOC));
+    }
+
+    private function hydrate(array $data): Watchlist {
+        $watchlist = new Watchlist(
+            intval($data['idWatchlist']),
+            $data['nom'],
+            $data['description'],
+            (bool) $data['estPublique'],
+            new DateTime($data['dateC']),
+            $data['idUtilisateur']
+        );
+        
+        // Récupérer et assigner les contenus
+        $watchlist->setContenus($this->getWatchlistContent($data['idWatchlist']));
+        
+        return $watchlist;
+    }
+    
+    public function hydrateAll(array $dataArray): array {
+        $watchlists = [];
+        foreach ($dataArray as $data) {
+            $watchlists[] = $this->hydrate($data);
+        }
+        return $watchlists;
     }
 }
