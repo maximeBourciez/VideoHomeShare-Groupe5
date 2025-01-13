@@ -10,12 +10,13 @@
                     <i class="bi bi-plus-lg me-2"></i>Créer une watchlist
                 </button>
             </div>
+
             {% if watchlistsPerso is not empty %}
                 {% for watchlist in watchlistsPerso %}
                     <div class="watchlist-container mb-4">
                         <div class="d-flex justify-content-between align-items-center">
                             <h3 class="watchlist-name">{{ watchlist.nom }}</h3>
-                            <button class="btn btn-myprimary" data-bs-toggle="modal" data-bs-target="#editWatchlistModal" data-watchlist-id="{{ watchlist.id }}">
+                            <button class="btn btn-myprimary" data-bs-toggle="modal" data-bs-target="#editWatchlistModal{{ watchlist.id }}">
                                 <i class="bi bi-pencil"></i>
                             </button>
                         </div>
@@ -38,52 +39,48 @@
                             {% endif %}
                         </div>
                     </div>
+
+                    <!-- Modal Édition pour cette watchlist spécifique -->
+                    <div class="modal fade" id="editWatchlistModal{{ watchlist.id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content bg-mydark text-white">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Éditer ma watchlist</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="index.php?controller=watchlist&methode=modifierWatchlist" method="POST">
+                                        <input type="hidden" name="id" value="{{ watchlist.id }}">
+                                        <div class="mb-3">
+                                            <label for="watchlistName{{ watchlist.id }}" class="form-label">Nom de la watchlist</label>
+                                            <input type="text" class="form-control" id="watchlistName{{ watchlist.id }}" 
+                                                   name="nom" value="{{ watchlist.nom }}" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="watchlistDesc{{ watchlist.id }}" class="form-label">Description</label>
+                                            <textarea class="form-control" id="watchlistDesc{{ watchlist.id }}" 
+                                                      name="description" rows="3">{{ watchlist.description }}</textarea>
+                                        </div>
+                                        <div class="mb-3 form-check">
+                                            <input type="checkbox" class="form-check-input" id="watchlistPublic{{ watchlist.id }}" 
+                                                   name="estPublique" {% if watchlist.estPublique %}checked{% endif %}>
+                                            <label class="form-check-label" for="watchlistPublic{{ watchlist.id }}">Watchlist publique</label>
+                                        </div>
+                                        <div class="modal-footer border-0">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                            <button type="submit" class="btn btn-myprimary">Enregistrer</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 {% endfor %}
             {% else %}
                 <p class="text-center">Vous n'avez pas encore de watchlists.</p>
             {% endif %}
         </section>
-        
-        <!-- Bouton Parcourir 
-        <div class="text-center mb-5">
-            <a href="/watchlists/communaute" class="btn btn-myprimary btn-lg">
-                Parcourir les watchlists de la communauté
-            </a>
-        </div> -->
     </main>
-
-    <!-- Modal Édition Watchlist -->
-    <div class="modal fade" id="editWatchlistModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content bg-mydark text-white">
-                <div class="modal-header">
-                    <h5 class="modal-title">Éditer ma watchlist</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="index.php?controller=watchlist&methode=modifierWatchlist" method="POST">
-                        <input type="hidden" name="id" id="watchlistId">
-                        <div class="mb-3">
-                            <label for="watchlistName" class="form-label">Nom de la watchlist</label>
-                            <input type="text" class="form-control" id="watchlistName" name="nom" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="watchlistDesc" class="form-label">Description</label>
-                            <textarea class="form-control" id="watchlistDesc" name="description" rows="3"></textarea>
-                        </div>
-                        <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="watchlistPublic" name="estPublique">
-                            <label class="form-check-label" for="watchlistPublic">Watchlist publique</label>
-                        </div>
-                        <div class="modal-footer border-0">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                            <button type="submit" class="btn btn-myprimary">Enregistrer</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Modale Création Watchlist -->
     <div class="modal fade" id="createWatchlistModal" tabindex="-1">
