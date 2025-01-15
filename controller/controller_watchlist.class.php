@@ -77,7 +77,7 @@ class ControllerWatchlist extends Controller {
         $idUtilisateur = htmlspecialchars(unserialize($_SESSION['utilisateur'])->getId());
         $nom = htmlspecialchars(trim($_POST['nom']));
         $description = isset($_POST['description']) ? htmlspecialchars(trim($_POST['description'])) : '';
-        $estPublique = isset($_POST['estPublique']);
+        $estPublique = isset($_POST['estPublique']) ? (bool)1 : (bool)0;
     
         if (empty($nom)) {
             throw new Exception("Le nom de la watchlist est requis");
@@ -111,7 +111,7 @@ class ControllerWatchlist extends Controller {
         
         $nom = htmlspecialchars(trim($_POST['nom']));
         $description = isset($_POST['description']) ? htmlspecialchars(trim($_POST['description'])) : '';
-        $estPublique = isset($_POST['estPublique']);
+        $estPublique = isset($_POST['estPublique']) ? (bool)1 : (bool)0;
     
         if (empty($nom)) {
             throw new Exception("Le nom de la watchlist est requis");

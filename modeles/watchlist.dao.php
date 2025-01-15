@@ -30,7 +30,7 @@ class WatchlistDAO
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':nom', $nom, PDO::PARAM_STR);
         $stmt->bindValue(':description', $description, PDO::PARAM_STR);
-        $stmt->bindValue(':estPublique', $estPublique, PDO::PARAM_BOOL);
+        $stmt->bindValue(':estPublique', $estPublique, PDO::PARAM_INT);
         $stmt->bindValue(':idUtilisateur', $idUtilisateur, PDO::PARAM_STR);
 
         $stmt->execute();
@@ -58,7 +58,7 @@ class WatchlistDAO
             ':idWatchlist' => $idWatchlist,
             ':nom' => $nom,
             ':description' => $description,
-            ':estPublique' => $estPublique
+            ':estPublique' => (int)$estPublique // Explicit cast to integer
         ]);
     }
 
