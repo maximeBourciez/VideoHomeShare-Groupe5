@@ -153,9 +153,11 @@ f.parentNode.insertBefore(j, f);
 					<div class="col-12">
 						<div class="d-flex flex-wrap justify-content-center text-white gap-3 mb-3">
 							<p class="mb-2">À propos de VHS</p>
-							<p class="mb-2">Conditions d'utilisation</p>
-							<p class="mb-2">Politique de confidentialité</p>
-							<p class="mb-2">Politique de cookies</p>
+							<a class="" data-bs-toggle="modal" data-bs-target="#afficherconditions">
+								Conditions d'utilisation
+							</a>
+							<a class="" data-bs-toggle="modal" data-bs-target="#afficherpolitiqueconfidentialite"> Politique de confidentialité</a>
+							<a class="" data-bs-toggle="modal" data-bs-target="#afficherpolitiquecookies"> Politique de cookies</a>
 						</div>
 					</div>
 					<div class="col-12">
@@ -170,6 +172,9 @@ f.parentNode.insertBefore(j, f);
 					</div>
 				</div>
 			</div>
+
+			<!-- Modals du footer-->
+			{% include 'modals.html.twig' with { 'last_update_date': '08/01/2025' } %}
 		</footer>
 
 
