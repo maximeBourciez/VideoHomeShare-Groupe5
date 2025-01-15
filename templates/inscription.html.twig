@@ -78,110 +78,11 @@
 				<!-- Lien vers la connexion -->
 				<div class="mt-3">
 					<a href="index.php?controller=utilisateur&methode=connexion" class="text-white">Se connecter</a>
-				</div>
+				</div>	
+				
+				<!-- Lien vers le modal des condition d'utilisation-->
+				{% include 'modals.html.twig' with { 'last_update_date': '08/01/2025' } %}
 
-				<div class="modal fade modal-xl" id="afficherconditions" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-					<div class="modal-dialog  modal-dialog-centered  modal-dialog-scrollable ">
-						<div class="modal-content bg-mydark " style="border: 1px solid #F2AC0F;">
-
-							<div class="modal-header border-bottom-0 ">
-                                <p class="fw-bold mb-0">Conditions Générales d'Utilisation (CGU)</p>
-								<button type="button" class="btn-close btn-close-white " data-bs-dismiss="modal" aria-label="Close"></button>
-							</div>
-							<div class="modal-body text-start"> <p>
-								
-								Dernière mise à jour : 08/01/2025<br>
-								<br>
-								Bienvenue sur Video Home Share (VHS), une plateforme dédiée aux passionnés de films et de séries, vous permettant de créer des watchlists, participer à des forums, jouer à des quiz et profiter de la fonctionnalité "Watch Together". En accédant ou en utilisant notre application, vous acceptez de vous conformer aux présentes Conditions Générales d'Utilisation (CGU).<br>
-								<br>
-                                1. Définitions<br>
-								<br>
-								    Application : Désigne le site web ou l'application mobile Video Home Share (VHS).<br>
-								    Utilisateur : Toute personne accédant à l'Application, inscrite ou non.<br>
-								    Compte : Profil utilisateur créé sur l'Application pour accéder à ses fonctionnalités interactives.<br>
-								    Contenu : Toute information, texte, image, vidéo ou autre élément partagé par les Utilisateurs.<br>
-								    Modérateur : Utilisateur ayant des droits spéciaux pour veiller au respect des CGU sur le forum.<br>
-								<br>
-								2. Objet<br>
-								<br>
-								Les présentes CGU ont pour objet de définir les conditions dans lesquelles les Utilisateurs peuvent accéder et utiliser VHS. Toute utilisation de l'Application implique l'acceptation sans réserve des présentes CGU.<br>
-								<br>
-                                3. Accès et inscription<br>
-								3.1 Accès à l'application<br>
-								<br>
-								L'accès à certaines fonctionnalités de l'Application nécessite la création d'un Compte. Les Utilisateurs non inscrits peuvent uniquement consulter la page d'accueil et rechercher des films et séries dans la base de données.<br>
-								<br>
-                                3.2 Inscription<br>
-								<br>
-								Pour s'inscrire, l'Utilisateur doit :<br>
-								<br>
-								    Être âgé de 13 ans ou plus (ou l'âge minimum requis selon la réglementation locale).<br>
-								    Fournir des informations exactes et les maintenir à jour.<br>
-								    Accepter les présentes CGU.<br>
-								<br>
-								4. Utilisation de l'application<br>
-								4.1 Watchlists<br>
-								<br>
-								Les Utilisateurs peuvent créer, gérer et partager leurs listes de visionnage. L'Utilisateur est seul responsable du contenu ajouté à ses watchlists.<br>
-								<br>
-                                4.2 Forum<br>
-								<br>
-								Le forum permet de débattre et de partager des avis. Les propos doivent être respectueux et conformes aux lois en vigueur. Les Modérateurs peuvent supprimer tout contenu non conforme.<br>
-								<br>
-                                4.3 Watch Together<br>
-								<br>
-								La fonctionnalité "Watch Together" permet aux Utilisateurs de regarder du contenu en simultané. Les utilisateurs doivent respecter les droits d'auteur et ne peuvent diffuser du contenu protégé sans autorisation.<br>
-								<br>
-                                4.4 Quiz et mini-jeux<br>
-								<br>
-								Les quiz et mini-jeux sont soumis à des règles spécifiques disponibles dans chaque section.<br>
-								<br>
-                                5. Contenu utilisateur<br>
-								<br>
-								    En publiant du Contenu, l'Utilisateur garantit qu'il est propriétaire des droits ou a obtenu toutes les autorisations nécessaires.<br>
-								    VHS se réserve le droit de supprimer tout Contenu non conforme aux CGU ou aux lois applicables.<br>
-								<br>
-								6. Protection des données personnelles<br>
-								<br>
-								VHS s'engage à respecter la confidentialité des données personnelles des Utilisateurs conformément au RGPD. Pour plus d'informations, consultez notre Politique de Confidentialité.<br>
-								<br>
-                                7. Propriété intellectuelle<br>
-								<br>
-								Tous les éléments de l'Application (logos, textes, images, design, code, etc.) sont protégés par les lois sur la propriété intellectuelle. Toute reproduction, modification ou utilisation non autorisée est strictement interdite.<br>
-								<br>
-                                8. Responsabilité<br>
-								8.1 Responsabilité de l'Utilisateur<br>
-								<br>
-								L'Utilisateur est responsable :<br>
-								<br>
-								    De l'utilisation qu'il fait de l'Application.<br>
-								    Du respect des lois et des présentes CGU.<br>
-								    De la sécurité de ses identifiants de connexion.<br>
-								<br>
-								8.2 Responsabilité de VHS<br>
-								<br>
-								VHS s'engage à fournir un service de qualité mais ne peut garantir l'absence de bugs ou d'interruptions. VHS décline toute responsabilité en cas d'utilisation abusive ou illégale par un Utilisateur.<br>
-								<br>
-                                9. Sanctions<br>
-								<br>
-								En cas de violation des CGU, VHS se réserve le droit de :<br>
-								<br>
-								    Suspendre ou supprimer le Compte de l'Utilisateur.<br>
-								    Supprimer tout Contenu non conforme.<br>
-								    Engager des poursuites judiciaires si nécessaire.<br>
-								<br>
-								10. Modification des CGU<br>
-								<br>
-								VHS peut modifier les présentes CGU à tout moment. Les Utilisateurs seront informés des changements via l'Application. En continuant d'utiliser le service, l'Utilisateur accepte les CGU mises à jour.<br>
-								<br>
-                                11. Loi applicable et juridiction<br>
-								<br>
-								Les présentes CGU sont soumises au droit français. En cas de litige, les tribunaux compétents seront ceux de Bayonne, sauf disposition légale contraire.<br>
-							</p>
-                            </div>
-						</div>
-					</div>
-				</div>
 			</form>
 		</main>
 

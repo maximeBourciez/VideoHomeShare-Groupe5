@@ -188,19 +188,16 @@ class ContenuDAO
             : null;
 
         $contenu = new Contenu(
-            null,                   // id
+            $movieData['id'],         // id
             $movieData['title'],    // titre
             $date,                  // date
             $descriptionCourte,     // description
             $descriptionLongue,     // descriptionLongue
             $lienAffiche,          // lienAffiche
-            $movieData['runtime'],  // duree
+            $movieData['runtime'] ?? null,  // duree
             'Film',                // type
             $lienAfficheReduite    // lienAfficheReduite
         );
-
-        // Ajouter l'ID TMDB
-        $contenu->setTmdbId($movieData['id']);
 
         return $contenu;
     }
@@ -286,28 +283,28 @@ class ContenuDAO
      * @return array|null Liste des films tendance ou null si une erreur se produit
      */
     public function getTrendingMovies(string $timeWindow = 'day'): ?array
-    {
-        $url = "https://api.themoviedb.org/3/trending/movie/{$timeWindow}?api_key={$this->apiKey}&language=fr-FR";
+{
+    $url = "https://api.themoviedb.org/3/trending/movie/{$timeWindow}?api_key={$this->apiKey}&language=fr-FR";
 
-        // Récupérer les résultats
-        $response = file_get_contents($url);
-        if ($response === false) {
-            return null;
-        }
-
-        $moviesData = json_decode($response, true);
-
-        if ($moviesData === null || !isset($moviesData['results'])) {
-            return null;
-        } else {
-            // Convertir les films en objets Contenu
-            $contenus = [];
-            foreach ($moviesData['results'] as $movieData) {
-                $contenus[] = $this->convertToContenuLight($movieData);
-            }
-            return $contenus;
-        }
+    // Récupérer les résultats
+    $response = file_get_contents($url);
+    if ($response === false) {
+        return null;
     }
+
+    $moviesData = json_decode($response, true);
+
+    if ($moviesData === null || !isset($moviesData['results'])) {
+        return null;
+    } else {
+        // Convertir les films en objets Contenu
+        $contenus = [];
+        foreach ($moviesData['results'] as $movieData) {  // Ajout d'une boucle foreach
+            $contenus[] = $this->convertToContenu($movieData);
+        }
+        return $contenus;
+    }
+}
 
     /**
      * Récupère les films populaires pour un genre spécifique.
