@@ -60,6 +60,8 @@ L’objectif de VHS est de recréer la convivialité des soirées cinéma entre 
 <br>
 <br>
 
+### Lien vers la documentation Doxygen de notre projet
+https://maximebourciez.github.io/SAE3.01/
 
 
 
