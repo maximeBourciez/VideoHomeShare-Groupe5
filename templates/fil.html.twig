@@ -151,6 +151,15 @@
 							</div>
 							<div
 								class="d-flex justify-content-between mt-4">
+								{% if utilisateurConnecte is null %}
+									<!-- Bouton "se connecter" -->
+									<div class="d-flex flex-wrap gap-2">
+										<a href="index.php?controller=utilisateur&methode=connexion" class="btn action-btn">
+											<i class="bi bi-box-arrow-in-right"></i>
+											<span class="btn-text">Se connecter</span>
+										</a>
+									</div>
+								{% else %}
 								<!-- Boutons like, dislike, répondre -->
 								<div class="d-flex flex-wrap gap-2">
 									<form method="POST" action="index.php?controller=fil&methode=like">
@@ -199,6 +208,7 @@
 										</button>
 									{% endif %}
 								</div>
+								{% endif %}
 							</div>
 						</div>
 					</div>
