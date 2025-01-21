@@ -6,38 +6,42 @@
 
 
 {% block content %}
-<main class="container min-vh-100">
+<main class="container">
     <br>
 	<h1>Création d'un quizz</h1>
 	<br>
-	<form action="index.php?controller=quizz&methode=creerQuestion" method="get">
+	<form action="index.php?controller=quizz&methode=creerQuestion" method="post">
 	<!-- Champ Titre -->
 		<div class="row">
 			<label for="titre"><b>Titre du quizz : </b></label>
-    		<input type="text" name="titre" required />
+    		<input type="text" name="titre" id="titre" required/>
 		</div>
 		<br>
 		<!-- Champ Description -->
 		<div class="row">
 			<label for="description"><b>Description : </b></label>
-    		<textarea name="description" required></textarea>
+    		<textarea name="description" id="description" required></textarea>
 		</div>
 		<br>
 		<!-- Champ Difficulté -->
 		<div class="row">
 			<label for="difficulte"><b>Difficulté : </b></label>
-    		<input type="number" name="difficulte" min="1" max="4" value="1" step="1" style="width: 10%" required></textarea>
+    		<input type="number" name="difficulte" id="difficulte" min="1" max="4" value="1" step="1" style="width: 10%" required></textarea>
 		</div>
 		<br>
 		<!-- Champ Nombre de questions -->
 		<div class="row">
 			<label for="nbQuestions"><b>Nombre de questions : </b></label>
-    		<input type="number" name="nbQuestions" min="4" max="8" value="4" step="1" style="width: 10%" required></textarea>
+    		<input type="number" name="nbQuestions" id="nbQuestions" min="4" max="8" value="4" step="1" style="width: 10%" required></textarea>
 		</div>
 		<br>
 		<br>
 		<!-- Bouton pour passer à la création des questions -->
-		<button type="submit" class="row btn btn-primary">Suivant</button>
+		<button type="submit" class="row btn btn-primary"><b>Suivant</b></button>
 	</form>
+	<br>
+	<br>
+	<br>
+	<br>
 </main>
 {% endblock %}

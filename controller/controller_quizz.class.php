@@ -73,9 +73,11 @@ class ControllerQuizz extends Controller
     public function gererQuizzUtilisateur(): void
     {
         if (isset($_SESSION['utilisateur'])){
-            $idUtilisateur = unserialize($_SESSION['utilisateur']);
+            $utilisateur = unserialize($_SESSION['utilisateur']);
+            $idUtilisateur = $utilisateur->getId();
+
             $managerQuizz = new QuizzDAO($this->getPdo());
-            $quizz = $managerQuizz->findAll();
+            $quizz = $managerQuizz->findAllByUser($idUtilisateur);
 
             echo $this->getTwig()->render('listeQuizz.html.twig', [
                 'idUtilisateur' => $idUtilisateur,
@@ -143,7 +145,8 @@ class ControllerQuizz extends Controller
 
     public function creerQuizz() : void
     {
-        $idUtilisateur = $_GET['idUtilisateur']; 
+        $utilisateur = unserialize($_SESSION['utilisateur']);
+        $idUtilisateur = $utilisateur->getId();
 
         echo $this->getTwig()->render('creationQuizz.html.twig', [
             'idUtilisateur' => $idUtilisateur
@@ -160,21 +163,24 @@ class ControllerQuizz extends Controller
     public function creerQuestion() : void
     {
         //Récupération des informations
-        $idQuizz = $_GET['idQuizz'];
-        $titre = $_GET['titre'];
-        $description = $_GET['description'];
-        $difficulte = $_GET['difficulte'];
-        $nbQuestions = range(1,$_GET['nbQuestions']);
-        $idUtilisateur = $_GET['idUtilisateur'];
+        $titre = $_POST['titre'];
+        $description = $_POST['description'];
+        $difficulte = $_POST['difficulte'];
+        $nbQuestions = range(1,$_POST['nbQuestions']);
+        $dateC = date('Y-m-d');
+        $utilisateur = unserialize($_SESSION['utilisateur']);
+        $idUtilisateur = $utilisateur->getId();
 
         //Création de l'objet Quizz
         $managerQuizz = new QuizzDAO($this->getPdo());
-        $newQuizz = new Quizz($idQuizz,$titre,$description,$difficulte,$idUtilisateur);
-        $managerQuizz->create($newQuizz);
+        $managerQuizz->create($titre,$description,$difficulte,$dateC,$idUtilisateur);
+        $newQuizz = $managerQuizz->findByTitreUser($titre,$idUtilisateur);
+        $idQuizz = $newQuizz->getId();
 
         echo $this->getTwig()->render('creationQuestion.html.twig', [
             'idQuizz' => $idQuizz,
-            'nbQuestions' => $nbQuestions
+            'nbQuestions' => $nbQuestions,
+            'idUtilisateur' => $idUtilisateur
         ]);
     }
 
