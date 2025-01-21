@@ -69,7 +69,7 @@ class MessageDAO
         
         $stmt = $this->pdo->prepare($requete);
         $stmt->bindValue(':id_fil', $idFil, PDO::PARAM_INT);
-        $stmt->bindValue(':limit', $page * $messagesParPage, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $messagesParPage, PDO::PARAM_INT);
         $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
         
