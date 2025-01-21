@@ -57,6 +57,39 @@ class MessageDAO
         return $this;
     }
 
+    // Récupère les messages parents paginés pour un fil donné
+    public function getMessagesParentsPagines($idFil, $page = 1, $messagesParPage = 5) {
+        $offset = ($page - 1) * $messagesParPage;
+        
+        $requete = "SELECT * FROM vhs_message 
+                   WHERE idFil = :id_fil 
+                   AND idMessageParent IS NULL 
+                   ORDER BY dateC DESC 
+                   LIMIT :limit OFFSET :offset";
+        
+        $stmt = $this->pdo->prepare($requete);
+        $stmt->bindValue(':id_fil', $idFil, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $page * $messagesParPage, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Compte le nombre total de messages parents pour la pagination
+    public function getNombreMessagesParents($idFil) {
+        $requete = "SELECT COUNT(*) as total 
+                   FROM vhs_message 
+                   WHERE idFil = :id_fil 
+                   AND idMessageParent IS NULL";
+        
+        $stmt = $this->pdo->prepare($requete);
+        $stmt->bindValue(':id_fil', $idFil, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+    }
+
     // Méthodes
     // Méthodes d'hydratation
     /**

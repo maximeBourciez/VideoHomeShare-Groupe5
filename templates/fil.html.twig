@@ -334,6 +334,28 @@
 			</div>
 		</div>
 
+		<!-- Pagination -->
+		<nav aria-label="Navigation des pages">
+			<ul class="pagination justify-content-center">
+				{% if page_courante > 1 %}
+					<li class="page-item">
+						<a class="page-link" href="index.php?controller=fil&methode=afficherFilParId&id_fil={{ fil.0.getId() }}&page={{ page_courante - 1 }}">Précédent</a>
+					</li>
+				{% endif %}
+				
+				{% for i in 1..nombre_pages %}
+					<li class="page-item {% if i == page_courante %}active{% endif %}">
+						<a class="page-link" href="index.php?controller=fil&methode=afficherFilParId&id_fil={{ fil.0.getId() }}&page={{ i }}">{{ i }}</a>
+					</li>
+				{% endfor %}
+				
+				{% if page_courante < nombre_pages %}
+					<li class="page-item">
+						<a class="page-link" href="index.php?controller=fil&methode=afficherFilParId&id_fil={{ fil.0.getId() }}&page={{ page_courante + 1 }}">Suivant</a>
+					</li>
+				{% endif %}
+			</ul>
+		</nav>
 
 		<script src="JS/thread.js"></script>
 		<script>
