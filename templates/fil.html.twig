@@ -190,6 +190,17 @@
 									</button>
 								</div>
 
+								<!-- Afficheur de réponses -->
+								{% if message.reponses is not empty %}
+									<div class="tooglerReponses mt-3">
+										<span class="toggle-responses text-light my-2" data-message-id="{{ message.getIdMessage() }}">
+											<i class="bi bi-chevron-down"></i>
+											<span class="show-text">Voir les réponses ({{ message.reponses|length }})</span>
+											<span class="hide-text" style="display: none;">Masquer les réponses</span>
+										</span>
+									</div>
+								{% endif %}
+
 								<!-- Boutons supprimer/signaler -->
 								<div class="d-flex gap-2">
 									{% if (message.getUtilisateur().getId() == utilisateurConnecte.getId()) or (utilisateurConnecte.getRoleAsString() == "Moderateur")  %}
@@ -211,26 +222,11 @@
 								{% endif %}
 							</div>
 						</div>
-
-						{% if message.reponses is not empty %}
-							<div class="card-footer bg-transparent border-0 pb-3 px-4">
-								<button class="btn btn-outline-primary toggle-responses" data-message-id="{{ message.getIdMessage() }}">
-									<i class="bi bi-chevron-down"></i>
-									<span class="show-text">Voir les réponses ({{ message.reponses|length }})</span>
-									<span class="hide-text" style="display: none;">Masquer les réponses</span>
-								</button>
-							</div>
-							<div class="responses-container" style="display: none;">
-								{{ macros.afficherReponses(message.reponses, message.getUtilisateur().getId(), message.getUtilisateur().getPseudo(), fil.0.getId(), messageSuppr) }}
-							</div>
-				{% endif %}
 					</div>
 
-					
-
-					{# {% if message.reponses is not empty %}
+					<div class="responses-container" style="display: none;" data-message-id="{{ message.getIdMessage() }}">
 						{{ macros.afficherReponses(message.reponses, message.getUtilisateur().getId(), message.getUtilisateur().getPseudo(), fil.0.getId(), messageSuppr) }}
-					{% endif %} #}
+					</div>
 
 
 				{% endif %}
@@ -419,29 +415,7 @@
 			}
 		}
 
-		/**************/
-		.toggle-responses {
-			width: auto;
-			padding: 0.5rem 1rem;
-			margin-top: 1rem;
-			transition: all 0.3s ease;
-		}
-
-		.toggle-responses:hover {
-			background-color: #0056b3;
-			color: white;
-		}
-
-		.responses-container {
-			transition: all 0.3s ease;
-		}
-
-		@media(max-width: 768px) {
-			.toggle-responses {
-				font-size: 0.9rem;
-				padding: 0.4rem 0.8rem;
-			}
-		}
+		
 	</style>
 
 {% endblock %}

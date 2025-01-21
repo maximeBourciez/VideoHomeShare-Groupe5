@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function () {
         button.addEventListener('click', function() {
             // Trouver le conteneur de réponses associé
             const messageId = this.getAttribute('data-message-id');
-            const responsesContainer = this.closest('.card-footer').nextElementSibling;
+            const responsesContainer = document.querySelector(`.responses-container[data-message-id="${messageId}"]`);
             
             // Vérifier si le conteneur existe
             if (responsesContainer && responsesContainer.classList.contains('responses-container')) {
