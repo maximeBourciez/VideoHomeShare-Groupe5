@@ -18,14 +18,14 @@ class Utilitaires
     /**
      * @brief pemet de verifier si la valeur est compris entre deux valeurs
      * @param string $val la valeur que l'on veut vérifier
-     * @param int $valmax la valeur maximal que l'on autorise
-     * @param int $valmin la valeur minimal que l'on autorise
+     * @param string $valmax la valeur maximal que l'on autorise
+     * @param string $valmin la valeur minimal que l'on autorise
      * @param string $contenu c'est le nom du contenu sur lequel on veut renvoyer un message d'erreur
      * @param string $messageErreur le message d'erreur que l'on veut renvoyer
      * @return bool true si la valeur est compris entre les deux valeurs false sinon
      * 
      */
-    public static function comprisEntre(string $val, ?int $valmax, int $valmin, string $contenu , string &$messageErreur): bool
+    public static function comprisEntre(string $val, ?string $valmax, string $valmin, string $contenu , string & $messageErreur): bool
     {
         $valretour = true;
         // si la valeur est plus petite que la valeur minimal
@@ -229,19 +229,19 @@ class Utilitaires
         if (!preg_match('/[A-Z]/', $mdp)) {
             $valretour = false;
 
-            $messageErreur = ($messageErreur == "Le mot de passe doit contenir") ? $messageErreur + " au moins une majuscule" : $messageErreur + ", au moins une majuscule";
+            $messageErreur = ($messageErreur == "Le mot de passe doit contenir") ? $messageErreur. " au moins une majuscule" : $messageErreur. ", au moins une majuscule";
         }
         // si le mot de passe ne contient pas un chiffre
         if (!preg_match('/[\d]/', $mdp)) {
             $valretour = false;
 
-            $messageErreur = ($messageErreur == "Le mot de passe doit contenir") ? $messageErreur + " au moins un chiffre" : $messageErreur + ", au moins un chiffre";
+            $messageErreur = ($messageErreur == "Le mot de passe doit contenir") ? $messageErreur . " au moins un chiffre" : $messageErreur. ", au moins un chiffre";
         }
         // si le mot de passe ne contient pas un caractère spécial
         if (!preg_match('/[@$!%*?&]/', $mdp)) {
             $valretour = false;
 
-            $messageErreur = ($messageErreur == "Le mot de passe doit contenir") ? $messageErreur + " au moins un caractère spécial" : $messageErreur + " et au moins un caractère spécial";
+            $messageErreur = ($messageErreur == "Le mot de passe doit contenir") ? $messageErreur . " au moins un caractère spécial" : $messageErreur . " et au moins un caractère spécial";
         }
         if ($valretour == true) {
             
