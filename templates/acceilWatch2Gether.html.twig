@@ -1,0 +1,119 @@
+{% extends 'base_template.html.twig' %}
+
+
+{% block content %}
+	<main class="container flex-grow-1">
+		<div >
+            <div class="d-flex justify-content-center my-3" >
+			    <img src="{{ constant('WEBSITE_LOGO') }}" height="95" width="155" alt="VHS Logo" >
+            </div>
+			<h1 class="h2 text-center">Watch2Gether</h1>
+            
+		</div>
+		<div class="text-center my-5 ">
+			<a class=" btn btn-primary w-25" data-bs-toggle="modal" data-bs-target="#rejoindre">
+				Rejoindre une salle
+			</a>
+		</div>
+		{# pop-up pour rejoindre une salle #}
+		<div class="modal fade " id="rejoindre" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog  modal-dialog-centered">
+				<div class="modal-content bg-mydark" style="border: 1px solid #F2AC0F;">
+
+					<div class="modal-header border-bottom-0">
+						<button type="button" class="btn-close btn-close-white " data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body pt-0 ">
+						<form class="">
+							<div class="form-check my-4 ms-3">
+								<label class=" text-start form-check-label mb-0 text-white ">code de la salle</label>
+								<input type="number" name="code" class="form-control w-75 " required>
+							</div>
+
+							<input type="submit" class="btn btn-primary w-25 " value="Rejoindre">
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="text-center my-5">
+			<a class="text-center btn btn-primary w-25" data-bs-toggle="modal" data-bs-target="#creer">
+				Crée une salle
+			</a>
+		</div>
+		{# pop-up pour créer une salle #}
+		<div class="modal fade " id="creer" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog  modal-dialog-centered">
+				<div class="modal-content bg-mydark" style="border: 1px solid #F2AC0F;">
+
+					<div class="modal-header border-bottom-0">
+						<h5 class="modal-title text-white">Créer une salle</h5>
+						<button type="button" class="btn-close btn-close-white " data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body pt-0">
+						<form class="row text-white">
+							<div class="form-group mb-3">
+								<label for="nom" class="d-block text-start mb-0">Nom de la salle
+								</label>
+								<input type="text" name="nom" id="nom" class="form-control" minlength="3" maxlength="50" required>
+							</div>
+							<div class="form-group mb-3">
+								<label for="capaciter" class="d-block text-start mb-0">Capaciter
+								</label>
+								<input type="text" name="capaciter" id="capaciter" class="form-control" minlength="3" maxlength="50" required>
+							</div>
+							<div class="form-group mb-3">
+								<label for="themeSelect" class="d-block text-start mb-0">genre
+								</label>
+								<div class="custom-select bg-mylight text-black" id="themeSelect">
+									<span class="custom-select-placeholder">Choisissez des thèmes</span>
+									<div class="custom-select-dropdown">
+										{% for theme in themes %}
+											<label class="custom-select-option">
+												<input type="checkbox" name="themes[]" value="{{ theme.getId() }}">
+												{{ theme.getNom() }}
+											</label>
+										{% endfor %}
+									</div>
+								</div>
+							</div>
+
+							<div class="form-check my-4 ms-3">
+								<input type="checkbox" name="Publique" id="Publique" class="form-check-input">
+								<label class="d-block text-start form-check-label mb-0" for="Publique">
+									Publique
+								</label>
+							</div>
+
+							<input type="submit" class="btn btn-primary w-25 mx-auto" value="Creer">
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+        <div >
+            <h2 class="h2 ">Salles publiques</h2>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                {% for salle in salles %}
+                    <div class="col">
+                        <div class="card h-100">
+                            <img src="{{ salle.getUrlImageBanniere() }}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ salle.getNom() }}</h5>
+                                <p class="card-text">{{ salle.getCapaciter() }} personnes</p>
+                                <p class="card-text">{{ salle.getThemes()|join(', ') }}</p>
+                                <a href="index.php?controller=salle&methode=afficherSalle&id={{ salle.getId() }}" class="btn btn-primary">Rejoindre</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+
+	</main>
+
+
+{% endblock %}
