@@ -20,11 +20,12 @@ class ControllerWatch2Gether extends Controller
      */
     public function accueilWatch2Gether() : void
     {
-        //$managersalle = new SalleDAO($this->getPdo());
+        $managersalle = new SalleDAO($this->getPdo());
         $managertheme = new ThemeDAO($this->getPdo());
 
         $themes = $managertheme->findAll();
+        $salles = $managersalle->findAllPublique();
         $template = $this->getTwig()->load('acceilWatch2Gether.html.twig');
-        echo $template->render(array('themes' => $themes));
+        echo $template->render(array('themes' => $themes, 'salles' => $salles));
     }
 }

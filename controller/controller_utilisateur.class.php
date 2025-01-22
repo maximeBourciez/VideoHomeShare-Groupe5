@@ -307,7 +307,6 @@ class ControllerUtilisateur extends Controller
         //récupération des messages de l'utilisateur
         $messages = $managermessage->listerMessagesParIdUser($id);
         $quizs = $managerquiz->findByIdUtilisateur($id);
-        var_dump($quizs);
         $messageErreur = "";
         // vérification de l'existence de l'utilisateur
         $verficationUtilisateurExiste = Utilitaires::utilisateurExiste($utilisateur, $messageErreur);

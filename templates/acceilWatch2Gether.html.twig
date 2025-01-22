@@ -11,7 +11,7 @@
             
 		</div>
 		<div class="text-center my-5 ">
-			<a class=" btn btn-primary w-25" data-bs-toggle="modal" data-bs-target="#rejoindre">
+			<a class=" btn btn-primary w-sm-25 w-50" data-bs-toggle="modal" data-bs-target="#rejoindre">
 				Rejoindre une salle
 			</a>
 		</div>
@@ -38,7 +38,7 @@
 		</div>
 
 		<div class="text-center my-5">
-			<a class="text-center btn btn-primary w-25" data-bs-toggle="modal" data-bs-target="#creer">
+			<a class="text-center btn btn-primary w-sm-25 w-50" data-bs-toggle="modal" data-bs-target="#creer">
 				Crée une salle
 			</a>
 		</div>
@@ -64,19 +64,9 @@
 								<input type="text" name="capaciter" id="capaciter" class="form-control" minlength="3" maxlength="50" required>
 							</div>
 							<div class="form-group mb-3">
-								<label for="themeSelect" class="d-block text-start mb-0">genre
+								<label for="themeSelect" class="d-block text-start mb-0">genre 
 								</label>
-								<div class="custom-select bg-mylight text-black" id="themeSelect">
-									<span class="custom-select-placeholder">Choisissez des thèmes</span>
-									<div class="custom-select-dropdown">
-										{% for theme in themes %}
-											<label class="custom-select-option">
-												<input type="checkbox" name="themes[]" value="{{ theme.getId() }}">
-												{{ theme.getNom() }}
-											</label>
-										{% endfor %}
-									</div>
-								</div>
+								<input type="text" name="genre" id="genre" class="form-control" minlength="3" maxlength="50" required>
 							</div>
 
 							<div class="form-check my-4 ms-3">
@@ -94,17 +84,16 @@
 		</div>
 
         <div >
-            <h2 class="h2 ">Salles publiques</h2>
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <h2 class="h2 mb-5">Salles publiques</h2>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 ">
                 {% for salle in salles %}
-                    <div class="col">
-                        <div class="card h-100">
-                            <img src="{{ salle.getUrlImageBanniere() }}" class="card-img-top" alt="...">
-                            <div class="card-body">
+                    <div class="col my-4">
+                        <div class="card h-100">    
+                            <div class="card-body bg-mydark text-white rounded ">    
                                 <h5 class="card-title">{{ salle.getNom() }}</h5>
-                                <p class="card-text">{{ salle.getCapaciter() }} personnes</p>
-                                <p class="card-text">{{ salle.getThemes()|join(', ') }}</p>
-                                <a href="index.php?controller=salle&methode=afficherSalle&id={{ salle.getId() }}" class="btn btn-primary">Rejoindre</a>
+                                <p class="card-text">{{ salle.nbpersonne }} personnes</p>
+                                <p class="card-text">genre : {{ salle.genre|join(', ') }}</p>
+                                <a href="index.php?controller=salle&methode=afficherSalle&id={{ salle.idSalle }}" class="btn btn-primary ms-auto">Rejoindre</a>
                             </div>
                         </div>
                     </div>

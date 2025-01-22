@@ -179,7 +179,6 @@ class QuizzDAO{
         $stmt->bindValue(':idUtilisateur', $idUtilisateur, PDO::PARAM_STR);
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $stmt->execute();
-        var_dump($stmt);
         return $this->hydrateAll($stmt->fetchAll());
         
     }
