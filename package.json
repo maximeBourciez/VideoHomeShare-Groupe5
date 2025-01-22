@@ -18,5 +18,6 @@
   "scripts": {
     "build": "sass SCSS/custom.scss CSS/style.css",
     "cz": "cz"
+
   }
 }

@@ -298,19 +298,22 @@ class ControllerUtilisateur extends Controller
 
         // instanciation des managers de base de données
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
-        $managermesage = new MessageDAO($this->getPdo());
+        $managermessage = new MessageDAO($this->getPdo());
+        $managerquiz = new QuizzDAO($this->getPdo());
 
         //récupération de l'utilisateur à partir de id dans l'url
         $utilisateur = $managerutilisateur->find($id);
 
         //récupération des messages de l'utilisateur
-        $messages = $managermesage->listerMessagesParIdUser($id);
+        $messages = $managermessage->listerMessagesParIdUser($id);
+        $quizs = $managerquiz->findByIdUtilisateur($id);
+        var_dump($quizs);
         $messageErreur = "";
         // vérification de l'existence de l'utilisateur
         $verficationUtilisateurExiste = Utilitaires::utilisateurExiste($utilisateur, $messageErreur);
         if ($verficationUtilisateurExiste) {
             $template = $this->getTwig()->load('profilUtilisateur.html.twig');
-            echo $template->render(array('utilisateur' => $utilisateur, 'messages' => $messages));
+            echo $template->render(array('utilisateur' => $utilisateur, 'messages' => $messages, 'quizs' => $quizs));
         } else {
             $template = $this->getTwig()->load('inscription.html.twig');
             echo $template->render(array('messagederreur' => $messageErreur));
