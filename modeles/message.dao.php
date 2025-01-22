@@ -64,11 +64,12 @@ class MessageDAO
      * 
      * @return mixed Nombre de messages
      */
-    public function getNombreMessages($idFil) : ?int
+    public function getNombreMessagesParent($idFil) : ?int
     {
         $requete = "SELECT COUNT(*) as total 
-                   FROM vhs_message 
-                   WHERE idFil = :id_fil;";
+                   FROM " . DB_PREFIX . "message 
+                   WHERE idFil = :id_fil
+                   AND idMessageParent IS NULL;";
 
         $stmt = $this->pdo->prepare($requete);
         $stmt->bindValue(':id_fil', $idFil, PDO::PARAM_INT);
@@ -218,7 +219,7 @@ class MessageDAO
      * 
      * @return array<Message> Tableau d'objets Message
      */
-    public function getMessagesParentsPagines($idFil, $page = 1, $messagesParPage = 5): ?array
+    public function getMessagesPagines($idFil, $page = 1, $messagesParPage = 5): ?array
     {
         $offset = ($page - 1) * $messagesParPage;
 

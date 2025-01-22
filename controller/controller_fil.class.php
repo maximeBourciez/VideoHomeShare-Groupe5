@@ -71,7 +71,7 @@ class ControllerFil extends Controller
         $messages = $messageDAO->getMessagesPagines($idFil, $page, $messagesParPage);
         
         // Calculer le nombre total de pages
-        $totalMessages = $messageDAO->getNombreMessages($idFil);
+        $totalMessages = $messageDAO->getNombreMessagesParent($idFil);
         $nombrePages = ceil($totalMessages / $messagesParPage);
 
         // Passer les données à la vue
