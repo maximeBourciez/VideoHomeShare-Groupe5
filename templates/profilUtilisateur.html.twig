@@ -45,9 +45,55 @@
 			</a>
 
 		{% endfor %}
-		</div>
-		<script src ="JS/utilisateur.js"> </script>
-		<script>  cachermessage() </script>
+
+		<div id="quiz" >
+		{% if utilisateurConnecte.getId() == utilisateur.getId()  %}
+
+			<h2 class="ms-5">
+				Mes quizs
+			</h2>
+		{% else %}
+			<h2 class="ms-5">
+				les quizs de
+				{{utilisateur.pseudo}}
+			</h2>
+		{% endif %}
+		{% if quizs is empty %}
+			<div class="alert alert-info  ">Aucun quiz n'a été trouvé</div>
+		{% endif %}
+
+
+		{% for quiz in quizs %}
+			
+				<div class="card my-4 shadow-sm border-0 rounded-3 w-75 mx-auto">
+
+					<div class="card-body p-4 bg-mydark text-white rounded" class="text-decoration-none">
+						<div class="row g-0">
+							<div class="card-body">
+								<h5 class="card-title">{{ quiz.titre }}</h5>
+								<br>
+								<p class="card-text">{{ quiz.description }}</p>
+								<p class="card-text">Difficulté : {{ quiz.difficulte }}</p>
+								<small class="card-text">Fait le {{ quiz.getDate() }}</small><br>
+								<!-- Redirige vers jouerQuizz.html.twig avec l'identifiant du quizz -->
+								<a href="index.php?controller=quizz&methode=jouerQuizz&idQuizz={{ quiz.id }}" class="btn btn-myprimary">
+                                    Jouer
+                                </a>
+							</div>
+						</div>
+
+					</div>
+
+				</div>		
+
+		{% endfor %}
+			<script src ="JS/utilisateur.js"> </script>
+			<script>  
+        cacher("quiz");
+        cachermessage();
+      </script>
+
+		<div>
 
 	</div>
 
