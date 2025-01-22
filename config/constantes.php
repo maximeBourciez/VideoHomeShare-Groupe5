@@ -40,3 +40,4 @@ define('TMDB_IMAGE_BASE_URL', $config['tmdb']['image_base_url']);
 // Constante pour les threads
 define('VALEUR_MESSAGE_SUPPRIME', $config['threads']['valeurMessageSupprime']);
 define('VALEUR_UTILISATEUR_MESSAGE_SUPPRIME', $config['threads']['valeurUtilisateurMessageSupprime']);
+define('NOMBRE_MESSAGES_PAR_PAGE', $config['threads']['nombreMessagesParPage']);

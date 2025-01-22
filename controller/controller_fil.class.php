@@ -56,11 +56,11 @@ class ControllerFil extends Controller
      *
      * @return void
      */
-    public function afficherFilParId()
+    public function afficherFilParId(?string $messageErreur = null)
     {
         $idFil = $_GET['id_fil'];
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-        $messagesParPage = 5;
+        $messagesParPage = NOMBRE_MESSAGES_PAR_PAGE;
 
         // Récupérer le fil
         $filDAO = new FilDAO($this->getPdo());
@@ -68,10 +68,10 @@ class ControllerFil extends Controller
         
         // Récupérer les messages paginés
         $messageDAO = new MessageDAO($this->getPdo());
-        $messages = $messageDAO->getMessagesParentsPagines($idFil, $page, $messagesParPage);
+        $messages = $messageDAO->getMessagesPagines($idFil, $page, $messagesParPage);
         
         // Calculer le nombre total de pages
-        $totalMessages = $messageDAO->getNombreMessagesParents($idFil);
+        $totalMessages = $messageDAO->getNombreMessages($idFil);
         $nombrePages = ceil($totalMessages / $messagesParPage);
 
         // Passer les données à la vue
@@ -79,7 +79,8 @@ class ControllerFil extends Controller
             'fil' => $fil,
             'messages' => $messages,
             'page_courante' => $page,
-            'nombre_pages' => $nombrePages
+            'nombre_pages' => $nombrePages,
+            'messageErreur' => $messageErreur
         ]);
         exit();
     }
