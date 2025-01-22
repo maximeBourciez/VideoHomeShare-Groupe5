@@ -73,17 +73,28 @@
 								<label class="d-block text-start mb-0">
 									Changer le mail
 								</label>
-								<input type="text" name="mail" class="form-control">
+								<input type="text" name="mail" id ="mail" class="form-control">
 							</div>
 							<div class="form-group mb-3">
 								<label class="d-block text-start mb-0">Confirmation du changement
 								</label>
-								<input type="mail" name="mailconf" class="form-control">
+								<input type="mail" name="mailconf" id="mailconf" class="form-control">
 							</div>
 
 							<input type="submit" class="btn btn-primary" value='valider'></input>
 
 					</form>
+					<script src ="JS/utilisateur.js" > </script>
+					<script>
+						document.addEventListener("DOMContentLoaded", function() { 
+							const mail = document.getElementById('mail');
+							const mailconf = document.getElementById('mailconf');
+
+
+							// Appel de verifieregau pour vérifier les valeurs
+							verifieregau(mail, mailconf);
+						});
+					</script>
 				</div>
 			</div>
 		</div>
