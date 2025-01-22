@@ -5,6 +5,7 @@
 {% block contenue %}
 
 	<div class="container mt-3 ">
+		<div id="message" >
 		{% if utilisateurConnecte.getId() == utilisateur.getId()  %}
 
 			<h2 class="ms-5">
@@ -87,9 +88,13 @@
 
 		{% endfor %}
 			<script src ="JS/utilisateur.js"> </script>
-			<script>  cacher("quiz") </script>
+			<script>  
+        cacher("quiz");
+        cachermessage();
+      </script>
 
 		<div>
+
 	</div>
 
 
