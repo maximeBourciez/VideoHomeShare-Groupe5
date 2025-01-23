@@ -26,7 +26,7 @@ class RealtimeMessages {
      * @returns {number} - L'identifiant du dernier message présent sur la page du forum
      */
     getDernierMessageId() {
-        const messages = document.querySelectorAll('.message');
+        const messages = document.querySelectorAll('[data-id-message]');
         if (messages.length === 0) return 0;
         
         const ids = Array.from(messages).map(msg => 
@@ -72,28 +72,44 @@ class RealtimeMessages {
      * @param {Array} messages 
      */
     ajouterNouveauxMessages(messages) {
-        const container = document.querySelector('.container.mt-3');
+        const container = document.getElementById('messageContainer');
         
-        for(let i = 0 ; i < messages.length ; i++) {
-            var message = messages[i];
-            if (!document.querySelector(`[data-id-message="${message.idMessage}"]`)) {
+        messages.forEach(message => {
+            // Vérifier si le message existe déjà avec un sélecteur plus précis
+            const messageExists = document.querySelector(`[data-id-message="${message.idMessage}"]`);
+            
+            if (!messageExists) {
                 const messageHTML = this.creerMessageHTML(message);
                 
                 if (message.idMessageParent) {
-                    // C'est une réponse
-                    const parentContainer = document.querySelector(`[data-id-message="${message.idMessageParent}"] .responses-container`);
+                    // Trouver le conteneur de réponses avec un sélecteur plus précis
+                    const parentContainer = document.querySelector(`.responses-container[data-message-id="${message.idMessageParent}"]`);
                     if (parentContainer) {
+                        // Ajouter le message à la fin du conteneur de réponses parent
                         parentContainer.insertAdjacentHTML('beforeend', messageHTML);
-                    }
-                    else {
-                        console.error('Impossible de trouver le conteneur parent pour le message:', message);
+
+                        // Afficher le conteneur de réponses parent si caché
+                        const responsesContainer = parentContainer;
+
+                        if (responsesContainer.style.display === 'none') {
+                            // toggleReponses(responsesContainer);
+                            // Déployer le conteneur des réponses afin qu'elle soit visible
+                        }
+                    } else {
+                        // Créer le conteneur
+                        const container = createHTMLElement('div', {
+                            class: 'responses-container',
+                            'data-message-id': message.idMessageParent
+                        });
+                        container.insertAdjacentHTML('afterbegin', messageHTML);
+
+                        console.error('Conteneur parent non trouvé pour le message:', message);
                     }
                 } else {
-                    // C'est un message principal
-                    container.insertAdjacentHTML('beforeend', messageHTML);
+                    container.insertAdjacentHTML('afterbegin', messageHTML);
                 }
             }
-        };
+        });
     }
 
     /**
@@ -107,18 +123,18 @@ class RealtimeMessages {
         // Eviter les problemes avec l'encodage des caractères spéciaux
         const decodedMessage = message.valeur
             .replace(/&#039;/g, "'")
-            .replace(/\r\n/g, '<br>');
-    
+            .replace(/\r\n/g, "<br>");
+
         // Créer le message HTML
         return `
-            <div id="${message.idMessage}" class="card my-4 shadow-sm border-0 rounded-3 ${message.idMessageParent ? 'ms-md-5 ms-2' : ''}">
+            <div id="${message.idMessage}" class="card my-4 shadow-sm border-0 rounded-3 ${message.idMessageParent ? "ms-md-5 ms-2" : ""}">
                 <div class="card-body p-4 bg-mydark text-white rounded">
                     <div class="d-flex align-items-center">
-                        <img src="${message.urlImageProfil || 'default_avatar.jpg'}" alt="Avatar" class="rounded-circle me-3" width="50" height="50">
+                        <img src="${message.urlImageProfil || "default_avatar.jpg"}" alt="Avatar" class="rounded-circle me-3" width="50" height="50">
                         <div class="d-flex align-items-center">
                             <h5 class="mb-0 mx-2 username-link">
                                 <a href="index.php?controller=utilisateur&methode=show&id_utilisateur=${message.idUtilisateur}" style="color:white;" class="text-decoration-none">
-                                    ${message.pseudo || 'Utilisateur inconnu'}
+                                    ${message.pseudo || "Utilisateur inconnu"}
                                 </a>
                             </h5>
                             <span class="mx-2" style="font-size: 1.2em;">•</span>
@@ -128,7 +144,48 @@ class RealtimeMessages {
                     <div class="message" data-id-message="${message.idMessage}">
                         <p class="mt-3 message-text">${decodedMessage}</p>
                     </div>
+                    <div class="d-flex justify-content-between mt-4">
+                        <!-- Boutons like, dislike, répondre -->
+                        <div class="d-flex flex-wrap gap-2">
+                            <form method="POST" action="index.php?controller=fil&methode=like">
+                                <input type="hidden" name="id_message" value="${message.idMessage}">
+                                <input type="hidden" name="id_fil" value="${this.idFil}">
+                                <button class="btn action-btn" type="submit">
+                                    <i class="bi bi-hand-thumbs-up"></i>
+                                    ${message.nbLikes > 0 ? `<span class="count">${message.nbLikes}</span>` : ""}
+                                </button>
+                            </form>
+
+                            <form method="POST" action="index.php?controller=fil&methode=dislike">
+                                <input type="hidden" name="id_message" value="${message.idMessage}">
+                                <input type="hidden" name="id_fil" value="${this.idFil}">
+                                <button class="btn action-btn" type="submit">
+                                    <i class="bi bi-hand-thumbs-down"></i>
+                                    ${message.nbDislikes > 0 ? `<span class="count">${message.nbDislikes}</span>` : ""}
+                                </button>
+                            </form>
+
+                            <button class="btn action-btn" data-bs-toggle="modal" data-bs-target="#repondreModal" data-id-message-parent="${message.idMessage}">
+                                <i class="bi bi-reply"></i>
+                                <span class="btn-text">Répondre</span>
+                            </button>
+                        </div>
+
+                        <!-- Boutons supprimer/signaler -->
+                        <div class="d-flex gap-2">
+                            <form method="POST" action="index.php?controller=fil&methode=supprimerMessage" onsubmit="return confirmerSuppression('${message.idMessage}');">
+                                <input type="hidden" name="idMessage" value="${message.idMessage}">
+                                <input type="hidden" name="id_fil" value="${this.idFil}">
+                                <button class="btn action-btn warning-btn">
+                                    <i class="bi bi-trash"></i>
+                                    <span class="btn-text">Supprimer</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
+            </div>
+            <div class="responses-container" style="display: none;" data-message-id="${message.idMessage}">
             </div>
         `;
     }

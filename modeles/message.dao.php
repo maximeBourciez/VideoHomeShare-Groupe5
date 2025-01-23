@@ -461,13 +461,23 @@ class MessageDAO
      * @return array<Message> Tableau d'objets Message
      */
     public function getNouveauxMessages($idFil, $dernierMessageId) {
-        $requete = "SELECT m.idMessage, m.idMessageParent, m.valeur, m.dateC, 
-                           m.idUtilisateur, u.pseudo, u.urlImageProfil 
-                    FROM " . DB_PREFIX . "message m 
-                    LEFT JOIN " . DB_PREFIX . "utilisateur u ON m.idUtilisateur = u.idUtilisateur 
-                    WHERE m.idFil = :id_fil 
-                    AND m.idMessage > :dernier_id 
-                    ORDER BY m.dateC ASC";
+        $requete = "
+                    SELECT m.idMessage, m.idMessageParent, m.valeur, m.dateC, 
+                           m.idUtilisateur, u.pseudo, u.urlImageProfil,  
+                            ld1.nbLikes, 
+                            ld1.nbDislikes
+                FROM " . DB_PREFIX . "message m
+                LEFT JOIN (
+                    SELECT idMessage,
+                            SUM(CASE WHEN reaction = true THEN 1 ELSE 0 END) AS nbLikes,
+                            SUM(CASE WHEN reaction = false THEN 1 ELSE 0 END) AS nbDislikes
+                    FROM " . DB_PREFIX . "reagir
+                    GROUP BY idMessage
+                ) AS ld1 ON m.idMessage = ld1.idMessage
+                LEFT JOIN " . DB_PREFIX . "utilisateur u ON m.idUtilisateur = u.idUtilisateur
+                WHERE m.idFil = :id_fil 
+                AND m.idMessage > :dernier_id 
+                ORDER BY dateC ASC;";
                     
         $stmt = $this->pdo->prepare($requete);
         $stmt->bindValue(':id_fil', $idFil, PDO::PARAM_INT);
