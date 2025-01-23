@@ -181,7 +181,7 @@ class QuizzDAO{
      * @return array
      */
     function findAllByUser(string $idUtilisateur): ?array{
-        $sql = "SELECT * FROM " .DB_PREFIX. "quizz WHERE idUtilisateur = :idUtilisateur";
+        $sql = "SELECT Q.*, U.pseudo FROM " .DB_PREFIX. "quizz Q JOIN " .DB_PREFIX. "utilisateur U ON Q.idUtilisateur = U.idUtilisateur WHERE Q.idUtilisateur = :idUtilisateur";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(":idUtilisateur", $idUtilisateur);
         $stmt->setFetchMode(PDO::FETCH_ASSOC);

@@ -36,9 +36,17 @@ class ControllerQuizz extends Controller
         $managerQuizz = new QuizzDAO($this->getPdo());
         $quizz = $managerQuizz->findAll();
 
+        if (isset($_SESSION['utilisateur'])){
+            $utilisateur = unserialize($_SESSION['utilisateur']);
+            $pseudoUtilisateur = $utilisateur->getPseudo();
+        }
+        else{
+            $pseudoUtilisateur = null;
+        }
         //Génération de la vue
         echo $this->getTwig()->render('listeQuizz.html.twig', [
-            'quizz' => $quizz
+            'quizz' => $quizz,
+            'pseudoUtilisateur' => $pseudoUtilisateur
         ]);
     }
 
@@ -70,13 +78,13 @@ class ControllerQuizz extends Controller
      *
      * @return void
      */
-    public function gererQuizzUtilisateur(): void
+    public function afficherOngletGerer(): void
     {
+        $managerQuizz = new QuizzDAO($this->getPdo());
         if (isset($_SESSION['utilisateur'])){
             $utilisateur = unserialize($_SESSION['utilisateur']);
             $idUtilisateur = $utilisateur->getId();
 
-            $managerQuizz = new QuizzDAO($this->getPdo());
             $quizz = $managerQuizz->findAllByUser($idUtilisateur);
 
             echo $this->getTwig()->render('listeQuizz.html.twig', [
@@ -85,8 +93,15 @@ class ControllerQuizz extends Controller
             ]);
         }
         else{
-            echo "Vous devez être connecté pour avoir accès aux quizz. <br>";
-            $this->listeQuizz();
+            //Récupération des quizz
+            $quizz = $managerQuizz->findAll();
+            
+            //Génération de la vue
+            echo $this->getTwig()->render('listeQuizz.html.twig', [
+                'quizz' => $quizz,
+                'pseudoUtilisateur' => null,
+                'messagederreur' => "Vous devez être connecté pour avoir accès à vos quizz."
+            ]);
         }
     }
 
