@@ -1,4 +1,18 @@
+/**
+ * Classe permettant de gérer les messages en temps réel
+ * 
+ * @param {number} idFil - L'identifiant du fil de discussion
+ * 
+ * @property {number} idFil - L'identifiant du fil de discussion
+ * @property {number} dernierMessageId - L'identifiant du dernier message récupéré
+ * @property {number} interval - L'identifiant de l'intervalle de vérification des nouveaux messages
+ * 
+ */
 class RealtimeMessages {
+    /**
+     * Constructeur de la classe RealtimeMessages
+     * @param {*} idFil 
+     */
     constructor(idFil) {
         this.idFil = idFil;
         this.dernierMessageId = this.getDernierMessageId();
@@ -6,6 +20,11 @@ class RealtimeMessages {
         this.initializePolling();
     }
 
+    /**
+     * Méthode permettant de récupérer l'identifiant du dernier message présent sur la page du forum
+     * 
+     * @returns {number} - L'identifiant du dernier message présent sur la page du forum
+     */
     getDernierMessageId() {
         const messages = document.querySelectorAll('.message');
         if (messages.length === 0) return 0;
@@ -16,11 +35,19 @@ class RealtimeMessages {
         return Math.max(...ids);
     }
 
+    /**
+     * Méthode permettant d'initialiser le polling pour vérifier les nouveaux messages
+     */
     initializePolling() {
         // Vérifie les nouveaux messages toutes les 5 secondes
         this.interval = setInterval(() => this.verifierNouveauxMessages(), 5000);
     }
 
+    /**
+     * Méthode permettant de vérifier les nouveaux messages
+     * 
+     * @details Cette méthode envoie une requête AJAX pour récupérer les nouveaux messages
+     */
     async verifierNouveauxMessages() {
         try {
             const response = await fetch(`index.php?controller=fil&methode=getNouveauxMessages&id_fil=${this.idFil}&dernierMessageId=${this.dernierMessageId}`);
@@ -39,6 +66,11 @@ class RealtimeMessages {
         }
     }
 
+    /**
+     * Méthode permettant d'ajouter les nouveaux messages à la page
+     * 
+     * @param {Array} messages 
+     */
     ajouterNouveauxMessages(messages) {
         const container = document.querySelector('.container.mt-3');
         
@@ -64,12 +96,20 @@ class RealtimeMessages {
         };
     }
 
+    /**
+     * Méthode permettant de créer le message HTML à partir des données du message
+     * 
+     * @param {Object} message - Les données du message
+     * @returns {string} - Le message HTML
+     * 
+     */
     creerMessageHTML(message) {
-        // Decode HTML entities
+        // Eviter les problemes avec l'encodage des caractères spéciaux
         const decodedMessage = message.valeur
             .replace(/&#039;/g, "'")
             .replace(/\r\n/g, '<br>');
     
+        // Créer le message HTML
         return `
             <div id="${message.idMessage}" class="card my-4 shadow-sm border-0 rounded-3 ${message.idMessageParent ? 'ms-md-5 ms-2' : ''}">
                 <div class="card-body p-4 bg-mydark text-white rounded">
