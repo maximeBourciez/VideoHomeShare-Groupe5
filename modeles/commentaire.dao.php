@@ -290,6 +290,41 @@ class CommentaireDAO
         $stmt->execute();
     }
 
+
+    /**
+     * @brief Crée un nouveau commentaire pour une série
+     * 
+     * @param Commentaire $commentaire Le commentaire à créer
+     * @throws Exception Si l'utilisateur a déjà commenté
+     */
+    public function createCommentaireSerie(Commentaire $commentaire): void
+    {
+        // Vérification si l'utilisateur a déjà commenté
+        if ($this->aDejaCommente($commentaire->getIdUtilisateur(), $commentaire->getIdSerieTmdb())) {
+            throw new Exception("Désolé mais vous avez déjà commenté et noté cette série.");
+        }
+
+        $sql = 'INSERT INTO vhs_commenterSerie (idSerieTmdb, idUtilisateur, titre, note, avis, estPositif, dateCommentaire)
+            VALUES (:idSerieTmdb, :idUtilisateur, :titre, :note, :avis, :estPositif, NOW())';
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $idSerieTmdb = $commentaire->getIdSerieTmdb();
+        $idUtilisateur = $commentaire->getIdUtilisateur();
+        $titre = $commentaire->getTitre();
+        $note = $commentaire->getNote();
+        $avis = $commentaire->getAvis();
+        $estPositif = $commentaire->getEstPositif();
+
+        $stmt->bindParam(':idSerieTmdb', $idSerieTmdb, PDO::PARAM_STR);
+        $stmt->bindParam(':idUtilisateur', $idUtilisateur, PDO::PARAM_STR);
+        $stmt->bindParam(':titre', $titre, PDO::PARAM_STR);
+        $stmt->bindParam(':note', $note, PDO::PARAM_INT);
+        $stmt->bindParam(':avis', $avis, PDO::PARAM_STR);
+        $stmt->bindParam(':estPositif', $estPositif, PDO::PARAM_BOOL);
+        $stmt->execute();
+    }
+
     /**
      * @brief Hydrate un commentaire à partir d'un tableau de données
      * 

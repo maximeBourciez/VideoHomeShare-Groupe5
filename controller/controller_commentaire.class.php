@@ -8,49 +8,61 @@
  * @author François Barlic <<francois.barlic57@gmail.com>>
  * @version 1.0
  */
-class ControllerCommentaire extends Controller {
+class ControllerCommentaire extends Controller
+{
     private const TYPE_CONTENU = 'contenu';
     private const TYPE_COLLECTION = 'collection';
-    
-    public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader) {
+    private const TYPE_SERIE = 'serie';
+
+    public function __construct(\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader)
+    {
         parent::__construct($twig, $loader);
     }
 
     /**
      * @brief Point d'entrée pour la création de commentaire
      */
-    public function createCommentaire(): void {
-        // Détermine le type de commentaire basé sur les paramètres POST
-        $type = isset($_POST['idContenu']) ? self::TYPE_CONTENU : 
-               (isset($_POST['idCollection']) ? self::TYPE_COLLECTION : null);
-        
+    public function createCommentaire(): void
+    {
+        $type = isset($_POST['idContenu']) ? self::TYPE_CONTENU : (isset($_POST['idCollection']) ? self::TYPE_COLLECTION : (isset($_POST['idSerie']) ? self::TYPE_SERIE : null));
+
         if ($type === null) {
             throw new Exception("Type de commentaire non spécifié");
         }
-
         $this->handleCommentaire($type);
     }
 
     /**
      * @brief Crée un nouveau commentaire pour un contenu
      */
-    public function createCommentaireContenu(): void {
+    public function createCommentaireContenu(): void
+    {
         $this->handleCommentaire(self::TYPE_CONTENU);
     }
 
     /**
      * @brief Crée un nouveau commentaire pour une collection
      */
-    public function createCommentaireCollection(): void {
+    public function createCommentaireCollection(): void
+    {
         $this->handleCommentaire(self::TYPE_COLLECTION);
+    }
+
+    /**
+     * @brief Crée un nouveau commentaire pour une serie
+     */
+    public function createCommentaireSerie(): void
+    {
+        $this->handleCommentaire(self::TYPE_SERIE);
     }
 
     /**
      * @brief Gère la création d'un commentaire
      */
-    private function handleCommentaire(string $type): void {
+    private function handleCommentaire(string $type): void
+    {
         $config = $this->getConfig($type);
-        
+
         // Vérification de la session
         $utilisateur = isset($_SESSION['utilisateur']) ? unserialize($_SESSION['utilisateur']) : null;
         if (!$utilisateur) {
@@ -67,9 +79,11 @@ class ControllerCommentaire extends Controller {
 
         // Validation des données
         $message = "";
-        if (!Utilitaires::comprisEntre($titre, 100, 3, "Le titre doit contenir", $message) ||
-            !Utilitaires::comprisEntre($commentaireTexte, 1000, 10, "Le commentaire doit contenir", $message)) {
-            
+        if (
+            !Utilitaires::comprisEntre($titre, 100, 3, "Le titre doit contenir", $message) ||
+            !Utilitaires::comprisEntre($commentaireTexte, 1000, 10, "Le commentaire doit contenir", $message)
+        ) {
+
             $this->redirectWithError($type, $idTmdb, $message);
             return;
         }
@@ -83,7 +97,8 @@ class ControllerCommentaire extends Controller {
                 $commentaireTexte,
                 $note >= 3,
                 $type === self::TYPE_CONTENU ? $idTmdb : null,
-                $type === self::TYPE_COLLECTION ? $idTmdb : null
+                $type === self::TYPE_COLLECTION ? $idTmdb : null,
+                $type === self::TYPE_SERIE ? $idTmdb : null
             );
 
             // Sauvegarde dans la base de données
@@ -93,7 +108,6 @@ class ControllerCommentaire extends Controller {
 
             // Redirection avec message de succès
             $this->redirectWithSuccess($type, $idTmdb);
-
         } catch (Exception $e) {
             $this->redirectWithError($type, $idTmdb, $e->getMessage());
         }
@@ -102,7 +116,8 @@ class ControllerCommentaire extends Controller {
     /**
      * @brief Récupère la configuration selon le type de commentaire
      */
-    private function getConfig(string $type): array {
+    private function getConfig(string $type): array
+    {
         $configs = [
             self::TYPE_CONTENU => [
                 'template' => 'pageDunContenu.html.twig',
@@ -117,6 +132,13 @@ class ControllerCommentaire extends Controller {
                 'controller' => 'ControllerCollection',
                 'createMethod' => 'createCommentaireCollection',
                 'displayMethod' => 'afficherCollection'
+            ],
+            self::TYPE_SERIE => [
+                'template' => 'pageDuneSerie.html.twig',
+                'idField' => 'idSerie',
+                'controller' => 'ControllerSerie',
+                'createMethod' => 'createCommentaireSerie',
+                'displayMethod' => 'afficherSerie'
             ]
         ];
 
@@ -126,7 +148,8 @@ class ControllerCommentaire extends Controller {
     /**
      * @brief Redirige avec un message d'erreur
      */
-    private function redirectWithError(string $type, string $idTmdb, string $message): void {
+    private function redirectWithError(string $type, string $idTmdb, string $message): void
+    {
         $config = $this->getConfig($type);
         $controller = new $config['controller']($this->getTwig(), $this->getLoader());
         $_GET['tmdb_id'] = $idTmdb;
@@ -137,7 +160,8 @@ class ControllerCommentaire extends Controller {
     /**
      * @brief Redirige avec un message de succès
      */
-    private function redirectWithSuccess(string $type, string $idTmdb): void {
+    private function redirectWithSuccess(string $type, string $idTmdb): void
+    {
         $config = $this->getConfig($type);
         $controller = new $config['controller']($this->getTwig(), $this->getLoader());
         $_GET['tmdb_id'] = $idTmdb;
