@@ -1,126 +1,198 @@
 {% extends 'base_template.html.twig' %}
+
 {% block content %}
-	<main class="flex-grow-1">
-		{% if serie %}
+	{% if messagederreur is defined %}
+		<div class="alert alert-danger" role="alert">
+			{{ messagederreur }}
+		</div>
+	{% endif %}
+	<main class="movie-page container d-flex flex-column justify-content-center align-items-center flex-grow-1">
+		<div
+			class="movie-content d-flex">
+			<!-- Section Affiche -->
+			<div class="movie-poster me-5">
+				{% if serie.lienAffiche is not empty %}
+					<img src="{{ serie.lienAffiche }}" alt="{{ serie.titre }}" class="movie-poster__image shadow img-fluid m-5 rounded" style="width: 525px; height: 750px; object-fit: cover;" loading="lazy" crossorigin="anonymous" referrerpolicy="no-referrer" onerror="this.src='images/no-image.svg'">
+				{% else %}
+					<img src="images/no-image.svg" alt="{{ serie.titre }}" class="movie-poster__image img-fluid m-5 rounded" style="width: 525px; height: 750px; object-fit: cover;">
+				{% endif %}
+			</div>
+
+			<!-- Section Informations -->
 			<div
-				class="container mt-4">
-				{# En-tête de la série avec l'affiche et les infos principales #}
-				<div class="row">
-					<div class="col-md-4">
-						{% if serie.lienAffiche %}
-							<img src="{{ serie.lienAffiche }}" alt="Affiche de {{ serie.titre }}" class="img-fluid rounded">
+				class="movie-info col-6 d-flex flex-column justify-content-between">
+				<!-- Titre -->
+				<h1 class="movie-info__title mt-5 fw-bolder text-center">{{ serie.titre }}</h1>
+
+				<!-- Nombre de saison et épisode -->
+				<div class="movie-info__metadata d-flex justify-content-between fs-5 fw-bolder">
+					<p class="movie-info__films">Nombre de saison :
+						{{ serie.nombreSaisons }}</p>
+
+					<p class="movie-info__date">Nombre d'épisodes :
+						{{ serie.nombreEpisodes }}</p>
+				</div>
+
+				<!-- Description -->
+				<div class="movie-info__description shadow fst-italic fs-5 bg-dark text-white p-3 rounded">
+					{% set description = serie.description %}
+					{% set descriptionmax_length = 500 %}
+					{% if description is not empty %}
+						{% if description|length > descriptionmax_length %}
+							<p class="fs-6">
+								{{ description }}</p>
 						{% else %}
-							<div class="placeholder-img bg-secondary rounded" style="height: 450px;"></div>
+							<p>
+								{{ description }}</p>
 						{% endif %}
+					{% else %}
+						<p class="fs-6">Aucune description disponible pour cette serie.</p>
+					{% endif %}
+				</div>
+
+				<!-- Genres -->
+				<div class="movie-info__genres d-flex justify-content-left align-items-center mt-2">
+					{% for theme in themes %}
+						<span class="movie-info__genre-tag bg-mydark text-white p-2 px-3 rounded me-3">{{ theme }}</span>
+					{% endfor %}
+				</div>
+
+				<!-- Note et Avis -->
+				<div class="movie-info__rating">
+					<div class="movie-info__rating-stars d-flex text-center align-items-center">
+						<p class="m-0">Note :
+							{{ moyenne }}/5</p>
+						<div id="rating" class="ms-5"></div>
 					</div>
-					<div class="col-md-8">
-						<h1>{{ serie.titre }}</h1>
-						<div class="d-flex align-items-center mb-3">
-							<div class="me-3">
-								<span class="fw-bold">Note moyenne:</span>
-								{{ moyenne ?? 0 }}/5 ({{ total ?? 0 }}
-								votes)
-							</div>
-							<div>
-								<span class="fw-bold">Première diffusion:</span>
-								{{ serie.datePremiereAir|date('d/m/Y') }}
-							</div>
+					<div class="movie-info__rating-count">
+						<p class="mb-5 mx-3 small fw-light">{{ total }}
+							avis</p>
+					</div>
+				</div>
+
+				<!-- Script de génération des étoiles -->
+				<script>
+					document.addEventListener('DOMContentLoaded', function () {
+if (document.querySelector('#rating')) {
+generateStarRating({{ moyenne }}, 5);
+}
+});
+				</script>
+
+				<!-- Boutons d'action -->
+				<div class="movie-actions mr-5">
+					<div class="movie-actions__buttons d-flex justify-content-right mb-5">
+						{% if utilisateurConnecte is not null %}
+							<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
+						{% else %}
+							<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Laisser un avis</button>
+						{% endif %}
+						<button class="movie-actions__watchlist-btn btn btn-myprimary fw-normal me-4 bi bi-plus">WatchList</button>
+						<a>
+							<button class="movie-actions__watch-btn btn btn-myprimary fw-normal bi bi-list">
+								Épisode</button>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Commentaires -->
+		<div class="movie-comments bg-mydark rounded text-white p-3 mb-5 w-100">
+			<h1 class="movie-comments__title mx-5">Commentaires :</h1>
+			{% if commentaires is not empty %}
+				{% for com in commentaires %}
+					<div class="movie-comment">
+						<div class="movie-comment__header d-flex align-items-center">
+							<h4 class="movie-comment__title m-3 mb-0">{{ com.titre }}</h4>
+							<p class="movie-comment__rating m-3 mb-0">
+								{{ com.note }}/5
+								<i class="ms-3 bi bi-star{% if com.estPositif == 1 %}-fill{% endif %}"></i>
+							</p>
+						</div>
+						<p class="movie-comment__text m-3">{{ com.avis }}</p>
+						<hr>
+					</div>
+				{% endfor %}
+			{% else %}
+				<div class="movie-comments__empty d-flex justify-content-center align-items-center">
+					<p class="m-3 fs-3">Aucun commentaire pour cette serie. Sois le premier à commenter 😉
+					</p>
+				</div>
+				<div class="d-flex justify-content-center">
+					{% if utilisateurConnecte is not null %}
+						<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
+					{% else %}
+						<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Laisser un avis</button>
+					{% endif %}
+				</div>
+			{% endif %}
+		</div>
+	</main>
+
+	<!-- Modal Avis -->
+	<div class="modal fade" id="commenterContenu" tabindex="-1" aria-labelledby="modalAvisLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content bg-mydark text-white">
+				<div class="modal-header">
+					<h5 class="modal-title" id="modalAvisLabel">Donner votre avis sur
+						{{ serie.titre }}</h5>
+					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form action="index.php?controller=commentaire&methode=createCommentaire" method="POST">
+						<input type="hidden" name="idSerie" value="{{ serie.id }}">
+						<div class="mb-3">
+							<label for="titre" class="form-label">Titre de votre avis</label>
+							<input type="text" class="form-control" id="titre" name="titre" required placeholder="Ex : J'ai adoré cette serie !" maxlength="100">
 						</div>
 						<div class="mb-3">
-							<span class="fw-bold">Nombre de saisons:</span>
-							{{ serie.nombreSaisons }}
-							<span class="ms-3 fw-bold">Episodes totaux:</span>
-							{{ serie.nombreEpisodes }}
+							<label for="note" class="form-label">Note :
+								<span id="sliderValue">3</span>
+							</label>
+							<input type="range" class="form-range" id="note" name="note" min="1" max="5" step="1" value="3" required>
 						</div>
-						<p class="lead">{{ serie.description }}</p>
-					</div>
-				</div>
 
-				{# Section des personnalités #}
-				{% if personnalites|length > 0 %}
-					<div class="mt-5">
-						<h2>Distribution et équipe</h2>
-						<div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 g-3">
-							{% for personnalite in personnalites %}
-								<div class="col">
-									<div class="card h-100">
-										{% if personnalite.lienPhoto %}
-											<img src="{{ personnalite.lienPhoto }}" class="card-img-top" alt="{{ personnalite.nom }}">
-										{% else %}
-											<div class="placeholder-img bg-secondary" style="height: 200px;"></div>
-										{% endif %}
-										<div class="card-body">
-											<h6 class="card-title">{{ personnalite.nom }}</h6>
-											<p class="card-text small">{{ personnalite.role }}</p>
-										</div>
-									</div>
-								</div>
-							{% endfor %}
+						<script>
+							const slider = document.getElementById('note');
+const sliderValue = document.getElementById('sliderValue');
+slider.addEventListener('input', () => {
+sliderValue.textContent = slider.value;
+});
+						</script>
+						<div class="mb-3">
+							<label for="commentaire" class="form-label">Votre commentaire</label>
+							<textarea class="form-control" id="commentaire" name="commentaire" rows="4" required placeholder="Ex : Cette serie est vraiment géniale car..." maxlength="1000"></textarea>
 						</div>
-					</div>
-				{% endif %}
-
-				{# Section des saisons #}
-				{% if saisons|length > 0 %}
-					<div class="mt-5">
-						<h2>Saisons</h2>
-						<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-							{% for saison in saisons %}
-								<div class="col">
-									<div class="card h-100">
-										{% if saison.lienAffiche %}
-											<img src="{{ saison.lienAffiche }}" class="card-img-top" alt="Saison {{ saison.numero }}">
-										{% else %}
-											<div class="placeholder-img bg-secondary" style="height: 200px;"></div>
-										{% endif %}
-										<div class="card-body">
-											<h5 class="card-title">{{ saison.nom }}</h5>
-											<h6 class="card-subtitle mb-2 text-muted">{{ saison.nombreEpisodes }}
-												épisodes</h6>
-											<p class="card-text">{{ saison.description|slice(0, 150) }}...</p>
-										</div>
-										<div class="card-footer">
-											<small class="text-muted">Diffusé le
-												{{ saison.datePremiereAir|date('d/m/Y') }}</small>
-										</div>
-									</div>
-								</div>
-							{% endfor %}
+						<div class="modal-footer border-0">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+							<button type="submit" class="btn btn-myprimary">Publier</button>
 						</div>
-					</div>
-				{% endif %}
-
-				{# Section des commentaires #}
-				{% if commentaires|length > 0 %}
-					<div class="mt-5">
-						<h2>Commentaires</h2>
-						<div class="row g-4">
-							{% for commentaire in commentaires %}
-								<div class="col-md-6">
-									<div class="card">
-										<div class="card-body">
-											<h5 class="card-title">{{ commentaire.titre }}</h5>
-											<h6 class="card-subtitle mb-2 text-muted">Note:
-												{{ commentaire.note }}/5</h6>
-											<p class="card-text">{{ commentaire.avis }}</p>
-											<footer class="text-muted">
-												Par
-												{{ commentaire.idUtilisateur }}
-											</footer>
-										</div>
-									</div>
-								</div>
-							{% endfor %}
-						</div>
-					</div>
-				{% endif %}
-			</div>
-		{% else %}
-			<div class="container mt-4">
-				<div class="alert alert-warning">
-					Série non trouvée.
+					</form>
 				</div>
 			</div>
-		{% endif %}
-	</main>
+		</div>
+	</div>
+
+	<!-- Modal Veuillez vous connecter -->
+	<div class="modal fade" id="veuillezVousConnecter" tabindex="-1" aria-labelledby="modalAvisLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content bg-mydark text-white">
+				<div class="modal-body text-center">
+					<p class="fs-3">Si vous voulez laisser un avis et participer à la communauté, vous devez d'abord vous connecter 😏</p>
+				</div>
+				<div class="modal-footer border-0 justify-content-center">
+					<a href="index.php?controller=utilisateur&methode=connexion">
+						<button type="button" class="btn btn-myprimary">Connexion</button>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block script %}
+	{{ parent() }}
+	<script type="text/javascript" src="JS/notation.js"></script>
 {% endblock %}
