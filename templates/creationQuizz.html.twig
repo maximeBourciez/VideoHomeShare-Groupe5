@@ -10,36 +10,35 @@
     <br>
 	<h1>Création d'un quizz</h1>
 	<br>
-	<form action="index.php?controller=quizz&methode=creerQuestion" method="post">
+	<form action="index.php?controller=quizz&methode=creerQuestion" method="post" class="card bg-mydark mx-auto my-auto p-4 text-white rounded">
 	<!-- Champ Titre -->
 		<div class="row">
-			<label for="titre"><b>Titre du quizz : </b></label>
-    		<input type="text" name="titre" id="titre" required/>
+			<label for="titre">Titre du quizz</label>
+    		<input type="text" name="titre" id="titre" class="rounded" required/>
 		</div>
+		<br>
 		<br>
 		<!-- Champ Description -->
 		<div class="row">
-			<label for="description"><b>Description : </b></label>
-    		<textarea name="description" id="description" required></textarea>
+			<label for="description">Description</label>
+    		<textarea name="description" id="description" class="rounded" required></textarea>
 		</div>
+		<br>
 		<br>
 		<!-- Champ Difficulté -->
-		<div class="row">
-			<label for="difficulte"><b>Difficulté : </b></label>
-    		<input type="number" name="difficulte" id="difficulte" min="1" max="4" value="1" step="1" style="width: 10%" required></textarea>
+		<div class="form-group row">
+			<label for="difficulte" class="col-sm-2 col-form-label d-flex justify-content-start">Difficulté</label>
+			<input type="number" name="difficulte" id="difficulte" min="1" max="4" value="1" step="1" style="width: 9%;" class="rounded" required></input>
+		<!-- Champ Nombre de questions -->
+			<label for="nbQuestions" class="col-sm-7 col-form-label text-right d-flex justify-content-end">Nombre de questions</label>
+    		<input type="number" name="nbQuestions" id="nbQuestions" min="4" max="8" value="4" step="1" style="width: 9%" class="rounded" required></input>
 		</div>
 		<br>
-		<!-- Champ Nombre de questions -->
-		<div class="row">
-			<label for="nbQuestions"><b>Nombre de questions : </b></label>
-    		<input type="number" name="nbQuestions" id="nbQuestions" min="4" max="8" value="4" step="1" style="width: 10%" required></textarea>
-		</div>
 		<br>
 		<br>
 		<!-- Bouton pour passer à la création des questions -->
 		<button type="submit" class="row btn btn-primary"><b>Suivant</b></button>
 	</form>
-	<br>
 	<br>
 	<br>
 	<br>

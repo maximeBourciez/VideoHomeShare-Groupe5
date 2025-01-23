@@ -191,7 +191,7 @@ class QuizzDAO{
     }
 
     function findByTitreUser(string $titre, string $idUtilisateur): ?Quizz{
-        $sql = "SELECT Q.*, U.pseudo FROM " .DB_PREFIX. "quizz Q JOIN " .DB_PREFIX. "utilisateur U ON Q.idUtilisateur = U.idUtilisateur WHERE titre = :titre AND idUtilisateur = :idUtilisateur";
+        $sql = "SELECT Q.*, U.pseudo FROM " .DB_PREFIX. "quizz Q JOIN " .DB_PREFIX. "utilisateur U ON Q.idUtilisateur = U.idUtilisateur WHERE Q.titre = :titre AND Q.idUtilisateur = :idUtilisateur";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':titre', $titre);
         $stmt->bindValue(':idUtilisateur', $idUtilisateur);
