@@ -29,7 +29,7 @@ class ControllerContenu extends Controller {
      */
     public function afficherContenu(): void {
         $tmdbId = isset($_GET['tmdb_id']) ? intval($_GET['tmdb_id']) : null;
-        
+
         if ($tmdbId) {
             // Récupérer les données du film via le DAO
             $contenu = $this->contenuDAO->getContentFromTMDB($tmdbId);
@@ -38,7 +38,7 @@ class ControllerContenu extends Controller {
                 // Récupérer les personnalités via le DAO
                 $movieData = $this->contenuDAO->getMovieData($tmdbId);
                 $personnalites = $this->contenuDAO->getPersonnalites($movieData);
-                
+
                 // Récupérer les thèmes via le DAO
                 $themes = $this->contenuDAO->getGenres($movieData);
 
@@ -46,18 +46,25 @@ class ControllerContenu extends Controller {
                 $commentaireDAO = new CommentaireDAO($this->getPdo());
                 $notes = $commentaireDAO->getMoyenneEtTotalNotesContenu($tmdbId);
                 $commentaires = $commentaireDAO->getCommentairesContenu($tmdbId);
-                
+
                 // Récupérer les thèmes depuis la BD
                 $themeDAO = new ThemeDAO($this->getPdo());
                 $themesFromDB = [];
-                
+
                 foreach ($themes as $theme) {
                     $themeFromDB = $themeDAO->createIfNotExists($theme);
                     if ($themeFromDB) {
                         $themesFromDB[] = $themeFromDB;
                     }
                 }
-                
+
+                // Récupérer les watchlists pour l'utilisateur connecté
+                $watchlistDAO = new WatchlistDAO($this->getPdo());
+                $watchlists = null;
+                if (isset($_SESSION['utilisateur'])) {
+                    $watchlists = $watchlistDAO->findByUser(unserialize($_SESSION['utilisateur'])->getId());
+                }
+
                 // Afficher le template avec les données
                 echo $this->getTwig()->render('pageDunContenu.html.twig', [
                     'contenu' => $contenu,
@@ -65,10 +72,12 @@ class ControllerContenu extends Controller {
                     'themes' => $themesFromDB,
                     'moyenne' => $notes['moyenne'],
                     'total' => $notes['total'],
-                    'commentaires' => $commentaires
+                    'commentaires' => $commentaires,
+                    'watchlists' => $watchlists
                 ]);
                 return;
             }
         }
     }
+
 } 

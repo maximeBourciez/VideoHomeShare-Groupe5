@@ -174,16 +174,26 @@ class SignalementDAO{
         $stmt->execute();
         return $this->pdo->lastInsertId();
     }
-
+    /**
+     * @brief Trouve tous les signalements associés à un message de tout les messages
+     * 
+     * @return array
+     */
     public function findAllMessageSignaleAssoc() : ?array{
-        $sql = "SELECT s.idMessage , m.valeur ,  COUNT(s.idMessage) AS nbSignalement FROM ".DB_PREFIX."signalement  s join ".DB_PREFIX."message m on s.idMessage = m.idMessage GROUP BY s.idMessage Order By nbSignalement  DESC; ";
+        $sql ="SELECT s.idMessage , m.valeur , GROUP_CONCAT(DISTINCT s.raison SEPARATOR ', ') AS raisons , COUNT(s.idMessage) AS nbSignalement, m.idFil FROM ".DB_PREFIX."signalement s join ".DB_PREFIX."message m on s.idMessage = m.idMessage GROUP BY s.idMessage Order By nbSignalement DESC";
         $pdoStatement = $this->pdo->prepare($sql);
         $pdoStatement->execute();
         $pdoStatement->setFetchMode(PDO::FETCH_ASSOC);
         $signalements = $pdoStatement->fetchAll();
         return $signalements;
     }
-
+    /**
+     * @brief Suprime tous les signalements associés à un message
+     * 
+     * @param int $idMessage Identifiant du message
+     * 
+     * @return bool true si la suppression a été effectuée, false sinon
+     */
     public function supprimerSignalementMessage(int $idMessage): bool{
         $sql = "DELETE FROM ".DB_PREFIX."signalement WHERE idMessage = :idMessage";
         $pdoStatement = $this->pdo->prepare($sql);

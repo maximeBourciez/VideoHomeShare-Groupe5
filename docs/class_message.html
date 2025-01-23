@@ -1,0 +1,961 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.12.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>VideoHomeShare: Référence de la classe Message</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">VideoHomeShare
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Généré par Doxygen 1.12.0 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() { codefold.init(0); });
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','Recherche',true);
+  $(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){initNavTree('class_message.html',''); initResizable(true); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Chargement...</div>
+<div class="SRStatus" id="Searching">Recherche...</div>
+<div class="SRStatus" id="NoMatches">Aucune correspondance</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">Fonctions membres publiques</a> &#124;
+<a href="#pri-attribs">Attributs privés</a>  </div>
+  <div class="headertitle"><div class="title">Référence de la classe Message</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Représente un message dans le forum, qui peut être un message principal ou une réponse à un autre message.  
+ <a href="#details">Plus de détails...</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Fonctions membres publiques</h2></td></tr>
+<tr class="memitem:aeaeb114dbc1de72c8efd1fd2d119158a" id="r_aeaeb114dbc1de72c8efd1fd2d119158a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeaeb114dbc1de72c8efd1fd2d119158a">__construct</a> (?int $idMessage=null, ?string $valeur=null, ?DateTime $dateC=null, ?int $nbLikes=null,?int $nbDislikes=null, ?int $idMessageParent=null, ?<a class="el" href="class_utilisateur.html">Utilisateur</a> $utilisateur=null, ?array $reponse=[], ?int $idFil=null)</td></tr>
+<tr class="memdesc:aeaeb114dbc1de72c8efd1fd2d119158a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructeur de la classe <a class="el" href="class_message.html" title="Représente un message dans le forum, qui peut être un message principal ou une réponse à un autre mes...">Message</a>.  <br /></td></tr>
+<tr class="separator:aeaeb114dbc1de72c8efd1fd2d119158a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa37eea27f26d7a3d55ab761f0261807c" id="r_aa37eea27f26d7a3d55ab761f0261807c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa37eea27f26d7a3d55ab761f0261807c">getIdMessage</a> ()</td></tr>
+<tr class="memdesc:aa37eea27f26d7a3d55ab761f0261807c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Récupère l'identifiant du message.  <br /></td></tr>
+<tr class="separator:aa37eea27f26d7a3d55ab761f0261807c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb0e94eadc30be81041031872ec91b55" id="r_abb0e94eadc30be81041031872ec91b55"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abb0e94eadc30be81041031872ec91b55">setIdMessage</a> (?int $idMessage)</td></tr>
+<tr class="memdesc:abb0e94eadc30be81041031872ec91b55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Définit l'identifiant du message.  <br /></td></tr>
+<tr class="separator:abb0e94eadc30be81041031872ec91b55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad15e981b49c3d498d2d681822de81e91" id="r_ad15e981b49c3d498d2d681822de81e91"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad15e981b49c3d498d2d681822de81e91">getValeur</a> ()</td></tr>
+<tr class="memdesc:ad15e981b49c3d498d2d681822de81e91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Récupère le contenu du message.  <br /></td></tr>
+<tr class="separator:ad15e981b49c3d498d2d681822de81e91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2e0d5367c00a96622fa32614cb538cc" id="r_ae2e0d5367c00a96622fa32614cb538cc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae2e0d5367c00a96622fa32614cb538cc">setValeur</a> (?string $valeur)</td></tr>
+<tr class="memdesc:ae2e0d5367c00a96622fa32614cb538cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Définit le contenu du message.  <br /></td></tr>
+<tr class="separator:ae2e0d5367c00a96622fa32614cb538cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa91c44312ec3a8fdb82db2b52a8c98b8" id="r_aa91c44312ec3a8fdb82db2b52a8c98b8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa91c44312ec3a8fdb82db2b52a8c98b8">getNbLikes</a> ()</td></tr>
+<tr class="memdesc:aa91c44312ec3a8fdb82db2b52a8c98b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Récupère le nombre de likes du message.  <br /></td></tr>
+<tr class="separator:aa91c44312ec3a8fdb82db2b52a8c98b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46b923a38748124fc426904265b4f2ca" id="r_a46b923a38748124fc426904265b4f2ca"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a46b923a38748124fc426904265b4f2ca">setNbLikes</a> (?int $nbLikes)</td></tr>
+<tr class="memdesc:a46b923a38748124fc426904265b4f2ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Définit le nombre de likes du message.  <br /></td></tr>
+<tr class="separator:a46b923a38748124fc426904265b4f2ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6151b4144b9cc4d04e9ed28bfbd13e0a" id="r_a6151b4144b9cc4d04e9ed28bfbd13e0a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6151b4144b9cc4d04e9ed28bfbd13e0a">getNbDislikes</a> ()</td></tr>
+<tr class="memdesc:a6151b4144b9cc4d04e9ed28bfbd13e0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Récupère le nombre de dislikes du message.  <br /></td></tr>
+<tr class="separator:a6151b4144b9cc4d04e9ed28bfbd13e0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad885db4a929887385c3ff723f0cf81e7" id="r_ad885db4a929887385c3ff723f0cf81e7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad885db4a929887385c3ff723f0cf81e7">setNbDislikes</a> (?int $nbDislikes)</td></tr>
+<tr class="memdesc:ad885db4a929887385c3ff723f0cf81e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Définit le nombre de dislikes du message.  <br /></td></tr>
+<tr class="separator:ad885db4a929887385c3ff723f0cf81e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67ad567fcf02cfc628e83bb1f280946e" id="r_a67ad567fcf02cfc628e83bb1f280946e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a67ad567fcf02cfc628e83bb1f280946e">getDateC</a> ()</td></tr>
+<tr class="memdesc:a67ad567fcf02cfc628e83bb1f280946e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Récupère la date de création du message.  <br /></td></tr>
+<tr class="separator:a67ad567fcf02cfc628e83bb1f280946e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf177de5d4ba87ef26d272e717b627b7" id="r_aaf177de5d4ba87ef26d272e717b627b7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaf177de5d4ba87ef26d272e717b627b7">setDateC</a> (?DateTime $dateC)</td></tr>
+<tr class="memdesc:aaf177de5d4ba87ef26d272e717b627b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Définit la date de création du message.  <br /></td></tr>
+<tr class="separator:aaf177de5d4ba87ef26d272e717b627b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ddff131eaa762be7120658d14bf3197" id="r_a6ddff131eaa762be7120658d14bf3197"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6ddff131eaa762be7120658d14bf3197">getIdMessageParent</a> ()</td></tr>
+<tr class="memdesc:a6ddff131eaa762be7120658d14bf3197"><td class="mdescLeft">&#160;</td><td class="mdescRight">Récupère l'identifiant du message parent. Si ce message n'est pas une réponse, retourne null.  <br /></td></tr>
+<tr class="separator:a6ddff131eaa762be7120658d14bf3197"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab47119ba52526d174164bd800fc184c4" id="r_ab47119ba52526d174164bd800fc184c4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab47119ba52526d174164bd800fc184c4">setIdMessageParent</a> (?int $idMessageParent)</td></tr>
+<tr class="memdesc:ab47119ba52526d174164bd800fc184c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Définit l'identifiant du message parent. Si ce message n'est pas une réponse, définit à null.  <br /></td></tr>
+<tr class="separator:ab47119ba52526d174164bd800fc184c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6eba8ba7a4c6c7de4b7c4385eeb6e5b2" id="r_a6eba8ba7a4c6c7de4b7c4385eeb6e5b2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6eba8ba7a4c6c7de4b7c4385eeb6e5b2">getUtilisateur</a> ()</td></tr>
+<tr class="memdesc:a6eba8ba7a4c6c7de4b7c4385eeb6e5b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Récupère l'utilisateur qui a créé ce message.  <br /></td></tr>
+<tr class="separator:a6eba8ba7a4c6c7de4b7c4385eeb6e5b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9763e16e3bea0585cbfaa4e560df561" id="r_ae9763e16e3bea0585cbfaa4e560df561"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae9763e16e3bea0585cbfaa4e560df561">setUtilisateur</a> (<a class="el" href="class_utilisateur.html">Utilisateur</a> $utilisateur)</td></tr>
+<tr class="memdesc:ae9763e16e3bea0585cbfaa4e560df561"><td class="mdescLeft">&#160;</td><td class="mdescRight">Définit l'utilisateur qui a créé ce message.  <br /></td></tr>
+<tr class="separator:ae9763e16e3bea0585cbfaa4e560df561"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2efd873e42e4866170cb5e871c00aa3" id="r_ad2efd873e42e4866170cb5e871c00aa3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad2efd873e42e4866170cb5e871c00aa3">getIdFil</a> ()</td></tr>
+<tr class="memdesc:ad2efd873e42e4866170cb5e871c00aa3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Récupère l'identifiant du fil de discussion auquel appartient le message.  <br /></td></tr>
+<tr class="separator:ad2efd873e42e4866170cb5e871c00aa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e4cb2e958e48660c560121f5d8114ab" id="r_a2e4cb2e958e48660c560121f5d8114ab"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2e4cb2e958e48660c560121f5d8114ab">setIdFil</a> (?int $idFil)</td></tr>
+<tr class="memdesc:a2e4cb2e958e48660c560121f5d8114ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Définir l'identifiant du fil de discussion auquel appartient le message.  <br /></td></tr>
+<tr class="separator:a2e4cb2e958e48660c560121f5d8114ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9cfd7f325d4a2b7c94d98ac67703fb6" id="r_ac9cfd7f325d4a2b7c94d98ac67703fb6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac9cfd7f325d4a2b7c94d98ac67703fb6">getReponses</a> ()</td></tr>
+<tr class="memdesc:ac9cfd7f325d4a2b7c94d98ac67703fb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Récupère la réponse à ce message, si elle existe.  <br /></td></tr>
+<tr class="separator:ac9cfd7f325d4a2b7c94d98ac67703fb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a199a8837eb99fbd63cf20f72bf1d9464" id="r_a199a8837eb99fbd63cf20f72bf1d9464"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a199a8837eb99fbd63cf20f72bf1d9464">setReponses</a> (?array $reponses)</td></tr>
+<tr class="memdesc:a199a8837eb99fbd63cf20f72bf1d9464"><td class="mdescLeft">&#160;</td><td class="mdescRight">Définit la réponse à ce message.  <br /></td></tr>
+<tr class="separator:a199a8837eb99fbd63cf20f72bf1d9464"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a76bc4eb50e656fb61596bc81c533103d" id="r_a76bc4eb50e656fb61596bc81c533103d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a76bc4eb50e656fb61596bc81c533103d">addReponse</a> (<a class="el" href="class_message.html">Message</a> $reponse)</td></tr>
+<tr class="memdesc:a76bc4eb50e656fb61596bc81c533103d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ajoute une réponse à ce message.  <br /></td></tr>
+<tr class="separator:a76bc4eb50e656fb61596bc81c533103d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e9208a5170561cebef037cdce13bcef" id="r_a6e9208a5170561cebef037cdce13bcef"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6e9208a5170561cebef037cdce13bcef">hasReponse</a> (<a class="el" href="class_message.html">Message</a> $reponse)</td></tr>
+<tr class="memdesc:a6e9208a5170561cebef037cdce13bcef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vérifie si la réponse existe dans ce message.  <br /></td></tr>
+<tr class="separator:a6e9208a5170561cebef037cdce13bcef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
+Attributs privés</h2></td></tr>
+<tr class="memitem:ac68d84da7d3a933bffcf923139f520ea" id="r_ac68d84da7d3a933bffcf923139f520ea"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac68d84da7d3a933bffcf923139f520ea">$idMessage</a></td></tr>
+<tr class="memdesc:ac68d84da7d3a933bffcf923139f520ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identifiant unique du message.  <br /></td></tr>
+<tr class="separator:ac68d84da7d3a933bffcf923139f520ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c74d4b050c97c4872288c0d461eb2e4" id="r_a6c74d4b050c97c4872288c0d461eb2e4"><td class="memItemLeft" align="right" valign="top">string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6c74d4b050c97c4872288c0d461eb2e4">$valeur</a></td></tr>
+<tr class="memdesc:a6c74d4b050c97c4872288c0d461eb2e4"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_contenu.html" title="Classe représentant un contenu multimédia.">Contenu</a> du message.  <br /></td></tr>
+<tr class="separator:a6c74d4b050c97c4872288c0d461eb2e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a749f38d2d984a10bfdc7a0185b2cf664" id="r_a749f38d2d984a10bfdc7a0185b2cf664"><td class="memItemLeft" align="right" valign="top">DateTime&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a749f38d2d984a10bfdc7a0185b2cf664">$dateC</a></td></tr>
+<tr class="memdesc:a749f38d2d984a10bfdc7a0185b2cf664"><td class="mdescLeft">&#160;</td><td class="mdescRight">Date de création du message.  <br /></td></tr>
+<tr class="separator:a749f38d2d984a10bfdc7a0185b2cf664"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d8b23a16a5268c7576384d580194cf6" id="r_a1d8b23a16a5268c7576384d580194cf6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1d8b23a16a5268c7576384d580194cf6">$nbLikes</a></td></tr>
+<tr class="memdesc:a1d8b23a16a5268c7576384d580194cf6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Nombre de likes du message.  <br /></td></tr>
+<tr class="separator:a1d8b23a16a5268c7576384d580194cf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a405681d1f58e9cbdadaf224fc78bf314" id="r_a405681d1f58e9cbdadaf224fc78bf314"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a405681d1f58e9cbdadaf224fc78bf314">$nbDislikes</a></td></tr>
+<tr class="memdesc:a405681d1f58e9cbdadaf224fc78bf314"><td class="mdescLeft">&#160;</td><td class="mdescRight">Nombre de dislikes du message.  <br /></td></tr>
+<tr class="separator:a405681d1f58e9cbdadaf224fc78bf314"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab885d0477ab09618c173ca08d1068a20" id="r_ab885d0477ab09618c173ca08d1068a20"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab885d0477ab09618c173ca08d1068a20">$idMessageParent</a></td></tr>
+<tr class="memdesc:ab885d0477ab09618c173ca08d1068a20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identifiant du message parent. Null si ce message n'est pas une réponse.  <br /></td></tr>
+<tr class="separator:ab885d0477ab09618c173ca08d1068a20"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a986c8d6469dde8ae1c0114ecd39981bf" id="r_a986c8d6469dde8ae1c0114ecd39981bf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_utilisateur.html">Utilisateur</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a986c8d6469dde8ae1c0114ecd39981bf">$utilisateur</a></td></tr>
+<tr class="memdesc:a986c8d6469dde8ae1c0114ecd39981bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">L'utilisateur qui a écrit le message.  <br /></td></tr>
+<tr class="separator:a986c8d6469dde8ae1c0114ecd39981bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8bcfdd7ca8f989160fc6c98a4542ea51" id="r_a8bcfdd7ca8f989160fc6c98a4542ea51"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8bcfdd7ca8f989160fc6c98a4542ea51">$idFil</a></td></tr>
+<tr class="memdesc:a8bcfdd7ca8f989160fc6c98a4542ea51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Identifiant du fil de discussion auquel appartient le message.  <br /></td></tr>
+<tr class="separator:a8bcfdd7ca8f989160fc6c98a4542ea51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d3478954bc96cc96c543855ce11bbbc" id="r_a3d3478954bc96cc96c543855ce11bbbc"><td class="memItemLeft" align="right" valign="top">array&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3d3478954bc96cc96c543855ce11bbbc">$reponses</a> = []</td></tr>
+<tr class="separator:a3d3478954bc96cc96c543855ce11bbbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Description détaillée</h2>
+<div class="textblock"><p>Représente un message dans le forum, qui peut être un message principal ou une réponse à un autre message. </p>
+<p>Cette classe permet de manipuler les informations relatives à un message, y compris les données associées telles que le texte du message, les likes/dislikes, la date de création, l'utilisateur qui a créé le message, ainsi que les réponses éventuelles. </p>
+</div><h2 class="groupheader">Documentation des constructeurs et destructeur</h2>
+<a id="aeaeb114dbc1de72c8efd1fd2d119158a" name="aeaeb114dbc1de72c8efd1fd2d119158a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeaeb114dbc1de72c8efd1fd2d119158a">&#9670;&#160;</a></span>__construct()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">__construct </td>
+          <td>(</td>
+          <td class="paramtype">?int</td>          <td class="paramname"><span class="paramname"><em>$idMessage</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">?string</td>          <td class="paramname"><span class="paramname"><em>$valeur</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">?DateTime</td>          <td class="paramname"><span class="paramname"><em>$dateC</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">?int</td>          <td class="paramname"><span class="paramname"><em>$nbLikes</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">?int</td>          <td class="paramname"><span class="paramname"><em>$nbDislikes</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">?int</td>          <td class="paramname"><span class="paramname"><em>$idMessageParent</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">?<a class="el" href="class_utilisateur.html">Utilisateur</a></td>          <td class="paramname"><span class="paramname"><em>$utilisateur</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">?array</td>          <td class="paramname"><span class="paramname"><em>$reponse</em></span><span class="paramdefsep"> = </span><span class="paramdefval">[]</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">?int</td>          <td class="paramname"><span class="paramname"><em>$idFil</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Constructeur de la classe <a class="el" href="class_message.html" title="Représente un message dans le forum, qui peut être un message principal ou une réponse à un autre mes...">Message</a>. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$idMessage</td><td>Identifiant du message. </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$valeur</td><td><a class="el" href="class_contenu.html" title="Classe représentant un contenu multimédia.">Contenu</a> du message. </td></tr>
+    <tr><td class="paramtype">DateTime</td><td class="paramname">$dateC</td><td>Date de création du message. </td></tr>
+    <tr><td class="paramtype">int&#160;|&#160;null</td><td class="paramname">$idMessageParent</td><td>Identifiant du message parent. Null si ce message n'est pas une réponse. </td></tr>
+    <tr><td class="paramtype"><a class="el" href="class_utilisateur.html">Utilisateur</a></td><td class="paramname">$utilisateur</td><td>L'utilisateur qui a écrit le message. </td></tr>
+    <tr><td class="paramtype"><a class="el" href="class_message.html" title="Représente un message dans le forum, qui peut être un message principal ou une réponse à un autre mes...">Message</a>&#160;|&#160;null</td><td class="paramname">$reponse</td><td>Une réponse à ce message, si elle existe. Null si ce n'est pas une réponse. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Documentation des fonctions membres</h2>
+<a id="a76bc4eb50e656fb61596bc81c533103d" name="a76bc4eb50e656fb61596bc81c533103d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76bc4eb50e656fb61596bc81c533103d">&#9670;&#160;</a></span>addReponse()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">addReponse </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_message.html">Message</a></td>          <td class="paramname"><span class="paramname"><em>$reponse</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Ajoute une réponse à ce message. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype"><a class="el" href="class_message.html" title="Représente un message dans le forum, qui peut être un message principal ou une réponse à un autre mes...">Message</a></td><td class="paramname">$reponse</td><td>La réponse à ajouter. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a67ad567fcf02cfc628e83bb1f280946e" name="a67ad567fcf02cfc628e83bb1f280946e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67ad567fcf02cfc628e83bb1f280946e">&#9670;&#160;</a></span>getDateC()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">getDateC </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Récupère la date de création du message. </p>
+<dl class="section return"><dt>Renvoie</dt><dd>DateTime La date de création du message. </dd></dl>
+
+</div>
+</div>
+<a id="ad2efd873e42e4866170cb5e871c00aa3" name="ad2efd873e42e4866170cb5e871c00aa3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2efd873e42e4866170cb5e871c00aa3">&#9670;&#160;</a></span>getIdFil()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">getIdFil </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Récupère l'identifiant du fil de discussion auquel appartient le message. </p>
+<dl class="section return"><dt>Renvoie</dt><dd>int|null L'identifiant du fil de discussion auquel appartient le message. </dd></dl>
+
+</div>
+</div>
+<a id="aa37eea27f26d7a3d55ab761f0261807c" name="aa37eea27f26d7a3d55ab761f0261807c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa37eea27f26d7a3d55ab761f0261807c">&#9670;&#160;</a></span>getIdMessage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">getIdMessage </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Récupère l'identifiant du message. </p>
+<dl class="section return"><dt>Renvoie</dt><dd>int L'identifiant du message. </dd></dl>
+
+</div>
+</div>
+<a id="a6ddff131eaa762be7120658d14bf3197" name="a6ddff131eaa762be7120658d14bf3197"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ddff131eaa762be7120658d14bf3197">&#9670;&#160;</a></span>getIdMessageParent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">getIdMessageParent </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Récupère l'identifiant du message parent. Si ce message n'est pas une réponse, retourne null. </p>
+<dl class="section return"><dt>Renvoie</dt><dd>int|null L'identifiant du message parent ou null si ce n'est pas une réponse. </dd></dl>
+
+</div>
+</div>
+<a id="a6151b4144b9cc4d04e9ed28bfbd13e0a" name="a6151b4144b9cc4d04e9ed28bfbd13e0a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6151b4144b9cc4d04e9ed28bfbd13e0a">&#9670;&#160;</a></span>getNbDislikes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">getNbDislikes </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Récupère le nombre de dislikes du message. </p>
+<dl class="section return"><dt>Renvoie</dt><dd>int|null Le nombre de dislikes du message. </dd></dl>
+
+</div>
+</div>
+<a id="aa91c44312ec3a8fdb82db2b52a8c98b8" name="aa91c44312ec3a8fdb82db2b52a8c98b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa91c44312ec3a8fdb82db2b52a8c98b8">&#9670;&#160;</a></span>getNbLikes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">getNbLikes </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Récupère le nombre de likes du message. </p>
+<dl class="section return"><dt>Renvoie</dt><dd>int|null Le nombre de likes du message. </dd></dl>
+
+</div>
+</div>
+<a id="ac9cfd7f325d4a2b7c94d98ac67703fb6" name="ac9cfd7f325d4a2b7c94d98ac67703fb6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac9cfd7f325d4a2b7c94d98ac67703fb6">&#9670;&#160;</a></span>getReponses()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">getReponses </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Récupère la réponse à ce message, si elle existe. </p>
+<dl class="section return"><dt>Renvoie</dt><dd>array&lt;Message&gt;|null La réponse à ce message ou null si ce n'est pas une réponse. </dd></dl>
+
+</div>
+</div>
+<a id="a6eba8ba7a4c6c7de4b7c4385eeb6e5b2" name="a6eba8ba7a4c6c7de4b7c4385eeb6e5b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6eba8ba7a4c6c7de4b7c4385eeb6e5b2">&#9670;&#160;</a></span>getUtilisateur()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">getUtilisateur </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Récupère l'utilisateur qui a créé ce message. </p>
+<dl class="section return"><dt>Renvoie</dt><dd><a class="el" href="class_utilisateur.html">Utilisateur</a> L'utilisateur qui a créé le message. </dd></dl>
+
+</div>
+</div>
+<a id="ad15e981b49c3d498d2d681822de81e91" name="ad15e981b49c3d498d2d681822de81e91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad15e981b49c3d498d2d681822de81e91">&#9670;&#160;</a></span>getValeur()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">getValeur </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Récupère le contenu du message. </p>
+<dl class="section return"><dt>Renvoie</dt><dd>string Le contenu du message. </dd></dl>
+
+</div>
+</div>
+<a id="a6e9208a5170561cebef037cdce13bcef" name="a6e9208a5170561cebef037cdce13bcef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e9208a5170561cebef037cdce13bcef">&#9670;&#160;</a></span>hasReponse()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">hasReponse </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_message.html">Message</a></td>          <td class="paramname"><span class="paramname"><em>$reponse</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vérifie si la réponse existe dans ce message. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype"><a class="el" href="class_message.html" title="Représente un message dans le forum, qui peut être un message principal ou une réponse à un autre mes...">Message</a></td><td class="paramname">$reponse</td><td>La réponse à vérifier. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aaf177de5d4ba87ef26d272e717b627b7" name="aaf177de5d4ba87ef26d272e717b627b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf177de5d4ba87ef26d272e717b627b7">&#9670;&#160;</a></span>setDateC()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">setDateC </td>
+          <td>(</td>
+          <td class="paramtype">?DateTime</td>          <td class="paramname"><span class="paramname"><em>$dateC</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Définit la date de création du message. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">DateTime</td><td class="paramname">$dateC</td><td>La date de création du message. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a2e4cb2e958e48660c560121f5d8114ab" name="a2e4cb2e958e48660c560121f5d8114ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e4cb2e958e48660c560121f5d8114ab">&#9670;&#160;</a></span>setIdFil()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">setIdFil </td>
+          <td>(</td>
+          <td class="paramtype">?int</td>          <td class="paramname"><span class="paramname"><em>$idFil</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Définir l'identifiant du fil de discussion auquel appartient le message. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int&#160;|&#160;null</td><td class="paramname">$idFil</td><td>L'identifiant du fil de discussion auquel appartient le message. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="abb0e94eadc30be81041031872ec91b55" name="abb0e94eadc30be81041031872ec91b55"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb0e94eadc30be81041031872ec91b55">&#9670;&#160;</a></span>setIdMessage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">setIdMessage </td>
+          <td>(</td>
+          <td class="paramtype">?int</td>          <td class="paramname"><span class="paramname"><em>$idMessage</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Définit l'identifiant du message. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$idMessage</td><td>L'identifiant du message. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ab47119ba52526d174164bd800fc184c4" name="ab47119ba52526d174164bd800fc184c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab47119ba52526d174164bd800fc184c4">&#9670;&#160;</a></span>setIdMessageParent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">setIdMessageParent </td>
+          <td>(</td>
+          <td class="paramtype">?int</td>          <td class="paramname"><span class="paramname"><em>$idMessageParent</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Définit l'identifiant du message parent. Si ce message n'est pas une réponse, définit à null. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int&#160;|&#160;null</td><td class="paramname">$idMessageParent</td><td>L'identifiant du message parent ou null si ce n'est pas une réponse. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ad885db4a929887385c3ff723f0cf81e7" name="ad885db4a929887385c3ff723f0cf81e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad885db4a929887385c3ff723f0cf81e7">&#9670;&#160;</a></span>setNbDislikes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">setNbDislikes </td>
+          <td>(</td>
+          <td class="paramtype">?int</td>          <td class="paramname"><span class="paramname"><em>$nbDislikes</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Définit le nombre de dislikes du message. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int&#160;|&#160;null</td><td class="paramname">$nbDislikes</td><td>Le nombre de dislikes du message. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a46b923a38748124fc426904265b4f2ca" name="a46b923a38748124fc426904265b4f2ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46b923a38748124fc426904265b4f2ca">&#9670;&#160;</a></span>setNbLikes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">setNbLikes </td>
+          <td>(</td>
+          <td class="paramtype">?int</td>          <td class="paramname"><span class="paramname"><em>$nbLikes</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Définit le nombre de likes du message. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int&#160;|&#160;null</td><td class="paramname">$nbLikes</td><td>Le nombre de likes du message. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a199a8837eb99fbd63cf20f72bf1d9464" name="a199a8837eb99fbd63cf20f72bf1d9464"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a199a8837eb99fbd63cf20f72bf1d9464">&#9670;&#160;</a></span>setReponses()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">setReponses </td>
+          <td>(</td>
+          <td class="paramtype">?array</td>          <td class="paramname"><span class="paramname"><em>$reponses</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Définit la réponse à ce message. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">array&lt;Message&gt;|null</td><td>$reponse La réponse à ce message ou null si ce n'est pas une réponse. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ae9763e16e3bea0585cbfaa4e560df561" name="ae9763e16e3bea0585cbfaa4e560df561"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9763e16e3bea0585cbfaa4e560df561">&#9670;&#160;</a></span>setUtilisateur()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">setUtilisateur </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_utilisateur.html">Utilisateur</a></td>          <td class="paramname"><span class="paramname"><em>$utilisateur</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Définit l'utilisateur qui a créé ce message. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype"><a class="el" href="class_utilisateur.html">Utilisateur</a></td><td class="paramname">$utilisateur</td><td>L'utilisateur qui a créé le message. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ae2e0d5367c00a96622fa32614cb538cc" name="ae2e0d5367c00a96622fa32614cb538cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2e0d5367c00a96622fa32614cb538cc">&#9670;&#160;</a></span>setValeur()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">setValeur </td>
+          <td>(</td>
+          <td class="paramtype">?string</td>          <td class="paramname"><span class="paramname"><em>$valeur</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Définit le contenu du message. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$valeur</td><td>Le contenu du message. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Documentation des champs</h2>
+<a id="a749f38d2d984a10bfdc7a0185b2cf664" name="a749f38d2d984a10bfdc7a0185b2cf664"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a749f38d2d984a10bfdc7a0185b2cf664">&#9670;&#160;</a></span>$dateC</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">DateTime $dateC</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Date de création du message. </p>
+
+</div>
+</div>
+<a id="a8bcfdd7ca8f989160fc6c98a4542ea51" name="a8bcfdd7ca8f989160fc6c98a4542ea51"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8bcfdd7ca8f989160fc6c98a4542ea51">&#9670;&#160;</a></span>$idFil</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int $idFil</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Identifiant du fil de discussion auquel appartient le message. </p>
+
+</div>
+</div>
+<a id="ac68d84da7d3a933bffcf923139f520ea" name="ac68d84da7d3a933bffcf923139f520ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac68d84da7d3a933bffcf923139f520ea">&#9670;&#160;</a></span>$idMessage</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int $idMessage</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Identifiant unique du message. </p>
+
+</div>
+</div>
+<a id="ab885d0477ab09618c173ca08d1068a20" name="ab885d0477ab09618c173ca08d1068a20"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab885d0477ab09618c173ca08d1068a20">&#9670;&#160;</a></span>$idMessageParent</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int $idMessageParent</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Identifiant du message parent. Null si ce message n'est pas une réponse. </p>
+
+</div>
+</div>
+<a id="a405681d1f58e9cbdadaf224fc78bf314" name="a405681d1f58e9cbdadaf224fc78bf314"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a405681d1f58e9cbdadaf224fc78bf314">&#9670;&#160;</a></span>$nbDislikes</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int $nbDislikes</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Nombre de dislikes du message. </p>
+
+</div>
+</div>
+<a id="a1d8b23a16a5268c7576384d580194cf6" name="a1d8b23a16a5268c7576384d580194cf6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d8b23a16a5268c7576384d580194cf6">&#9670;&#160;</a></span>$nbLikes</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int $nbLikes</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Nombre de likes du message. </p>
+
+</div>
+</div>
+<a id="a3d3478954bc96cc96c543855ce11bbbc" name="a3d3478954bc96cc96c543855ce11bbbc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d3478954bc96cc96c543855ce11bbbc">&#9670;&#160;</a></span>$reponses</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">array $reponses = []</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a986c8d6469dde8ae1c0114ecd39981bf" name="a986c8d6469dde8ae1c0114ecd39981bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a986c8d6469dde8ae1c0114ecd39981bf">&#9670;&#160;</a></span>$utilisateur</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_utilisateur.html">Utilisateur</a> $utilisateur</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>L'utilisateur qui a écrit le message. </p>
+
+</div>
+</div>
+<a id="a6c74d4b050c97c4872288c0d461eb2e4" name="a6c74d4b050c97c4872288c0d461eb2e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c74d4b050c97c4872288c0d461eb2e4">&#9670;&#160;</a></span>$valeur</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">string $valeur</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p><a class="el" href="class_contenu.html" title="Classe représentant un contenu multimédia.">Contenu</a> du message. </p>
+
+</div>
+</div>
+<hr/>La documentation de cette classe a été générée à partir du fichier suivant :<ul>
+<li>modeles/<a class="el" href="message_8class_8php.html">message.class.php</a></li>
+</ul>
+</div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="class_message.html">Message</a></li>
+    <li class="footer">Généré par <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+  </ul>
+</div>
+</body>
+</html>

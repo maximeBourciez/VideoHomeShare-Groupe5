@@ -6,9 +6,18 @@
     "tarteaucitronjs": "^1.19.0"
   },
   "devDependencies": {
+    "commitizen": "^4.3.1",
+    "cz-conventional-changelog": "^3.3.0",
     "sass": "^1.83.0"
   },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
   "scripts": {
-    "build": "sass SCSS/custom.scss CSS/style.css"
+    "build": "sass SCSS/custom.scss CSS/style.css",
+    "cz": "cz"
+
   }
 }

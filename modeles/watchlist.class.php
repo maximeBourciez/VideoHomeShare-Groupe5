@@ -1,54 +1,158 @@
 <?php
+/**
+ * @brief Classe représentant une watchlist
+ * @details Gère les données d'une watchlist et ses contenus associés
+ * @author VotreNom
+ * @version 1.0
+ */
+class Watchlist {
+    private int $id;
+    private string $nom;
+    private string $description;
+    private bool $estPublique;
+    private DateTime $date;
+    private string $idUtilisateur;
+    private array $contenus = [];
 
-class Watchlist{
-    // Attributs 
-    private ?int $id; //Identifiant de la watchlist
-    private ?string $nom; //Nom de la watchlist
-    private ?string $desc; //Description de la watchlist
-    private ?bool $estPublique; //Indicateur de publicité d'une WL
-    private ?string $date; //Date de création de la WL
-
-    // Constructeur
-    public function __construct(?int $id = null, ?string $nom = null, ?string $desc = null, ?bool $estPublique = null, ?string $date = null){
+    /**
+     * @brief Constructeur de la classe Watchlist
+     * @param int $id Identifiant unique de la watchlist
+     * @param string $nom Nom de la watchlist
+     * @param string $description Description de la watchlist
+     * @param bool $estPublique Statut public/privé de la watchlist
+     * @param DateTime $date Date de création
+     * @param string $idUtilisateur Identifiant de l'utilisateur propriétaire
+     * @param array $contenus Liste des contenus de la watchlist
+     */
+    public function __construct(
+        int $id,
+        string $nom,
+        string $description,
+        bool $estPublique,
+        DateTime $date,
+        string $idUtilisateur,
+        array $contenus = []
+    ) {
         $this->id = $id;
-        $this->nom = $nom;
-        $this->desc = $desc;
+        $this->nom = htmlspecialchars($nom);
+        $this->description = htmlspecialchars($description);
         $this->estPublique = $estPublique;
         $this->date = $date;
+        $this->idUtilisateur = htmlspecialchars($idUtilisateur);
+        $this->contenus = $contenus;
     }
-    
-    // Encapsulation
-    // Getters
-    public function getId(): ?int{
+
+    /**
+     * @brief Récupère l'ID de la watchlist
+     * @return int L'identifiant de la watchlist
+     */
+    public function getId(): int {
         return $this->id;
     }
-    public function getNom(): ?string{
+
+    /**
+     * @brief Récupère le nom de la watchlist
+     * @return string Le nom de la watchlist
+     */
+    public function getNom(): string {
         return $this->nom;
     }
-    public function getDesc(): ?string{
-        return $this->desc;
+
+    /**
+     * @brief Récupère la description de la watchlist
+     * @return string La description de la watchlist
+     */
+    public function getDescription(): string {
+        return $this->description;
     }
-    public function getPublicite(): ?bool{
+
+    /**
+     * @brief Vérifie si la watchlist est publique
+     * @return bool True si la watchlist est publique, false sinon
+     */
+    public function isEstPublique(): bool {
         return $this->estPublique;
     }
-    public function getDate(): ?string{
+
+    /**
+     * @brief Récupère la date de création
+     * @return DateTime La date de création
+     */
+    public function getDate(): DateTime {
         return $this->date;
     }
 
-    // Setters
-    public function setId(?int $id) : void{
+    /**
+     * @brief Récupère l'ID de l'utilisateur
+     * @return string L'identifiant de l'utilisateur
+     */
+    public function getIdUtilisateur(): string {
+        return $this->idUtilisateur;
+    }
+
+    /**
+     * @brief Récupère les contenus de la watchlist
+     * @return array La liste des contenus
+     */
+    public function getContenus(): array {
+        return $this->contenus;
+    }
+
+    // Setters avec sécurisation des entrées
+
+    /**
+     * @brief Définit l'ID de la watchlist
+     * @param int $id Le nouvel identifiant
+     */
+    public function setId(int $id): void {
         $this->id = $id;
     }
-    public function setNom(?string $nom) : void{
-        $this->nom = $nom;
+
+    /**
+     * @brief Définit le nom de la watchlist
+     * @param string $nom Le nouveau nom
+     */
+    public function setNom(string $nom): void {
+        $this->nom = htmlspecialchars($nom);
     }
-    public function setDesc(?string $desc) : void{
-        $this->desc = $desc;
+
+    /**
+     * @brief Définit la description de la watchlist
+     * @param string $description La nouvelle description
+     */
+    public function setDescription(string $description): void {
+        $this->description = htmlspecialchars($description);
     }
-    public function setPublicite(?bool $estPublique) : void{
+
+    /**
+     * @brief Définit si la watchlist est publique
+     * @param bool $estPublique Le nouveau statut
+     */
+    public function setEstPublique(bool $estPublique): void {
         $this->estPublique = $estPublique;
     }
-    public function setDate(?string $date) : void{
+
+    /**
+     * @brief Définit la date de création
+     * @param DateTime $date La nouvelle date
+     */
+    public function setDate(DateTime $date): void {
         $this->date = $date;
+    }
+
+    /**
+     * @brief Définit l'ID de l'utilisateur
+     * @param string $idUtilisateur Le nouvel identifiant utilisateur
+     */
+    public function setIdUtilisateur(string $idUtilisateur): void {
+        $this->idUtilisateur = htmlspecialchars($idUtilisateur);
+    }
+
+    /**
+     * @brief Définit les contenus de la watchlist
+     * @param array $contenus La nouvelle liste de contenus
+     */
+    public function setContenus(array $contenus): void {
+        $this->contenus = $contenus;
     }
 }

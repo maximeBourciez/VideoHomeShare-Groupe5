@@ -9,21 +9,23 @@
  * @version 1.0
  * 
  * @date Création : 16/12/2024 - Mise à jour : 22/12/2024
+ * 
+ * @author Sylvain Trouilh <strouilh@iutbayonne.univ-pau.fr>
  */
 
 class Utilitaires
 {    
     /**
-     * @bref pemet de verifier si la valeur est compris entre deux valeurs
+     * @brief pemet de verifier si la valeur est compris entre deux valeurs
      * @param string $val la valeur que l'on veut vérifier
-     * @param int $valmax la valeur maximal que l'on autorise
-     * @param int $valmin la valeur minimal que l'on autorise
-     * @param string $contenu le contenu sur lequel on veut renvoyer un message d'erreur
+     * @param string $valmax la valeur maximal que l'on autorise
+     * @param string $valmin la valeur minimal que l'on autorise
+     * @param string $contenu c'est le nom du contenu sur lequel on veut renvoyer un message d'erreur
      * @param string $messageErreur le message d'erreur que l'on veut renvoyer
-     * @return bool
+     * @return bool true si la valeur est compris entre les deux valeurs false sinon
      * 
      */
-    public static function comprisEntre(string $val, ?int $valmax, int $valmin, string $contenu , string &$messageErreur): bool
+    public static function comprisEntre(string $val, ?string $valmax, string $valmin, string $contenu , string & $messageErreur): bool
     {
         $valretour = true;
         // si la valeur est plus petite que la valeur minimal
@@ -45,12 +47,12 @@ class Utilitaires
     }
 
     /**
-     * @bref permet de verifier si les deux valeurs sont identiques
+     * @brief permet de verifier si les deux valeurs sont identiques
      * @param string $val1 la première valeur
      * @param string $val2 la deuxième valeur
-     * @param string $contenu le nom du contenu sur lequel on veut renvoyer un message d'erreur
+     * @param string $contenu c'est nom du contenu sur lequel on veut renvoyer un message d'erreur
      * @param string $messageErreur le message d'erreur que l'on veut renvoyer
-     * @return bool
+     * @return bool true si les deux valeurs sont identiques false sinon
      * 
      */
     public static function egale(string $val1, string $val2, string $contenu , string &$messageErreur): bool
@@ -66,11 +68,11 @@ class Utilitaires
     }
 
     /**
-     * @bref permet de verifier si le mail est correct  
-     * @param string $mail le mail que l'on veut vérifier
+     * @brief permet de verifier si le mail est correct  
+     * @param string $mail l'adresse mail que l'on veut vérifier
      * @param string $messageErreur le message d'erreur que l'on veut renvoyer
      * @param UtilisateurDAO $managerutilisateur le manager de l'utilisateur
-     * @return bool
+     * @return bool true si le mail est correct false sinon
      * 
      */
     public static function mailCorrectExistePas(string $mail, string &$messageErreur ,UtilisateurDAO $managerutilisateur): bool
@@ -87,11 +89,11 @@ class Utilitaires
     }
 
     /**
-     * @bref permet de verifier si l'utilisateur est assez vieux
+     * @brief permet de verifier si l'utilisateur est assez vieux
      * @param string $date la date de naissance de l'utilisateur
      * @param int $age l'age minimal de l'utilisateur
      * @param string $messageErreur le message d'erreur que l'on veut renvoyer
-     * @return bool
+     * @return bool true si l'utilisateur est assez vieux false sinon
      * 
      */
     public static function ageCorrect(string $date, int $age, string &$messageErreur ): bool
@@ -100,18 +102,18 @@ class Utilitaires
         // si l'utilisateur est trop jeune
         if (strtotime($date) >= strtotime(date("Y-m-d") . " -" . ($age * 12) . " month")) {
            
-            $messageErreur = "Vous êtes trop jeune pour vous inscrire";
+            $messageErreur = "Vous êtes moins de $age. Vous êtes trop jeune pour vous inscrire.";
             $valretour = false;
         }
         return $valretour;
     }
     /**
-     * @bref génére un token 
-     * @param string $userId le id de l'utilisateur que l'on veut mettre dans le token
-     * @param int $temp la durée de vie du token en heure
-     * @return string  le token
+     * @brief génére un token 
+     * @param string $IdUtilisateur le id de l'utilisateur que l'on veut mettre dans le token
+     * @param int $temp la durée de vie du token en heure du token
+     * @return string  la chaine de caractère qui est le token
      */
-    public static function  generateToken(?string $userId, ?int $temp = 1)
+    public static function  generateToken(?string $IdUtilisateur, ?int $temp = 1)
     {
         // clé secrète
         $secretKey = SECRET_KEY;
@@ -121,7 +123,7 @@ class Utilitaires
         $payload = json_encode([
             'iat' => time(),
             'exp' => time() + 3600 * $temp,
-            'id' => $userId,
+            'id' => $IdUtilisateur,
         ]);
         // encodage en base64url
         $base64UrlHeader = rtrim(strtr(base64_encode($header), '+/', '-_'), '=');
@@ -134,9 +136,9 @@ class Utilitaires
     }
 
     /**
-     * @bref permet de renvoyer les informations du token id utilisateur et date d'expiration
+     * @brief permet de renvoyer les informations du token id utilisateur et date d'expiration
      * @param string $token le token que l'on veut connaitre les informations
-     * @return array
+     * @return array tableau associatif contenant les informations du token
      */
     public static function verifyToken(?string $token): ?array
     {
@@ -163,16 +165,16 @@ class Utilitaires
         return $data;
     }
     /**
-     * @bref permet de verifier si l'utilisateur existe et ranvoie un message d'erreur si il n'existe pas sur la page donnée
-     * @param Utilisateur $useur l'utilisateur que l'on veut vérifier si il existe
+     * @brief permet de verifier si l'utilisateur existe et ranvoie un message d'erreur si il n'existe pas sur la page donnée
+     * @param Utilisateur $utilisateur l'utilisateur que l'on veut vérifier si il existe
      * @param string $page la page sur laquelle on veut renvoyer un message d'erreur
      * @return bool
      */
-    public static function utilisateurExiste(?Utilisateur $useur, string &$messageErreur): bool
+    public static function utilisateurExiste(?Utilisateur $utilisateur, string &$messageErreur): bool
     {
         $valretour = true;
         // si l'utilisateur n'existe pas
-        if ($useur == null) {
+        if ($utilisateur == null) {
             $valretour = false;
             
             $messageErreur = " Ce compte n'existe pas veuillez vous inscrire";
@@ -180,12 +182,13 @@ class Utilitaires
         return $valretour;
     }
     /**
-     * @bref permet de verifier si le mot de passe est correct et renvoie un message d'erreur si il ne l'est pas
+     * @brief permet de verifier si le mot de passe est correct et renvoie un message d'erreur si il ne l'est pas
      * @param string $mdp le mot de passe que l'on veut vérifier
      * @param string $mdpBDD le mot de passe de la base de données (correct)
-     * @return bool
+     * @param Utilisateur $utilisateur l'utilisateur sur lequel on veut renvoyer un message d'erreur
+     * @return bool true si le mot de passe est correct false sinon
      */
-    public static function motDePasseCorrect(string $mdp, string $mdpBDD, $utilisateur , string &$messageErreur): bool
+    public static function motDePasseCorrect(string $mdp, string $mdpBDD, Utilisateur $utilisateur , string &$messageErreur): bool
     {
         $valretour = true;
         // si le mot de passe est incorrect
@@ -207,10 +210,10 @@ class Utilitaires
         return $valretour;
     }
     /**
-     * @bref permet de verifier si le mot de passe est robuste et renvoie un message d'erreur si il ne l'est pas
+     * @brief permet de verifier si le mot de passe est robuste et renvoie un message d'erreur si il ne l'est pas
      * @param string $mdp le mot de passe que l'on veut vérifier
-     * @param string $page la page sur laquelle on veut renvoyer un message d'erreur
-     * @return bool
+     * @param string $messageErreur le message d'erreur que l'on veut renvoyer
+     * @return bool 
      */
     public static function estRobuste(string $mdp, string &$messageErreur): bool
     {
@@ -226,19 +229,19 @@ class Utilitaires
         if (!preg_match('/[A-Z]/', $mdp)) {
             $valretour = false;
 
-            $messageErreur = ($messageErreur == "Le mot de passe doit contenir") ? $messageErreur + " au moins une majuscule" : $messageErreur + ", au moins une majuscule";
+            $messageErreur = ($messageErreur == "Le mot de passe doit contenir") ? $messageErreur. " au moins une majuscule" : $messageErreur. ", au moins une majuscule";
         }
         // si le mot de passe ne contient pas un chiffre
         if (!preg_match('/[\d]/', $mdp)) {
             $valretour = false;
 
-            $messageErreur = ($messageErreur == "Le mot de passe doit contenir") ? $messageErreur + " au moins un chiffre" : $messageErreur + ", au moins un chiffre";
+            $messageErreur = ($messageErreur == "Le mot de passe doit contenir") ? $messageErreur . " au moins un chiffre" : $messageErreur. ", au moins un chiffre";
         }
         // si le mot de passe ne contient pas un caractère spécial
         if (!preg_match('/[@$!%*?&]/', $mdp)) {
             $valretour = false;
 
-            $messageErreur = ($messageErreur == "Le mot de passe doit contenir") ? $messageErreur + " au moins un caractère spécial" : $messageErreur + " et au moins un caractère spécial";
+            $messageErreur = ($messageErreur == "Le mot de passe doit contenir") ? $messageErreur . " au moins un caractère spécial" : $messageErreur . " et au moins un caractère spécial";
         }
         if ($valretour == true) {
             
@@ -247,11 +250,10 @@ class Utilitaires
         return $valretour;
     }
     /**
-     * @bref permet de verifier si la valeur est non null et renvoie un message d'erreur si elle l'est
+     * @brief permet de verifier si la valeur est non null et renvoie un message d'erreur si elle l'est
      * @param mixed $val
      * @param string $messageErreur le message d'erreur que l'on veut renvoyer
-     * @param string $page la page sur laquelle on veut renvoyer un message d'erreur
-     * @return bool
+     * @return bool true si la valeur est non null false sinon
      */
     public static function nonNull($val, string &$messageErreur): bool
     {
@@ -266,9 +268,11 @@ class Utilitaires
     }
 
     /**
-     * @bref permet de  verifier l'identifiant de l'utilisateur  n'existe pas déjà
+     * @brief permet de  verifier l'identifiant de l'utilisateur  n'existe pas déjà
      * @param string $id l'identifiant que l'on veut vérifier
-     * 
+     * @param string $messageErreur le message d'erreur que l'on veut renvoyer
+     * @param UtilisateurDAO $managerutilisateur le manager de l'utilisateur
+     * @return bool true si l'identifiant n'existe pas false sinon     * 
      */
     public static function idExistePas(string $id, string &$messageErreur, UtilisateurDAO $managerutilisateur): bool
     {
@@ -285,27 +289,28 @@ class Utilitaires
 
 
       /**
-     * @bref permet de verifier si le fichier est trop lourd et renvoie un message d'erreur si il l'est
+     * @brief permet de verifier si le fichier est trop lourd et renvoie un message d'erreur si il l'est
      * @param array $fichier le fichier que l'on veut vérifier
+     * @param string $nom le nom du fichier que l'on veut vérifier 
      * @param string $messageErreur le message d'erreur que l'on veut renvoyer
-     * @param Utilisateur $utilisateur l'utilisateur sur lequel on veut renvoyer un message d'erreur
      */
-    public static function fichierTropLourd(array $fichier,string $contenu,  ?string $messageErreur): bool
+    public static function fichierTropLourd(array $fichier, string $nom,  ?string &$messageErreur): bool
     {
         $valretour = true;
         // si le fichier est trop lourd (2Mo)
         if ($fichier['size'] > 2000000) {
             $valretour = false;
             
-            $messageErreur = "Le fichier de $contenu est trop lourd";
+            $messageErreur = "Le fichier de $nom est trop lourd";
         }
         return $valretour;
     }
 
     /**
-     * @bref permet de mettre à jour l'image de l'utilisateur
+     * @brief permet de mettre à jour l'image de l'utilisateur
      * @param array $fichier le fichier que l'on veut mettre à jour
      * @param string $type le type de fichier que l'on veut mettre à jour
+     * @param string $messageErreur le message d'erreur que l'on veut renvoyer
      * @param Utilisateur $utilisateur l'utilisateur sur lequel on veut mettre à jour l'image
      */
     public static function ajourfichier( $fichier, $type, string &$messageErreur , Utilisateur  $utilisateur)
@@ -346,7 +351,10 @@ class Utilitaires
     }
 
     /**
-     * @bref permet de verifier si ne brute force  pas la connexion
+     * @brief permet de verifier si ne brute force  pas la connexion
+     * @param string $id_utilisateur le nom de l'utilisateur que l'on veut vérifier si il est en brute force
+     * @param string $message le message d'erreur que l'on veut renvoyer
+     * @return bool true si l'utilisateur est en brute force plus de 5 tentatives en moins de 10 minutes false sinon
      * 
      */
     public static function isBruteForce($id_utilisateur, string &$message)
@@ -377,7 +385,7 @@ class Utilitaires
         return false;
     }
     /**
-     * @bref permet de mettre à jour le nombre de tentative de connexion échoué
+     * @brief ajoute une tentative de connexion échoué a l'utilisateur concerné
      * @param string $id_utilisateur le nom de l'utilisateur
      * @return void
      */
@@ -393,8 +401,9 @@ class Utilitaires
 
     }
     /**
-     * @bref permet de remettre à zéro le nombre de tentative de connexion échoué
+     * @brief permet de remettre à zéro le nombre de tentative de connexion échoué
      * @param string $id_utilisateur le nom de l'utilisateur
+     * @return void
      */
     public static function resetBrutForce($id_utilisateur)
     {
@@ -407,13 +416,13 @@ class Utilitaires
     
 
     /**
-     * @bref permet de verifier si le texte contient de la profanité
+     * @brief permet de verifier si le texte contient de la profanité
      * @param string $text le texte que l'on veut vérifier
-     * @param string $contenu le contenu sur lequel on veut renvoyer un message d'erreur
+     * @param string $nom nom de l'élément que l'on veut vérifier
      * @param string $messageErreur le message d'erreur que l'on veut renvoyer
      * @return bool retourne vrai si le texte contient de la profanité
      */
-    public static function verificationDeNom($text , string $contenu , string  &$messageErreur) : bool {
+    public static function verificationDeNom($text , string $nom , string  &$messageErreur) : bool {
 
         $profanity_list = json_decode(file_get_contents("config/nomincorect.json"), true); // Vous pouvez ajouter d'autres mots
         
@@ -451,17 +460,18 @@ class Utilitaires
 
             if (preg_match($pattern, $textbien)) {
                  
-                $messageErreur = "$contenu contient de la profanité";
+                $messageErreur = "$nom contient de la profanité";
                 return true; // Le texte contient de la profanité
             }
         }
         return false; // Aucun mot de profanité trouvé
     }
     /**
-     * @bref permet de verifier si un utilisateur est vérifié
+     * @brief permet de verifier si un utilisateur est vérifié
      * @param string $id l'id de l'utilisateur
      * @param string $messageErreur le message d'erreur que l'on veut renvoyer
      * @param UtilisateurDAO $managerutilisateur le manager de l'utilisateur
+     * @return bool true si l'utilisateur est vérifié false sinon
      */
    public static function verifUtiliateurverifier(string $id, string &$messageErreur , UtilisateurDAO $managerutilisateur) : bool {
         $valretour = true;
@@ -474,7 +484,13 @@ class Utilitaires
         return $valretour;
     
    }
-
+   /**
+    * @brief permet de verifier si la case est cochée
+    * @param mixed $case la case que l'on veut vérifier
+    * @param string $messageErreur le message d'erreur que l'on veut renvoyer
+    * @param string $type le type d'élément que l'on veut vérifier
+    * @return bool true si la case est cochée false sinon
+    */
    public static function verifiecasecocher( $case, string &$messageErreur , string $type) : bool {
         $valretour = true;
         // si la case n'est pas cochée

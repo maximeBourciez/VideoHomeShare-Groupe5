@@ -34,6 +34,7 @@ class ControllerIndex extends Controller
         // Récupérer les 3 fils les plus likés de la semaine
         $filDAO = new FilDAO($this->getPdo());
         $fils = $filDAO->getFilsLesPlusLikes(3);
+        $fils = array_slice($fils, 0, 3);   
 
         // Afficher le template avec les données
         echo $this->getTwig()->render('index.html.twig', [

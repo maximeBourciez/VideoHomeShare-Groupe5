@@ -57,6 +57,27 @@ class MessageDAO
         return $this;
     }
 
+    /**
+     * @brief Méthode permettant de récupérer le nombre de messages d'un fil de discussion
+     * 
+     * @param mixed $idFil Identifiant du fil de discussion
+     * 
+     * @return mixed Nombre de messages
+     */
+    public function getNombreMessagesParent($idFil) : ?int
+    {
+        $requete = "SELECT COUNT(*) as total 
+                   FROM " . DB_PREFIX . "message 
+                   WHERE idFil = :id_fil
+                   AND idMessageParent IS NULL;";
+
+        $stmt = $this->pdo->prepare($requete);
+        $stmt->bindValue(':id_fil', $idFil, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+    }
+
     // Méthodes
     // Méthodes d'hydratation
     /**
@@ -189,21 +210,22 @@ class MessageDAO
         return ($this->hydrateAll($messages));
     }
 
-
-
     /**
-     * @brief Méthode de listing des messages par fil
+     * @brief Méthode permettant de récupérer les messages d'un fil de discussion
      * 
-     * @details Méthode permettant de lister les messages d'un fil de discussion par son id
-     * 
-     * @param integer $id_fil Identifiant du fil
+     * @param mixed $idFil Identifiant du fil de discussion
+     * @param mixed $page Numéro de la page
+     * @param mixed $messagesParPage Nombre de messages par page
      * 
      * @return array<Message> Tableau d'objets Message
      */
-
-    public function listerMessagesParFil(int $idFil): array
+    public function getMessagesPagines($idFil, $page = 1, $messagesParPage = 5): ?array
     {
-        $sql = "SELECT m.*, 
+        $offset = ($page - 1) * $messagesParPage;
+
+        // Récupérer les messages parents 
+        $requete = "
+                   SELECT m.*, 
                         u.*, 
                         ld1.like_count, 
                         ld1.dislike_count
@@ -217,18 +239,70 @@ class MessageDAO
                 ) AS ld1 ON m.idMessage = ld1.idMessage
                 LEFT JOIN " . DB_PREFIX . "utilisateur u ON m.idUtilisateur = u.idUtilisateur
                 WHERE m.idFil = :idFil
-                ORDER BY m.dateC DESC;";
+                AND idMessageParent IS NULL 
+                   ORDER BY dateC DESC 
+                   LIMIT :limit OFFSET :offset;";
 
-
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = $this->pdo->prepare($requete);
         $stmt->bindValue(':idFil', $idFil, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $messagesParPage, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
-        $stmt->setFetchMode(PDO::FETCH_ASSOC);
-        $messages = $stmt->fetchAll();
 
-        // Hydrate les messages
-        return $this->hydrateAll($messages);
+        $messages = $this->hydrateAll($stmt->fetchAll());
+
+        // Récupérer les enfants de chaque message parent
+        foreach ($messages as $message) {
+            $message->setReponses($this->getMessagesEnfants($message->getIdMessage()));
+        }
+
+        return $messages;
     }
+
+    /**
+     * @brief Méthode permettant de récupérer les messages enfants d'un message parent
+     * 
+     * @details Méthode permettant de récupérer les messages enfants d'un message parent récursivemement, c'est-à-dre qu'on récupère l'intégralité de la discussion sous-jascente
+     * 
+     * @param mixed $idMessageParent Identifiant du message parent
+     * 
+     * @return array<Message> Tableau d'objets Message
+     * 
+     * @warning Fonction à appels récursifs
+     */
+    private function getMessagesEnfants($idMessageParent): ?array
+    {
+        $requete = "
+                   SELECT m.*, 
+                        u.*, 
+                        ld1.like_count, 
+                        ld1.dislike_count
+                FROM " . DB_PREFIX . "message m
+                LEFT JOIN (
+                    SELECT idMessage,
+                            SUM(CASE WHEN reaction = true THEN 1 ELSE 0 END) AS like_count,
+                            SUM(CASE WHEN reaction = false THEN 1 ELSE 0 END) AS dislike_count
+                    FROM " . DB_PREFIX . "reagir
+                    GROUP BY idMessage
+                ) AS ld1 ON m.idMessage = ld1.idMessage
+                LEFT JOIN " . DB_PREFIX . "utilisateur u ON m.idUtilisateur = u.idUtilisateur
+                WHERE m.idMessageParent = :idMessageParent
+                ORDER BY dateC DESC;";
+    
+        $stmt = $this->pdo->prepare($requete);
+        $stmt->bindValue(':idMessageParent', $idMessageParent, PDO::PARAM_INT);
+        $stmt->execute();
+    
+        $enfants = $this->hydrateAll($stmt->fetchAll());
+    
+        // Récupérer les enfants de chaque enfant de manière récursive
+        foreach ($enfants as $enfant) {
+            $enfant->setReponses($this->getMessagesEnfants($enfant->getIdMessage()));
+        }
+    
+        return $enfants;
+    }
+
 
     /**
      * @brief Méthode d'ajout d'une reponse dans un fil de discussion

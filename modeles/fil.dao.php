@@ -65,6 +65,7 @@ class FilDAO
      */
     public function hydrate(array $row): Fil
     {
+        // Vérifier si j'ai un seul ou plusieurs tableau 
         $themes = [];
         $user = new Utilisateur();
         $user->setId($row['idUtilisateur']);
@@ -89,7 +90,7 @@ class FilDAO
      * @param array $rows Tableau de lignes de la base de données
      * @return array Tableau d'objets Fil hydratés
      */
-    public function hydrateAll(array $rows): array
+    public function hydrateAll(array $rows, ?int $limit = null): array
     {
         $fils = [];
         foreach ($rows as $row) {
@@ -107,9 +108,19 @@ class FilDAO
         }
 
         return array_values($fils);
+
+
     }
 
-    // Méthode pour vérifier si un thème existe déjà
+    /**
+     * 
+     * @brief Méthode pour vérifier si un thème existe déjà dans les thèmes d'un fil
+     * 
+     * @param array $themes Tableau de thèmes d'un fil
+     * @param Theme $theme Thème à vérifier
+     * 
+     * @return bool Vrai si le thème existe déjà, faux sinon
+     */
     private function themeExisteDeja(array $themes, Theme $theme): bool
     {
         foreach ($themes as $t) {
@@ -160,9 +171,9 @@ class FilDAO
      * @details Méthode permettant de trouver un fil par son id - Sert à afficher un fil de discussion et ses messages sous-jacents
      *
      * @param integer $id Identifiant du fil
-     * @return Fil|null
+     * @return array
      */
-    public function findById(int $id)
+    public function findById(int $id)   
     {
         $sql = "
         SELECT DISTINCT f.*, 
@@ -194,56 +205,6 @@ class FilDAO
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         return $this->hydrateAll($stmt->fetchAll());
-    }
-
-
-    /**
-     * @brief Méthode pour trouver les messages d'un fil par son id
-     *
-     * @param integer $idFil
-     * @return array
-     * @warning non testée
-     */
-    public function findMessagesByFilId(int $idFil): array
-    {
-        $sql = "
-            SELECT m.*, u.idUtilisateur, u.pseudo, u.urlImageProfil
-            FROM " . DB_PREFIX . "message AS m
-            INNER JOIN " . DB_PREFIX . "utilisateur AS u ON m.idUtilisateur = u.idUtilisateur
-            WHERE m.idFil = :idFil
-            ORDER BY m.dateC ASC
-        ";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':idFil', $idFil, PDO::PARAM_INT);
-        $stmt->execute();
-        $stmt->setFetchMode(PDO::FETCH_ASSOC);
-        $messages = new MessageDAO($this->pdo);
-        return $messages->listerMessagesParFil($idFil);
-    }
-
-    /**
-     * @brief Méthode pour récupérer l'utilisateur ayant posté le premier message d'un fil
-     * 
-     * @param integer $idFil Identifiant du fil
-     * 
-     * @return Utilisateur|null
-     */
-    public function findFirstUserByFilId(int $idFil): ?Utilisateur
-    {
-        $sql = "
-            SELECT u.*
-            FROM " . DB_PREFIX . "message AS m
-            INNER JOIN " . DB_PREFIX . "utilisateur AS u ON m.idUtilisateur = u.idUtilisateur
-            WHERE m.idFil = :idFil
-            ORDER BY m.dateC ASC
-            LIMIT 1
-        ";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':idFil', $idFil, PDO::PARAM_INT);
-        $stmt->execute();
-        $stmt->setFetchMode(PDO::FETCH_ASSOC);
-        $user = new UtilisateurDAO($this->pdo);
-        return $user->hydrate($stmt->fetch());
     }
 
     /**
@@ -328,14 +289,11 @@ class FilDAO
                 LEFT JOIN " . DB_PREFIX . "theme AS t 
                     ON p.idTheme = t.idTheme
                     GROUP BY f.idFil, u.idUtilisateur, u.pseudo, u.urlImageProfil, t.idTheme, t.nom, likes.likes
-
                 ORDER BY likes.likes DESC
-                LIMIT :limit
             ";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
-        return $this->hydrateAll($stmt->fetchAll());
+        return $this->hydrateAll($stmt->fetchAll(),3);
     }
 
 

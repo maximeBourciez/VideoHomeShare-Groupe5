@@ -10,7 +10,7 @@ class ControllerUtilisateur extends Controller
 
 
     /**
-     * @bref permet d'afficher la page de connection
+     * @brief permet d'afficher la page de connection
      *
      * @return void
      */
@@ -143,7 +143,7 @@ class ControllerUtilisateur extends Controller
             $role = Role::Utilisateur;
             $token = Utilitaires::generateToken($id, 24);
             mail($mail, "Confirmation de votre compte", "Bonjour, \n\n Vous avez créé un compte sur notre plateforme. Pour confirmer votre compte, veuillez cliquer sur le lien suivant : " . WEBSITE_LINK . "index.php?controller=utilisateur&methode=confirmationCompte&token=" . $token . " \n\n Cordialement, \n\n L'équipe de la plateforme de vhs");
-            $newUtilisateur = new Utilisateur($id, $pseudo, $nom, $mail, $mdp, $role, "images/Profil_de_base.svg", "images/Baniere_de_base.png");
+            $newUtilisateur = new Utilisateur($id, $pseudo, $nom, $mail, $mdp, $role, "images/Profil_de_base.svg", "images/Banniere_de_base.png");
             $managerutilisateur->create($newUtilisateur);
             //Génération de la vue
             $template = $this->getTwig()->load('connection.html.twig');
@@ -298,19 +298,22 @@ class ControllerUtilisateur extends Controller
 
         // instanciation des managers de base de données
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
-        $managermesage = new MessageDAO($this->getPdo());
+        $managermessage = new MessageDAO($this->getPdo());
+        $managerquiz = new QuizzDAO($this->getPdo());
 
         //récupération de l'utilisateur à partir de id dans l'url
         $utilisateur = $managerutilisateur->find($id);
 
         //récupération des messages de l'utilisateur
-        $messages = $managermesage->listerMessagesParIdUser($id);
+        $messages = $managermessage->listerMessagesParIdUser($id);
+        $quizs = $managerquiz->findByIdUtilisateur($id);
+        var_dump($quizs);
         $messageErreur = "";
         // vérification de l'existence de l'utilisateur
         $verficationUtilisateurExiste = Utilitaires::utilisateurExiste($utilisateur, $messageErreur);
         if ($verficationUtilisateurExiste) {
             $template = $this->getTwig()->load('profilUtilisateur.html.twig');
-            echo $template->render(array('utilisateur' => $utilisateur, 'messages' => $messages));
+            echo $template->render(array('utilisateur' => $utilisateur, 'messages' => $messages, 'quizs' => $quizs));
         } else {
             $template = $this->getTwig()->load('inscription.html.twig');
             echo $template->render(array('messagederreur' => $messageErreur));
@@ -451,7 +454,7 @@ class ControllerUtilisateur extends Controller
         }
     }
     /**
-     * @bref affiche le notification de l'utilisateur
+     * @brief affiche le notification de l'utilisateur
      * @return void
      */
     public function notification(): void
@@ -461,7 +464,7 @@ class ControllerUtilisateur extends Controller
         echo $template->render(array('fontionliter' => "notification"));
     }
     /**
-     * @bref permet de deconnecter l'utilisateur
+     * @brief permet de deconnecter l'utilisateur
      * @return void
      */
     public function deconnexion(): void
