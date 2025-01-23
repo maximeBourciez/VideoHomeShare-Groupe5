@@ -61,7 +61,8 @@ class SalleDAO{
         $code = $row['code'];
         $genre = $row['genre'];
         $estPublique = $row['estPublique'];
-        $salle = new Salle($idSalle, $nom, $nbpersonne, $rangCourant, $code, $genre, $estPublique);
+        $placedisponible = $row['placedisponible'];
+        $salle = new Salle($idSalle, $nom, $nbpersonne, $rangCourant, $code, $genre, $estPublique, $placedisponible);
         return $salle;
     }
 
@@ -120,5 +121,64 @@ class SalleDAO{
         return $this->hydrateAll($rows);
     }
 
-    
+    function update(Salle $salle): void
+    {
+        $stmt = $this->pdo->prepare("UPDATE ".DB_PREFIX. "salle SET nom = :nom, nbpersonne = :nbpersonne, rangCourant = :rangCourant, code = :code, genre = :genre, estPublique = :estPublique, placedisponible = :placedisponible WHERE idSalle = :idSalle");
+        $stmt->bindValue(':nom', $salle->getNom());
+        $stmt->bindValue(':nbpersonne', $salle->getNbPersonne());
+        $stmt->bindValue(':rangCourant', $salle->getRangCourant());
+        $stmt->bindValue(':code', $salle->getCode());
+        $stmt->bindValue(':genre', $salle->getGenre());
+
+        if($salle->getEstPublique() == true){
+            $stmt->bindValue(':estPublique', 1);
+        }else{
+            $stmt->bindValue(':estPublique', 0);
+        }
+        $stmt->bindValue(':placedisponible', $salle->getPlaceDisponible());
+        $stmt->bindValue(':idSalle', $salle->getIdSalle());
+        $stmt->execute();
+    }
+
+    function findByCode(string $code): Salle
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM ".DB_PREFIX. "salle WHERE code = :code");
+        $stmt->bindValue(':code', $code);
+        $stmt->execute();
+        $row = $stmt->fetch();
+        return $this->hydrate($row);
+    }
+
+    function findAllPubliqueDisponible(): array
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM ".DB_PREFIX. "salle WHERE estPublique = 1 AND placedisponible > 0");
+        $stmt->execute();
+        $rows = $stmt->fetchAll();
+        return $this->hydrateAll($rows);
+    }
+
+    function create(Salle $salle): bool
+    {
+        
+        $stmt = $this->pdo->prepare("INSERT INTO ".DB_PREFIX. "salle (nom, nbpersonne, rangCourant, code, genre, estPublique, placedisponible) VALUES (:nom, :nbpersonne, :rangCourant, :code, :genre, :estPublique, :placedisponible)");
+        $stmt->bindValue(':nom', $salle->getNom());
+        $stmt->bindValue(':nbpersonne', $salle->getNbPersonne());
+        $stmt->bindValue(':rangCourant', $salle->getRangCourant());
+        $stmt->bindValue(':code', $salle->getCode());
+        $stmt->bindValue(':genre', $salle->getGenre());
+        if($salle->getEstPublique() == true){
+            $stmt->bindValue(':estPublique', 1);
+        }else{
+            $stmt->bindValue(':estPublique', 0);
+        }
+        $stmt->bindValue(':placedisponible', $salle->getPlaceDisponible());
+        return($stmt->execute());
+    }
+        
+        
+
+        
 }
+
+    
+

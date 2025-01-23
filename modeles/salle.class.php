@@ -19,9 +19,15 @@ class Salle {
      */
     private ?int $nbpersonne;
     /**
+     * @brief nombre de place disponible dans la salle
+     * @var int $placedisponible
+     */
+    private ?int $placedisponible;
+    /**
      * @brief rang courant du contenu regader dans la salle
      * @var int $rangCourant
      */
+    
     private ?int $rangCourant;
     /**
      * @brief code de la salle
@@ -49,7 +55,7 @@ class Salle {
      * @param mixed $genre
      * @param mixed $estPublique
      */
-    public function __construct(?int $idSalle, ?string $nom, ?int $nbpersonne, ?int $rangCourant, ?int $code, ?string $genre, ?bool $estPublique)
+    public function __construct(?int $idSalle = null, ?string $nom = null, ?int $nbpersonne= null, ?int $rangCourant= null, ?int $code = null, ?string $genre= null, ?bool $estPublique= null , ?int $placedisponible= null)
     {
         $this->idSalle = $idSalle;
         $this->nom = $nom;
@@ -58,6 +64,7 @@ class Salle {
         $this->code = $code;
         $this->genre = $genre;
         $this->estPublique = $estPublique;
+        $this->placedisponible = $placedisponible;
     }
 
     // Getters
@@ -84,6 +91,14 @@ class Salle {
     public function getNbPersonne(): ?int
     {
         return $this->nbpersonne;
+    }
+    /**
+     * @brief Getter du nombre de place disponible
+     * @return int
+     */
+    public function getPlaceDisponible(): ?int
+    {
+        return $this->placedisponible;
     }
     /**
      * @brief Getter du rang courant du contenu regader dans la salle
@@ -146,6 +161,15 @@ class Salle {
     public function setNbPersonne(?int $nbpersonne): void
     {
         $this->nbpersonne = $nbpersonne;
+    }
+    /**
+     * @brief Setter du nombre de place disponible dans la salle
+     * @param int $placedisponible
+     * @return void
+     */
+    public function setPlaceDisponible(?int $placedisponible): void
+    {
+        $this->placedisponible = $placedisponible;
     }
     /**
      * @brief Setter du rang courant du contenu regader dans la salle

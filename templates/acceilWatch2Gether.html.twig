@@ -24,7 +24,7 @@
 						<button type="button" class="btn-close btn-close-white " data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body pt-0 ">
-						<form class="">
+						<form class="" action="index.php?controller=salle&methode=rejoindreSallePriver" method="POST">
 							<div class="form-check my-4 ms-3">
 								<label class=" text-start form-check-label mb-0 text-white ">code de la salle</label>
 								<input type="number" name="code" class="form-control w-75 " required>
@@ -52,7 +52,7 @@
 						<button type="button" class="btn-close btn-close-white " data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body pt-0">
-						<form class="row text-white">
+						<form class="row text-white"  action="index.php?controller=salle&methode=createSalle" method="POST">
 							<div class="form-group mb-3">
 								<label for="nom" class="d-block text-start mb-0">Nom de la salle
 								</label>
@@ -61,12 +61,12 @@
 							<div class="form-group mb-3">
 								<label for="capaciter" class="d-block text-start mb-0">Capaciter
 								</label>
-								<input type="text" name="capaciter" id="capaciter" class="form-control" minlength="3" maxlength="50" required>
+								<input type="numeic" name="capaciter" id="capaciter" class="form-control" minlength="1" maxlength="2" required>
 							</div>
 							<div class="form-group mb-3">
 								<label for="themeSelect" class="d-block text-start mb-0">genre 
 								</label>
-								<input type="text" name="genre" id="genre" class="form-control" minlength="3" maxlength="50" required>
+								<input type="text" name="genre" id="genre" class="form-control" minlength="3" maxlength="50" >
 							</div>
 
 							<div class="form-check my-4 ms-3">
@@ -91,7 +91,7 @@
                         <div class="card h-100">    
                             <div class="card-body bg-mydark text-white rounded ">    
                                 <h5 class="card-title">{{ salle.getNom() }}</h5>
-                                <p class="card-text">{{ salle.nbpersonne }} personnes</p>
+                                <p class="card-text">{{ salle.placedisponible }} place restante</p>
                                 <p class="card-text">genre : {{ salle.genre|join(', ') }}</p>
                                 <a href="index.php?controller=salle&methode=afficherSalle&id={{ salle.idSalle }}" class="btn btn-primary ms-auto">Rejoindre</a>
                             </div>
