@@ -428,4 +428,27 @@ class ControllerFil extends Controller
         $managerNotification->creation( $contenu , $idReceveur);
 
     }
+
+    public function getNouveauxMessages() {
+        if (!isset($_GET['id_fil']) || !isset($_GET['dernierMessageId'])) {
+            http_response_code(400);
+            exit(json_encode(['error' => 'Paramètres manquants']));
+        }
+
+        $idFil = intval($_GET['id_fil']);
+        $dernierMessageId = intval($_GET['dernierMessageId']);
+        
+        $messageDAO = new MessageDAO($this->getPdo());
+        $nouveauxMessages = json_encode($messageDAO->getNouveauxMessages($idFil, $dernierMessageId));
+        
+        // S'assurer qu'aucun output n'a été envoyé avant
+        if (ob_get_length()) ob_clean();
+        
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true,
+            'messages' => $nouveauxMessages
+        ]);
+        exit();
+    }
 }

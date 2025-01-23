@@ -373,6 +373,12 @@
 				}
 		</script>
 
+		<script src="JS/realtime-messages.js"></script>
+		<script>
+			document.addEventListener('DOMContentLoaded', () => {
+				const realtimeMessages = new RealtimeMessages({{ fil.0.getId() }});
+			});
+		</script>
 
 	</main>
 
