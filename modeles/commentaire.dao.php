@@ -10,7 +10,8 @@
  * @author François Barlic <<francois.barlic57@gmail.com>>
  * @version 1.0
  */
-class CommentaireDAO {
+class CommentaireDAO
+{
     /** @var PDO|null Instance de connexion à la base de données */
     private ?PDO $pdo;
 
@@ -19,7 +20,8 @@ class CommentaireDAO {
      * 
      * @param PDO|null $pdo Instance de connexion à la base de données
      */
-    public function __construct(?PDO $pdo = null) {
+    public function __construct(?PDO $pdo = null)
+    {
         $this->pdo = $pdo;
     }
 
@@ -27,7 +29,8 @@ class CommentaireDAO {
      * @brief Récupère l'instance PDO
      * @return PDO|null L'instance de connexion
      */
-    public function getPdo(): ?PDO {
+    public function getPdo(): ?PDO
+    {
         return $this->pdo;
     }
 
@@ -35,7 +38,8 @@ class CommentaireDAO {
      * @brief Définit l'instance PDO
      * @param PDO $pdo Nouvelle instance de connexion
      */
-    public function setPdo(PDO $pdo): void {
+    public function setPdo(PDO $pdo): void
+    {
         $this->pdo = $pdo;
     }
 
@@ -45,7 +49,8 @@ class CommentaireDAO {
      * @param string $idContenuTmdb Identifiant TMDB du contenu
      * @return array Tableau avec la moyenne et le total des notes
      */
-    public function getMoyenneEtTotalNotesContenu(string $idContenuTmdb): array {
+    public function getMoyenneEtTotalNotesContenu(string $idContenuTmdb): array
+    {
         $sql = 'SELECT AVG(note) AS moyenne, COUNT(note) AS total 
                 FROM vhs_commenterContenu 
                 WHERE idContenuTmdb = :idContenuTmdb';
@@ -57,7 +62,7 @@ class CommentaireDAO {
 
         if ($result) {
             return [
-                'moyenne' => isset($result['moyenne']) ? (double) round($result['moyenne'], 1) : 0,
+                'moyenne' => isset($result['moyenne']) ? (float) round($result['moyenne'], 1) : 0,
                 'total' => isset($result['total']) ? (int) $result['total'] : 0,
             ];
         }
@@ -74,7 +79,8 @@ class CommentaireDAO {
      * @param string $idCollectionTmdb Identifiant TMDB de la collection
      * @return array Tableau avec la moyenne et le total des notes
      */
-    public function getMoyenneEtTotalNotesCollection(string $idCollectionTmdb): array {
+    public function getMoyenneEtTotalNotesCollection(string $idCollectionTmdb): array
+    {
         $sql = 'SELECT AVG(note) AS moyenne, COUNT(note) AS total 
                 FROM vhs_commenterCollection 
                 WHERE idCollectionTmdb = :idCollectionTmdb';
@@ -103,7 +109,8 @@ class CommentaireDAO {
      * @param string $idContenuTmdb Identifiant TMDB du contenu
      * @return array Liste des commentaires
      */
-    public function getCommentairesContenu(string $idContenuTmdb): array {
+    public function getCommentairesContenu(string $idContenuTmdb): array
+    {
         $sql = 'SELECT idUtilisateur, titre, note, avis, estPositif
                 FROM vhs_commenterContenu
                 WHERE idContenuTmdb = :idContenuTmdb
@@ -124,7 +131,8 @@ class CommentaireDAO {
      * @param string $idCollectionTmdb Identifiant TMDB de la collection
      * @return array Liste des commentaires
      */
-    public function getCommentairesCollection(string $idCollectionTmdb): array {
+    public function getCommentairesCollection(string $idCollectionTmdb): array
+    {
         $sql = 'SELECT idUtilisateur, titre, note, avis, estPositif
                 FROM vhs_commenterCollection
                 WHERE idCollectionTmdb = :idCollectionTmdb
@@ -140,23 +148,76 @@ class CommentaireDAO {
     }
 
     /**
+     * @brief Récupère la moyenne et le total des notes pour une série
+     * 
+     * @param string $idSerieTmdb Identifiant TMDB de la série
+     * @return array Tableau avec la moyenne et le total des notes
+     */
+    public function getMoyenneEtTotalNotesSerie(string $idSerieTmdb): array
+    {
+        $sql = 'SELECT AVG(note) AS moyenne, COUNT(note) AS total 
+                FROM vhs_commenterSerie 
+                WHERE idSerieTmdb = :idSerieTmdb';
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':idSerieTmdb', $idSerieTmdb, PDO::PARAM_STR);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            return [
+                'moyenne' => isset($result['moyenne']) ? (float) round($result['moyenne'], 1) : 0,
+                'total' => isset($result['total']) ? (int) $result['total'] : 0,
+            ];
+        }
+
+        return [
+            'moyenne' => 0,
+            'total' => 0,
+        ];
+    }
+
+    /**
+     * @brief Récupère les commentaires pour une série
+     * 
+     * @param string $idSerieTmdb Identifiant TMDB de la série
+     * @return array Liste des commentaires
+     */
+    public function getCommentairesSerie(string $idSerieTmdb): array
+    {
+        $sql = 'SELECT idUtilisateur, titre, note, avis, estPositif
+                FROM vhs_commenterSerie
+                WHERE idSerieTmdb = :idSerieTmdb
+                ORDER BY dateCommentaire DESC
+                LIMIT 6';
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':idSerieTmdb', $idSerieTmdb, PDO::PARAM_STR);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result ?: [];
+    }
+
+    /**
      * @brief Vérifie si un utilisateur a déjà commenté un contenu
      * 
      * @param string $idUtilisateur ID de l'utilisateur
      * @param string $idContenuTmdb ID du contenu TMDB
      * @return bool True si l'utilisateur a déjà commenté, false sinon
      */
-    public function aDejaCommente(string $idUtilisateur, string $idContenuTmdb): bool {
+    public function aDejaCommente(string $idUtilisateur, string $idContenuTmdb): bool
+    {
         $sql = 'SELECT COUNT(*) as nbCommentaires 
                 FROM vhs_commenterContenu 
                 WHERE idUtilisateur = :idUtilisateur 
                 AND idContenuTmdb = :idContenuTmdb';
-        
+
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':idUtilisateur', $idUtilisateur, PDO::PARAM_STR);
         $stmt->bindParam(':idContenuTmdb', $idContenuTmdb, PDO::PARAM_STR);
         $stmt->execute();
-        
+
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return ($result['nbCommentaires'] > 0);
     }
@@ -167,7 +228,8 @@ class CommentaireDAO {
      * @param Commentaire $commentaire Le commentaire à créer
      * @throws Exception Si l'utilisateur a déjà commenté
      */
-    public function createCommentaireContenu(Commentaire $commentaire): void {
+    public function createCommentaireContenu(Commentaire $commentaire): void
+    {
         // Vérification si l'utilisateur a déjà commenté
         if ($this->aDejaCommente($commentaire->getIdUtilisateur(), $commentaire->getIdContenuTmdb())) {
             throw new Exception("Désolé mais vous avez déjà commenté et noté ce film.");
@@ -175,16 +237,16 @@ class CommentaireDAO {
 
         $sql = 'INSERT INTO vhs_commenterContenu (idContenuTmdb, idUtilisateur, titre, note, avis, estPositif) 
                 VALUES (:idContenuTmdb, :idUtilisateur, :titre, :note, :avis, :estPositif)';
-        
+
         $stmt = $this->pdo->prepare($sql);
-        
+
         $idContenuTmdb = $commentaire->getIdContenuTmdb();
         $idUtilisateur = $commentaire->getIdUtilisateur();
         $titre = $commentaire->getTitre();
         $note = $commentaire->getNote();
         $avis = $commentaire->getAvis();
         $estPositif = $commentaire->getEstPositif();
-        
+
         $stmt->bindParam(':idContenuTmdb', $idContenuTmdb, PDO::PARAM_INT);
         $stmt->bindParam(':idUtilisateur', $idUtilisateur, PDO::PARAM_STR);
         $stmt->bindParam(':titre', $titre, PDO::PARAM_STR);
@@ -200,7 +262,8 @@ class CommentaireDAO {
      * @param Commentaire $commentaire Le commentaire à créer
      * @throws Exception Si l'utilisateur a déjà commenté
      */
-    public function createCommentaireCollection(Commentaire $commentaire): void {
+    public function createCommentaireCollection(Commentaire $commentaire): void
+    {
         // Vérification si l'utilisateur a déjà commenté
         if ($this->aDejaCommente($commentaire->getIdUtilisateur(), $commentaire->getIdCollectionTmdb())) {
             throw new Exception("Désolé mais vous avez déjà commenté et noté cette collection.");
@@ -208,16 +271,16 @@ class CommentaireDAO {
 
         $sql = 'INSERT INTO vhs_commenterCollection (idCollectionTmdb, idUtilisateur, titre, note, avis, estPositif) 
                 VALUES (:idCollectionTmdb, :idUtilisateur, :titre, :note, :avis, :estPositif)';
-        
+
         $stmt = $this->pdo->prepare($sql);
-        
+
         $idCollectionTmdb = $commentaire->getIdCollectionTmdb(); // Utilisation de l'ID de collection
         $idUtilisateur = $commentaire->getIdUtilisateur();
         $titre = $commentaire->getTitre();
         $note = $commentaire->getNote();
         $avis = $commentaire->getAvis();
         $estPositif = $commentaire->getEstPositif();
-        
+
         $stmt->bindParam(':idCollectionTmdb', $idCollectionTmdb, PDO::PARAM_INT);
         $stmt->bindParam(':idUtilisateur', $idUtilisateur, PDO::PARAM_STR);
         $stmt->bindParam(':titre', $titre, PDO::PARAM_STR);
@@ -233,7 +296,8 @@ class CommentaireDAO {
      * @param array $tableauAssaus Données du commentaire
      * @return Commentaire Le commentaire hydraté
      */
-    public function hydrate(array $tableauAssaus): Commentaire {
+    public function hydrate(array $tableauAssaus): Commentaire
+    {
         return new Commentaire(
             $tableauAssaus['idUtilisateur'],
             $tableauAssaus['titre'],
@@ -249,7 +313,8 @@ class CommentaireDAO {
      * @param array $tableauAssaus Tableau de données des commentaires
      * @return array|null Liste des commentaires hydratés
      */
-    public function hydrateAll(array $tableauAssaus): ?array {
+    public function hydrateAll(array $tableauAssaus): ?array
+    {
         $commentaires = [];
         foreach ($tableauAssaus as $row) {
             $commentaires[] = $this->hydrate($row);
@@ -257,4 +322,3 @@ class CommentaireDAO {
         return $commentaires;
     }
 }
-?>

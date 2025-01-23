@@ -9,6 +9,7 @@
     "sass": "^1.83.0"
   },
   "scripts": {
-    "build": "sass SCSS/custom.scss CSS/style.css"
+    "build": "sass SCSS/custom.scss CSS/style.css",
+    "commit": "cz"
   }
 }

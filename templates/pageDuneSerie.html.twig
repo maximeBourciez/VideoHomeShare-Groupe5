@@ -1,0 +1,126 @@
+{% extends 'base_template.html.twig' %}
+{% block content %}
+	<main class="flex-grow-1">
+		{% if serie %}
+			<div
+				class="container mt-4">
+				{# En-tête de la série avec l'affiche et les infos principales #}
+				<div class="row">
+					<div class="col-md-4">
+						{% if serie.lienAffiche %}
+							<img src="{{ serie.lienAffiche }}" alt="Affiche de {{ serie.titre }}" class="img-fluid rounded">
+						{% else %}
+							<div class="placeholder-img bg-secondary rounded" style="height: 450px;"></div>
+						{% endif %}
+					</div>
+					<div class="col-md-8">
+						<h1>{{ serie.titre }}</h1>
+						<div class="d-flex align-items-center mb-3">
+							<div class="me-3">
+								<span class="fw-bold">Note moyenne:</span>
+								{{ moyenne ?? 0 }}/5 ({{ total ?? 0 }}
+								votes)
+							</div>
+							<div>
+								<span class="fw-bold">Première diffusion:</span>
+								{{ serie.datePremiereAir|date('d/m/Y') }}
+							</div>
+						</div>
+						<div class="mb-3">
+							<span class="fw-bold">Nombre de saisons:</span>
+							{{ serie.nombreSaisons }}
+							<span class="ms-3 fw-bold">Episodes totaux:</span>
+							{{ serie.nombreEpisodes }}
+						</div>
+						<p class="lead">{{ serie.description }}</p>
+					</div>
+				</div>
+
+				{# Section des personnalités #}
+				{% if personnalites|length > 0 %}
+					<div class="mt-5">
+						<h2>Distribution et équipe</h2>
+						<div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 g-3">
+							{% for personnalite in personnalites %}
+								<div class="col">
+									<div class="card h-100">
+										{% if personnalite.lienPhoto %}
+											<img src="{{ personnalite.lienPhoto }}" class="card-img-top" alt="{{ personnalite.nom }}">
+										{% else %}
+											<div class="placeholder-img bg-secondary" style="height: 200px;"></div>
+										{% endif %}
+										<div class="card-body">
+											<h6 class="card-title">{{ personnalite.nom }}</h6>
+											<p class="card-text small">{{ personnalite.role }}</p>
+										</div>
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+					</div>
+				{% endif %}
+
+				{# Section des saisons #}
+				{% if saisons|length > 0 %}
+					<div class="mt-5">
+						<h2>Saisons</h2>
+						<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+							{% for saison in saisons %}
+								<div class="col">
+									<div class="card h-100">
+										{% if saison.lienAffiche %}
+											<img src="{{ saison.lienAffiche }}" class="card-img-top" alt="Saison {{ saison.numero }}">
+										{% else %}
+											<div class="placeholder-img bg-secondary" style="height: 200px;"></div>
+										{% endif %}
+										<div class="card-body">
+											<h5 class="card-title">{{ saison.nom }}</h5>
+											<h6 class="card-subtitle mb-2 text-muted">{{ saison.nombreEpisodes }}
+												épisodes</h6>
+											<p class="card-text">{{ saison.description|slice(0, 150) }}...</p>
+										</div>
+										<div class="card-footer">
+											<small class="text-muted">Diffusé le
+												{{ saison.datePremiereAir|date('d/m/Y') }}</small>
+										</div>
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+					</div>
+				{% endif %}
+
+				{# Section des commentaires #}
+				{% if commentaires|length > 0 %}
+					<div class="mt-5">
+						<h2>Commentaires</h2>
+						<div class="row g-4">
+							{% for commentaire in commentaires %}
+								<div class="col-md-6">
+									<div class="card">
+										<div class="card-body">
+											<h5 class="card-title">{{ commentaire.titre }}</h5>
+											<h6 class="card-subtitle mb-2 text-muted">Note:
+												{{ commentaire.note }}/5</h6>
+											<p class="card-text">{{ commentaire.avis }}</p>
+											<footer class="text-muted">
+												Par
+												{{ commentaire.idUtilisateur }}
+											</footer>
+										</div>
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+					</div>
+				{% endif %}
+			</div>
+		{% else %}
+			<div class="container mt-4">
+				<div class="alert alert-warning">
+					Série non trouvée.
+				</div>
+			</div>
+		{% endif %}
+	</main>
+{% endblock %}

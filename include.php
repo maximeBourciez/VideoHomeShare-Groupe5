@@ -28,6 +28,7 @@ require_once 'modeles/personnalite.dao.php';
 require_once 'modeles/collection.dao.php';
 require_once 'modeles/signalement.dao.php';
 require_once 'modeles/notification.dao.php';
+require_once 'modeles/serie.dao.php';
 
 
 // Ajout des modèles
@@ -44,9 +45,11 @@ require_once 'modeles/theme.class.php';
 require_once 'modeles/commentaire.class.php';
 require_once 'modeles/personnalite.class.php';
 require_once 'modeles/utilitaires.class.php';
-require_once 'modeles/collection.class.php'; 
+require_once 'modeles/collection.class.php';
 require_once 'modeles/signalement.class.php';
-require_once 'modeles/notification.class.php';  
+require_once 'modeles/notification.class.php';
+require_once 'modeles/serie.class.php';
+require_once 'modeles/saison.class.php';
 
 
 
@@ -64,3 +67,4 @@ require_once 'controller/controller_index.class.php';
 require_once 'controller/controller_signalement.class.php';
 require_once 'controller/controller_watch2gether.class.php';
 require_once 'controller/controller_quizz.class.php';
+require_once 'controller/controller_serie.class.php';
