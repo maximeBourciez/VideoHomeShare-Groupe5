@@ -166,4 +166,21 @@ class QuizzDAO{
 
         return $this->hydrateAll($stmt->fetchAll());
     }
+
+    /**
+     * @brief Méthode pour récupérer les attributs des quizz d'un utilisateur
+     * 
+     * @param $idUtilisateur //identifiant de l'utilisateur
+     * @return array
+     */
+    function findByIdUtilisateur( string $idUtilisateur ) : array {
+        $sql = "SELECT Q.*, U.pseudo FROM " .DB_PREFIX. "quizz Q JOIN " .DB_PREFIX. "utilisateur U ON Q.idUtilisateur = U.idUtilisateur WHERE Q.idUtilisateur = :idUtilisateur";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':idUtilisateur', $idUtilisateur, PDO::PARAM_STR);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $stmt->execute();
+        var_dump($stmt);
+        return $this->hydrateAll($stmt->fetchAll());
+        
+    }
 }

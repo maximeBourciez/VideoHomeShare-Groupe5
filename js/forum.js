@@ -1,6 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("DOM chargé !");
-
   // Main page forum - Listing des threads
   const customSelect = document.getElementById("themeSelect");
   const placeholder = customSelect.querySelector(".custom-select-placeholder");
@@ -57,6 +55,8 @@ document.addEventListener("DOMContentLoaded", function () {
       compteurTitreThread.textContent = `${titreThread.value.length} / 100`;
     });
   } else {
-    console.error("Element 'descriptionThread' ou 'countTitreThread' non trouvé !");
+    console.error(
+      "Element 'descriptionThread' ou 'countTitreThread' non trouvé !"
+    );
   }
 });
