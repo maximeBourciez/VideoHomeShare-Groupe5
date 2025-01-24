@@ -59,6 +59,8 @@ class ControllerSerie extends Controller
                 $commentaires = $commentaireDAO->getCommentairesSerie($tmdbId);
                 // Récupérer les thèmes
                 $themes = $this->serieDAO->getThemesSerie($tmdbId);
+                // Récupérer les personnalités
+                $personnalites = $this->serieDAO->getPersonnalitesSerie($tmdbId);
 
                 // Afficher le template avec les données
                 echo $this->getTwig()->render('pageDuneSerie.html.twig', [
@@ -67,7 +69,8 @@ class ControllerSerie extends Controller
                     'moyenne' => $notes['moyenne'],
                     'total' => $notes['total'],
                     'commentaires' => $commentaires,
-                    'themes' => $themes
+                    'themes' => $themes,
+                    'personnalites' => $personnalites
                 ]);
                 return;
             }

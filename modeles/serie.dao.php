@@ -207,4 +207,54 @@ class SerieDAO
 
         return $themes;
     }
+
+    /**
+     * @brief Récupère les personnalités principales d'une série
+     * 
+     * @param int $tmdbId Identifiant TMDB de la série
+     * @return array Liste des personnalités avec leurs rôles
+     */
+    public function getPersonnalitesSerie(int $tmdbId): array
+    {
+        $url = "{$this->baseUrl}/tv/{$tmdbId}/credits?api_key={$this->apiKey}&language=fr-FR";
+        $response = $this->makeRequest($url);
+
+        $personnalites = [
+            'acteurs' => [],
+            'equipe' => []
+        ];
+
+        if ($response) {
+            // Récupérer les acteurs principaux (max 5)
+            if (isset($response['cast'])) {
+                foreach ($response['cast'] as $acteur) {
+                    $personnalites['acteurs'][] = [
+                        'nom' => $acteur['name'],
+                        'role' => $acteur['character'],
+                        'photo' => !empty($acteur['profile_path'])
+                            ? $this->imageBaseUrl . $acteur['profile_path']
+                            : null
+                    ];
+                }
+            }
+
+            // Récupérer les membres clés de l'équipe (réalisateur, scénariste, etc.)
+            if (isset($response['crew'])) {
+                $rolesRecherches = ['Director', 'Writer', 'Creator', 'Executive Producer'];
+                foreach ($response['crew'] as $membre) {
+                    if (in_array($membre['job'], $rolesRecherches)) {
+                        $personnalites['equipe'][] = [
+                            'nom' => $membre['name'],
+                            'role' => $membre['job'],
+                            'photo' => !empty($membre['profile_path'])
+                                ? $this->imageBaseUrl . $membre['profile_path']
+                                : null
+                        ];
+                    }
+                }
+            }
+        }
+
+        return $personnalites;
+    }
 }
