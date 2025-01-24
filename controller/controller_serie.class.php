@@ -53,21 +53,21 @@ class ControllerSerie extends Controller
             if ($serie) {
                 // Récupérer les saisons de la série
                 $saisons = $this->serieDAO->getSeasonsFromSerie($tmdbId);
-                // Récupérer les personnalités de la série
-                $personnalites = $this->serieDAO->getPersonnalitesSerie($tmdbId);
                 // Récupérer les notes et commentaires
                 $commentaireDAO = new CommentaireDAO($this->getPdo());
                 $notes = $commentaireDAO->getMoyenneEtTotalNotesSerie($tmdbId);
                 $commentaires = $commentaireDAO->getCommentairesSerie($tmdbId);
+                // Récupérer les thèmes
+                $themes = $this->serieDAO->getThemesSerie($tmdbId);
 
                 // Afficher le template avec les données
                 echo $this->getTwig()->render('pageDuneSerie.html.twig', [
                     'serie' => $serie,
-                    'personnalites' => $personnalites,
                     'saisons' => $saisons,
                     'moyenne' => $notes['moyenne'],
                     'total' => $notes['total'],
-                    'commentaires' => $commentaires
+                    'commentaires' => $commentaires,
+                    'themes' => $themes
                 ]);
                 return;
             }

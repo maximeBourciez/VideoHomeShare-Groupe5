@@ -61,50 +61,10 @@ class SerieDAO
         return null;
     }
 
-    /**
-     * @brief Récupère les personnalités d'une série
-     * 
-     * @param int|Serie $serie ID ou objet Serie
-     * @return array Liste des personnalités
-     */
-    public function getPersonnalitesSerie($serie): array
+    public function getEpisodesFromSerie(int $tmdbId, int $saison): array
     {
-        $serieId = is_object($serie) ? $serie->getId() : $serie;
-
-        $url = "{$this->baseUrl}/tv/{$serieId}?api_key={$this->apiKey}&language=fr-FR&append_to_response=credits";
-        $serieData = $this->makeRequest($url);
-        $personnalites = [];
-
-        if ($serieData && isset($serieData['credits'])) {
-            // Ajouter créateurs
-            foreach ($serieData['created_by'] ?? [] as $creator) {
-                $personnalites[] = new Personnalite(
-                    null,
-                    $creator['name'],
-                    '',
-                    !empty($creator['profile_path'])
-                        ? $this->imageBaseUrl . $creator['profile_path']
-                        : null,
-                    'Créateur'
-                );
-            }
-
-            // Ajouter les acteurs principaux
-            $actors = array_slice($serieData['credits']['cast'] ?? [], 0, 5);
-            foreach ($actors as $actor) {
-                $personnalites[] = new Personnalite(
-                    null,
-                    $actor['name'],
-                    '',
-                    !empty($actor['profile_path'])
-                        ? $this->imageBaseUrl . $actor['profile_path']
-                        : null,
-                    'Acteur'
-                );
-            }
-        }
-
-        return $this->removeDuplicatePersonnalites($personnalites);
+        $url = "{$this->baseUrl}/tv/{$tmdbId}/season/{$saison}?api_key={$this->apiKey}&language=fr-FR";
+        return $this->makeRequest($url);
     }
 
     /**
@@ -188,13 +148,18 @@ class SerieDAO
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Accept: application/json',
+            'Content-Type: application/json'
+        ]);
 
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         curl_close($ch);
 
-        if ($httpCode === 200) {
+        if ($httpCode === 200 && $response) {
             return json_decode($response, true);
         }
 
@@ -220,20 +185,26 @@ class SerieDAO
     }
 
     /**
-     * @brief Élimine les doublons de personnalités
+     * @brief Récupère les thèmes d'une série (maximum 5)
+     * 
+     * @param int $tmdbId Identifiant TMDB de la série
+     * @return array Liste des thèmes (max 5)
      */
-    private function removeDuplicatePersonnalites(array $personnalites): array
+    public function getThemesSerie(int $tmdbId): array
     {
-        $uniquePersonnalites = [];
-        $seenNames = [];
+        $url = "{$this->baseUrl}/tv/{$tmdbId}/keywords?api_key={$this->apiKey}&language=fr-FR";
+        $response = $this->makeRequest($url);
 
-        foreach ($personnalites as $personnalite) {
-            if (!in_array($personnalite->getNom(), $seenNames)) {
-                $seenNames[] = $personnalite->getNom();
-                $uniquePersonnalites[] = $personnalite;
+        $themes = [];
+        if ($response && isset($response['results'])) {
+            $count = 0;
+            foreach ($response['results'] as $keyword) {
+                if ($count >= 5) break; // Arrêter après 5 thèmes
+                $themes[] = $keyword['name'];
+                $count++;
             }
         }
 
-        return $uniquePersonnalites;
+        return $themes;
     }
 }

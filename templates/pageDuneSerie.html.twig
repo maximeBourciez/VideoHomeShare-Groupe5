@@ -53,10 +53,11 @@
 				<!-- Genres -->
 				<div class="movie-info__genres d-flex justify-content-left align-items-center mt-2">
 					{% for theme in themes %}
-						<span class="movie-info__genre-tag bg-mydark text-white p-2 px-3 rounded me-3">{{ theme }}</span>
+						<span class="movie-info__genre-tag bg-mydark text-white p-2 px-3 rounded me-3 {% if theme|length > 10 %}fs-6{% endif %}">
+							{{ theme }}
+						</span>
 					{% endfor %}
 				</div>
-
 				<!-- Note et Avis -->
 				<div class="movie-info__rating">
 					<div class="movie-info__rating-stars d-flex text-center align-items-center">
