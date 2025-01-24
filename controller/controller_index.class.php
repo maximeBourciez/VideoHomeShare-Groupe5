@@ -34,7 +34,7 @@ class ControllerIndex extends Controller
         // Récupérer les 3 fils les plus likés de la semaine
         $filDAO = new FilDAO($this->getPdo());
         $fils = $filDAO->getFilsLesPlusLikes(3);
-        $fils = array_slice($fils, 0, 3);   
+        $fils = array_slice($fils, 0, 3);
 
         // Afficher le template avec les données
         echo $this->getTwig()->render('index.html.twig', [
@@ -53,10 +53,11 @@ class ControllerIndex extends Controller
      * 
      * @return array<Contenu> Tableau de contenus avec les infos pour les notes 
      */
-    private function addNotesToContenus(array $contenus): array{
+    private function addNotesToContenus(array $contenus): array
+    {
         $commentaire = new CommentaireDAO($this->getPdo());
         $tendances = [];
-        for($i = 1; $i < count($contenus); $i++) {
+        for ($i = 1; $i < count($contenus); $i++) {
             // Ajouter une clé moyenne et nbAvis à chaque film
             $tendances[$i][0] = $contenus[$i];
             $tendances[$i][1]["moyenne"] = $commentaire->getMoyenneEtTotalNotesContenu($contenus[$i]->getId())["moyenne"];
@@ -73,7 +74,8 @@ class ControllerIndex extends Controller
      * 
      * @return void
      */
-    public function rechercher(){
+    public function rechercher()
+    {
         // Récupérer le terme de recherche
         $recherche = $_POST['recherche'];
 
@@ -85,8 +87,10 @@ class ControllerIndex extends Controller
         $managerCollection = new CollectionDAO($this->getPdo());
         $collections = $managerCollection->searchByName($recherche);
 
-        // Récupérer les sagas
-        // En attente du travail sur les sagas
+        // Récupérer les series
+        $managerSerie = new SerieDAO($this->getPdo());
+        $series = $managerSerie->searchByName($recherche);
+
 
         // Récupérer les threads (fils)
         $filDAO = new FilDAO($this->getPdo());
@@ -97,7 +101,8 @@ class ControllerIndex extends Controller
             'contenus' => $contenus,
             'fils' => $fils,
             'collections' => $collections,
-            'recherche' => $recherche
+            'recherche' => $recherche,
+            'series' => $series
         ]);
     }
 }
