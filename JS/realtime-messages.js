@@ -92,8 +92,56 @@ class RealtimeMessages {
                         const responsesContainer = parentContainer;
 
                         if (responsesContainer.style.display === 'none') {
-                            // toggleReponses(responsesContainer);
                             // Déployer le conteneur des réponses afin qu'elle soit visible
+                            responsesContainer.style.display = 'block';
+
+                            // Vérifier si le message parent est déjà un message enfant
+                            const messageParentContainer = document.getElementById(message.idMessageParent);
+                            var estEnfant = messageParentContainer.classList.contains('ms-md-5'); // Indique si le message qu'on sélectione est déjà un enfant
+
+                            // S'il n'a pas de parent, créer un toggle button si ce n'est pas déjà fait
+                            if (!estEnfant) {
+                                // Récupérer le toggle button
+                                const toggleButton = messageParentContainer.querySelector(`.tooglerReponses`);
+                                const likesContainer = messageParentContainer.querySelector(`.likesContainer`);  
+
+                                // S'il n'existe pas, le créer
+                                if (!toggleButton) {
+                                    // Créer le bouton
+                                    const toggleButton = document.createElement('div');
+                                    toggleButton.className = 'tooglerReponses mt-3';
+                                    toggleButton.innerHTML = `
+                                        <span class="toggle-responses text-light my-2" data-message-id="${message.idMessageParent}">
+                                            <i class="bi bi-chevron-up"></i>
+                                            <span class="show-text" style="display: none;">Voir les réponses</span>
+                                            <span class="hide-text">Masquer les réponses</span>
+                                        </span>
+                                    `;
+                                    
+                                    // Ajouter un écouteur d'événements pour le bouton
+                                    toggleButton.addEventListener('click', function() {
+                                        // Trouver le conteneur de réponses associé
+                                        const messageId = this.getAttribute('data-message-id');
+                                        const responsesContainer = document.querySelector(`.responses-container[data-message-id="${messageId}"]`);
+                                        
+                                        // Vérifier si le conteneur existe
+                                        if (responsesContainer && responsesContainer.classList.contains('responses-container')) {
+                                            // Basculer l'affichage des réponses
+                                            if (responsesContainer.style.display === 'none') {
+                                                responsesContainer.style.display = 'block';
+                                                this.innerText = 'Masquer les réponses';
+                                            } else {
+                                                responsesContainer.style.display = 'none';
+                                                this.innerText = 'Voir les réponses';
+                                            }
+                                        }
+                                    });
+
+                                    // Insérer le bouton avant le message parent
+                                    likesContainer.insertAdjacentElement('afterend', toggleButton);
+                                }    
+                            }
+                            
                         }
                     } else {
                         // Créer le conteneur
@@ -146,7 +194,7 @@ class RealtimeMessages {
                     </div>
                     <div class="d-flex justify-content-between mt-4">
                         <!-- Boutons like, dislike, répondre -->
-                        <div class="d-flex flex-wrap gap-2">
+                        <div class="d-flex flex-wrap gap-2 {{ message.idMessageParent ? '' : 'likesContainer' }}">
                             <form method="POST" action="index.php?controller=fil&methode=like">
                                 <input type="hidden" name="id_message" value="${message.idMessage}">
                                 <input type="hidden" name="id_fil" value="${this.idFil}">

@@ -163,7 +163,7 @@
 									</div>
 								{% else %}
 								<!-- Boutons like, dislike, répondre -->
-								<div class="d-flex flex-wrap gap-2">
+								<div class="d-flex flex-wrap gap-2 likesContainer">
 									<form method="POST" action="index.php?controller=fil&methode=like">
 										<input type="hidden" name="id_message" value="{{ message.getIdMessage() }}">
 										<input type="hidden" name="id_fil" value="{{ fil.0.getId() }}">
@@ -204,7 +204,7 @@
 								{% endif %}
 
 								<!-- Boutons supprimer/signaler -->
-								<div class="d-flex gap-2">
+								<div class="d-flex gap-2" >
 									{% if (message.getUtilisateur().getId() == utilisateurConnecte.getId()) or (utilisateurConnecte.getRoleAsString() == "Moderateur")  %}
 										<form method="POST" action="index.php?controller=fil&methode=supprimerMessage" onsubmit="return confirmerSuppression('{{ message.getIdMessage() }}');">
 											<input type="hidden" name="idMessage" value="{{ message.getIdMessage() }}">
