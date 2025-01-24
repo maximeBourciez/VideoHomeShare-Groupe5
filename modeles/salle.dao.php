@@ -174,6 +174,15 @@ class SalleDAO{
         $stmt->bindValue(':placedisponible', $salle->getPlaceDisponible());
         return($stmt->execute());
     }
+
+    function ajouterRole( ?string $idUtilisateur, ?int $idSalle, ?string $role){
+        $stmt = $this->pdo->prepare("INSERT INTO ".DB_PREFIX. "se_trouver (idUtilisateur, idSalle, role) VALUES (:idUtilisateur, :idSalle, :role)");
+        $stmt->bindValue(':idUtilisateur', $idUtilisateur);
+        $stmt->bindValue(':idSalle', $idSalle);
+        $stmt->bindValue(':role', $role);
+        return($stmt->execute());
+
+    }
         
         
 

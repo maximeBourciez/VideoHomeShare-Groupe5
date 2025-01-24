@@ -20,9 +20,35 @@ function onYouTubeIframeAPIReady(w= 633) { // Crée un objet YT.Player pour int�
                     
     }
 
-    function changetailleVideo(player){
+      
 
-        player.target;
+    async function callController(controller, methode, parametres) {
+        try {
+
+            var parm ='';
+            for (let index = 0; index < parametres.length; index++) {
+                 parm += `&${parametres[index][0]}=${parametres[index][1]}`;
+                
+            }
+        
+            // Construire l'URL avec les paramètres
+            const url = `index.php?controller=${controller}&methode=${methode}${parm}`;
+
+            // Envoyer une requête fetch
+            const response = await fetch(url, {
+                method: 'GET', // Utilisez POST si nécessaire
+            });
+
+            // Vérifier si la requête a réussi
+            if (response.ok) {
+                const result = await response.text(); // Lire la réponse en texte
+                console.log(result) ;
+            } else {
+                console.error('Erreur HTTP :', response.status);
+            }
+        } catch (error) {
+            console.error('Erreur lors de la requête Fetch :', error);
+        }
     }
 
 
