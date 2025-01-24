@@ -163,7 +163,7 @@
 									</div>
 								{% else %}
 								<!-- Boutons like, dislike, répondre -->
-								<div class="d-flex flex-wrap gap-2 likesContainer">
+								<div class="d-flex flex-wrap gap-2 likesContainer" data-message-id="{{ message.getIdMessage() }}">
 									<form method="POST" action="index.php?controller=fil&methode=like">
 										<input type="hidden" name="id_message" value="{{ message.getIdMessage() }}">
 										<input type="hidden" name="id_fil" value="{{ fil.0.getId() }}">
@@ -193,15 +193,16 @@
 								</div>
 
 								<!-- Afficheur de réponses -->
-								{% if message.reponses is not empty %}
-									<div class="tooglerReponses mt-3">
+								<div class="tooglerReponses mt-3" data-message-id="{{ message.getIdMessage() }}">
+									{% if message.reponses is not empty %}
 										<span class="toggle-responses text-light my-2" data-message-id="{{ message.getIdMessage() }}">
 											<i class="bi bi-chevron-down"></i>
 											<span class="show-text">Voir les réponses</span>
 											<span class="hide-text" style="display: none;">Masquer les réponses</span>
 										</span>
-									</div>
-								{% endif %}
+									{% endif %}
+								</div>
+								
 
 								<!-- Boutons supprimer/signaler -->
 								<div class="d-flex gap-2" >

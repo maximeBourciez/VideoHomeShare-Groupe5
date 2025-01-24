@@ -75,14 +75,14 @@ class RealtimeMessages {
         const container = document.getElementById('messageContainer');
         
         messages.forEach(message => {
-            // Vérifier si le message existe déjà avec un sélecteur plus précis
+            // Vérifier si le message existe déjà 
             const messageExists = document.querySelector(`[data-id-message="${message.idMessage}"]`);
             
             if (!messageExists) {
                 const messageHTML = this.creerMessageHTML(message);
                 
                 if (message.idMessageParent) {
-                    // Trouver le conteneur de réponses avec un sélecteur plus précis
+                    // Trouver le conteneur de réponses 
                     const parentContainer = document.querySelector(`.responses-container[data-message-id="${message.idMessageParent}"]`);
                     if (parentContainer) {
                         // Ajouter le message à la fin du conteneur de réponses parent
@@ -102,37 +102,33 @@ class RealtimeMessages {
                             // S'il n'a pas de parent, créer un toggle button si ce n'est pas déjà fait
                             if (!estEnfant) {
                                 // Récupérer le toggle button
-                                const toggleButton = messageParentContainer.querySelector(`.tooglerReponses`);
-                                const likesContainer = messageParentContainer.querySelector(`.likesContainer`);  
+                                const toggleButton = document.querySelector(`.tooglerReponses [data-message-id="${message.idMessageParent}"]`);  
 
                                 // S'il n'existe pas, le créer
                                 if (!toggleButton) {
                                     // Créer le bouton
-                                    const toggleButton = document.createElement('div');
-                                    toggleButton.className = 'tooglerReponses mt-3';
-                                    toggleButton.innerHTML = `
-                                        <span class="toggle-responses text-light my-2" data-message-id="${message.idMessageParent}">
-                                            <i class="bi bi-chevron-up"></i>
-                                            <span class="show-text" style="display: none;">Voir les réponses</span>
-                                            <span class="hide-text">Masquer les réponses</span>
-                                        </span>
-                                    `;
-                                    
+                                    const toggleButton = this.creerTogglerHtml(message);
+                                    let likesContainer = messageParentContainer.querySelector('.likesContainer');
+                                    console.log('Création du bouton pour le message:', toggleButton);
+
                                     // Ajouter un écouteur d'événements pour le bouton
                                     toggleButton.addEventListener('click', function() {
                                         // Trouver le conteneur de réponses associé
                                         const messageId = this.getAttribute('data-message-id');
-                                        const responsesContainer = document.querySelector(`.responses-container[data-message-id="${messageId}"]`);
+                                        const responsesContainer = document.querySelector(`.responses-container[data-message-id="${message.idMessageParent}"]`);
                                         
                                         // Vérifier si le conteneur existe
                                         if (responsesContainer && responsesContainer.classList.contains('responses-container')) {
                                             // Basculer l'affichage des réponses
-                                            if (responsesContainer.style.display === 'none') {
-                                                responsesContainer.style.display = 'block';
-                                                this.innerText = 'Masquer les réponses';
-                                            } else {
+                                            console.log('Basculer l\'affichage des réponses pour le message:', messageId);
+                                            if (responsesContainer.style.display === 'block') {
                                                 responsesContainer.style.display = 'none';
-                                                this.innerText = 'Voir les réponses';
+                                                this.querySelector('.show-text').style.display = 'inline';
+                                                this.querySelector('.hide-text').style.display = 'none';
+                                            } else {
+                                                responsesContainer.style.display = 'block';
+                                                this.querySelector('.show-text').style.display = 'none';
+                                                this.querySelector('.hide-text').style.display = 'inline';
                                             }
                                         }
                                     });
@@ -140,6 +136,8 @@ class RealtimeMessages {
                                     // Insérer le bouton avant le message parent
                                     likesContainer.insertAdjacentElement('afterend', toggleButton);
                                 }    
+                            }else{
+                                console.error('Ce message n\'est pas parent', message);
                             }
                             
                         }
@@ -194,7 +192,7 @@ class RealtimeMessages {
                     </div>
                     <div class="d-flex justify-content-between mt-4">
                         <!-- Boutons like, dislike, répondre -->
-                        <div class="d-flex flex-wrap gap-2 {{ message.idMessageParent ? '' : 'likesContainer' }}">
+                        <div class="d-flex flex-wrap gap-2 ${ message.idMessageParent ? '' : 'likesContainer' }">
                             <form method="POST" action="index.php?controller=fil&methode=like">
                                 <input type="hidden" name="id_message" value="${message.idMessage}">
                                 <input type="hidden" name="id_fil" value="${this.idFil}">
@@ -219,6 +217,8 @@ class RealtimeMessages {
                             </button>
                         </div>
 
+                        ${message.idMessageParent ? "" : `<div class="tooglerReponses mt-3" data-message-id="${message.idMessage}"></div>`}
+
                         <!-- Boutons supprimer/signaler -->
                         <div class="d-flex gap-2">
                             <form method="POST" action="index.php?controller=fil&methode=supprimerMessage" onsubmit="return confirmerSuppression('${message.idMessage}');">
@@ -237,4 +237,33 @@ class RealtimeMessages {
             </div>
         `;
     }
-} 
+
+    /**
+     * Méthode permettant de créer le toggler HTML pour les réponses
+     * 
+     * @param {Object} message - Les données du message
+     * @returns {HTMLElement} - Le bouton pour afficher/masquer les réponses
+     */
+    creerTogglerHtml(message) {
+        const button = document.createElement('span');
+        button.className = 'toggle-responses text-light my-2';
+        button.setAttribute('data-message-id', message.idMessage);
+
+        const icon = document.createElement('i');
+        icon.className = 'bi bi-chevron-down';
+        button.appendChild(icon);
+
+        const showText = document.createElement('span');
+        showText.className = 'show-text';
+        showText.textContent = 'Voir les réponses';
+        button.appendChild(showText);
+
+        const hideText = document.createElement('span');
+        hideText.className = 'hide-text';
+        hideText.textContent = 'Masquer les réponses';
+        hideText.style.display = 'none';
+        button.appendChild(hideText);
+
+        return button;
+    }
+}
