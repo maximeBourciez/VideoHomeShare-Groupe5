@@ -61,12 +61,6 @@ class SerieDAO
         return null;
     }
 
-    public function getEpisodesFromSerie(int $tmdbId, int $saison): array
-    {
-        $url = "{$this->baseUrl}/tv/{$tmdbId}/season/{$saison}?api_key={$this->apiKey}&language=fr-FR";
-        return $this->makeRequest($url);
-    }
-
     /**
      * @brief Récupère les saisons d'une série
      * 
@@ -256,5 +250,44 @@ class SerieDAO
         }
 
         return $personnalites;
+    }
+
+    /**
+     * @brief Récupère tous les épisodes d'une série
+     * 
+     * @param int $tmdbId Identifiant TMDB de la série
+     * @return array Liste des épisodes groupés par saison
+     */
+    public function getAllEpisodesFromSerie(int $tmdbId): array
+    {
+        $saisons = $this->getSeasonsFromSerie($tmdbId);
+        $allEpisodes = [];
+
+        foreach ($saisons as $saison) {
+            $url = "{$this->baseUrl}/tv/{$tmdbId}/season/{$saison->getNumero()}?api_key={$this->apiKey}&language=fr-FR";
+            $response = $this->makeRequest($url);
+
+            if ($response && isset($response['episodes'])) {
+                $episodes = [];
+                foreach ($response['episodes'] as $episodeData) {
+                    $episodes[] = new Episode(
+                        $episodeData['id'],
+                        $episodeData['name'],
+                        $episodeData['overview'] ?? '',
+                        $episodeData['episode_number'],
+                        new DateTime($episodeData['air_date'] ?? 'now'),
+                        !empty($episodeData['still_path'])
+                            ? $this->imageBaseUrl . $episodeData['still_path']
+                            : null
+                    );
+                }
+                $allEpisodes[$saison->getNumero()] = [
+                    'saison' => $saison,
+                    'episodes' => $episodes
+                ];
+            }
+        }
+
+        return $allEpisodes;
     }
 }

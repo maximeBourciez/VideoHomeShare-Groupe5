@@ -50,6 +50,7 @@ require_once 'modeles/signalement.class.php';
 require_once 'modeles/notification.class.php';
 require_once 'modeles/serie.class.php';
 require_once 'modeles/saison.class.php';
+require_once 'modeles/episode.class.php';
 
 
 

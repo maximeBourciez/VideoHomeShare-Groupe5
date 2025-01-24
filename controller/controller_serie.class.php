@@ -78,4 +78,36 @@ class ControllerSerie extends Controller
         // Si pas d'ID ou série non trouvée, rediriger vers la page d'accueil
         echo $this->getTwig()->render('index.html.twig');
     }
+
+    public function afficherListeSerie(): void
+    {
+        $tmdbId = isset($_GET['tmdb_id']) ? intval($_GET['tmdb_id']) : null;
+        $season = isset($_GET['season']) ? intval($_GET['season']) : null;
+        $serie = $this->serieDAO->getSerieFromTMDB($tmdbId);
+
+        if ($serie) {
+        }
+    }
+
+    public function afficherListeEpisodes(): void
+    {
+        $tmdbId = isset($_GET['tmdb_id']) ? intval($_GET['tmdb_id']) : null;
+
+        if ($tmdbId) {
+            $serie = $this->serieDAO->getSerieFromTMDB($tmdbId);
+            if ($serie) {
+                $episodes = $this->serieDAO->getAllEpisodesFromSerie($tmdbId);
+
+                echo $this->getTwig()->render('listeEpSerie.html.twig', [
+                    'serie' => $serie,
+                    'episodes' => $episodes
+                ]);
+                return;
+            }
+        }
+
+        // Redirection vers la page d'accueil si erreur
+        header('Location: index.php');
+        exit();
+    }
 }

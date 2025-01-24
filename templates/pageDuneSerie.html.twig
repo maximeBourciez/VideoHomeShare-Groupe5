@@ -89,15 +89,15 @@ generateStarRating({{ moyenne }}, 5);
 							<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Laisser un avis</button>
 						{% endif %}
 						<button class="movie-actions__watchlist-btn btn btn-myprimary fw-normal me-4 bi bi-plus">WatchList</button>
-						<a>
+						<a href="index.php?controller=serie&methode=afficherListeEpisodes&tmdb_id={{ serie.id }}">
 							<button class="movie-actions__watch-btn btn btn-myprimary fw-normal bi bi-list">
-								Épisode</button>
+								Épisodes
+							</button>
 						</a>
 					</div>
 				</div>
 			</div>
 		</div>
-
 
 		<!-- Personnalités -->
 		<div class="movie-cast bg-mydark my-5 text-white w-100 rounded shadow position-relative">
