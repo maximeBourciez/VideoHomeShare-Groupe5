@@ -4,11 +4,16 @@
 
 	<main class=" flex-grow-1">
 		<div class="row mt-3">
+			
 			<div class="col-8  d-inline-block">
 				<p class="w-75 bg-primary rounded p-1 ms-lg-auto me-lg-0 mx-auto" id="lienVideo">
 					lien video :
 				</p>
+				
 			</div>
+
+
+			
 			{% if salle.estPublique != 1 %}
 				<div class="col-3 mx-auto  ">
 					<p class=" mb-0 bg-primary rounded p-1 text-center">
@@ -27,17 +32,25 @@
 				</div>
 
 				<div id="description" class="bg-mydark text-white rounded col-lg-8 col-10 ms-lg-auto me-lg-0 mx-auto p-2 mb-4">
-					<p id="titreVideo">
+					<p id="titreVideo" class="ms-2">
 						titre
 					</p>
 
 					
-					<p id="dureeVideo">
+					<p id="dureeVideo" class="ms-2">
 						duree
 					</p>
 
 					{% if Hote == true %}
-					<a class="btn btn-primary" href="index.php?controller=salle&methode=fermerSalle&id={{salle.idSalle}}"> fermer la salle </a>
+					
+						<div class=" row mx-2 mb-3	"> 
+						 <input type="text" class="  rounded	 col-8" id="lien" placeholder="lien de la video">
+						 <button class="btn btn-primary col-4 "  onclick="">ajouter</button>
+						</div>
+						
+					<a class="btn btn-primary ms-2" href="index.php?controller=salle&methode=fermerSalle&id={{salle.idSalle}}"> fermer la salle </a>
+					
+					
 					{% endif %}
 
 				</div>

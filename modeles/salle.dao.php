@@ -183,6 +183,25 @@ class SalleDAO{
         return($stmt->execute());
 
     }
+
+    function findRole( ?string $idUtilisateur, ?int $idSalle)
+    {
+        $stmt = $this->pdo->prepare("SELECT role FROM ".DB_PREFIX. "se_trouver WHERE idUtilisateur = :idUtilisateur AND idSalle = :idSalle");
+        $stmt->bindValue(':idUtilisateur', $idUtilisateur);
+        $stmt->bindValue(':idSalle', $idSalle);
+        $stmt->execute();
+        $row = $stmt->fetch();
+        if ($row == false){
+            return null;
+        }
+        return $row['role'];
+    }
+
+    function suprimersalle(int $id) : bool{
+        $stmt = $this->getPdo()->prepare("DELETE FROM ".DB_PREFIX."salle WHERE idSalle = :idSalle ");
+        $stmt->bindParam(":idSalle", $id);
+        return $stmt->execute();
+    }
         
         
 

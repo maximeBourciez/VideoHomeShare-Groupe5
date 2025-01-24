@@ -3,7 +3,7 @@ function onYouTubeIframeAPIReady(w= 633) { // Crée un objet YT.Player pour int�
     let player = new YT.Player('video', {
         height: w*9/16,
           width: w,
-        videoId: 'gIdaTOTzZuw', // Remplacez VIDEO_ID par l'ID de votre vidéo YouTube
+        videoId: 'bdXM4DT_Mfw', // Remplacez VIDEO_ID par l'ID de votre vidéo YouTube
         events: {
         'onReady': onPlayerReady
         }

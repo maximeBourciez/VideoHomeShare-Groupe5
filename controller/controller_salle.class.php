@@ -38,9 +38,10 @@ class ControllerSalle extends Controller
             $this->accueilWatch2Gether();
             exit();
         }
+        $hote = $managersalle->findRole(unserialize($_SESSION['utilisateur'])->getId(),$salle->getIdSalle());
         $managersalle->update($salle);
         $template = $this->getTwig()->load('visionageW2G.html.twig');
-        echo $template->render(array('salle' => $salle));
+        echo $template->render(array('salle' => $salle,'Hote' => $hote));
 
 
     }
@@ -51,12 +52,7 @@ class ControllerSalle extends Controller
             $managerUtilisateur->connexion();
             exit();
         }
-        $hote = false;
-        if (isset($_SESSION['salle'])) {
-            if ($_SESSION['salle'][$code] == "Hote") {
-                $hote = true;
-            }
-        }
+        
         
         $managersalle = new SalleDAO($this->getPdo());
         $salle = $managersalle->findByCode($code);
@@ -65,6 +61,8 @@ class ControllerSalle extends Controller
             $this->accueilWatch2Gether();
             exit();
         }
+        $hote = $managersalle->findRole(unserialize($_SESSION['utilisateur'])->getId(),$salle->getIdSalle());
+
         $managersalle->update($salle);
         $template = $this->getTwig()->load('visionageW2G.html.twig');
         echo $template->render(array('salle' => $salle,'Hote' => $hote));
@@ -121,6 +119,29 @@ class ControllerSalle extends Controller
         $salle = $managersalle->find($id);
         $salle->setPlaceDisponible($salle->getPlaceDisponible()+1);
         $managersalle->update($salle);
+
+    }
+
+    public function fermerSalle(){
+        $id = isset($_GET['id']) ?  htmlspecialchars($_GET['id']) : null;
+        $managersalle = new SalleDAO($this->getPdo());
+        if (!isset($_SESSION['utilisateur'])) {
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
+            exit();
+        }
+        $utilisateur = unserialize($_SESSION['utilisateur']);
+        $role = $managersalle->findRole($utilisateur->getId(),$id);
+        if( $role != "Hote"){
+            $managerIndex = new ControllerIndex($this->getTwig(), $this->getLoader());
+            $managerIndex->index();
+            exit();
+        }
+
+        $managersalle->suprimersalle($id);
+        $this->accueilWatch2Gether();
+
+
 
     }
 
