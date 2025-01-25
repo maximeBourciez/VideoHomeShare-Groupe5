@@ -87,11 +87,11 @@
 				</div>
 			</div>
 
-			<div class="responses-container" style="display: none;" data-message-id="{{ reponse.getIdMessage() }}">
-				{% if reponse.getReponses() is not empty %}
-					{{ _self.afficherReponses(reponse.reponses, reponse.getUtilisateur() ? reponse.getUtilisateur().getId() : 0, reponse.getUtilisateur() ? reponse.getUtilisateur().getPseudo() : 'Utilisateur inconnu', idFil, messageSuppr) }}
-				{% endif %}
-			</div>
+			<div class="responses-container" data-message-id="{{ reponse.getIdMessage() }}">
+            {% if reponse.reponses is not empty %}
+				{{ _self.afficherReponses(reponse.reponses, reponse.getUtilisateur() ? reponse.getUtilisateur().getId() : 0, reponse.getUtilisateur() ? reponse.getUtilisateur().getPseudo() : 'Utilisateur inconnu', idFil, messageSuppr) }}
+			{% endif %}
+        </div>
 
 		{% endfor %}
 {% endmacro %}
@@ -105,7 +105,9 @@
 {% endblock %}
 
 {% block content %}
-	
+	<pre>
+		{{ dump(messages[0]) }}
+	</pre>
 	<main class="flex-grow-1">
 		<div class="container-fluid bg-mydark text-white p-4 shadow " style="border-top: 5px solid #F2AC0F;">
 			<div class="text-center">
@@ -228,9 +230,7 @@
 					</div>
 
 					<div class="responses-container" style="display: none;" data-message-id="{{ message.getIdMessage() }}">
-						
 							{{ macros.afficherReponses(message.reponses, message.getUtilisateur().getId(), message.getUtilisateur().getPseudo(), fil.0.getId(), messageSuppr) }}
-						
 					</div>
 
 
