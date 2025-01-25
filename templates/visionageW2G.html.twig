@@ -44,9 +44,11 @@
 					{% if Hote == true %}
 					
 						<div class=" row mx-2 mb-3	"> 
-						 <input type="text" class="  rounded	 col-8" id="lien" placeholder="lien de la video">
-						 <button class="btn btn-primary col-4 "  onclick="">ajouter</button>
+						 <input type="text" class="  rounded col-8" id="lien" placeholder="lien de la video">
+						 <button class="btn btn-primary col-4 "  onclick="ajouerVideo({{salle.idSalle}})">ajouter</button>
 						</div>
+
+						<button class="btn btn-primary ms-2 my-2" onclick="prochainVideo({{salle.idSalle}}, video)"> passe a la prochaine video</button>
 						
 					<a class="btn btn-primary ms-2" href="index.php?controller=salle&methode=fermerSalle&id={{salle.idSalle}}"> fermer la salle </a>
 					
@@ -58,45 +60,38 @@
 			<script src="JS\Watch2Gether.js"></script>
 			<script>
 				var video = onYouTubeIframeAPIReady(document.getElementById("description").clientWidth);
-				
+				console.log(video);
+				console.log(video.target.getPlayerState());
 				window.addEventListener('resize', function() {
 				
 				video.setSize(document.getElementById("description").clientWidth,document.getElementById("description").clientWidth*9/16)
 
 				});
 
+				function onPlayerStateChange(event) {
+            		console.log("L'état du lecteur a changé :", event.data);
+					console.log(event.target.getPlayerState());
+					console.log(event.target.getCurrentTime());
+					console.log(event.target.getVideoData().video_id);
+        		}		
+
 				window.onbeforeunload = function (event) {
 					
 					callController('salle','quiter',[['id',{{salle.idSalle}}]]);
 					
 				};
+				setInterval(majchat({{salle.idSalle}}),1000)
 			</script>
 
 			<div id="chat" class="bg-mydark  col-8 col-lg-3 mx-auto rounded d-flex col flex-column mb-3  " style=" height: 550px;">
-				<div data-bs-spy="scroll" class="overflow-auto ">
-					<div class="bg-white rounded my-3 py-2 d-inline-block " >
-						<p class="mb-0 ms-2">
-							user2</p>
-						<p class="mb-0 mx-2"> bonjour bonjour  bonjour  bonjour  bonjour  bonjour  bonjour  bonjour  bonjour  bonjour  bonjour  bonjour  bonjour  bonjour  bonjour  bonjour </p>
-					</div>
-					<br>
-					<div class="bg-white rounded mb-3  py-2 d-inline-block " >
-						<p class="mb-0 ms-2">
-							user1</p>
-						<p class="mb-0 mx-2"> bonjour </p>
-					</div>
-					<br>
-					<div class="bg-white rounded mb-3 py-2 d-inline-block "  >
-						<p class="mb-0 ms-2">
-							user3</p>
-						<p  class="mb-0 mx-2"> bonjour </p>
-					</div>
+				<div data-bs-spy="scroll" class="overflow-auto " id="messages">
+					
 				</div>
 
 				<div class="row bg-white  m-1 rounded mt-auto mb-2">
-					<input type="text" class="  border border-0 rounded col-9" placeholder="Message"></input>
+					<input type="text" class="  border border-0 rounded col-9" placeholder="Message" id = "Message"></input>
 
-				<button class="col-2 rounded bg-primary m-1 p-1 ps-0 " >
+				<button class="col-2 rounded bg-primary m-1 p-1 ps-0 " onclick="envoyerMessage({{salle.idSalle}})">
 					<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 					<i class="bi bi-send  "></i>
 

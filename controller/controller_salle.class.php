@@ -138,13 +138,133 @@ class ControllerSalle extends Controller
             exit();
         }
 
+        if (file_exists("jsonW2G/salle$id.json")) {
+            // Supprimer le fichier
+            unlink("jsonW2G/salle$id.json");
+        }
+
         $managersalle->suprimersalle($id);
         $this->accueilWatch2Gether();
+
+    }
+
+    public function envoyerMessage(){
+
+        // verifier si l'utilisateur est connecter
+        if (!isset($_SESSION['utilisateur'])) {
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
+            exit();
+        }
+        // ouvrir fichier json contenant les messages
+        $id = isset($_GET['id']) ?  htmlspecialchars($_GET['id']) : null;
+        $message = isset($_GET['message']) ?  htmlspecialchars($_GET['message']) : null;
+        $jsonData = file_get_contents("jsonW2G/salle$id.json");
+
+        if ($jsonData == false){
+            $this->accueilWatch2Gether();
+            exit();
+        }
+        $data = json_decode($jsonData, true);   
+         
+
+        $newmessage = array('id' => count($data['chat']['messages'])+1, 'message' => $message, 'auteur' => unserialize($_SESSION['utilisateur'])->getPseudo());
+        $data['chat']['messages'][] = $newmessage;
+
+        file_put_contents("jsonW2G/salle$id.json", json_encode($data));
+    }
+
+
+    public function majChat(){
+        // verifier si l'utilisateur est connecter
+        if (!isset($_SESSION['utilisateur'])) {
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
+            exit();
+        }
+        // ouvrir fichier json contenant les messages
+        $id = isset($_GET['id']) ?  htmlspecialchars($_GET['id']) : null;
+        $jsonData = file_get_contents("jsonW2G/salle$id.json");
+
+        if ($jsonData == false){
+            $this->accueilWatch2Gether();
+            exit();
+        }   
+
+        $data = json_decode($jsonData, true);
+
+        echo json_encode($data);
 
 
 
     }
 
+
+    public function majVideo(){}
+
+    public function envoyerinfoVideo(){}
+
+    public function prochainVideo(){
+        $id = isset($_GET['id']) ?  htmlspecialchars($_GET['id']) : null;
+        $managersalle = new SalleDAO($this->getPdo());
+        if (!isset($_SESSION['utilisateur'])) {
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
+            exit();
+        }
+        $utilisateur = unserialize($_SESSION['utilisateur']);
+        $role = $managersalle->findRole($utilisateur->getId(),$id);
+        $salle = $managersalle->find($id);
+        if( $role != "Hote"){
+            $managerIndex = new ControllerIndex($this->getTwig(), $this->getLoader());
+            $managerIndex->index();
+            exit();
+        }
+
+        if ( $salle->getRangCourant() == null){
+            $salle->setRangCourant(1);
+        }
+        else{
+            $salle->setRangCourant($salle->getRangCourant()+1);
+        }
+        $managersalle->update($salle);
+
+        $url = $managersalle->getUrlVideo($salle->getIdSalle());
+        if ($url == null){
+            $salle->setRangCourant(1);
+            $managersalle->update($salle);
+            $url = $managersalle->getUrlVideo($salle->getIdSalle());
+        }
+
+        echo $url;
+
+    }
+
+    public function ajouterVideo(){
+        
+        
+        $id = isset($_GET['id']) ?  htmlspecialchars($_GET['id']) : null;
+        $url = isset($_GET['url']) ?  htmlspecialchars($_GET['url']) : null;
+
+        $managersalle = new SalleDAO($this->getPdo());
+        if (!isset($_SESSION['utilisateur'])) {
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
+            exit();
+        }
+        $utilisateur = unserialize($_SESSION['utilisateur']);
+        $role = $managersalle->findRole($utilisateur->getId(),$id);
+        if( $role != "Hote"){
+            $managerIndex = new ControllerIndex($this->getTwig(), $this->getLoader());
+            $managerIndex->index();
+            exit();
+        }
+
+        $managersalle = new SalleDAO($this->getPdo());
+        $salle = $managersalle->find($id);
+        $managersalle->ajouterVideo($salle->getIdSalle(),$url);
+
+    }
     
 
 }

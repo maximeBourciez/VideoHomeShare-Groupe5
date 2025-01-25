@@ -202,6 +202,30 @@ class SalleDAO{
         $stmt->bindParam(":idSalle", $id);
         return $stmt->execute();
     }
+
+    function getUrlVideo(int $idSalle) : ?string 
+    {
+        $stmt = $this->getPdo()->prepare("SELECT c.urlVideo FROM ".DB_PREFIX."concerner c WHERE c.idSalle = :idSalle and c.rang = (SELECT s.rangCourant FROM ".DB_PREFIX."salle s WHERE s.idSalle = :idSalle)");
+        $stmt->bindParam(":idSalle", $idSalle);
+        $stmt->execute();
+        $row = $stmt->fetch();
+        if ($row == false){
+            return null;
+        }
+        return $row['urlVideo'];
+    }
+
+    function ajouterVideo(int $idSalle, string $urlVideo) : bool
+    {
+        $stmt = $this->getPdo()->prepare("INSERT INTO ".DB_PREFIX."concerner (idSalle, urlVideo, rang) VALUES (:idSalle, :urlVideo, (SELECT count(c.rang)+1 FROM ".DB_PREFIX."concerner c WHERE c.idSalle = :idSalle))");
+        $stmt->bindParam(":idSalle", $idSalle);
+        $stmt->bindParam(":urlVideo", $urlVideo);
+        return $stmt->execute();
+    }
+
+    
+
+    
         
         
 
