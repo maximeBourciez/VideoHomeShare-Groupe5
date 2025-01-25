@@ -108,7 +108,7 @@ class RealtimeMessages {
                                 if (!toggleButton) {
                                     // Créer le bouton
                                     const toggleButton = this.creerTogglerHtml(message);
-                                    let likesContainer = messageParentContainer.querySelector('.likesContainer');
+                                    let toggleButtonContainer = document.querySelector(`.tooglerReponses[data-message-id="${message.idMessageParent}"]`);
                                     console.log('Création du bouton pour le message:', toggleButton);
 
                                     // Ajouter un écouteur d'événements pour le bouton
@@ -125,16 +125,18 @@ class RealtimeMessages {
                                                 responsesContainer.style.display = 'none';
                                                 this.querySelector('.show-text').style.display = 'inline';
                                                 this.querySelector('.hide-text').style.display = 'none';
+                                                this.querySelector('.bi').classList.replace('bi-chevron-up', 'bi-chevron-down');
                                             } else {
                                                 responsesContainer.style.display = 'block';
                                                 this.querySelector('.show-text').style.display = 'none';
                                                 this.querySelector('.hide-text').style.display = 'inline';
+                                                this.querySelector('.bi').classList.replace('bi-chevron-down', 'bi-chevron-up');
                                             }
                                         }
                                     });
 
                                     // Insérer le bouton avant le message parent
-                                    likesContainer.insertAdjacentElement('afterend', toggleButton);
+                                    toggleButtonContainer.insertAdjacentElement('afterbegin', toggleButton);
                                 }    
                             }else{
                                 console.error('Ce message n\'est pas parent', message);
@@ -245,25 +247,31 @@ class RealtimeMessages {
      * @returns {HTMLElement} - Le bouton pour afficher/masquer les réponses
      */
     creerTogglerHtml(message) {
+        // Créer la span 
         const button = document.createElement('span');
         button.className = 'toggle-responses text-light my-2';
         button.setAttribute('data-message-id', message.idMessage);
 
+        // Créer l'icône
         const icon = document.createElement('i');
         icon.className = 'bi bi-chevron-down';
         button.appendChild(icon);
 
+        // Créer le texte (voir les réponses)
         const showText = document.createElement('span');
         showText.className = 'show-text';
         showText.textContent = 'Voir les réponses';
+        showText.style.display = 'none';
         button.appendChild(showText);
 
+        // Créer le texte (masquer les réponses)
         const hideText = document.createElement('span');
         hideText.className = 'hide-text';
         hideText.textContent = 'Masquer les réponses';
-        hideText.style.display = 'none';
+        hideText.style.display = 'block';
         button.appendChild(hideText);
 
+        // Retourner le bouton
         return button;
     }
 }
