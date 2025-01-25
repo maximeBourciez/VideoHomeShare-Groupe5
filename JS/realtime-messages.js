@@ -18,6 +18,7 @@ class RealtimeMessages {
         this.dernierMessageId = this.getDernierMessageId();
         this.interval = null;
         this.initializePolling();
+        this.setupDynamicEventListeners();
     }
 
     /**
@@ -273,5 +274,54 @@ class RealtimeMessages {
 
         // Retourner le bouton
         return button;
+    }
+
+    /**
+     * Méthode permettant de mettre en place les écouteurs d'événements dynamiques pour les boutons "Répondre" et "Signaler"
+     * 
+     * @details Cette méthode utilise la délégation d'événements pour les boutons "Répondre" et "Signaler" qui sont ajoutés dynamiquement, afin de remplir les données des messages originaux
+     * 
+     * @returns {void}
+     */
+    setupDynamicEventListeners() {
+        const self = this;
+        // Add event delegation for dynamically added messages
+        document.addEventListener('click', function(event) {
+            // Répondre dynamique
+            const repondreButton = event.target.closest('.btn[data-bs-target="#repondreModal"]');
+            if (repondreButton) {
+                const repondreModal = document.getElementById("repondreModal");
+                const modalTextarea = repondreModal.querySelector("textarea");
+                const messageOriginal = repondreModal.querySelector(".message-original p");
+                const auteurOriginal = repondreModal.querySelector(".message-original strong");
+                const compteur = repondreModal.querySelector(".modal-body span");
+
+                const parentMessage = repondreButton.closest(".card-body");
+                const messageText = parentMessage.querySelector("p").textContent;
+                const pseudoAuteur = parentMessage.querySelector(".username-link");
+
+                messageOriginal.textContent = messageText.trim();
+                auteurOriginal.textContent = pseudoAuteur.textContent.trim();
+                modalTextarea.placeholder = `Répondre à ${pseudoAuteur.textContent.trim()}...`;
+                modalTextarea.value = "";
+                compteur.textContent = "0 / 1000";
+            }
+
+            // Signaler dynamique
+            const signalerButton = event.target.closest('[data-bs-target="#signalement"]');
+            if (signalerButton) {
+                const messageId = signalerButton.getAttribute('data-id-message');
+                const messageToSignal = document.querySelector(`.message[data-id-message="${messageId}"]`);
+                const hiddenInputIdMessage = document.getElementById("id_message_signalement");
+
+                if (messageToSignal) {
+                    const messageText = messageToSignal.querySelector('.message-text').innerText;
+                    document.querySelector('#signalement .message-to-signal').innerText = messageText;
+                    hiddenInputIdMessage.value = messageId;
+                } else {
+                    console.log("Message Introuvable");
+                }
+            }
+        });
     }
 }
