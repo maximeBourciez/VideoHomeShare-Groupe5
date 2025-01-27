@@ -30,6 +30,45 @@
 				<div class=" ms-lg-auto me-lg-0 mx-auto ">
 					<div id="video" class="  rounded"></div>
 				</div>
+				<script src="JS\Watch2Gether.js"></script>
+			<script>
+				var video = onYouTubeIframeAPIReady();
+				console.log(video);
+				console.log(video.getPlayerState());
+				
+
+				function onPlayerStateChange(event) {
+            		console.log("L'état du lecteur a changé :", event.target.getPlayerState());
+					// // recuperer l'etat du lecteur
+					// console.log(event.target.getPlayerState());
+					// // set l'etat du lecteur
+					// player.playVideo()
+					// player.pauseVideo()
+					// recuperer le temps de la video
+					// console.log(event.target.getCurrentTime());
+					// // set le temps de la video
+					// player.setCurrentTime(seconds)
+					// // recuperer le id de la video
+					// console.log(event.target.getVideoData().video_id);
+					// // set le id de la video
+					// player.loadVideoById(id);
+ 
+					document.getElementById("dureeVideo").innerHTML = "durée : "+ Math.floor(event.target.getDuration() / 60) + "min " + event.target.getDuration() % 60;
+        			document.getElementById("titreVideo").innerHTML = "titre : "+ event.target.videoTitle;
+       		 		document.getElementById("lienVideo").innerHTML =  "lien vidéo : "+ event.target.getVideoUrl();
+					
+					
+					
+        		}		
+
+				window.onbeforeunload = function (event) {
+					
+					callController('salle','quiter',[['id',{{salle.idSalle}}]]);
+					
+				};
+				setInterval(majchat({{salle.idSalle}}),1000)
+				
+			</script>
 
 				<div id="description" class="bg-mydark text-white rounded col-lg-8 col-10 ms-lg-auto me-lg-0 mx-auto p-2 mb-4">
 					<p id="titreVideo" class="ms-2">
@@ -37,7 +76,7 @@
 					</p>
 
 					
-					<p id="dureeVideo" class="ms-2">
+					<p id="dureeVideo" class="ms-2" onclick="envoyerinfoVideo({{salle.idSalle}}, video)">
 						duree
 					</p>
 
@@ -45,7 +84,7 @@
 					
 						<div class=" row mx-2 mb-3	"> 
 						 <input type="text" class="  rounded col-8" id="lien" placeholder="lien de la video">
-						 <button class="btn btn-primary col-4 "  onclick="ajouerVideo({{salle.idSalle}})">ajouter</button>
+						 <button class="btn btn-primary col-4 "  onclick="ajouerVideo({{salle.idSalle}}, video)">ajouter</button>
 						</div>
 
 						<button class="btn btn-primary ms-2 my-2" onclick="prochainVideo({{salle.idSalle}}, video)"> passe a la prochaine video</button>
@@ -57,31 +96,7 @@
 
 				</div>
 			</div>
-			<script src="JS\Watch2Gether.js"></script>
-			<script>
-				var video = onYouTubeIframeAPIReady(document.getElementById("description").clientWidth);
-				console.log(video);
-				console.log(video.target.getPlayerState());
-				window.addEventListener('resize', function() {
-				
-				video.setSize(document.getElementById("description").clientWidth,document.getElementById("description").clientWidth*9/16)
-
-				});
-
-				function onPlayerStateChange(event) {
-            		console.log("L'état du lecteur a changé :", event.data);
-					console.log(event.target.getPlayerState());
-					console.log(event.target.getCurrentTime());
-					console.log(event.target.getVideoData().video_id);
-        		}		
-
-				window.onbeforeunload = function (event) {
-					
-					callController('salle','quiter',[['id',{{salle.idSalle}}]]);
-					
-				};
-				setInterval(majchat({{salle.idSalle}}),1000)
-			</script>
+			
 
 			<div id="chat" class="bg-mydark  col-8 col-lg-3 mx-auto rounded d-flex col flex-column mb-3  " style=" height: 550px;">
 				<div data-bs-spy="scroll" class="overflow-auto " id="messages">

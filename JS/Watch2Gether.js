@@ -1,23 +1,31 @@
-function onYouTubeIframeAPIReady(w= 633) { // Crée un objet YT.Player pour intégrer le lecteur YouTube
-    console.log(w);
-    let player = new YT.Player('video', {
-        height: w*9/16,
-          width: w,
+ function onYouTubeIframeAPIReady() { // Crée un objet YT.Player pour intégrer le lecteur YouTube
+    
+    var  player = new YT.Player('video', {
+        height: 180,
+        width: 320,
         videoId: '_SjWyd7LxZ8', // Remplacez VIDEO_ID par l'ID de votre vidéo YouTube_SjWyd7LxZ8
         events: {
         'onReady': onPlayerReady,
         'onStateChange': onPlayerStateChange
         }
     });
+
+    
+        
     return(player);
     }
 
     // Fonction appelée lorsque le lecteur est prêt
     function onPlayerReady(event) { // Vous pouvez maintenant utiliser les fonctions de l'API pour contrôler le lecteur
         event.target.playVideo(); // Joue la vidéo
-        document.getElementById("dureeVideo").innerHTML += Math.floor(event.target.getDuration() / 60) + "min " + event.target.getDuration() % 60;
-        document.getElementById("titreVideo").innerHTML += event.target.videoTitle;
-        document.getElementById("lienVideo").innerHTML += event.target.getVideoUrl();
+        event.target.setSize(document.getElementById("description").clientWidth,document.getElementById("description").clientWidth*9/16)
+        majVideo(1, event.target);
+        majchat(1);
+        window.addEventListener('resize', function() {
+				
+            event.target.setSize(document.getElementById("description").clientWidth,document.getElementById("description").clientWidth*9/16)
+    
+            })
                     
     }
 
@@ -65,27 +73,31 @@ function onYouTubeIframeAPIReady(w= 633) { // Crée un objet YT.Player pour int�
         
        let url = callController('salle', 'prochainVideo', [["id", id]]);
          url.then(result => {
-            console.log(result);
+            
             var videoId = new URL(result).searchParams.get("v");
-            console.log(videoId);
+            
             if (videoId == null) {
                 videoId = new URL(result).pathname.split('/')[1];
-                console.log(videoId);
+                
             }
+            player.loadVideoById(videoId);
             
-            player.loadVideoById(videoId); 
-            majdescription(player);
+            
+            envoyerinfoVideo(id, player);
+             
+            
             
           });
        
           
     }
 
-    function ajouerVideo(id) {
+    function ajouerVideo(id, player) {
         let url = document.getElementById("lien").value;
         
         let test =callController('salle', 'ajouterVideo', [["id", id],["url", url] ]);
         document.getElementById("lien").value = '';
+        majVideo(id, player)
        console.log(test);        
         
     }
@@ -93,12 +105,11 @@ function onYouTubeIframeAPIReady(w= 633) { // Crée un objet YT.Player pour int�
     function majchat(id) {
         let url = callController('salle', 'majChat', [["id", id]]);
         url.then(result =>  {
-            console.log(result);
+            
            
-            let test = JSON.parse(result);
-            console.log(test);
-            let messages = test.chat.messages;
-            console.log(messages.length);
+            let data = JSON.parse(result);
+            let messages = data.chat.messages;
+            
             
             for (let index = 1; index < messages.length+1; index++) {
 
@@ -131,6 +142,43 @@ function onYouTubeIframeAPIReady(w= 633) { // Crée un objet YT.Player pour int�
         document.getElementById("Message").value = '';
         
         majchat(id);
+    }
+
+    function majVideo(id, player) {
+        let url = callController('salle', 'majVideo', [["id", id]]);
+        url.then(result => {
+            let data = JSON.parse(result);
+            let url = data.video.url;
+            var videoId = new URL(url).searchParams.get("v");
+            
+            if (videoId == null) {
+                videoId = new URL(url).pathname.split('/')[1];
+                
+            }
+            console.log(videoId);
+            player.loadVideoById(videoId); 
+            let etat = data.video.etat;
+            if (etat == 1 ) {
+                player.playVideo();
+            } else {
+                player.pauseVideo();
+            }
+
+            let temps = data.video.temps;
+            player.seekTo(temps);
+            
+
+        });
+    }
+
+    function envoyerinfoVideo(id, player) {
+        console.log(player);
+        console.log(player.getVideoUrl());
+       let url = player.getVideoUrl();
+       console.log(url);
+       let cc = url.replace("&", "\\");
+       let test = callController('salle', 'envoyerinfoVideo', [["id", id],["temps", player.getCurrentTime()],["etat", player.getPlayerState()],["url", cc]]);
+        console.log(test);
     }
 
 

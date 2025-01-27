@@ -106,6 +106,10 @@ class ControllerSalle extends Controller
         $utilisateur = unserialize($_SESSION['utilisateur']);
         $managersalle->ajouterRole($utilisateur->getId(),$salle->getIdSalle(),'Hote');
         $_SESSION['salle'] = array([$salle->getIdSalle() => "Hote"]);
+        // creer le fichier json
+        $data = array( 'video' => array('url' => null, 'etat' => null,'temps'=> null),'chat' => array('messages' => array()));
+        file_put_contents("jsonW2G/salle$lastInsertId.json", json_encode($data));
+        
         // afficher la salle
         $template = $this->getTwig()->load('visionageW2G.html.twig');
         echo $template->render(array('salle' => $salle,'Hote' => true));
@@ -200,9 +204,48 @@ class ControllerSalle extends Controller
     }
 
 
-    public function majVideo(){}
+    public function majVideo(){
+        // verifier si l'utilisateur est connecter
+        if (!isset($_SESSION['utilisateur'])) {
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
+            exit();
+        }
 
-    public function envoyerinfoVideo(){}
+        $id = isset($_GET['id']) ?  htmlspecialchars($_GET['id']) : null;
+        $jsonData = file_get_contents("jsonW2G/salle$id.json");
+        $data = json_decode($jsonData, true);
+        
+        if($data == null){
+            $this->accueilWatch2Gether();
+            exit();
+        }
+
+        echo json_encode($data);
+    }
+
+    public function envoyerinfoVideo(){
+        // verifier si l'utilisateur est connecter
+        if (!isset($_SESSION['utilisateur'])) {
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
+            exit();
+        }
+
+        $id = isset($_GET['id']) ?  htmlspecialchars($_GET['id']) : null;
+        $url = isset($_GET['url']) ?  htmlspecialchars($_GET['url']) : null;
+        $etat = isset($_GET['etat']) ?  htmlspecialchars($_GET['etat']) : null;
+        $temps = isset($_GET['temps']) ?  htmlspecialchars($_GET['temps']) : null;
+        $jsonData = file_get_contents("jsonW2G/salle$id.json");
+        $data = json_decode($jsonData, true);
+        $url = str_replace("\\", "&", $url);
+        $data['video']['url'] = $url;
+        $data['video']['etat'] = $etat;
+        $data['video']['temps'] = $temps;
+        file_put_contents("jsonW2G/salle$id.json", json_encode($data));
+        
+
+    }
 
     public function prochainVideo(){
         $id = isset($_GET['id']) ?  htmlspecialchars($_GET['id']) : null;
@@ -262,6 +305,29 @@ class ControllerSalle extends Controller
 
         $managersalle = new SalleDAO($this->getPdo());
         $salle = $managersalle->find($id);
+
+        if ($salle->getRangCourant() == null){
+            $salle->setRangCourant(1);
+
+            // modifier le fichier json
+            $jsonData = file_get_contents("jsonW2G/salle$id.json");
+            $data = json_decode($jsonData, true);
+            preg_match('/(?:v=|\/)([a-zA-Z0-9_-]{11})/', $url, $matches);
+            if (isset($matches[1])) {
+                // $matches[1] contient l'ID de la vidéo
+                $idVideo= $matches[1];
+            } else {
+                preg_match('/youtu\.be\/([a-zA-Z0-9_-]+)/', $url, $matches);
+                // $matches[1] contient l'ID de la vidéo
+                $idVideo= $matches[1];
+            }
+            $data['video']['id'] = $idVideo;
+            file_put_contents("jsonW2G/salle$id.json", json_encode($data));
+
+        }
+        
+        $managersalle->update($salle);
+
         $managersalle->ajouterVideo($salle->getIdSalle(),$url);
 
     }
