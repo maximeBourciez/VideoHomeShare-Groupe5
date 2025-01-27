@@ -48,7 +48,9 @@ class Serie
     }
 
     /**
-     * @return int
+     * @brief Retourne l'identifiant de la série
+     * 
+     * @return int L'identifiant unique de la série
      */
     public function getId(): int
     {
@@ -56,7 +58,10 @@ class Serie
     }
 
     /**
-     * @param int $id
+     * @brief Définit l'identifiant de la série
+     * 
+     * @param int $id Le nouvel identifiant de la série
+     * @return void
      */
     public function setId(int $id): void
     {

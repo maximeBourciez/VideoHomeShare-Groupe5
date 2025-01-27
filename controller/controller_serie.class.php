@@ -79,16 +79,19 @@ class ControllerSerie extends Controller
         echo $this->getTwig()->render('index.html.twig');
     }
 
-    public function afficherListeSerie(): void
-    {
-        $tmdbId = isset($_GET['tmdb_id']) ? intval($_GET['tmdb_id']) : null;
-        $season = isset($_GET['season']) ? intval($_GET['season']) : null;
-        $serie = $this->serieDAO->getSerieFromTMDB($tmdbId);
-
-        if ($serie) {
-        }
-    }
-
+    /**
+     * @brief Affiche la liste des épisodes d'une série
+     * 
+     * Cette méthode :
+     * - Récupère l'ID TMDB de la série depuis l'URL
+     * - Utilise le DAO pour obtenir les informations de la série et ses épisodes
+     * - Affiche la liste complète des épisodes dans un template Twig
+     * 
+     * Si la série n'est pas trouvée ou si l'ID n'est pas fourni,
+     * redirige vers la page d'accueil
+     * 
+     * @return void
+     */
     public function afficherListeEpisodes(): void
     {
         $tmdbId = isset($_GET['tmdb_id']) ? intval($_GET['tmdb_id']) : null;
@@ -109,5 +112,22 @@ class ControllerSerie extends Controller
         // Redirection vers la page d'accueil si erreur
         header('Location: index.php');
         exit();
+    }
+
+    /**
+     * @brief Affiche la liste des séries
+     * 
+     * @param int|null $tmdbId Identifiant TMDB de la série
+     * @param int|null $season Numéro de la saison à afficher
+     * @return void
+     */
+    public function afficherListeSerie(): void
+    {
+        $tmdbId = isset($_GET['tmdb_id']) ? intval($_GET['tmdb_id']) : null;
+        $season = isset($_GET['season']) ? intval($_GET['season']) : null;
+        $serie = $this->serieDAO->getSerieFromTMDB($tmdbId);
+
+        if ($serie) {
+        }
     }
 }
