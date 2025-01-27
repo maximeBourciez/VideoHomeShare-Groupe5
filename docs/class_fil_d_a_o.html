@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
-<meta name="generator" content="Doxygen 1.12.0"/>
+<meta name="generator" content="Doxygen 1.11.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>VideoHomeShare: Référence de la classe FilDAO</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
@@ -35,7 +35,7 @@
 </table>
 </div>
 <!-- end header part -->
-<!-- Généré par Doxygen 1.12.0 -->
+<!-- Généré par Doxygen 1.11.0 -->
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 var searchBox = new SearchBox("searchBox", "search/",'.html');
@@ -127,12 +127,6 @@ Fonctions membres publiques</h2></td></tr>
 <tr class="memitem:a7320e757c1ee831183e2ac33d0bcfcfa" id="r_a7320e757c1ee831183e2ac33d0bcfcfa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7320e757c1ee831183e2ac33d0bcfcfa">findById</a> (int $id)</td></tr>
 <tr class="memdesc:a7320e757c1ee831183e2ac33d0bcfcfa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode pour trouver un fil par son id.  <br /></td></tr>
 <tr class="separator:a7320e757c1ee831183e2ac33d0bcfcfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1626e9027c4e9ff4c6182d2cc1af261d" id="r_a1626e9027c4e9ff4c6182d2cc1af261d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1626e9027c4e9ff4c6182d2cc1af261d">findMessagesByFilId</a> (int $idFil)</td></tr>
-<tr class="memdesc:a1626e9027c4e9ff4c6182d2cc1af261d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode pour trouver les messages d'un fil par son id.  <br /></td></tr>
-<tr class="separator:a1626e9027c4e9ff4c6182d2cc1af261d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93a5768d966009c4b2955714e67f642d" id="r_a93a5768d966009c4b2955714e67f642d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a93a5768d966009c4b2955714e67f642d">findFirstUserByFilId</a> (int $idFil)</td></tr>
-<tr class="memdesc:a93a5768d966009c4b2955714e67f642d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode pour récupérer l'utilisateur ayant posté le premier message d'un fil.  <br /></td></tr>
-<tr class="separator:a93a5768d966009c4b2955714e67f642d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae4832783f040078635b49ef54e177174" id="r_ae4832783f040078635b49ef54e177174"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae4832783f040078635b49ef54e177174">create</a> (string $titre, string $description)</td></tr>
 <tr class="memdesc:ae4832783f040078635b49ef54e177174"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode pour ajouter un fil.  <br /></td></tr>
 <tr class="separator:ae4832783f040078635b49ef54e177174"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -149,6 +143,7 @@ Fonctions membres publiques</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Fonctions membres privées</h2></td></tr>
 <tr class="memitem:a40d107f9edaf2427daa8fc35436ccc34" id="r_a40d107f9edaf2427daa8fc35436ccc34"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a40d107f9edaf2427daa8fc35436ccc34">themeExisteDeja</a> (array $themes, <a class="el" href="class_theme.html">Theme</a> $theme)</td></tr>
+<tr class="memdesc:a40d107f9edaf2427daa8fc35436ccc34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode pour vérifier si un thème existe déjà dans les thèmes d'un fil.  <br /></td></tr>
 <tr class="separator:a40d107f9edaf2427daa8fc35436ccc34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa2be421a0b7405c61263f6af0aed06d8" id="r_aa2be421a0b7405c61263f6af0aed06d8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa2be421a0b7405c61263f6af0aed06d8">searchFilsByTheme</a> (string $search)</td></tr>
 <tr class="separator:aa2be421a0b7405c61263f6af0aed06d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -296,59 +291,6 @@ Attributs privés</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Renvoie</dt><dd>array </dd></dl>
-
-</div>
-</div>
-<a id="a93a5768d966009c4b2955714e67f642d" name="a93a5768d966009c4b2955714e67f642d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a93a5768d966009c4b2955714e67f642d">&#9670;&#160;</a></span>findFirstUserByFilId()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">findFirstUserByFilId </td>
-          <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$idFil</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Méthode pour récupérer l'utilisateur ayant posté le premier message d'un fil. </p>
-<dl class="params"><dt>Paramètres</dt><dd>
-  <table class="params">
-    <tr><td class="paramtype">integer</td><td class="paramname">$idFil</td><td>Identifiant du fil</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Renvoie</dt><dd>Utilisateur|null </dd></dl>
-
-</div>
-</div>
-<a id="a1626e9027c4e9ff4c6182d2cc1af261d" name="a1626e9027c4e9ff4c6182d2cc1af261d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1626e9027c4e9ff4c6182d2cc1af261d">&#9670;&#160;</a></span>findMessagesByFilId()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">findMessagesByFilId </td>
-          <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$idFil</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Méthode pour trouver les messages d'un fil par son id. </p>
-<dl class="params"><dt>Paramètres</dt><dd>
-  <table class="params">
-    <tr><td class="paramtype">integer</td><td class="paramname">$idFil</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Renvoie</dt><dd>array </dd></dl>
-<dl class="section warning"><dt>Avertissement</dt><dd>non testée </dd></dl>
 
 </div>
 </div>
@@ -600,6 +542,16 @@ Attributs privés</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Méthode pour vérifier si un thème existe déjà dans les thèmes d'un fil. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">array</td><td class="paramname">$themes</td><td>Tableau de thèmes d'un fil </td></tr>
+    <tr><td class="paramtype"><a class="el" href="class_theme.html" title="Classe représentant un thème dans l&#39;application.">Theme</a></td><td class="paramname">$theme</td><td>Thème à vérifier</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>bool Vrai si le thème existe déjà, faux sinon </dd></dl>
+
 </div>
 </div>
 <h2 class="groupheader">Documentation des champs</h2>
@@ -634,7 +586,7 @@ Attributs privés</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_fil_d_a_o.html">FilDAO</a></li>
-    <li class="footer">Généré par <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Généré par <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.11.0 </li>
   </ul>
 </div>
 </body>
