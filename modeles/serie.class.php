@@ -17,6 +17,7 @@ class Serie
     private ?string $lienAffiche;
     private int $nombreSaisons;
     private int $nombreEpisodes;
+    private ?string $lienAfficheReduite = null;
 
     /**
      * @brief Constructeur de la classe Serie
@@ -162,5 +163,26 @@ class Serie
     public function setNombreEpisodes(int $nombreEpisodes): void
     {
         $this->nombreEpisodes = $nombreEpisodes;
+    }
+
+    /**
+     * @brief Définit le lien vers l'affiche réduite de la série
+     * 
+     * @param string $lienAfficheReduite Lien vers l'affiche réduite
+     * @return void
+     */
+    public function setLienAfficheReduite(?string $lienAfficheReduite): void
+    {
+        $this->lienAfficheReduite = $lienAfficheReduite;
+    }
+
+    /**
+     * @brief Récupère le lien vers l'affiche réduite de la série
+     * 
+     * @return string|null Lien vers l'affiche réduite
+     */
+    public function getLienAfficheReduite(): ?string
+    {
+        return $this->lienAfficheReduite;
     }
 }

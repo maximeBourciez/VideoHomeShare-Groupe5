@@ -87,10 +87,21 @@ class ControllerIndex extends Controller
         $managerCollection = new CollectionDAO($this->getPdo());
         $collections = $managerCollection->searchByName($recherche);
 
-        // Récupérer les series
+        // Récupérer les series et traiter leurs images
         $managerSerie = new SerieDAO($this->getPdo());
         $series = $managerSerie->searchByName($recherche);
 
+        // Traitement des liens d'images pour les séries
+        foreach ($series as $serie) {
+            if ($serie->getLienAffiche()) {
+                $serie->setLienAfficheReduite('https://image.tmdb.org/t/p/w500' . $serie->getLienAffiche());
+                $serie->setLienAffiche('https://image.tmdb.org/t/p/original' . $serie->getLienAffiche());
+            } else {
+                // Image par défaut si pas d'affiche
+                $serie->setLienAfficheReduite('assets/images/no-poster.jpg');
+                $serie->setLienAffiche('assets/images/no-poster.jpg');
+            }
+        }
 
         // Récupérer les threads (fils)
         $filDAO = new FilDAO($this->getPdo());
