@@ -733,3 +733,98 @@ body {
   margin: 0;
 }
 
+// Styles améliorés pour les carousels
+.carousel {
+  position: relative;
+  padding: 0 50px; // Ajoute de l'espace pour les flèches
+  
+  &-inner {
+    .row {
+      @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+    }
+    
+    img {
+      @media (max-width: 768px) {
+        max-height: 200px !important; // Réduire davantage la hauteur des images sur mobile
+        width: auto;
+        max-width: 100%;
+      }
+    }
+  }
+
+  &-control {
+    &-prev, &-next {
+      position: absolute !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      width: 40px;
+      height: 40px;
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 50%;
+      z-index: 10;
+      
+      @media (max-width: 768px) {
+        width: 30px;
+        height: 30px;
+      }
+    }
+    
+    &-prev {
+      left: 5px !important;
+    }
+    
+    &-next {
+      right: 5px !important;
+    }
+  }
+}
+
+// Ajustements pour les cartes de films dans les carousels
+.carousel {
+  .card {
+    height: 100%;
+    max-width: 300px; // Limite la largeur maximale des cartes
+    margin: 0 auto; // Centre les cartes
+    
+    img {
+      max-height: 300px;
+      object-fit: cover;
+      
+      @media (max-width: 768px) {
+        max-height: 150px;
+        object-fit: contain;
+      }
+    }
+    
+    &-body {
+      padding: 1rem;
+      
+      @media (max-width: 768px) {
+        padding: 0.5rem;
+      }
+    }
+  }
+}
+
+// Ajustements pour les threads
+.container {
+  .row {
+    @media (max-width: 768px) {
+      justify-content: center;
+      margin: 0; // Enlève les marges par défaut
+    }
+  }
+}
+
+// Style spécifique pour les cartes de threads
+.thread-card {
+  @media (max-width: 768px) {
+    width: 90%; // Utilise 90% de la largeur disponible
+    margin: 0 auto; // Centre la carte
+  }
+}
+
