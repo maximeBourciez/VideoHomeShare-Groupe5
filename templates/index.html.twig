@@ -20,13 +20,11 @@
 					<div class="carousel-inner mb-4">
 						{% for film in trends %}
 							<div class="carousel-item {% if loop.first %}active{% endif %}">
-								<div class="row g-4">
+								<div
+									class="row g-4">
 									<!-- Image du film -->
 									<div class="col-12 col-md-6 text-center">
-										<img src="{{ film.0.lienAffiche }}" 
-											 class="img-fluid rounded" 
-											 style="width: auto; max-height: 500px; object-fit: contain;" 
-											 alt="{{ film.titre }}">
+										<img src="{{ film.0.lienAffiche }}" class="img-fluid rounded" style="width: auto; max-height: 500px; object-fit: contain;" alt="{{ film.titre }}">
 									</div>
 									<!-- Description du film -->
 									<div class="col-12 col-md-6">
@@ -66,7 +64,8 @@
 		<!-- Films récents d'action/aventure -->
 		{% for category in ['action', 'adventure'] %}
 			<div class="my-4 bg-dark text-white p-3 p-md-4">
-				<h2 class="ms-3 ms-md-5 mb-4">Films récents {{ category == 'action' ? "d'action" : "d'aventure" }}</h2>
+				<h2 class="ms-3 ms-md-5 mb-4">Films récents
+					{{ category == 'action' ? "d'action" : "d'aventure" }}</h2>
 				<div id="{{ category }}Carousel" class="carousel slide position-relative" data-bs-ride="carousel">
 					<button class="carousel-control-prev" type="button" data-bs-target="#{{ category }}Carousel" data-bs-slide="prev">
 						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
