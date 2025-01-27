@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
-<meta name="generator" content="Doxygen 1.12.0"/>
+<meta name="generator" content="Doxygen 1.11.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>VideoHomeShare: Référence de la classe Utilitaires</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
@@ -35,7 +35,7 @@
 </table>
 </div>
 <!-- end header part -->
-<!-- Généré par Doxygen 1.12.0 -->
+<!-- Généré par Doxygen 1.11.0 -->
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 var searchBox = new SearchBox("searchBox", "search/",'.html');
@@ -104,9 +104,9 @@ $(function(){initNavTree('class_utilitaires.html',''); initResizable(true); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Fonctions membres publiques statiques</h2></td></tr>
-<tr class="memitem:a757169c97b5b20b50fa457e2308d3440" id="r_a757169c97b5b20b50fa457e2308d3440"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a757169c97b5b20b50fa457e2308d3440">comprisEntre</a> (string $val, ?int $valmax, int $valmin, string $contenu, string &amp;$messageErreur)</td></tr>
-<tr class="memdesc:a757169c97b5b20b50fa457e2308d3440"><td class="mdescLeft">&#160;</td><td class="mdescRight">pemet de verifier si la valeur est compris entre deux valeurs  <br /></td></tr>
-<tr class="separator:a757169c97b5b20b50fa457e2308d3440"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb5c6de7d6c13899a7cb001011bacdd0" id="r_acb5c6de7d6c13899a7cb001011bacdd0"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acb5c6de7d6c13899a7cb001011bacdd0">comprisEntre</a> (string $val, ?string $valmax, string $valmin, string $contenu, string &amp; $messageErreur)</td></tr>
+<tr class="memdesc:acb5c6de7d6c13899a7cb001011bacdd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">pemet de verifier si la valeur est compris entre deux valeurs  <br /></td></tr>
+<tr class="separator:acb5c6de7d6c13899a7cb001011bacdd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aab9b754e7e8aa955c02f0ec6fe1b7c13" id="r_aab9b754e7e8aa955c02f0ec6fe1b7c13"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aab9b754e7e8aa955c02f0ec6fe1b7c13">egale</a> (string $val1, string $val2, string $contenu, string &amp;$messageErreur)</td></tr>
 <tr class="memdesc:aab9b754e7e8aa955c02f0ec6fe1b7c13"><td class="mdescLeft">&#160;</td><td class="mdescRight">permet de verifier si les deux valeurs sont identiques  <br /></td></tr>
 <tr class="separator:aab9b754e7e8aa955c02f0ec6fe1b7c13"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -259,8 +259,8 @@ Fonctions membres publiques statiques</h2></td></tr>
 
 </div>
 </div>
-<a id="a757169c97b5b20b50fa457e2308d3440" name="a757169c97b5b20b50fa457e2308d3440"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a757169c97b5b20b50fa457e2308d3440">&#9670;&#160;</a></span>comprisEntre()</h2>
+<a id="acb5c6de7d6c13899a7cb001011bacdd0" name="acb5c6de7d6c13899a7cb001011bacdd0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb5c6de7d6c13899a7cb001011bacdd0">&#9670;&#160;</a></span>comprisEntre()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -276,12 +276,12 @@ Fonctions membres publiques statiques</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">?int</td>          <td class="paramname"><span class="paramname"><em>$valmax</em></span>, </td>
+          <td class="paramtype">?string</td>          <td class="paramname"><span class="paramname"><em>$valmax</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$valmin</em></span>, </td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$valmin</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -305,8 +305,8 @@ Fonctions membres publiques statiques</h2></td></tr>
 <dl class="params"><dt>Paramètres</dt><dd>
   <table class="params">
     <tr><td class="paramtype">string</td><td class="paramname">$val</td><td>la valeur que l'on veut vérifier </td></tr>
-    <tr><td class="paramtype">int</td><td class="paramname">$valmax</td><td>la valeur maximal que l'on autorise </td></tr>
-    <tr><td class="paramtype">int</td><td class="paramname">$valmin</td><td>la valeur minimal que l'on autorise </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$valmax</td><td>la valeur maximal que l'on autorise </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$valmin</td><td>la valeur minimal que l'on autorise </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$contenu</td><td>c'est le nom du contenu sur lequel on veut renvoyer un message d'erreur </td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$messageErreur</td><td>le message d'erreur que l'on veut renvoyer </td></tr>
   </table>
@@ -993,7 +993,7 @@ Fonctions membres publiques statiques</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_utilitaires.html">Utilitaires</a></li>
-    <li class="footer">Généré par <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Généré par <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.11.0 </li>
   </ul>
 </div>
 </body>
