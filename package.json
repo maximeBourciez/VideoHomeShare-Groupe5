@@ -10,8 +10,13 @@
     "cz-conventional-changelog": "^3.3.0",
     "sass": "^1.83.0"
   },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
   "scripts": {
     "build": "sass SCSS/custom.scss CSS/style.css",
-    "commit": "cz"
+    "cz": "cz"
   }
 }

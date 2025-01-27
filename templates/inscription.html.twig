@@ -57,7 +57,7 @@
 
 				<!-- Champ Vérification Mot de Passe -->
 				<div class="form-group mb-4">
-					<label for="vmdp" class="d-block text-start mb-0">Vérification mot de passe</label>
+					<label for="vmdp" class="d-block text-start mb-0 bor">Vérification mot de passe</label>
 					<input type="password" name="vmdp" id="vmdp" class="form-control" minlength="8" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" required title="Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.">
 				</div>
 				<!-- Champ  Accepter les conditions d'utilisation-->
@@ -84,7 +84,19 @@
 				{% include 'modals.html.twig' with { 'last_update_date': '08/01/2025' } %}
 
 			</form>
+			<script src ="JS/utilisateur.js" > </script>
+			<script>
+				document.addEventListener("DOMContentLoaded", function() { 
+					const mdp = document.getElementById('mdp');
+					const vmdp = document.getElementById('vmdp');
+
+
+					// Appel de verifieregau pour vérifier les valeurs
+					verifieregau(mdp, vmdp);
+				});
+ 			</script>
 		</main>
+		
 
 
 	{% endblock %}
