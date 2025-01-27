@@ -7,21 +7,21 @@
 {% block content %}
 <main class="container min-vh-100">
     <br>
-    <h2>{{ quizz.titre }}</h2>
+    <h2>{{ quizz.getTitre() }}</h2>
     <br>
 	{% set bonnesReponses = 0 %}
 
     {% for question in questions %}
 	<!-- URL de l'image de la question -->
         <div class="row">
-            <img src="images/{{ question.urlImage }}" alt="Image de la question">
+            <img src="images/{{ question.getUrlImage() }}" alt="Image de la question">
         </div>
 		<!-- Carte de la question -->
-		<h4 class="row">Question n°{{ question.rang }}</h4>
+		<h4 class="row">Question n°{{ question.getRang() }}</h4>
 		<div class="row">
 			<div class="card">
 				<div class="card-body">
-					{{ question.valeur }}
+					{{ question.getValeur() }}
 				</div>
 			</div>
         </div>
@@ -34,11 +34,11 @@
 			<div class="col-md-6">
 				<div class="card">
 					<div class="card-body">
-					Réponse n°{{ reponse.rang }} :<br>
-						{{ reponse.valeur }}
+					Réponse n°{{ reponse.getRang() }} :<br>
+						{{ reponse.getValeur() }}
 					</div>
 					<!-- Si la réponse est vraie, ajouter 1 au nombre de bonnes réponses -->
-					{% if reponse.estVraie %}
+					{% if reponse.getVerite() %}
                         {% set bonnesReponses = bonnesReponses + 1 %}
                     {% endif %}
 				</div>
@@ -46,8 +46,8 @@
 			<br>
 		{% endfor %}
     {% endfor %}
-	<a href="index.php?controller=quizz&methode=afficherResultats&{{ idUtilisateur }}&idQuizz={{ quizz.id }}&{{ bonnesReponses }}" class="btn btn-primary">
-		Voir les résultats
+	<a href="index.php?controller=quizz&methode=afficherResultats&idUtilisateur &idQuizz={{ quizz.getId() }}&bonnesReponses" class="btn btn-primary">
+		<b>Voir les résultats</b>
 	</a>
 </main>
 {% endblock %}

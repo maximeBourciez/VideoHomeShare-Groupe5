@@ -135,8 +135,15 @@ class ControllerQuizz extends Controller
             ]);
         }
         else{
-            echo "Vous devez être connecté pour pouvoir jouer aux quizz. <br>";
-            $this->listeQuizz();
+            //Récupération des quizz
+            $managerQuizz = new QuizzDAO($this->getPdo());
+            $quizz = $managerQuizz->findAll();
+            
+            //Génération de la vue
+            echo $this->getTwig()->render('listeQuizz.html.twig', [
+                'quizz' => $quizz,
+                'messagederreur' => "Vous devez être connecté pour pouvoir jouer à un quizz."
+            ]); 
         }  
     }
 
@@ -158,42 +165,104 @@ class ControllerQuizz extends Controller
         return $tabReponses;
     }
 
-    public function creerQuizz() : void
+    public function afficherPageCreerQuizz() : void
     {
-        $utilisateur = unserialize($_SESSION['utilisateur']);
-        $idUtilisateur = $utilisateur->getId();
+        if (isset($_SESSION['utilisateur'])){
+            $utilisateur = unserialize($_SESSION['utilisateur']);
+            $idUtilisateur = $utilisateur->getId();
 
-        echo $this->getTwig()->render('creationQuizz.html.twig', [
-            'idUtilisateur' => $idUtilisateur
-        ]);
+            echo $this->getTwig()->render('creationQuizz.html.twig', [
+                'idUtilisateur' => $idUtilisateur
+            ]);
+        }
+        else{
+            //Récupération des quizz
+            $managerQuizz = new QuizzDAO($this->getPdo());
+            $quizz = $managerQuizz->findAll();
+            
+            //Génération de la vue
+            echo $this->getTwig()->render('listeQuizz.html.twig', [
+                'quizz' => $quizz,
+                'messagederreur' => "Vous devez être connecté pour pouvoir créer un quizz."
+            ]);        
+
+        }
+    }
+
+        /**
+     * @brief Méthode permettant de créer un quizz
+     * 
+     * @details Méthode qui crée un quizz selon les informations entrées en paramètres
+     *
+     * @return int id du quizz créé
+     */
+    public function creerQuizz(string $titre, string $description, int $difficulte, string $dateC, string $idUtilisateur) : int
+    {
+        //Création de l'objet Quizz
+        $managerQuizz = new QuizzDAO($this->getPdo());
+        $idQuizz = $managerQuizz->create($titre,$description,$difficulte,$dateC,$idUtilisateur);
+
+        return $idQuizz;
     }
 
     /**
-     * @brief Méthode permettant de créer une question
+     * @brief Méthode permettant d'afficher la page des questions après avoir créé le quizz
      * 
      * @details Méthode qui redirige l'utilisateur vers la page des questions pour créer ou modifier sa question
      *
-     * @return array
+     * @return void
      */
-    public function creerQuestion() : void
+    public function afficherPageQuestions() : void
     {
         //Récupération des informations
         $titre = $_POST['titre'];
         $description = $_POST['description'];
         $difficulte = $_POST['difficulte'];
-        $nbQuestions = range(1,$_POST['nbQuestions']);
+        $nbQuestions = $_POST['nbQuestions'];
+        $numQuestion = $_GET['numQuestion'] ?? 1;
         $dateC = date('Y-m-d');
+
         $utilisateur = unserialize($_SESSION['utilisateur']);
         $idUtilisateur = $utilisateur->getId();
 
-        //Création de l'objet Quizz
-        $managerQuizz = new QuizzDAO($this->getPdo());
-        $managerQuizz->create($titre,$description,$difficulte,$dateC,$idUtilisateur);
-        $newQuizz = $managerQuizz->findByTitreUser($titre,$idUtilisateur);
-        $idQuizz = $newQuizz->getId();
+        $idQuizz = $this->creerQuizz($titre,$description,$difficulte,$dateC,$idUtilisateur);
+
+        if ($numQuestion > $nbQuestions) {
+            header('Location: index.php?controller=quizz&methode=listeQuizz' . $idQuizz);
+            exit;
+        }
 
         echo $this->getTwig()->render('creationQuestion.html.twig', [
             'idQuizz' => $idQuizz,
+            'numQuestion' => $numQuestion,
+            'nbQuestions' => $nbQuestions,
+            'idUtilisateur' => $idUtilisateur
+        ]);
+    }
+
+        /**
+     * @brief Méthode permettant de créer les questions
+     * 
+     * @details Méthode qui créer les questions d'un quizz créé par l'utilisateur
+     * @return void
+     */
+    public function creerQuestion() : void
+    {
+        //Récupération des informations
+        $idQuizz = $_GET['idQuizz'];
+        $numQuestion = intval($_GET['numQuestion']) ?? 1;
+        $nbQuestions = intval($_GET['nbQuestions']);
+        $idUtilisateur = $_GET['idUtilisateur'];
+
+        //On vérifie que toutes les questions ont été créées
+        if ($numQuestion > $nbQuestions) {
+            header('Location: index.php?controller=quizz&methode=listeQuizz' . $idQuizz);
+            exit;
+        }
+
+        echo $this->getTwig()->render('creationQuestion.html.twig', [
+            'idQuizz' => $idQuizz,
+            'numQuestion' => $numQuestion,
             'nbQuestions' => $nbQuestions,
             'idUtilisateur' => $idUtilisateur
         ]);

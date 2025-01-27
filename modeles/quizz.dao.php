@@ -57,25 +57,18 @@ class QuizzDAO{
      * @brief Méthode de création d'un quizz
      * 
      * @param quizz
-     * @return bool
+     * @return int
      */
-    function create(string $titre, string $description, int $difficulte, string $dateC, string $idUtilisateur): bool{
-        //Récupération de l'id max pour en faire un nouveau
-        $sql = "SELECT MAX(idQuizz) FROM vhs_quizz";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute();
-        $maxIdQuizz = $stmt->fetch();
-        $newIdQuizz = $maxIdQuizz[0] + 1;
-
-        $req = $this->pdo->prepare("INSERT INTO vhs_quizz VALUES (:idQuizz, :titre, :description, :difficulte, :dateC, :idUtilisateur)");
-        $req->bindParam(":idQuizz", $newIdQuizz);
+    function create(string $titre, string $description, int $difficulte, string $dateC, string $idUtilisateur): int{
+        $req = $this->pdo->prepare("INSERT INTO vhs_quizz (titre, description, difficulte, dateC, idUtilisateur) VALUES (:titre, :description, :difficulte, :dateC, :idUtilisateur)");
         $req->bindParam(":titre", $titre);
         $req->bindParam(":description", $description);
         $req->bindParam(":difficulte", $difficulte);
         $req->bindParam(":dateC", $dateC);
         $req->bindParam(":idUtilisateur", $idUtilisateur);
+        $req->execute();
 
-        return $req->execute();
+        return $this->pdo->lastInsertId();
     }
 
     /**
