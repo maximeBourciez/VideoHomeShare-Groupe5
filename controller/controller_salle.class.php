@@ -188,13 +188,12 @@ class ControllerSalle extends Controller
         }
         // ouvrir fichier json contenant les messages
         $id = isset($_GET['id']) ?  htmlspecialchars($_GET['id']) : null;
-        $jsonData = file_get_contents("jsonW2G/salle$id.json");
-
-        if ($jsonData == false){
+        if (!file_exists("jsonW2G/salle$id.json")) {
             $this->accueilWatch2Gether();
             exit();
-        }   
+        }
 
+        $jsonData = file_get_contents("jsonW2G/salle$id.json");
         $data = json_decode($jsonData, true);
 
         echo json_encode($data);
