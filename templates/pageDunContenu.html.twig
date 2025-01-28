@@ -61,7 +61,9 @@
 					<div class="movie-info__rating-stars d-flex text-center align-items-center">
 						<p class="m-0">Note :
 							{{ moyenne }}/5</p>
-						<div id="rating" class="ms-5"></div>
+						<div class="rating-container ms-5">
+							<div id="rating" data-note="{{ moyenne }}"></div>
+						</div>
 					</div>
 					<div class="movie-info__rating-count">
 						<p class="mb-5 mx-3 small fw-light">{{ total }}
@@ -69,10 +71,12 @@
 					</div>
 				</div>
 
-				<!-- Script de génération des étoiles -->
+				<!-- Script d'initialisation -->
 				<script>
 					document.addEventListener('DOMContentLoaded', function () {
-generateStarRating({{ moyenne }}, 5);
+const ratingElement = document.querySelector('#rating');
+const note = parseFloat(ratingElement.dataset.note);
+generateStarRating(note);
 });
 				</script>
 
@@ -82,7 +86,7 @@ generateStarRating({{ moyenne }}, 5);
 						{% if utilisateurConnecte is not null %}
 							<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
 							<form action="index.php?controller=watchlist&methode=ajouterContenuAWatchlist" method="POST" class="me-4">
-								<input type="hidden" name="idContenu" value="{{ contenu.tmdbId|escape('html_attr') }}">
+								<input type="hidden" name="idContenu" value="{{ contenu.id|escape('html_attr') }}">
 								<button type="button" class="movie-actions__watchlist-btn btn btn-myprimary fw-normal bi bi-plus" data-bs-toggle="modal" data-bs-target="#choisirWatchlist">
 									Ajouter à sa Watchlist
 								</button>
@@ -251,7 +255,7 @@ fullSynopsis.style.display = 'block';
 				</div>
 				<div class="modal-body">
 					<form action="index.php?controller=commentaire&methode=createCommentaire" method="POST">
-						<input type="hidden" name="idContenu" value="{{ contenu.tmdbId|escape('html_attr') }}">
+						<input type="hidden" name="idContenu" value="{{ contenu.id|escape('html_attr') }}">
 						<div class="mb-3">
 							<label for="titre" class="form-label">Titre de votre avis</label>
 							<input type="text" class="form-control" id="titre" name="titre" required placeholder="Ex : J'ai adoré ce film !" maxlength="100">
@@ -310,7 +314,7 @@ sliderValue.textContent = slider.value;
 				</div>
 				<form action="index.php?controller=watchlist&methode=ajouterAWatchlist" method="POST">
 					<div class="modal-body">
-						<input type="hidden" name="idContenu" value="{{ contenu.tmdbId|escape('html_attr') }}">
+						<input type="hidden" name="idContenu" value="{{ contenu.id|escape('html_attr') }}">
 						{% if watchlists is not empty %}
 							{% for watchlist in watchlists %}
 								<div class="form-check">

@@ -63,7 +63,9 @@
 					<div class="movie-info__rating-stars d-flex text-center align-items-center">
 						<p class="m-0">Note :
 							{{ moyenne }}/5</p>
-						<div id="rating" class="ms-5"></div>
+						<div class="rating-container ms-5">
+							<div id="rating" data-note="{{ moyenne }}"></div>
+						</div>
 					</div>
 					<div class="movie-info__rating-count">
 						<p class="mb-5 mx-3 small fw-light">{{ total }}
@@ -71,12 +73,12 @@
 					</div>
 				</div>
 
-				<!-- Script de génération des étoiles -->
+				<!-- Script d'initialisation -->
 				<script>
 					document.addEventListener('DOMContentLoaded', function () {
-if (document.querySelector('#rating')) {
-generateStarRating({{ moyenne }}, 5);
-}
+const ratingElement = document.querySelector('#rating');
+const note = parseFloat(ratingElement.dataset.note);
+generateStarRating(note);
 });
 				</script>
 
