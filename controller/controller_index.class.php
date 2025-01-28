@@ -24,11 +24,11 @@ class ControllerIndex extends Controller
         $tendances = $this->addNotesToContenus($trends);
 
         // Récupérer les films d'action (genre ID 28)
-        $actionMovies = $tmdbApi->getPopularMoviesByGenre(28, 20);
+        $actionMovies = $tmdbApi->getPopularMoviesByGenre(28, 31);
         $actionMovies = $this->addNotesToContenus($actionMovies);
 
         // Récupérer les films d'aventure (genre ID 12)
-        $adventureMovies = $tmdbApi->getPopularMoviesByGenre(12, 20);
+        $adventureMovies = $tmdbApi->getPopularMoviesByGenre(12, 31);
         $adventureMovies = $this->addNotesToContenus($adventureMovies);
 
         // Récupérer les 3 fils les plus likés de la semaine

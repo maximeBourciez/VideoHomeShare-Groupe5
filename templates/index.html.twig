@@ -61,49 +61,61 @@
 		</div>
 
 
-		<!-- Films récents d'action/aventure -->
 		{% for category in ['action', 'adventure'] %}
-			<div class="my-4 bg-dark text-white p-3 p-md-4">
-				<h2 class="ms-3 ms-md-5 mb-4">Films récents
+			<div class="movie-category bg-dark text-white rounded shadow my-4">
+				<h2 class="p-3">Films récents
 					{{ category == 'action' ? "d'action" : "d'aventure" }}</h2>
-				<div id="{{ category }}Carousel" class="carousel slide position-relative" data-bs-ride="carousel">
-					<button class="carousel-control-prev" type="button" data-bs-target="#{{ category }}Carousel" data-bs-slide="prev">
-						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-						<span class="visually-hidden">Précédent</span>
-					</button>
 
-					<div class="carousel-inner">
+				<div id="{{ category }}Carousel" class="carousel slide carousel-container" data-bs-ride="carousel" data-bs-touch="true">
+					<div class="carousel-inner px-4">
 						{% set movies = category == 'action' ? actionMovies : adventureMovies %}
 						{% for film in movies %}
-							{% if loop.index0 % 5 == 0 %}
+							{% if loop.index0 % 6 == 0 %}
 								<div class="carousel-item {% if loop.first %}active{% endif %}">
-									<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4">
+									<div class="row g-3">
 									{% endif %}
-									<div class="col">
-										<div class="card h-100 bg-light">
-											<div class="card-body d-flex flex-column">
-												<img src="{{ film.0.lienAfficheReduite }}" class="shadow img-fluid my-1 rounded" style="width: 100%; height: auto; object-fit: cover;" alt="{{ film.titre }}">
-												<p>{{ film.1.moyenne }}
-													<i class="bi bi-star-fill"></i>
-												</p>
-												<h5 class="card-title mb-2">{{ film.0.titre }}</h5>
-												<a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ film.0.id }}" class="btn btn-primary mt-auto">
-													Plus d'informations
+									<div class="col-6 col-sm-4 col-md-3 col-lg">
+										<div class="card h-100 bg-light hover-card">
+											<div class="card-img-wrapper position-relative pt-2 px-2">
+												<img src="{{ film.0.lienAfficheReduite }}" class="card-img-top rounded shadow" alt="{{ film.0.titre }}">
+											</div>
+											<div class="card-body d-flex flex-column p-2">
+												<div class="rating mb-2">
+													<span class="badge bg-primary">
+														{{ film.1.moyenne }}
+														<i class="bi bi-star-fill ms-1"></i>
+													</span>
+												</div>
+												<h5 class="card-title fs-6 mb-3">{{ film.0.titre }}</h5>
+												<a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ film.0.id }}" class="btn btn-primary btn-sm mt-auto">
+													<i class="bi bi-info-circle me-1"></i>Plus d'informations
 												</a>
 											</div>
 										</div>
 									</div>
-									{% if loop.index0 % 5 == 4 or loop.last %}
+									{% if loop.index0 % 6 == 5 or loop.last %}
 									</div>
 								</div>
 							{% endif %}
 						{% endfor %}
 					</div>
 
-					<button class="carousel-control-next" type="button" data-bs-target="#{{ category }}Carousel" data-bs-slide="next">
-						<span class="carousel-control-next-icon" aria-hidden="true"></span>
+					<!-- Contrôles du carousel -->
+					<button class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#{{ category }}Carousel" data-bs-slide="prev">
+						<i class="bi bi-chevron-left"></i>
+						<span class="visually-hidden">Précédent</span>
+					</button>
+					<button class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#{{ category }}Carousel" data-bs-slide="next">
+						<i class="bi bi-chevron-right"></i>
 						<span class="visually-hidden">Suivant</span>
 					</button>
+
+					<!-- Indicateurs -->
+					<div class="carousel-indicators position-relative mt-3">
+						{% for i in range(0, ((movies|length - 1) // 6)) %}
+							<button type="button" data-bs-target="#{{ category }}Carousel" data-bs-slide-to="{{ i }}" class="{{ i == 0 ? 'active' : '' }}" aria-current="{{ i == 0 ? 'true' : 'false' }}" aria-label="Slide {{ i + 1 }}"></button>
+						{% endfor %}
+					</div>
 				</div>
 			</div>
 		{% endfor %}

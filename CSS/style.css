@@ -12162,6 +12162,135 @@ body {
     height: 30px;
   }
 }
+/* Styles spécifiques au carousel de films */
+.movie-featured {
+  overflow: hidden;
+  margin: 2rem 0;
+}
+
+.carousel-container {
+  position: relative;
+  padding: 0 60px;
+}
+
+.film-image-wrapper {
+  max-height: 500px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+
+.film-image-wrapper img {
+  width: auto;
+  max-height: 500px;
+  object-fit: contain;
+  margin: 0 auto;
+}
+
+.film-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.film-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Contrôles du carousel */
+.custom-carousel-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  z-index: 10;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-carousel-control:hover {
+  background-color: rgba(0, 0, 0, 0.9);
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+.custom-carousel-control i {
+  color: white;
+  font-size: 1.5rem;
+}
+
+.carousel-control-prev {
+  left: 10px;
+}
+
+.carousel-control-next {
+  right: 10px;
+}
+
+/* Indicateurs */
+.carousel-indicators {
+  margin-bottom: 0;
+  position: relative;
+  bottom: 0;
+}
+
+.carousel-indicators button {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  margin: 0 4px;
+}
+
+.carousel-indicators button.active {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .carousel-container {
+    padding: 0 45px;
+  }
+  .custom-carousel-control {
+    width: 35px;
+    height: 35px;
+  }
+  .film-image-wrapper {
+    max-height: 400px;
+  }
+  .film-image-wrapper img {
+    max-height: 400px;
+  }
+  .film-description {
+    -webkit-line-clamp: 4;
+  }
+}
+@media (max-width: 576px) {
+  .carousel-container {
+    padding: 0 35px;
+  }
+  .custom-carousel-control {
+    width: 30px;
+    height: 30px;
+  }
+  .film-image-wrapper {
+    max-height: 300px;
+  }
+  .film-image-wrapper img {
+    max-height: 300px;
+  }
+  .film-description {
+    -webkit-line-clamp: 3;
+  }
+}
 @media (max-width: 992px) {
   .movie-content {
     flex-direction: column;
