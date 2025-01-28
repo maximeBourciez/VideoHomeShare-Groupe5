@@ -12062,31 +12062,104 @@ body {
   color: #f2ac0f;
 }
 
+/* Styles du carousel */
+.movie-cast {
+  overflow: hidden;
+}
+
+.carousel-container {
+  position: relative;
+  padding: 0 50px; /* Espace pour les flèches */
+}
+
+.carousel-inner {
+  overflow: visible;
+}
+
 .custom-carousel-control {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 50px;
-  height: 50px;
-  background-color: rgba(0, 0, 0, 0.5);
+  width: 40px;
+  height: 40px;
+  background-color: rgba(0, 0, 0, 0.7);
   border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.5);
   z-index: 10;
-  margin: 0 15px;
+  transition: all 0.3s ease;
+}
+
+.custom-carousel-control:hover {
+  background-color: rgba(0, 0, 0, 0.9);
+  border-color: rgba(255, 255, 255, 0.8);
 }
 
 .carousel-control-prev {
-  left: 0;
+  left: 10px;
 }
 
 .carousel-control-next {
-  right: 0;
+  right: 10px;
 }
 
+/* Indicateurs du carousel */
+.carousel-indicators {
+  margin-bottom: 0;
+  position: relative;
+  bottom: 0;
+}
+
+.carousel-indicators button {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  margin: 0 4px;
+}
+
+.carousel-indicators button.active {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+/* Styles des cartes */
+.card {
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-img-wrapper {
+  overflow: hidden;
+}
+
+/* Tailles de police personnalisées */
+.fs-7 {
+  font-size: 0.9rem;
+}
+
+.fs-8 {
+  font-size: 0.8rem;
+}
+
+/* Media Queries */
 @media (max-width: 768px) {
+  .carousel-container {
+    padding: 0 40px;
+  }
   .custom-carousel-control {
-    width: 40px;
-    height: 40px;
-    margin: 0 10px;
+    width: 35px;
+    height: 35px;
+  }
+}
+@media (max-width: 576px) {
+  .carousel-container {
+    padding: 0 35px;
+  }
+  .custom-carousel-control {
+    width: 30px;
+    height: 30px;
   }
 }
 @media (max-width: 992px) {
@@ -12330,226 +12403,6 @@ body {
   border: none;
   padding: 0;
   margin: 0;
-}
-
-.carousel {
-  position: relative;
-  padding: 0 50px;
-}
-@media (max-width: 768px) {
-  .carousel-inner .row {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-}
-@media (max-width: 768px) {
-  .carousel-inner img {
-    max-height: 200px !important;
-    width: auto;
-    max-width: 100%;
-  }
-}
-.carousel-control-prev, .carousel-control-next {
-  position: absolute !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  width: 40px;
-  height: 40px;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 50%;
-  z-index: 10;
-}
-@media (max-width: 768px) {
-  .carousel-control-prev, .carousel-control-next {
-    width: 30px;
-    height: 30px;
-  }
-}
-.carousel-control-prev {
-  left: 5px !important;
-}
-.carousel-control-next {
-  right: 5px !important;
-}
-
-.carousel .card {
-  height: 100%;
-  max-width: 300px;
-  margin: 0 auto;
-}
-.carousel .card img {
-  max-height: 300px;
-  object-fit: cover;
-}
-@media (max-width: 768px) {
-  .carousel .card img {
-    max-height: 150px;
-    object-fit: contain;
-  }
-}
-.carousel .card-body {
-  padding: 1rem;
-}
-@media (max-width: 768px) {
-  .carousel .card-body {
-    padding: 0.5rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .container .row {
-    justify-content: center;
-    margin: 0;
-  }
-}
-
-@media (max-width: 768px) {
-  .thread-card {
-    width: 90%;
-    margin: 0 auto;
-  }
-}
-
-.search-results-title {
-  color: #231b33;
-  margin: 2rem 0;
-  font-weight: bold;
-}
-@media (max-width: 768px) {
-  .search-results-title {
-    font-size: 1.5rem;
-  }
-}
-.search-results-section {
-  background: linear-gradient(to right, rgb(23.5576923077, 18.1730769231, 34.3269230769), #231b33);
-  padding: 2rem 0;
-  margin: 1rem 0;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-.search-results-section .section-header {
-  padding: 0 1rem;
-  margin-bottom: 1.5rem;
-}
-.search-results-section .section-header h3, .search-results-section .section-header .h3 {
-  font-size: 1.5rem;
-  color: #fbfade;
-  margin: 0;
-}
-@media (max-width: 768px) {
-  .search-results-section .section-header h3, .search-results-section .section-header .h3 {
-    font-size: 1.2rem;
-  }
-}
-.search-results-section .section-header .results-count {
-  color: #f2ac0f;
-  font-weight: bold;
-}
-
-.result-card {
-  height: 100%;
-  background: #fbfade;
-  border: none;
-  border-radius: 8px;
-  transition: transform 0.3s ease;
-}
-.result-card:hover {
-  transform: translateY(-5px);
-}
-.result-card .card-img-top {
-  height: 200px;
-  object-fit: cover;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-}
-@media (max-width: 768px) {
-  .result-card .card-img-top {
-    height: 150px;
-  }
-}
-.result-card .card-body {
-  padding: 1rem;
-}
-@media (max-width: 768px) {
-  .result-card .card-body {
-    padding: 0.75rem;
-  }
-}
-.result-card .card-body .card-title {
-  font-size: 1.1rem;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-}
-@media (max-width: 768px) {
-  .result-card .card-body .card-title {
-    font-size: 0.9rem;
-  }
-}
-.result-card .card-body .card-title.long-title {
-  font-size: 0.9rem;
-}
-@media (max-width: 768px) {
-  .result-card .card-body .card-title.long-title {
-    font-size: 0.8rem;
-  }
-}
-.result-card .card-body .card-text {
-  font-size: 0.9rem;
-  color: rgba(35, 27, 51, 0.8);
-}
-@media (max-width: 768px) {
-  .result-card .card-body .card-text {
-    font-size: 0.8rem;
-  }
-}
-.result-card .card-footer {
-  background: transparent;
-  border-top: 1px solid rgba(35, 27, 51, 0.1);
-  padding: 0.75rem;
-}
-.result-card .card-footer .btn {
-  width: 100%;
-}
-@media (max-width: 768px) {
-  .result-card .card-footer .btn {
-    font-size: 0.8rem;
-    padding: 0.4rem 0.8rem;
-  }
-}
-
-.results-carousel {
-  padding: 0 3rem;
-}
-@media (max-width: 768px) {
-  .results-carousel {
-    padding: 0 1.5rem;
-  }
-}
-.results-carousel .carousel-control-prev, .results-carousel .carousel-control-next {
-  width: 40px;
-  background-color: rgba(35, 27, 51, 0.6);
-  border-radius: 50%;
-  height: 40px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-@media (max-width: 768px) {
-  .results-carousel .carousel-control-prev, .results-carousel .carousel-control-next {
-    width: 30px;
-    height: 30px;
-  }
-}
-.results-carousel .carousel-indicators {
-  margin-top: 1rem;
-  position: relative;
-}
-.results-carousel .carousel-indicators button {
-  background-color: #f2ac0f;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin: 0 5px;
 }
 
 /*# sourceMappingURL=style.css.map */

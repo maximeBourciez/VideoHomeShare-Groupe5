@@ -394,33 +394,107 @@ body {
   color: $primary;
 }
 
-//Carousel
+/* Styles du carousel */
+.movie-cast {
+  overflow: hidden;
+}
+
+.carousel-container {
+  position: relative;
+  padding: 0 50px;  /* Espace pour les flèches */
+}
+
+.carousel-inner {
+  overflow: visible;
+}
 
 .custom-carousel-control {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 50px;
-  height: 50px;
-  background-color: rgba(0,0,0,0.5);
+  width: 40px;
+  height: 40px;
+  background-color: rgba(0, 0, 0, 0.7);
   border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.5);
   z-index: 10;
-  margin: 0 15px;
+  transition: all 0.3s ease;
+}
+
+.custom-carousel-control:hover {
+  background-color: rgba(0, 0, 0, 0.9);
+  border-color: rgba(255, 255, 255, 0.8);
 }
 
 .carousel-control-prev {
-  left: 0;
+  left: 10px;
 }
 
 .carousel-control-next {
-  right: 0;
+  right: 10px;
 }
 
+/* Indicateurs du carousel */
+.carousel-indicators {
+  margin-bottom: 0;
+  position: relative;
+  bottom: 0;
+}
+
+.carousel-indicators button {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  margin: 0 4px;
+}
+
+.carousel-indicators button.active {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+/* Styles des cartes */
+.card {
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-img-wrapper {
+  overflow: hidden;
+}
+
+/* Tailles de police personnalisées */
+.fs-7 {
+  font-size: 0.9rem;
+}
+
+.fs-8 {
+  font-size: 0.8rem;
+}
+
+/* Media Queries */
 @media (max-width: 768px) {
+  .carousel-container {
+      padding: 0 40px;
+  }
+
   .custom-carousel-control {
-      width: 40px;
-      height: 40px;
-      margin: 0 10px;
+      width: 35px;
+      height: 35px;
+  }
+}
+
+@media (max-width: 576px) {
+  .carousel-container {
+      padding: 0 35px;
+  }
+
+  .custom-carousel-control {
+      width: 30px;
+      height: 30px;
   }
 }
 
@@ -732,252 +806,3 @@ body {
   padding: 0;
   margin: 0;
 }
-
-// Styles améliorés pour les carousels
-.carousel {
-  position: relative;
-  padding: 0 50px; // Ajoute de l'espace pour les flèches
-  
-  &-inner {
-    .row {
-      @media (max-width: 768px) {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-      }
-    }
-    
-    img {
-      @media (max-width: 768px) {
-        max-height: 200px !important; // Réduire davantage la hauteur des images sur mobile
-        width: auto;
-        max-width: 100%;
-      }
-    }
-  }
-
-  &-control {
-    &-prev, &-next {
-      position: absolute !important;
-      top: 50% !important;
-      transform: translateY(-50%) !important;
-      width: 40px;
-      height: 40px;
-      background-color: rgba(0, 0, 0, 0.5);
-      border-radius: 50%;
-      z-index: 10;
-      
-      @media (max-width: 768px) {
-        width: 30px;
-        height: 30px;
-      }
-    }
-    
-    &-prev {
-      left: 5px !important;
-    }
-    
-    &-next {
-      right: 5px !important;
-    }
-  }
-}
-
-// Ajustements pour les cartes de films dans les carousels
-.carousel {
-  .card {
-    height: 100%;
-    max-width: 300px; // Limite la largeur maximale des cartes
-    margin: 0 auto; // Centre les cartes
-    
-    img {
-      max-height: 300px;
-      object-fit: cover;
-      
-      @media (max-width: 768px) {
-        max-height: 150px;
-        object-fit: contain;
-      }
-    }
-    
-    &-body {
-      padding: 1rem;
-      
-      @media (max-width: 768px) {
-        padding: 0.5rem;
-      }
-    }
-  }
-}
-
-// Ajustements pour les threads
-.container {
-  .row {
-    @media (max-width: 768px) {
-      justify-content: center;
-      margin: 0; // Enlève les marges par défaut
-    }
-  }
-}
-
-// Style spécifique pour les cartes de threads
-.thread-card {
-  @media (max-width: 768px) {
-    width: 90%; // Utilise 90% de la largeur disponible
-    margin: 0 auto; // Centre la carte
-  }
-}
-
-// Styles pour la page de résultats de recherche
-.search-results {
-  &-title {
-    color: $dark;
-    margin: 2rem 0;
-    font-weight: bold;
-    
-    @media (max-width: 768px) {
-      font-size: 1.5rem;
-    }
-  }
-
-  &-section {
-    background: linear-gradient(to right, darken($dark, 5%), $dark);
-    padding: 2rem 0;
-    margin: 1rem 0;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-
-    .section-header {
-      padding: 0 1rem;
-      margin-bottom: 1.5rem;
-      
-      h3 {
-        font-size: 1.5rem;
-        color: $light;
-        margin: 0;
-        
-        @media (max-width: 768px) {
-          font-size: 1.2rem;
-        }
-      }
-      
-      .results-count {
-        color: $primary;
-        font-weight: bold;
-      }
-    }
-  }
-}
-
-// Styles pour les cartes de résultats
-.result-card {
-  height: 100%;
-  background: $light;
-  border: none;
-  border-radius: 8px;
-  transition: transform 0.3s ease;
-  
-  &:hover {
-    transform: translateY(-5px);
-  }
-
-  .card-img-top {
-    height: 200px;
-    object-fit: cover;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    
-    @media (max-width: 768px) {
-      height: 150px;
-    }
-  }
-
-  .card-body {
-    padding: 1rem;
-    
-    @media (max-width: 768px) {
-      padding: 0.75rem;
-    }
-
-    .card-title {
-      font-size: 1.1rem;
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-      
-      @media (max-width: 768px) {
-        font-size: 0.9rem;
-      }
-      
-      &.long-title {
-        font-size: 0.9rem;
-        
-        @media (max-width: 768px) {
-          font-size: 0.8rem;
-        }
-      }
-    }
-
-    .card-text {
-      font-size: 0.9rem;
-      color: rgba($dark, 0.8);
-      
-      @media (max-width: 768px) {
-        font-size: 0.8rem;
-      }
-    }
-  }
-
-  .card-footer {
-    background: transparent;
-    border-top: 1px solid rgba($dark, 0.1);
-    padding: 0.75rem;
-    
-    .btn {
-      width: 100%;
-      
-      @media (max-width: 768px) {
-        font-size: 0.8rem;
-        padding: 0.4rem 0.8rem;
-      }
-    }
-  }
-}
-
-// Styles pour le carousel des résultats
-.results-carousel {
-  padding: 0 3rem;
-  
-  @media (max-width: 768px) {
-    padding: 0 1.5rem;
-  }
-
-  .carousel-control {
-    &-prev, &-next {
-      width: 40px;
-      background-color: rgba($dark, 0.6);
-      border-radius: 50%;
-      height: 40px;
-      top: 50%;
-      transform: translateY(-50%);
-      
-      @media (max-width: 768px) {
-        width: 30px;
-        height: 30px;
-      }
-    }
-  }
-
-  .carousel-indicators {
-    margin-top: 1rem;
-    position: relative;
-    
-    button {
-      background-color: $primary;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      margin: 0 5px;
-    }
-  }
-}
-
