@@ -249,9 +249,6 @@ class ControllerFil extends Controller
      */
     public function creerFil()
     {
-        // Récupérer l'id du fil
-        $idFil = intval($_POST['id_fil']);
-
         // Vérifier la méthode HTTP
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->listerThreads( "Méthode HTTP invalide");
@@ -277,6 +274,13 @@ class ControllerFil extends Controller
             exit();
         }
 
+        // vérifier la profanité du titre
+        $titreEstProfane = Utilitaires::verificationDeNom($titre, "Le titre ", $messageErreur);
+        if ($titreEstProfane) {
+            $this->listerThreads($messageErreur);
+            exit();
+        }
+
         // Un fil pouvant avoir 0..* thèmes, on n'a pas besoin de les vérifier. On les récupère simplement
         $themes = isset($_POST['themes']) ? $_POST['themes'] : [];
 
@@ -291,6 +295,13 @@ class ControllerFil extends Controller
             exit();
         }
 
+        // Vérifier la profanité du premier message
+        $premierMessageEstProfane = Utilitaires::verificationDeNom($premierMessage, "Le message ", $messageErreur);
+        if ($premierMessageEstProfane) {
+            $this->listerThreads($messageErreur);
+            exit();
+        }
+
         // Vérifier la description
         $description = htmlspecialchars($_POST['description']);
 
@@ -298,6 +309,12 @@ class ControllerFil extends Controller
         $contenuErreur = "Une description doit contenir";
         $messageOk = Utilitaires::comprisEntre($description, 1024, 10, $contenuErreur, $messageErreur);
 
+        // Vérifier la profanité de la description
+        $descriptionEstProfane = Utilitaires::verificationDeNom($description, "La description ", $messageErreur);
+        if ($descriptionEstProfane) {
+            $this->listerThreads($messageErreur);
+            exit();
+        }
 
         // Créer le fil
         $managerFil = new FilDAO($this->getPdo());
