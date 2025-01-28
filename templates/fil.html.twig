@@ -87,10 +87,11 @@
 				</div>
 			</div>
 
-			<!-- Affichage des réponses aux réponses -->
-			{% if reponse.reponses is not empty %}
+			<div class="responses-container" data-message-id="{{ reponse.getIdMessage() }}">
+            {% if reponse.reponses is not empty %}
 				{{ _self.afficherReponses(reponse.reponses, reponse.getUtilisateur() ? reponse.getUtilisateur().getId() : 0, reponse.getUtilisateur() ? reponse.getUtilisateur().getPseudo() : 'Utilisateur inconnu', idFil, messageSuppr) }}
 			{% endif %}
+        </div>
 
 		{% endfor %}
 {% endmacro %}
@@ -104,7 +105,6 @@
 {% endblock %}
 
 {% block content %}
-	
 	<main class="flex-grow-1">
 		<div class="container-fluid bg-mydark text-white p-4 shadow " style="border-top: 5px solid #F2AC0F;">
 			<div class="text-center">
@@ -124,7 +124,7 @@
 			</div>
 		{% endif %}
 
-		<div class="container mt-3">
+		<div class="container mt-3" id="messageContainer">
 			{% for message in messages %}
 				{% if message.idMessageParent is null %}
 					<div id="{{message.getIdMessage()}}" class="card my-4 shadow-sm border-0 rounded-3">
@@ -162,7 +162,7 @@
 									</div>
 								{% else %}
 								<!-- Boutons like, dislike, répondre -->
-								<div class="d-flex flex-wrap gap-2">
+								<div class="d-flex flex-wrap gap-2 likesContainer" data-message-id="{{ message.getIdMessage() }}">
 									<form method="POST" action="index.php?controller=fil&methode=like">
 										<input type="hidden" name="id_message" value="{{ message.getIdMessage() }}">
 										<input type="hidden" name="id_fil" value="{{ fil.0.getId() }}">
@@ -192,18 +192,19 @@
 								</div>
 
 								<!-- Afficheur de réponses -->
-								{% if message.reponses is not empty %}
-									<div class="tooglerReponses mt-3">
+								<div class="tooglerReponses mt-3" data-message-id="{{ message.getIdMessage() }}">
+									{% if message.reponses is not empty %}
 										<span class="toggle-responses text-light my-2" data-message-id="{{ message.getIdMessage() }}">
 											<i class="bi bi-chevron-down"></i>
 											<span class="show-text">Voir les réponses</span>
 											<span class="hide-text" style="display: none;">Masquer les réponses</span>
 										</span>
-									</div>
-								{% endif %}
+									{% endif %}
+								</div>
+								
 
 								<!-- Boutons supprimer/signaler -->
-								<div class="d-flex gap-2">
+								<div class="d-flex gap-2" >
 									{% if (message.getUtilisateur().getId() == utilisateurConnecte.getId()) or (utilisateurConnecte.getRoleAsString() == "Moderateur")  %}
 										<form method="POST" action="index.php?controller=fil&methode=supprimerMessage" onsubmit="return confirmerSuppression('{{ message.getIdMessage() }}');">
 											<input type="hidden" name="idMessage" value="{{ message.getIdMessage() }}">
@@ -226,7 +227,7 @@
 					</div>
 
 					<div class="responses-container" style="display: none;" data-message-id="{{ message.getIdMessage() }}">
-						{{ macros.afficherReponses(message.reponses, message.getUtilisateur().getId(), message.getUtilisateur().getPseudo(), fil.0.getId(), messageSuppr) }}
+							{{ macros.afficherReponses(message.reponses, message.getUtilisateur().getId(), message.getUtilisateur().getPseudo(), fil.0.getId(), messageSuppr) }}
 					</div>
 
 
@@ -373,6 +374,12 @@
 				}
 		</script>
 
+		<script src="JS/realtime-messages.js"></script>
+		<script>
+			document.addEventListener('DOMContentLoaded', () => {
+				const realtimeMessages = new RealtimeMessages({{ fil.0.getId() }});
+			});
+		</script>
 
 	</main>
 

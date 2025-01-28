@@ -96,13 +96,13 @@ class ControllerFil extends Controller
     {
         // Vérifier la méthode HTTP
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->afficherFilParId();
+            $this->afficherFilParId("Méthode HTTP invalide");
             exit();
         }
 
         // Vérifier que l'utilisateur est connecté
         if (!isset($_SESSION['utilisateur'])) {
-            $this->afficherFilParId();
+            $this->afficherFilParId("Vous devez être connecté pour ajouter un message");
             exit();
         }
         $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
@@ -113,21 +113,21 @@ class ControllerFil extends Controller
         $contenuErreur = "Un message doit contenir";
         $messageEstValide = Utilitaires::comprisEntre($message, 1024, 10, $contenuErreur, $messageErreur);
         if (!$messageEstValide) {
-            $this->afficherFilParId();
+            $this->afficherFilParId($messageErreur);	
             exit();
         }
 
         // Vérifier et convertir l'ID du fil
         $idFil = intval($_POST['id_fil']);
         if ($idFil === 0) {
-            $this->afficherFilParId();
+            $this->afficherFilParId("ID de fil invalide");
             exit();
         }
 
         // Récupérer l'ID du message parent (si présent)
         $idMessageParent = isset($_POST['id_message_parent']) ? intval($_POST['id_message_parent']) : null;
         if (isset($_POST['id_message_parent']) && $idMessageParent === 0) {
-            $this->afficherFilParId();
+            $this->afficherFilParId("ID de message parent invalide");
             exit();
         }
 
@@ -160,13 +160,13 @@ class ControllerFil extends Controller
 
         // Vérifier la méthode HTTP
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->afficherFilParId();
+            $this->afficherFilParId("Méthode HTTP invalide");
             exit();
         }
 
         // Vérifier que l'utilisateur est connecté
         if (!isset($_SESSION['utilisateur'])) {
-            $this->afficherFilParId();
+            $this->afficherFilParId("Vous devez être connecté pour réagir à un message");
             exit();
         } else {
             $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
@@ -200,13 +200,13 @@ class ControllerFil extends Controller
 
         // Vérifier la méthode HTTP
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->afficherFilParId();
+            $this->afficherFilParId("Méthode HTTP invalide");
             exit();
         }
 
         // Vérifier que l'utilisateur est connecté
         if (!isset($_SESSION['utilisateur'])) {
-            $this->afficherFilParId();
+            $this->afficherFilParId("Vous devez être connecté pour réagir à un message");
             exit();
         } else {
             $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
@@ -308,13 +308,13 @@ class ControllerFil extends Controller
     {
         // Vérifier la méthode HTTP
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->afficherFilParId();
+            $this->afficherFilParId("Méthode HTTP invalide");
             exit();
         }
 
         // Vérifier que l'utilisateur est connecté
         if (!isset($_SESSION['utilisateur'])) {
-            $this->afficherFilParId();
+            $this->afficherFilParId("Vous devez être connecté pour supprimer un message");
             exit();
         } else {
             $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
@@ -329,7 +329,7 @@ class ControllerFil extends Controller
         $indiquePropriete = $managerMessage->checkProprieteMessage($idMessageASuppr, $idUtilisateur);
 
         if (!$indiquePropriete) {
-            $this->afficherFilParId();
+            $this->afficherFilParId("Vous ne pouvez pas supprimer ce message, il ne vous appartient pas");
             exit();
         }
 
@@ -358,13 +358,13 @@ class ControllerFil extends Controller
 
         // Vérifier la méthode HTTP
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->afficherFilParId();
+            $this->afficherFilParId("Méthode HTTP invalide");
             exit();
         }
 
         // Vérifier que l'utilisateur est connecté
         if (!isset($_SESSION['utilisateur'])) {
-            $this->afficherFilParId();
+            $this->afficherFilParId("Vous devez être connecté pour signaler un message");
             exit();
         } else {
             $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
@@ -427,5 +427,28 @@ class ControllerFil extends Controller
         $managerNotification = new NotificationDAO($this->getPdo()); ;
         $managerNotification->creation( $contenu , $idReceveur);
 
+    }
+
+    public function getNouveauxMessages() {
+        if (!isset($_GET['id_fil']) || !isset($_GET['dernierMessageId'])) {
+            http_response_code(400);
+            exit(json_encode(['error' => 'Paramètres manquants']));
+        }
+
+        $idFil = intval($_GET['id_fil']);
+        $dernierMessageId = intval($_GET['dernierMessageId']);
+        
+        $messageDAO = new MessageDAO($this->getPdo());
+        $nouveauxMessages = json_encode($messageDAO->getNouveauxMessages($idFil, $dernierMessageId));
+        
+        // S'assurer qu'aucun output n'a été envoyé avant
+        if (ob_get_length()) ob_clean();
+        
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true,
+            'messages' => $nouveauxMessages
+        ]);
+        exit();
     }
 }
