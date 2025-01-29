@@ -136,6 +136,9 @@ class SerieDAO
 
     /**
      * @brief Effectue une requête HTTP vers l'API TMDB
+     * 
+     * @param string $url L'URL de la requête à effectuer
+     * @return array|null Les données JSON décodées ou null en cas d'erreur
      */
     private function makeRequest(string $url): ?array
     {
@@ -162,6 +165,9 @@ class SerieDAO
 
     /**
      * @brief Convertit les données TMDB en objet Serie
+     * 
+     * @param array $serieData Les données brutes de la série depuis TMDB
+     * @return Serie L'objet Serie créé à partir des données
      */
     private function convertToSerie(array $serieData): Serie
     {
@@ -182,7 +188,7 @@ class SerieDAO
      * @brief Récupère les thèmes d'une série (maximum 5)
      * 
      * @param int $tmdbId Identifiant TMDB de la série
-     * @return array Liste des thèmes (max 5)
+     * @return array Liste des thèmes (maximum 5 éléments)
      */
     public function getThemesSerie(int $tmdbId): array
     {
@@ -206,7 +212,7 @@ class SerieDAO
      * @brief Récupère les personnalités principales d'une série
      * 
      * @param int $tmdbId Identifiant TMDB de la série
-     * @return array Liste des personnalités avec leurs rôles
+     * @return array Liste des personnalités avec leurs rôles, séparée en 'acteurs' et 'equipe'
      */
     public function getPersonnalitesSerie(int $tmdbId): array
     {
@@ -256,7 +262,7 @@ class SerieDAO
      * @brief Récupère tous les épisodes d'une série
      * 
      * @param int $tmdbId Identifiant TMDB de la série
-     * @return array Liste des épisodes groupés par saison
+     * @return array Liste des épisodes groupés par saison avec les informations de chaque saison
      */
     public function getAllEpisodesFromSerie(int $tmdbId): array
     {
