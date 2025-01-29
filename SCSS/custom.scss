@@ -575,103 +575,15 @@ $bp-xl: 1200px;
     }
   }
 }
-
-// Spécifique au carousel des films
-.movie-category {
-  margin: 1rem 0;
-  
-  .carousel-container {
-    overflow: hidden;
-    margin: 0 20px; // Réduit les marges sur mobile
-
-    @media (min-width: $bp-md) {
-      margin: 0 50px;
-    }
-  }
 }
+
   // Ajustements des cartes de films
-.card.h-100 {
-  max-width: 200px; /* Empêche une carte unique de devenir énorme */
-  margin: auto; /* Centre la carte si elle est seule */
-}
 
-
-  .card {
-    margin-bottom: 1rem;
-
-    .card-img-wrapper {
-      height: 0;
-      padding-bottom: 150%; // Ratio d'aspect 2:3 pour les affiches
-      position: relative;
-
-      img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-    }
-
-    .card-body {
-      padding: 0.5rem;
-
-      @media (min-width: $bp-md) {
-        padding: 1rem;
-      }
-
-      .card-title {
-        font-size: 0.9rem;
-
-        @media (min-width: $bp-md) {
-          font-size: 1rem;
-        }
-      }
-    }
+  .card.h-100 {
+    width: 100%; /* Permet aux cartes de s'étendre */
+    max-width: 200px; /* Garde une limite si besoin */
+    margin: auto; /* Centre la carte si elle est seule */
   }
-}
-
-// Ajustements pour le carousel principal
-#filmCarousel {
-  .carousel-item {
-    .row {
-      align-items: center;
-    }
-
-    img {
-      max-height: 300px;
-
-      @media (min-width: $bp-md) {
-        max-height: 500px;
-      }
-    }
-
-    .card-body {
-      padding: 1rem;
-
-      @media (min-width: $bp-md) {
-        padding: 2rem;
-      }
-
-      .card-title {
-        font-size: 1.2rem;
-
-        @media (min-width: $bp-md) {
-          font-size: 1.5rem;
-        }
-      }
-
-      .card-text {
-        font-size: 0.9rem;
-
-        @media (min-width: $bp-md) {
-          font-size: 1rem;
-        }
-      }
-    }
-  }
-}
 
 .bouton-card{
   font-size: 0.9rem;

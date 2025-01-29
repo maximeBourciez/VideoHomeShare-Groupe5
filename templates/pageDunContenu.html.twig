@@ -146,66 +146,64 @@ fullSynopsis.style.display = 'block';
 		</script>
 
 		<!-- Personnalités -->
-		<div class="movie-cast bg-mydark my-4 text-white rounded shadow position-relative">
-			<h2 class="movie-cast__title p-3 mb-0">Personnalités :</h2>
+		<div class="movie-cast bg-mydark my-4 text-white rounded shadow">
+			<h2 class="movie-cast__title p-3">Personnalités</h2>
+
 			{% if personnalite is not empty %}
-				{% if personnalite|length > 6 %}
-					<div id="personnalitesCarousel" class="carousel slide carousel-container" data-bs-ride="carousel" data-bs-touch="true">
-						<div class="carousel-inner px-4">
-							{% set chunks = personnalite|batch(6) %}
-							{% for chunk in chunks %}
-								<div class="carousel-item {{ loop.first ? 'active' : '' }}">
-									<div class="row g-3 justify-content-center">
-										{% for personne in chunk %}
-											<div class="col-4 col-sm-2">
-												<div class="card h-100 bg-mylight">
-													<div class="card-img-wrapper position-relative pt-2 px-2">
-														<img src="{{ personne.urlImage }}" alt="{{ personne.nom }}" class="card-img-top rounded shadow" style="aspect-ratio: 1/1; object-fit: cover;">
-													</div>
-													<div class="card-body p-2">
-														<h5 class="card-title h6 mb-1 fs-7">{{ personne.nom }}</h5>
-														<p class="card-text small text-muted mb-1 fs-8">{{ personne.role }}</p>
+				<div class="film-carousel-container">
+					{% if personnalite|length > 6 %}
+						<div id="personnalitesCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-touch="true">
+							<div class="carousel-inner">
+								{% set chunks = personnalite|batch(6) %}
+								{% for chunk in chunks %}
+									<div class="carousel-item {{ loop.first ? 'active' : '' }}">
+										<div class="row g-3">
+											{% for personne in chunk %}
+												<div class="col-6 col-sm-4 col-md-3 col-lg-2 my-3 shadow">
+													<div class="card h-100 bg-light hover-card ">
+														<div class="card-img-wrapper position-relative pt-2 px-2">
+															<img src="{{ personne.urlImage }}" alt="{{ personne.nom }}" class="card-img-top rounded shadow" style="aspect-ratio: 1/1; object-fit: cover;">
+														</div>
+														<div class="card-body d-flex flex-column p-2">
+															<h5 class="card-title fs-6 mb-1">{{ personne.nom }}</h5>
+															<p class="card-text small text-muted mb-0">{{ personne.role }}</p>
+														</div>
 													</div>
 												</div>
-											</div>
-										{% endfor %}
+											{% endfor %}
+										</div>
 									</div>
-								</div>
-							{% endfor %}
-						</div>
-
-						<button class="carousel-control-prev custom-carousel-control border-0" type="button" data-bs-target="#personnalitesCarousel" data-bs-slide="prev">
-							<i class="bi bi-chevron-left"></i>
-							<span class="visually-hidden">Précédent</span>
-						</button>
-						<button class="carousel-control-next custom-carousel-control border-0" type="button" data-bs-target="#personnalitesCarousel" data-bs-slide="next">
-							<i class="bi bi-chevron-right"></i>
-							<span class="visually-hidden">Suivant</span>
-						</button>
-
-						<div class="carousel-indicators position-relative mt-3">
-							{% for chunk in chunks %}
-								<button type="button" data-bs-target="#personnalitesCarousel" data-bs-slide-to="{{ loop.index0 }}" class="{{ loop.first ? 'active' : '' }}" aria-current="{{ loop.first ? 'true' : 'false' }}" aria-label="Slide {{ loop.index }}"></button>
-							{% endfor %}
-						</div>
-					</div>
-				{% else %}
-					<div class="row g-3 p-3 justify-content-center">
-						{% for personne in personnalite %}
-							<div class="col-4 col-sm-2">
-								<div class="card h-100 bg-mylight">
-									<div class="card-img-wrapper position-relative pt-2 px-2">
-										<img src="{{ personne.urlImage }}" alt="{{ personne.nom }}" class="card-img-top rounded shadow" style="aspect-ratio: 1/1; object-fit: cover;">
-									</div>
-									<div class="card-body p-2">
-										<h5 class="card-title h6 mb-1 fs-7">{{ personne.nom }}</h5>
-										<p class="card-text small text-muted mb-1 fs-8">{{ personne.role }}</p>
-									</div>
-								</div>
+								{% endfor %}
 							</div>
-						{% endfor %}
-					</div>
-				{% endif %}
+
+							<!-- Contrôles du carousel -->
+							<button class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#personnalitesCarousel" data-bs-slide="prev">
+								<i class="bi bi-chevron-left"></i>
+								<span class="visually-hidden">Précédent</span>
+							</button>
+							<button class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#personnalitesCarousel" data-bs-slide="next">
+								<i class="bi bi-chevron-right"></i>
+								<span class="visually-hidden">Suivant</span>
+							</button>
+						</div>
+					{% else %}
+						<div class="row g-3 p-3">
+							{% for personne in personnalite %}
+								<div class="col-6 col-sm-4 col-md-3 col-lg-2">
+									<div class="card h-100 bg-light hover-card">
+										<div class="card-img-wrapper position-relative pt-2 px-2">
+											<img src="{{ personne.urlImage }}" alt="{{ personne.nom }}" class="card-img-top rounded shadow" style="aspect-ratio: 1/1; object-fit: cover;">
+										</div>
+										<div class="card-body d-flex flex-column p-2">
+											<h5 class="card-title fs-6 mb-1">{{ personne.nom }}</h5>
+											<p class="card-text small text-muted mb-0">{{ personne.role }}</p>
+										</div>
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+					{% endif %}
+				</div>
 			{% else %}
 				<p class="fs-6 p-3 mb-0">Aucune personnalité disponible pour ce film.</p>
 			{% endif %}

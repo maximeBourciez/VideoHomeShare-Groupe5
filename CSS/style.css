@@ -12264,100 +12264,11 @@ body {
     font-size: 1.5rem;
   }
 }
-.film-carousel-container .movie-category,
-.carousel-container .movie-category {
-  margin: 1rem 0;
-}
-.film-carousel-container .movie-category .carousel-container,
-.carousel-container .movie-category .carousel-container {
-  overflow: hidden;
-  margin: 0 20px;
-}
-@media (min-width: 768px) {
-  .film-carousel-container .movie-category .carousel-container,
-  .carousel-container .movie-category .carousel-container {
-    margin: 0 50px;
-  }
-}
-.film-carousel-container .card.h-100,
-.carousel-container .card.h-100 {
-  max-width: 200px; /* Empêche une carte unique de devenir énorme */
-  margin: auto; /* Centre la carte si elle est seule */
-}
-.film-carousel-container .card,
-.carousel-container .card {
-  margin-bottom: 1rem;
-}
-.film-carousel-container .card .card-img-wrapper,
-.carousel-container .card .card-img-wrapper {
-  height: 0;
-  padding-bottom: 150%;
-  position: relative;
-}
-.film-carousel-container .card .card-img-wrapper img,
-.carousel-container .card .card-img-wrapper img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.film-carousel-container .card .card-body,
-.carousel-container .card .card-body {
-  padding: 0.5rem;
-}
-@media (min-width: 768px) {
-  .film-carousel-container .card .card-body,
-  .carousel-container .card .card-body {
-    padding: 1rem;
-  }
-}
-.film-carousel-container .card .card-body .card-title,
-.carousel-container .card .card-body .card-title {
-  font-size: 0.9rem;
-}
-@media (min-width: 768px) {
-  .film-carousel-container .card .card-body .card-title,
-  .carousel-container .card .card-body .card-title {
-    font-size: 1rem;
-  }
-}
 
-#filmCarousel .carousel-item .row {
-  align-items: center;
-}
-#filmCarousel .carousel-item img {
-  max-height: 300px;
-}
-@media (min-width: 768px) {
-  #filmCarousel .carousel-item img {
-    max-height: 500px;
-  }
-}
-#filmCarousel .carousel-item .card-body {
-  padding: 1rem;
-}
-@media (min-width: 768px) {
-  #filmCarousel .carousel-item .card-body {
-    padding: 2rem;
-  }
-}
-#filmCarousel .carousel-item .card-body .card-title {
-  font-size: 1.2rem;
-}
-@media (min-width: 768px) {
-  #filmCarousel .carousel-item .card-body .card-title {
-    font-size: 1.5rem;
-  }
-}
-#filmCarousel .carousel-item .card-body .card-text {
-  font-size: 0.9rem;
-}
-@media (min-width: 768px) {
-  #filmCarousel .carousel-item .card-body .card-text {
-    font-size: 1rem;
-  }
+.card.h-100 {
+  width: 100%; /* Permet aux cartes de s'étendre */
+  max-width: 200px; /* Garde une limite si besoin */
+  margin: auto; /* Centre la carte si elle est seule */
 }
 
 .bouton-card {
