@@ -143,7 +143,7 @@ class ControllerWatchlist extends Controller {
         $this->afficherWatchlists();
     }
 
-    /**
+/**
  * @brief Supprime une watchlist existante
  */
 public function supprimerWatchlist(): void {
