@@ -68,6 +68,14 @@ class Quizz {
     {
         return $this->dateC;
     }
+    /**
+     * Get the value of string
+     * @return string
+     */
+    public function getIdUtilisateur(): ?string
+    {
+        return $this->idUtilisateur;
+    }
 
     // Setters
 

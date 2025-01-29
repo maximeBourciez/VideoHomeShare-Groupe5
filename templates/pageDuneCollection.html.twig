@@ -1,227 +1,213 @@
 {% extends 'base_template.html.twig' %}
 
 {% block content %}
-    {% if messagederreur is defined %}
-        <div class="alert alert-danger" role="alert">
-            {{ messagederreur }}
-        </div>
-    {% endif %}
-    <main class="movie-page container d-flex flex-column justify-content-center align-items-center flex-grow-1">
-        <div class="movie-content d-flex">
-            <!-- Section Affiche -->
-            <div class="movie-poster me-5">
-                {% if collection.lienAffiche is not empty %}
-               <img 
-                    src="{{ collection.lienAffiche }}" 
-                    alt="{{ collection.titreCollection }}" 
-                    class="movie-poster__image shadow img-fluid m-5 rounded" 
-                    style="width: 525px; height: 750px; object-fit: cover;"
-                    loading="lazy"
-                    crossorigin="anonymous"
-                    referrerpolicy="no-referrer"
-                    onerror="this.src='images/no-image.svg'"
-                >
-                {% else %}
-                <img 
-                    src="images/no-image.svg" 
-                    alt="{{ collection.titreCollection }}" 
-                    class="movie-poster__image img-fluid m-5 rounded" 
-                    style="width: 525px; height: 750px; object-fit: cover;"
-                >
-                {% endif %}
-            </div>
+	{% if messagederreur is defined %}
+		<div class="alert alert-danger" role="alert">
+			{{ messagederreur }}
+		</div>
+	{% endif %}
+	<main class="movie-page container d-flex flex-column justify-content-center align-items-center flex-grow-1">
+		<div
+			class="movie-content d-flex">
+			<!-- Section Affiche -->
+			<div class="movie-poster me-5">
+				{% if collection.lienAffiche is not empty %}
+					<img src="{{ collection.lienAffiche }}" alt="{{ collection.titreCollection }}" class="movie-poster__image shadow img-fluid m-5 rounded" style="width: 525px; height: 750px; object-fit: cover;" loading="lazy" crossorigin="anonymous" referrerpolicy="no-referrer" onerror="this.src='images/no-image.svg'">
+				{% else %}
+					<img src="images/no-image.svg" alt="{{ collection.titreCollection }}" class="movie-poster__image img-fluid m-5 rounded" style="width: 525px; height: 750px; object-fit: cover;">
+				{% endif %}
+			</div>
 
-            <!-- Section Informations -->
-            <div class="movie-info col-6 d-flex flex-column justify-content-between">
-                <!-- Titre -->
-                <h1 class="movie-info__title mt-5 fw-bolder text-center">{{ collection.titreCollection }}</h1>
+			<!-- Section Informations -->
+			<div
+				class="movie-info col-6 d-flex flex-column justify-content-between">
+				<!-- Titre -->
+				<h1 class="movie-info__title mt-5 fw-bolder text-center">{{ collection.titreCollection }}</h1>
 
-                <!-- Date et Nombre de Films -->
-                <div class="movie-info__metadata d-flex justify-content-between fs-5 fw-bolder">
-                    <p class="movie-info__films">Nombre de films : {{ collection.nombreFilms }}</p>
-                </div>
+				<!-- Date et Nombre de Films -->
+				<div class="movie-info__metadata d-flex justify-content-between fs-5 fw-bolder">
+					<p class="movie-info__films">Nombre de films :
+						{{ collection.nombreFilms }}</p>
+				</div>
 
-                <!-- Description -->
-                <div class="movie-info__description shadow fst-italic fs-5 bg-dark text-white p-3 rounded">
-                    {% set description = collection.description %}
-                    {% set descriptionmax_length = 500 %}
-                    {% if description is not empty %}
-                    {% if description|length > descriptionmax_length %}
-                        <p class="fs-6"> {{ description }}</p>
-                    {% else %}
-                        <p> {{ description }}</p>
-                    {% endif %}
-                    {% else %}
-                        <p class="fs-6">Aucune description disponible pour cette collection.</p>
-                    {% endif %}
-                </div>
+				<!-- Description -->
+				<div class="movie-info__description shadow fst-italic fs-5 bg-dark text-white p-3 rounded">
+					{% set description = collection.description %}
+					{% set descriptionmax_length = 500 %}
+					{% if description is not empty %}
+						{% if description|length > descriptionmax_length %}
+							<p class="fs-6">
+								{{ description }}</p>
+						{% else %}
+							<p>
+								{{ description }}</p>
+						{% endif %}
+					{% else %}
+						<p class="fs-6">Aucune description disponible pour cette collection.</p>
+					{% endif %}
+				</div>
 
-                <!-- Genres -->
-                <div class="movie-info__genres d-flex justify-content-left align-items-center mt-2">    
-                    {% for theme in themes %}
-                        <span class="movie-info__genre-tag bg-mydark text-white p-2 px-3 rounded me-3">{{ theme }}</span>
-                    {% endfor %}
-                </div>
+				<!-- Genres -->
+				<div class="movie-info__genres d-flex justify-content-left align-items-center mt-2">
+					{% for theme in themes %}
+						<span class="movie-info__genre-tag bg-mydark text-white p-2 px-3 rounded me-3">{{ theme }}</span>
+					{% endfor %}
+				</div>
 
-                <!-- Note et Avis -->
-                <div class="movie-info__rating">
-                    <div class="movie-info__rating-stars d-flex text-center align-items-center">
-                        <p class="m-0">Note : {{ moyenne }}/5</p>
-                        <div id="rating" class="ms-5"></div>
-                    </div>
-                    <div class="movie-info__rating-count">
-                        <p class="mb-5 mx-3 small fw-light">{{ total }} avis</p>
-                    </div>
-                </div>
+				<!-- Note et Avis -->
+				<div class="movie-info__rating">
+					<div class="movie-info__rating-stars d-flex text-center align-items-center">
+						<p class="m-0">Note :
+							{{ moyenne }}/5</p>
+						<div class="rating-container ms-5">
+							<div id="rating" data-note="{{ moyenne }}"></div>
+						</div>
+					</div>
+					<div class="movie-info__rating-count">
+						<p class="mb-5 mx-3 small fw-light">{{ total }}
+							avis</p>
+					</div>
+				</div>
 
-                <!-- Script de génération des étoiles -->
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        if (document.querySelector('#rating')) {
-                            generateStarRating({{ moyenne }}, 5);
-                        }
-                    });
-                </script>
+				<!-- Script d'initialisation -->
+				<script>
+					document.addEventListener('DOMContentLoaded', function () {
+const ratingElement = document.querySelector('#rating');
+const note = parseFloat(ratingElement.dataset.note);
+generateStarRating(note);
+});
+				</script>
 
-                <!-- Boutons d'action -->
-                <div class="movie-actions mr-5">
-                    <div class="movie-actions__buttons d-flex justify-content-right mb-5">
-                        {% if utilisateurConnecte is not null %}
-                            <button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
-                        {% else %}
-                            <button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Laisser un avis</button>
-                        {% endif %}
-                        <button class="movie-actions__watchlist-btn btn btn-myprimary fw-normal me-4 bi bi-plus">WatchList</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+				<!-- Boutons d'action -->
+				<div class="movie-actions mr-5">
+					<div class="movie-actions__buttons d-flex justify-content-right mb-5">
+						{% if utilisateurConnecte is not null %}
+							<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
+						{% else %}
+							<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Laisser un avis</button>
+						{% endif %}
+						<button class="movie-actions__watchlist-btn btn btn-myprimary fw-normal me-4 bi bi-plus">WatchList</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
-        <!-- Films de la collection -->
-        <div>
-            <h2>Films de la collection</h2>
-        </div>
-        <div class="d-flex flex-column bg-mydark w-100 rounded my-5 shadow">
-            {% for film in films %}
-            <div class="d-flex">
-                <a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ film.tmdbId }}">
-                    <img 
-                        src="{{ film.lienAfficheReduite }}" 
-                        class="rounded float-start m-2" 
-                        alt="{{ film.titre }}" 
-                        style="width: 100px; height: 150px;"
-                        loading="lazy"
-                        crossorigin="anonymous"
-                        referrerpolicy="no-referrer"
-                        onerror="this.src='images/no-image.svg'"
-                    >
-                </a>
-                <div class="d-flex flex-column text-white my-2 ms-3">
-                    <h3>{{ film.titre }}</h3>
-                    <p>{{ film.description|length > 250 ? film.description|slice(0, 250) ~ '...' : film.description }}</p>
-                    <a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ film.tmdbId }}" class="btn btn-myprimary">Voir plus</a>
-                </div>
-            </div>
-            <hr class="text-white m-0 p-0">
-            {% endfor %}
-        </div> 
+		<!-- Films de la collection -->
+		<div>
+			<h2>Films de la collection</h2>
+		</div>
+		<div class="d-flex flex-column bg-mydark w-100 rounded my-5 shadow">
+			{% for film in films %}
+				<div class="d-flex">
+					<a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ film.id }}">
+						<img src="{{ film.lienAfficheReduite }}" class="rounded float-start m-2" alt="{{ film.titre }}" style="width: 100px; height: 150px;" loading="lazy" crossorigin="anonymous" referrerpolicy="no-referrer" onerror="this.src='images/no-image.svg'">
+					</a>
+					<div class="d-flex flex-column text-white my-2 ms-3">
+						<h3>{{ film.titre }}</h3>
+						<p>{{ film.description|length > 250 ? film.description|slice(0, 250) ~ '...' : film.description }}</p>
+						<a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ film.id }}" class="btn btn-myprimary">Voir plus</a>
+					</div>
+				</div>
+				<hr class="text-white m-0 p-0">
+			{% endfor %}
+		</div>
 
-        <!-- Commentaires -->
-        <div class="movie-comments bg-mydark rounded text-white p-3 mb-5 w-100">
-            <h1 class="movie-comments__title mx-5">Commentaires :</h1>
-            {% if commentaires is not empty %}
-                {% for com in commentaires %}
-                    <div class="movie-comment">
-                        <div class="movie-comment__header d-flex align-items-center">
-                            <h4 class="movie-comment__title m-3 mb-0">{{ com.titre }}</h4>
-                            <p class="movie-comment__rating m-3 mb-0">
-                                {{ com.note }}/5
-                                <i class="ms-3 bi bi-star{% if com.estPositif == 1 %}-fill{% endif %}"></i>
-                            </p>
-                        </div>
-                        <p class="movie-comment__text m-3">{{ com.avis }}</p>
-                        <hr>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <div class="movie-comments__empty d-flex justify-content-center align-items-center">
-                    <p class="m-3 fs-3">Aucun commentaire pour cette collection. Sois le premier à commenter 😉 </p>
-                </div>
-                <div class="d-flex justify-content-center">
-                     {% if utilisateurConnecte is not null %}
-                            <button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
-                        {% else %}
-                            <button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Laisser un avis</button>
-                        {% endif %}
-                </div>
-            {% endif %}
-        </div>
-    </main>
+		<!-- Commentaires -->
+		<div class="movie-comments bg-mydark rounded text-white p-3 mb-5 w-100">
+			<h1 class="movie-comments__title mx-5">Commentaires :</h1>
+			{% if commentaires is not empty %}
+				{% for com in commentaires %}
+					<div class="movie-comment">
+						<div class="movie-comment__header d-flex align-items-center">
+							<h4 class="movie-comment__title m-3 mb-0">{{ com.titre }}</h4>
+							<p class="movie-comment__rating m-3 mb-0">
+								{{ com.note }}/5
+								<i class="ms-3 bi bi-star{% if com.estPositif == 1 %}-fill{% endif %}"></i>
+							</p>
+						</div>
+						<p class="movie-comment__text m-3">{{ com.avis }}</p>
+						<hr>
+					</div>
+				{% endfor %}
+			{% else %}
+				<div class="movie-comments__empty d-flex justify-content-center align-items-center">
+					<p class="m-3 fs-3">Aucun commentaire pour cette collection. Sois le premier à commenter 😉
+					</p>
+				</div>
+				<div class="d-flex justify-content-center">
+					{% if utilisateurConnecte is not null %}
+						<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
+					{% else %}
+						<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Laisser un avis</button>
+					{% endif %}
+				</div>
+			{% endif %}
+		</div>
+	</main>
 
-    <!-- Modal Avis -->
-    <div class="modal fade" id="commenterContenu" tabindex="-1" aria-labelledby="modalAvisLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content bg-mydark text-white">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalAvisLabel">Donner votre avis sur {{ collection.titreCollection }}</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="index.php?controller=commentaire&methode=createCommentaire" method="POST">
-                        <input type="hidden" name="idCollection" value="{{ collection.id }}">
-                        <div class="mb-3">
-                            <label for="titre" class="form-label">Titre de votre avis</label>
-                            <input type="text" class="form-control" id="titre" name="titre" required 
-                                   placeholder="Ex : J'ai adoré cette collection !"
-                                   maxlength="100">
-                        </div>
-                        <div class="mb-3">
-                            <label for="note" class="form-label">Note : <span id="sliderValue">3</span></label>
-                            <input type="range" class="form-range" id="note" name="note" min="1" max="5" step="1" value="3" required>
-                        </div>
+	<!-- Modal Avis -->
+	<div class="modal fade" id="commenterContenu" tabindex="-1" aria-labelledby="modalAvisLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content bg-mydark text-white">
+				<div class="modal-header">
+					<h5 class="modal-title" id="modalAvisLabel">Donner votre avis sur
+						{{ collection.titreCollection }}</h5>
+					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form action="index.php?controller=commentaire&methode=createCommentaire" method="POST">
+						<input type="hidden" name="idCollection" value="{{ collection.id }}">
+						<div class="mb-3">
+							<label for="titre" class="form-label">Titre de votre avis</label>
+							<input type="text" class="form-control" id="titre" name="titre" required placeholder="Ex : J'ai adoré cette collection !" maxlength="100">
+						</div>
+						<div class="mb-3">
+							<label for="note" class="form-label">Note :
+								<span id="sliderValue">3</span>
+							</label>
+							<input type="range" class="form-range" id="note" name="note" min="1" max="5" step="1" value="3" required>
+						</div>
 
-                        <script>
-                            const slider = document.getElementById('note');
-                            const sliderValue = document.getElementById('sliderValue');
-                            slider.addEventListener('input', () => {
-                                sliderValue.textContent = slider.value;
-                            });
-                        </script>
-                        <div class="mb-3">
-                            <label for="commentaire" class="form-label">Votre commentaire</label>
-                            <textarea class="form-control" id="commentaire" name="commentaire" rows="4" required 
-                                      placeholder="Ex : Cette collection est vraiment géniale car..."
-                                      maxlength="1000"></textarea>
-                        </div>
-                        <div class="modal-footer border-0">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                            <button type="submit" class="btn btn-myprimary">Publier</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+						<script>
+							const slider = document.getElementById('note');
+const sliderValue = document.getElementById('sliderValue');
+slider.addEventListener('input', () => {
+sliderValue.textContent = slider.value;
+});
+						</script>
+						<div class="mb-3">
+							<label for="commentaire" class="form-label">Votre commentaire</label>
+							<textarea class="form-control" id="commentaire" name="commentaire" rows="4" required placeholder="Ex : Cette collection est vraiment géniale car..." maxlength="1000"></textarea>
+						</div>
+						<div class="modal-footer border-0">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+							<button type="submit" class="btn btn-myprimary">Publier</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 
-    <!-- Modal Veuillez vous connecter -->
-    <div class="modal fade" id="veuillezVousConnecter" tabindex="-1" aria-labelledby="modalAvisLabel" aria-hidden="true">   
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content bg-mydark text-white">
-                <div class="modal-body text-center">
-                    <p class="fs-3">Si vous voulez laisser un avis et participer à la communauté, vous devez d'abord vous connecter 😏</p>
-                </div>
-                <div class="modal-footer border-0 justify-content-center">
-                    <a href="index.php?controller=utilisateur&methode=connexion">
-                        <button type="button" class="btn btn-myprimary">Connexion</button>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+	<!-- Modal Veuillez vous connecter -->
+	<div class="modal fade" id="veuillezVousConnecter" tabindex="-1" aria-labelledby="modalAvisLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content bg-mydark text-white">
+				<div class="modal-body text-center">
+					<p class="fs-3">Si vous voulez laisser un avis et participer à la communauté, vous devez d'abord vous connecter 😏</p>
+				</div>
+				<div class="modal-footer border-0 justify-content-center">
+					<a href="index.php?controller=utilisateur&methode=connexion">
+						<button type="button" class="btn btn-myprimary">Connexion</button>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
 
 {% endblock %}
 
 {% block script %}
-    {{ parent() }}
-    <script type="text/javascript" src="JS/notation.js"></script>
+	{{ parent() }}
+	<script type="text/javascript" src="JS/notation.js"></script>
 {% endblock %}

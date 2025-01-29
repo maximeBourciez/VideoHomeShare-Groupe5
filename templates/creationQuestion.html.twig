@@ -5,49 +5,55 @@
 {% endblock %}
 
 {% block content %}
-<main class="container min-vh-100">
+<main class="container flex-fill">
     <br>
-    <h1>Création d'un quizz</h1>
+    <h1>Création des questions</h1>
     <br>
-    {{% for numQuestion in nbQuestions %}}
-        <form id="quizzForm" action="" method="get">
+
+    <form id="quizzForm" action="index.php" method="get">
+        <input type="hidden" name="controller" value="quizz">
+        <input type="hidden" name="methode" value="creerQuestion">
+        <input type="hidden" name="idQuizz" value="{{ idQuizz }}">
+        <input type="hidden" name="numQuestion" value="{{ numQuestion + 1 }}">
+        
+        <h3>Question n°{{ numQuestion }}</h3>
+        <div class="card bg-mydark mx-auto my-auto p-4 text-white rounded">
             <!-- Champ Image -->
-            <div class="row">
-                <label for="image_{{ numQuestion }}">Ajouter une image : </label>
+            <div class="row mb-4" style=" margin: 1px;">
+                <label for="image_{{ numQuestion }}" class="col-form-label">Ajouter une image</label>
                 <input type="file" name="image_{{ numQuestion }}" id="image"/>
             </div>
-            <br>
             <!-- Champ Titre -->
-            <div class="row">
-                <label for="titre_{{ numQuestion }}">Titre de la question : </label>
-                <textarea name="titre_{{ numQuestion }}" id="titre" required></textarea>
+            <div class="row mb-4" style=" margin: 1px;">
+                <label for="titre_{{ numQuestion }}">Entrez la question</label>
+                <textarea name="titre_{{ numQuestion }}" id="titre" class="rounded" placeholder="Saisir la question..." required></textarea>
             </div>
-            <br>
+            <!-- Bouton d'ajout de réponses -->
+            <div class="row" style=" margin: 1px;">
+                <button type="button" class="btn btn-primary" id="addReponseBtn">
+                    <i class="bi bi-pencil" style="font-size: 1.3rem; margin-right: 0.2 rem;"></i>
+                    <b>Ajouter une réponse</b>
+                </button>
+            </div>
             <!-- Champ des réponses -->
             <div id="reponsesContainer">
             </div>
-            <br>
-            <!-- Bouton d'ajout de réponses -->
-            <div class="row">
-                <button type="button" class="btn btn-primary" id="addReponseBtn">+ Ajouter une réponse</button>
-            </div>
-            <br>
-            <br>
-    {{% endfor %}}
-
+        </div>
+    <br><br>
         <!-- Boutons de manipulation de la page -->
         <div class="row text-center">
             <div class="col">
                 <a href="index.php?controller=quizz&methode=listeQuizz" class="btn btn-primary">
-                    Annuler
+                    <b>Annuler</b>
                 </a>
             </div>
             <div class="col">
-                <a href="index.php?controller=quizz&methode=creerQuestion&idQuizz" class="btn btn-primary">
-                    Suivant
+                <a href="index.php?controller=quizz&methode=creerQuestion&idQuizz&numQuestion&nbQuestions&idUtilisateur" class="btn btn-primary">
+                    <b>Suivant</b>
                 </a>
             </div>
         </div>
+        <br>
     </form>
 </main>
 

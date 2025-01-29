@@ -5,174 +5,158 @@
 
 {% block content %}
 
-	<main class="flex-grow-1">
-		<div
-			class="mt-4">
-			<!-- Films tendances -->
-			<div id="filmCarousel" class="carousel carousel-dark slide d-flex flex-row justify-content-between container-fluid px-5 container" data-bs-ride="carousel">
-				<button class="carousel-control-prev position-static" type="button" data-bs-target="#filmCarousel" data-bs-slide="prev">
-					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-					<span class="visually-hidden">Précédent</span>
-				</button>
-
-				<!-- Conteneur des diapositives -->
-				<div class="carousel-inner mb-4 vh-75">
-					{% for film in trends %}
-						<div class="carousel-item {% if loop.first %}active{% endif %} container-fluid">
-							<div
-								class="row align-items-center">
-								<!-- Image du film -->
-								<div class="col-md-6 align-items-center">
-									<img src="{{ film.0.lienAffiche }}" class="img-fluid rounded d-block" style="width: 400px; height: 600px; object-fit: cover;" alt="{{ film.titre }}">
-								</div>
-								<!-- Description du film -->
-								<div class="col-md-6">
-									<div class="card-body p-4">
-										<h5 class="card-title ">
-											{{ film.0.titre }}
-										</h5>
-										<p class="card-text">{{ film.0.description }}</p>
-										<p class="card-text">
-											<strong>Note :</strong>
-											{{ film.1.moyenne }}/5
-											<i class="bi bi-star-fill"></i><br>
-											<small class="text-muted">{{ film.1.nbAvis }}
-												avis</small>
-										</p>
-										<!-- Boutons d'action -->
-										<a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ film.0.id }}" class="btn btn-primary">
-											Voir le film
-										</a>
-
+	<main
+		class="flex-grow-1">
+		<!-- HTML du carousel -->
+		<div class="mt-4">
+			<div id="filmCarousel" class="carousel carousel-dark slide container-fluid px-3 px-md-5" data-bs-ride="carousel">
+				<div class="position-relative">
+					<button class="carousel-control-prev" type="button" data-bs-target="#filmCarousel" data-bs-slide="prev">
+						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Précédent</span>
+					</button>
+					<!-- Conteneur des diapositives -->
+					<div class="carousel-inner mb-4">
+						{% for film in trends %}
+							<div class="carousel-item {% if loop.first %}active{% endif %}">
+								<div
+									class="row g-4">
+									<!-- Image du film -->
+									<div class="col-12 col-md-6 text-center img-film-container">
+										<img src="{{ film.0.lienAffiche }}" class="img-fluid rounded" style="width: auto; max-height: 500px; object-fit: contain;" alt="{{ film.titre }}">
+									</div>
+									<!-- Description du film -->
+									<div class="col-12 col-md-5">
+										<div class="card-body p-3 p-md-4">
+											<h5 class="card-title">
+												{{ film.0.titre }}
+											</h5>
+											<p class="card-text">{{ film.0.description }}</p>
+											<p
+												class="card-text">
+												<!-- Note et Avis -->
+												<div class="movie-info__rating">
+													<div class="rating mb-2">
+														<span class="badge bg-mydark">
+															{{ film.1.moyenne }}
+															<i class="bi bi-star-fill ms-1"></i>
+														</span>
+													</div>
+													<div class="d-flex align-items-left">
+														<p class="mb-5  small fw-light">{{ film.1.nbAvis }}
+															avis</p>
+													</div>
+												</div>
+											</p>
+											<!-- Boutons d'action -->
+											<a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ film.0.id }}" class="btn btn-primary">
+												Voir le film
+											</a>
+										</div>
 									</div>
 								</div>
 							</div>
+						{% endfor %}
+					</div>
+					<button class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#filmCarousel" data-bs-slide="next">
+						<span class="carousel-control-next-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Suivant</span>
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Carousels des catégories -->
+		{% for category in ['action', 'adventure'] %}
+			<div class="movie-category bg-dark text-white rounded shadow my-4">
+				<h2 class="p-3">Films récents
+					{{ category == 'action' ? "d'action" : "d'aventure" }}</h2>
+
+				<div class="carousel-container">
+					<div id="{{ category }}Carousel" class="carousel slide" data-bs-ride="carousel" data-bs-touch="true">
+						<div class="carousel-inner px-4">
+							{% set movies = category == 'action' ? actionMovies : adventureMovies %}
+							{% for film in movies %}
+								{% if loop.index0 % 6 == 0 %}
+									<div class="carousel-item {% if loop.first %}active{% endif %}">
+										<div class="row g-3 {% if loop.index0 % 6 == (movies|length - 1) % 6 and movies|length % 6 == 1 %}d-flex justify-content-center{% endif %}">
+										{% endif %}
+										<div class="col-6 col-sm-4 col-md-3 col-lg">
+											<div class="card h-100 bg-white hover-card">
+												<div class="card-img-wrapper position-relative pt-2 px-2">
+													<img src="{{ film.0.lienAfficheReduite }}" class="card-img-top rounded shadow border border-black" alt="{{ film.0.titre }}">
+												</div>
+												<div class="card-body d-flex flex-column p-2 ">
+													<div class="rating mb-2">
+														<span class="badge bg-mydark">
+															{{ film.1.moyenne }}
+															<i class="bi bi-star-fill ms-1"></i>
+														</span>
+													</div>
+													<h5 class="card-title fs-6 mb-3">{{ film.0.titre }}</h5>
+													<a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ film.0.id }}" class="btn btn-primary btn-sm mt-auto">
+														<i class="bi bi-info-circle me-1 bouton-card"></i>Plus d'informations
+													</a>
+												</div>
+											</div>
+										</div>
+										{% if loop.index0 % 6 == 5 or loop.last %}
+										</div>
+									</div>
+								{% endif %}
+							{% endfor %}
 						</div>
-					{% endfor %}
+
+						<!-- Contrôles du carousel -->
+						<button class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#{{ category }}Carousel" data-bs-slide="prev">
+							<i class="bi bi-chevron-left"></i>
+							<span class="visually-hidden">Précédent</span>
+						</button>
+						<button class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#{{ category }}Carousel" data-bs-slide="next">
+							<i class="bi bi-chevron-right"></i>
+							<span class="visually-hidden">Suivant</span>
+						</button>
+
+						<!-- Indicateurs -->
+						<div class="carousel-indicators position-relative mt-3">
+							{% for i in range(0, ((movies|length - 1) // 6)) %}
+								<button type="button" data-bs-target="#{{ category }}Carousel" data-bs-slide-to="{{ i }}" class="{{ i == 0 ? 'active' : '' }}" aria-current="{{ i == 0 ? 'true' : 'false' }}" aria-label="Slide {{ i + 1 }}"></button>
+							{% endfor %}
+						</div>
+					</div>
 				</div>
-
-
-				<button class="carousel-control-next position-static" type="button" data-bs-target="#filmCarousel" data-bs-slide="next">
-					<span class="carousel-control-next-icon" aria-hidden="true"></span>
-					<span class="visually-hidden">Suivant</span>
-				</button>
 			</div>
-		</div>
+		{% endfor %}
 
 
-		<!-- Films récents d'action -->
-		<div class="my-4 bg-dark text-white p-4">
-			<h2 class="ms-5 mb-4">Films récents d'action</h2>
-			<div id="actionCarousel" class="carousel slide d-flex flex-row justify-content-between" data-bs-ride="carousel">
-				<button class="carousel-control-prev position-static" type="button" data-bs-target="#actionCarousel" data-bs-slide="prev">
-					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-					<span class="visually-hidden">Précédent</span>
-				</button>
-
-				<div class="carousel-inner">
-					{% for film in actionMovies %}
-						{% if loop.index0 % 5 == 0 %}
-							<div class="carousel-item {% if loop.first %}active{% endif %}">
-								<div class="row row-cols-1 row-cols-md-5 g-4">
-								{% endif %}
-								<div class="col">
-									<div class="card h-100 bg-light">
-										<div class="card-body d-flex flex-column">
-											<img src="{{ film.0.lienAfficheReduite }}" class="shadow img-fluid my-1 rounded" style="width: 100%; height: auto; object-fit: cover;" alt="{{ film.titre }}">
-											<p>{{ film.1.moyenne }}
-												<i class="bi bi-star-fill"></i>
-											</p>
-											<h5 class="card-title mb-2">{{ film.0.titre }}</h5>
-											<a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ film.0.id }}" class="btn btn-primary mt-auto">
-												Plus d'informations
-											</a>
-										</div>
-									</div>
-								</div>
-								{% if loop.index0 % 5 == 4 or loop.last %}
-								</div>
-							</div>
-						{% endif %}
-					{% endfor %}
-				</div>
-
-				<button class="carousel-control-next position-static" type="button" data-bs-target="#actionCarousel" data-bs-slide="next">
-					<span class="carousel-control-next-icon" aria-hidden="true"></span>
-					<span class="visually-hidden">Suivant</span>
-				</button>
-			</div>
-		</div>
-
-		<!-- Films récents d'aventure -->
-		<div class="my-4 bg-dark text-white p-4">
-			<h2 class="ms-5 mb-4">Films récents d'aventure</h2>
-			<div id="adventureCarousel" class="carousel slide d-flex flex-row justify-content-between" data-bs-ride="carousel">
-				<button class="carousel-control-prev position-static" type="button" data-bs-target="#adventureCarousel" data-bs-slide="prev">
-					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-					<span class="visually-hidden">Précédent</span>
-				</button>
-
-				<div class="carousel-inner">
-					{% for film in adventureMovies %}
-						{% if loop.index0 % 5 == 0 %}
-							<div class="carousel-item {% if loop.first %}active{% endif %}">
-								<div class="row row-cols-1 row-cols-md-5 g-4">
-								{% endif %}
-								<div class="col">
-									<div class="card h-100 bg-light">
-										<div class="card-body d-flex flex-column">
-
-											<img src="{{ film.0.lienAfficheReduite }}" class="shadow img-fluid my-1 rounded" style="width: 100%; height: auto; object-fit: cover;" alt="{{ film.titre }}">
-											<p>{{ film.1.moyenne }}
-												<i class="bi bi-star-fill"></i>
-											</p>
-											<h5 class="card-title mb-2">{{ film.0.titre }}</h5>
-											<a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ film.0.id }}" class="btn btn-primary mt-auto">
-												Plus d'informations
-											</a>
-										</div>
-									</div>
-								</div>
-								{% if loop.index0 % 5 == 4 or loop.last %}
-								</div>
-							</div>
-						{% endif %}
-					{% endfor %}
-				</div>
-
-				<button class="carousel-control-next position-static" type="button" data-bs-target="#adventureCarousel" data-bs-slide="next">
-					<span class="carousel-control-next-icon" aria-hidden="true"></span>
-					<span class="visually-hidden">Suivant</span>
-				</button>
-			</div>
-		</div>
-
-
-		<!-- Thread les plus likés -->
+		<!-- Threads les plus likés -->
 		<div class="container my-5">
 			<div class="row">
-				<h2 class="ms-5 mb-4">Threads les plus likés</h2>
+				<h2 class="ms-3 ms-md-5 mb-4">Threads les plus likés</h2>
 				{% for thread in fils %}
-					<div class="col-md-4 d-flex align-items-stretch">
-						<div class="card mb-4 h-100 d-flex flex-column">
-							<div class="card-header">
-								<img src="{{ thread.getUtilisateur().getUrlImageProfil() }}" class="rounded-circle" style="width: 30px; height: 30px;" alt="{{ thread.getUtilisateur().getPseudo() }}">
-								<span class="ms-2">{{ thread.getUtilisateur().getPseudo() }}</span>
+					<div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch mb-4">
+						<div class="card shadow-sm border-0 thread-card bg-white m-3">
+							<div class="card-header d-flex align-items-center bg-mydark text-white">
+								<img src="{{ thread.getUtilisateur().getUrlImageProfil() }}" class="rounded-circle me-2 border border-white border-2" style="width: 30px; height: 30px;" alt="{{ thread.getUtilisateur().getPseudo() }}">
+								<span class="fw-bold">{{ thread.getUtilisateur().getPseudo() }}</span>
 							</div>
-							<div class="card-body d-flex flex-column">
+							<div class="card-body d-flex flex-column bg-white">
 								<h5 class="card-title">{{ thread.titre }}</h5>
 								<p class="card-text">{{ thread.description }}</p>
-								<p class="card-text mt-auto">{{ thread.nbLikes }}
-									<i class="bi bi-heart-fill"></i>
-								</p>
-								<a href="index.php?controller=fil&methode=afficherFilParId&id_fil={{ thread.id }}" class="btn btn-primary mt-2">Voir le thread</a>
+								<div class="mt-auto d-flex justify-content-between align-items-center">
+									<span class="text-muted">{{ thread.nbLikes }}
+										<i class="bi bi-heart-fill text-danger"></i>
+									</span>
+									<a href="index.php?controller=fil&methode=afficherFilParId&id_fil={{ thread.id }}" class="btn btn-primary">Voir le thread</a>
+								</div>
 							</div>
 						</div>
 					</div>
 				{% endfor %}
 			</div>
 		</div>
-
-
 	</main>
+{% endblock %}
+{% block script %}
+	{{ parent() }}<script type="text/javascript" src="JS/notation.js"></script>
 {% endblock %}

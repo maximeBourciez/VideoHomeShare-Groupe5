@@ -59,7 +59,7 @@ class ContenuDAO
 
         $moviesData = json_decode($response, true);
 
-        if ($moviesData === null ) {
+        if ($moviesData === null) {
             return null;
         } else {
             // Convertir les films en objets Contenu
@@ -88,8 +88,8 @@ class ContenuDAO
                     $crew['name'], // nom
                     '', // prenom
                     !empty($crew['profile_path'])
-                    ? $this->imageBaseUrl . $crew['profile_path']
-                    : null,
+                        ? $this->imageBaseUrl . $crew['profile_path']
+                        : null,
                     'Réalisateur'
                 );
             }
@@ -103,8 +103,8 @@ class ContenuDAO
                 $actor['name'], // nom
                 '', // prenom
                 !empty($actor['profile_path'])
-                ? $this->imageBaseUrl . $actor['profile_path']
-                : null,
+                    ? $this->imageBaseUrl . $actor['profile_path']
+                    : null,
                 'Acteur'
             );
         }
@@ -283,40 +283,10 @@ class ContenuDAO
      * @return array|null Liste des films tendance ou null si une erreur se produit
      */
     public function getTrendingMovies(string $timeWindow = 'day'): ?array
-{
-    $url = "https://api.themoviedb.org/3/trending/movie/{$timeWindow}?api_key={$this->apiKey}&language=fr-FR";
-
-    // Récupérer les résultats
-    $response = file_get_contents($url);
-    if ($response === false) {
-        return null;
-    }
-
-    $moviesData = json_decode($response, true);
-
-    if ($moviesData === null || !isset($moviesData['results'])) {
-        return null;
-    } else {
-        // Convertir les films en objets Contenu
-        $contenus = [];
-        foreach ($moviesData['results'] as $movieData) {  // Ajout d'une boucle foreach
-            $contenus[] = $this->convertToContenu($movieData);
-        }
-        return $contenus;
-    }
-}
-
-    /**
-     * Récupère les films populaires pour un genre spécifique.
-     *
-     * @param int $genreId ID du genre à filtrer (par exemple, 28 pour Action, 12 pour Aventure)
-     * @param int $limit Nombre de films à récupérer (par défaut 20)
-     * @return array|null Liste des films populaires ou null en cas d'erreur
-     */
-    public function getPopularMoviesByGenre(int $genreId, int $limit = 20): ?array
     {
-        $url = "https://api.themoviedb.org/3/discover/movie?api_key={$this->apiKey}&language=fr-FR&sort_by=popularity.desc&with_genres={$genreId}&page=1";
+        $url = "https://api.themoviedb.org/3/trending/movie/{$timeWindow}?api_key={$this->apiKey}&language=fr-FR";
 
+        // Récupérer les résultats
         $response = file_get_contents($url);
         if ($response === false) {
             return null;
@@ -329,13 +299,53 @@ class ContenuDAO
         } else {
             // Convertir les films en objets Contenu
             $contenus = [];
-            foreach ($moviesData['results'] as $movieData) {
-                $contenus[] = $this->convertToContenuLight($movieData);
+            foreach ($moviesData['results'] as $movieData) {  // Ajout d'une boucle foreach
+                $contenus[] = $this->convertToContenu($movieData);
             }
-            return array_slice($contenus, 0, $limit);
+            return $contenus;
         }
     }
 
+    /**
+     * Récupère les films populaires pour un genre spécifique.
+     *
+     * @param int $genreId ID du genre à filtrer (par exemple, 28 pour Action, 12 pour Aventure)
+     * @param int $limit Nombre de films à récupérer (par défaut 20)
+     * @return array|null Liste des films populaires ou null en cas d'erreur
+     */
+    public function getPopularMoviesByGenre(int $genreId, int $limit = 31): ?array
+    {
+        $contenus = [];
+        $page = 1;
+
+        while (count($contenus) < $limit) {
+            $url = "https://api.themoviedb.org/3/discover/movie?api_key={$this->apiKey}&language=fr-FR&sort_by=popularity.desc&with_genres={$genreId}&page={$page}";
+
+            $response = file_get_contents($url);
+            if ($response === false) {
+                return null;
+            }
+
+            $moviesData = json_decode($response, true);
+
+            if ($moviesData === null || !isset($moviesData['results']) || empty($moviesData['results'])) {
+                break; // Arrêter si l'API ne retourne plus de résultats
+            }
+
+            foreach ($moviesData['results'] as $movieData) {
+                $contenus[] = $this->convertToContenuLight($movieData);
+
+                // Arrêter si on atteint la limite souhaitée
+                if (count($contenus) >= $limit) {
+                    break;
+                }
+            }
+
+            $page++;
+        }
+
+        return $contenus;
+    }
 
     /**
      * @brief Méthode de recherche de films dans l'api TMDB
@@ -368,6 +378,5 @@ class ContenuDAO
             }
             return $contenus;
         }
-
     }
 }

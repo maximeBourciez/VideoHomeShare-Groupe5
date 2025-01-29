@@ -1,4 +1,12 @@
-
+/**
+ * @brief Gestionnaire des événements d'un thread
+ * 
+ * @details Ce gestionnaire d'événements est responsable de la gestion des événements suivants : 
+ * - Répondre à un message (Compléter la pop-up de réponse)
+ * - Signaler un message (Mettre à jour le contenu de la pop-up de signalement)
+ * - Afficher / Masquer les réponses à un message (Basculer l'affichage des réponses)
+ * - Mettre à jour le compteur de caractères dans les textareas des modals
+ */
 document.addEventListener("DOMContentLoaded", function () {
     // Sélectionne toutes les textareas dans les modals
     const textareas = document.querySelectorAll(".modal textarea");
@@ -124,6 +132,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.error('Container de réponses non trouvé pour le message:', messageId);
             }
         });
+    
     });
 });
 

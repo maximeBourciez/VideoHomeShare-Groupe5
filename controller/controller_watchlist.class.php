@@ -142,4 +142,46 @@ class ControllerWatchlist extends Controller {
     
         $this->afficherWatchlists();
     }
+
+    /**
+ * @brief Supprime une watchlist existante
+ */
+public function supprimerWatchlist(): void {
+    if (!isset($_SESSION['utilisateur']) || !isset($_POST['id'])) {
+        $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+        $managerUtilisateur->connexion();
+        return;
+    }
+
+    $idUtilisateur = htmlspecialchars(unserialize($_SESSION['utilisateur'])->getId());
+    $idWatchlist = filter_var($_POST['id'], FILTER_VALIDATE_INT);
+    if ($idWatchlist === false) {
+        throw new Exception("ID de watchlist invalide");
+    }
+
+    $watchlistDAO = new WatchlistDAO($this->getPdo());
+    
+    // Vérification des droits d'accès
+    $watchlists = $watchlistDAO->findByUser($idUtilisateur);
+    $watchlistAppartientUtilisateur = false;
+    
+    foreach ($watchlists as $watchlist) {
+        if ($watchlist->getId() === $idWatchlist) {
+            $watchlistAppartientUtilisateur = true;
+            break;
+        }
+    }
+
+    if (!$watchlistAppartientUtilisateur) {
+        throw new Exception("Vous n'avez pas les droits pour supprimer cette watchlist");
+    }
+
+    $success = $watchlistDAO->delete($idWatchlist);
+    
+    if (!$success) {
+        throw new Exception("Erreur lors de la suppression de la watchlist");
+    }
+
+    $this->afficherWatchlists();
+}
 }

@@ -24,17 +24,17 @@ class ControllerIndex extends Controller
         $tendances = $this->addNotesToContenus($trends);
 
         // Récupérer les films d'action (genre ID 28)
-        $actionMovies = $tmdbApi->getPopularMoviesByGenre(28, 20);
+        $actionMovies = $tmdbApi->getPopularMoviesByGenre(28, 31);
         $actionMovies = $this->addNotesToContenus($actionMovies);
 
         // Récupérer les films d'aventure (genre ID 12)
-        $adventureMovies = $tmdbApi->getPopularMoviesByGenre(12, 20);
+        $adventureMovies = $tmdbApi->getPopularMoviesByGenre(12, 31);
         $adventureMovies = $this->addNotesToContenus($adventureMovies);
 
         // Récupérer les 3 fils les plus likés de la semaine
         $filDAO = new FilDAO($this->getPdo());
         $fils = $filDAO->getFilsLesPlusLikes(3);
-        $fils = array_slice($fils, 0, 3);   
+        $fils = array_slice($fils, 0, 3);
 
         // Afficher le template avec les données
         echo $this->getTwig()->render('index.html.twig', [
@@ -53,10 +53,11 @@ class ControllerIndex extends Controller
      * 
      * @return array<Contenu> Tableau de contenus avec les infos pour les notes 
      */
-    private function addNotesToContenus(array $contenus): array{
+    private function addNotesToContenus(array $contenus): array
+    {
         $commentaire = new CommentaireDAO($this->getPdo());
         $tendances = [];
-        for($i = 1; $i < count($contenus); $i++) {
+        for ($i = 1; $i < count($contenus); $i++) {
             // Ajouter une clé moyenne et nbAvis à chaque film
             $tendances[$i][0] = $contenus[$i];
             $tendances[$i][1]["moyenne"] = $commentaire->getMoyenneEtTotalNotesContenu($contenus[$i]->getId())["moyenne"];
@@ -73,7 +74,8 @@ class ControllerIndex extends Controller
      * 
      * @return void
      */
-    public function rechercher(){
+    public function rechercher()
+    {
         // Récupérer le terme de recherche
         $recherche = $_POST['recherche'];
 
@@ -85,8 +87,21 @@ class ControllerIndex extends Controller
         $managerCollection = new CollectionDAO($this->getPdo());
         $collections = $managerCollection->searchByName($recherche);
 
-        // Récupérer les sagas
-        // En attente du travail sur les sagas
+        // Récupérer les series et traiter leurs images
+        $managerSerie = new SerieDAO($this->getPdo());
+        $series = $managerSerie->searchByName($recherche);
+
+        // Traitement des liens d'images pour les séries
+        foreach ($series as $serie) {
+            if ($serie->getLienAffiche()) {
+                $serie->setLienAfficheReduite('https://image.tmdb.org/t/p/w500' . $serie->getLienAffiche());
+                $serie->setLienAffiche('https://image.tmdb.org/t/p/original' . $serie->getLienAffiche());
+            } else {
+                // Image par défaut si pas d'affiche
+                $serie->setLienAfficheReduite('assets/images/no-poster.jpg');
+                $serie->setLienAffiche('assets/images/no-poster.jpg');
+            }
+        }
 
         // Récupérer les threads (fils)
         $filDAO = new FilDAO($this->getPdo());
@@ -97,7 +112,8 @@ class ControllerIndex extends Controller
             'contenus' => $contenus,
             'fils' => $fils,
             'collections' => $collections,
-            'recherche' => $recherche
+            'recherche' => $recherche,
+            'series' => $series
         ]);
     }
 }
