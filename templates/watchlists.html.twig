@@ -39,20 +39,20 @@
                                                 <div class="carousel-item {% if loop.first %}active{% endif %}">
                                                     <div class="row g-3">
                                             {% endif %}
-                                            
+
                                             <div class="col-6 col-sm-4 col-md-3 col-lg">
                                                 <div class="card h-100 bg-light hover-card">
                                                     <div class="card-img-wrapper position-relative pt-2 px-2">
-                                                        <img src="{{ contenu.affiche }}" class="card-img-top rounded shadow" alt="{{ contenu.nom }}">
+                                                        <img src="{{ contenu.getLienAfficheReduite() }}" class="card-img-top rounded shadow" alt="{{ contenu.nom }}">
                                                     </div>
                                                     <div class="card-body d-flex flex-column p-2">
                                                         <div class="rating mb-2">
                                                             <span class="badge bg-mydark">
-                                                                {{ contenu.note }} <i class="bi bi-star-fill ms-1"></i>
+                                                                {{ contenu.getNote() }} <i class="bi bi-star-fill ms-1"></i>
                                                             </span>
                                                         </div>
-                                                        <h5 class="card-title fs-6 mb-3">{{ contenu.nom }}</h5>
-                                                        <a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ contenu.id }}" class="btn btn-primary btn-sm mt-auto">
+                                                        <h5 class="card-title fs-6 mb-3">{{ contenu.getTitre() }}</h5>
+                                                        <a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ contenu.getId() }}" class="btn btn-primary btn-sm mt-auto">
                                                             <i class="bi bi-info-circle me-1"></i>Plus d'informations
                                                         </a>
                                                     </div>
