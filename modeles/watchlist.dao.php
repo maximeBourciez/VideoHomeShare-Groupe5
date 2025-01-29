@@ -226,4 +226,24 @@ class WatchlistDAO
         }
         return $watchlists;
     }
+
+    /**
+     * @brief Méthode pour vérifier si un contenu est dans une watchlist
+     * 
+     * @param int $watchlistId Identifiant de la watchlist
+     * @param int $contenuId Identifiant du contenu
+     * 
+     * @return bool Vrai si le contenu est dans la watchlist, faux sinon
+     */
+    public function isContenuInWatchlist(int $watchlistId, int $contenuId): bool
+    {
+        $sql = "SELECT COUNT(*) FROM " . DB_PREFIX . "contenirContenu WHERE idWatchlist = :watchlistId AND idContenuTmdb = :contenuId";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            ':watchlistId' => $watchlistId,
+            ':contenuId' => $contenuId
+        ]);
+        return intval($stmt->fetchColumn()) > 0;
+    }   
 }
+

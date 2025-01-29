@@ -38,7 +38,7 @@ class ControllerWatchlist extends Controller {
     }
 
     /**
-     * @brief Ajoute un contenu à une ou plusieurs watchlists
+     * @brief Affiche les détails d'une watchlist
      */
     public function ajouterAWatchlist(): void {
         if (!isset($_SESSION['utilisateur']) || !isset($_POST['watchlists']) || !isset($_POST['idContenu'])) {
@@ -48,15 +48,16 @@ class ControllerWatchlist extends Controller {
         }
     
         $watchlistDAO = new WatchlistDAO($this->getPdo());
+    
         $contenuId = filter_var($_POST['idContenu'], FILTER_VALIDATE_INT);
         if ($contenuId === false) {
             throw new Exception("ID de contenu invalide");
         }
-        
-        $watchlists = array_map('intval', (array)$_POST['watchlists']); // Cast en array et conversion en integers
+    
+        $watchlists = array_map('intval', (array)$_POST['watchlists']); // Convertit les valeurs en entiers dans un tableau
     
         foreach ($watchlists as $watchlistId) {
-            if ($watchlistId > 0) { // Validation basique de l'ID
+            if (!$watchlistDAO->isContenuInWatchlist($watchlistId, $contenuId)) { // Vérifie pour chaque watchlist individuellement
                 $watchlistDAO->addContenuToWatchlist($watchlistId, $contenuId);
             }
         }
