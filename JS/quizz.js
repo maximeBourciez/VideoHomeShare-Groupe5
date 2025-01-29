@@ -30,4 +30,5 @@ document.addEventListener('DOMContentLoaded', function() {
         // Ajouter la nouvelle réponse dans le container de réponses
         document.getElementById('reponsesContainer').appendChild(zoneReponse);
     });
+
 });

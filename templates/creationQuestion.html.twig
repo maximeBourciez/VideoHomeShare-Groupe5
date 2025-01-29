@@ -14,8 +14,7 @@
         <input type="hidden" name="controller" value="quizz">
         <input type="hidden" name="methode" value="creerQuestion">
         <input type="hidden" name="idQuizz" value="{{ idQuizz }}">
-        <input type="hidden" name="numQuestion" value="{{ numQuestion + 1 }}">
-        
+
         <h3>Question n°{{ numQuestion }}</h3>
         <div class="card bg-mydark mx-auto my-auto p-4 text-white rounded">
             <!-- Champ Image -->
@@ -38,22 +37,20 @@
             <!-- Champ des réponses -->
             <div id="reponsesContainer">
             </div>
-        </div>
-    <br><br>
-        <!-- Boutons de manipulation de la page -->
-        <div class="row text-center">
-            <div class="col">
-                <a href="index.php?controller=quizz&methode=listeQuizz" class="btn btn-primary">
-                    <b>Annuler</b>
-                </a>
+            <!-- Boutons de manipulation de la page -->
+            <div class="row text-center mt-4">
+                <div class="row col mt-4 mb-2 me-4">
+                    <a href="index.php?controller=quizz&methode=listeQuizz" class="btn btn-primary">
+                        <b>Annuler</b>
+                    </a>
+                </div>
+                <div class="row col mb-2 mt-4">
+                    <a href="index.php?controller=quizz&methode=traiterInfosQuestion&idQuizz={{ idQuizz }}&numQuestion={{ numQuestion }}&nbQuestions={{ nbQuestions }}&idUtilisateur={{ idUtilisateur }}" class="btn btn-primary">
+                        <b>Suivant</b>
+                    </a>
+                </div>
             </div>
-            <div class="col">
-                <a href="index.php?controller=quizz&methode=creerQuestion&idQuizz&numQuestion&nbQuestions&idUtilisateur" class="btn btn-primary">
-                    <b>Suivant</b>
-                </a>
-            </div>
         </div>
-        <br>
     </form>
 </main>
 

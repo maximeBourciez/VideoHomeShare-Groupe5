@@ -19,8 +19,6 @@ class ReponseDAO{
     }
 
     //Methodes
-    //A tester quand la BD sera mise en place
-    //Methodes find
     public function find(?int $id): ?Reponse{
         $sql="SELECT * FROM ".DB_PREFIX. "reponse WHERE id= :id";
         $pdoStatement = $this->pdo->prepare($sql);
@@ -90,12 +88,11 @@ class ReponseDAO{
     public function findByQuestionId($idQuestion): ?array
     {
         $sql="SELECT * FROM ".DB_PREFIX. "reponse WHERE idQuestion = :idQuestion";
-        $pdoStatement = $this->pdo->prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
         $pdoStatement->execute(array("idQuestion"=>$idQuestion));
-        $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Reponse');
-        $reponses = $pdoStatement->fetchAll();
+        $stmt->bindValue(':idQuestion', $idQuestion, PDO::PARAM_INT);
 
-        return $reponses;
+        return $this->hydrateAll($stmt->fetchAll());
     }
 }
 

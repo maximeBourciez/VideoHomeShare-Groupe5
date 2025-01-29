@@ -96,7 +96,7 @@ class QuizzDAO{
      * @return bool
      */
     function delete(int $idQuizz): bool{
-        $req = $this->pdo->prepare("DELETE FROM Quizz WHERE idQuizz = :idQuizz");
+        $req = $this->pdo->prepare("DELETE FROM " . DB_PREFIX . "quizz WHERE idQuizz = :idQuizz");
         $req->bindParam(":idQuizz", $idQuizz);
 
         return $req->execute();

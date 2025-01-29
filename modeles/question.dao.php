@@ -56,17 +56,17 @@ class QuestionDAO{
     /**
      * @brief Méthode de création d'un quizz
      * 
-     * @param Question
-     * @return bool
+     * @param valeur, rang, urlImage et idQuizz
+     * @return int Confirmation ou non que la question a bien été créée
      */
-    function create(Question $question): bool{
+    function create(string $valeur, int $rang, string $urlImage, int $idQuizz): int{
         $req = $this->pdo->prepare("INSERT INTO Question (valeur, rang, urlImage, idQuizz) VALUES (:valeur, :rang, :urlImage, :idQuizz)");
-        $req->bindParam(":valeur", $question->getValeur());
-        $req->bindParam(":rang", $question->geRang());
-        $req->bindParam(":urlImage", $question->getUrlImage());
-        $req->bindParam(":idQuizz", $question->getIdQuizz());
+        $req->bindParam(":valeur", $valeur);
+        $req->bindParam(":rang", $rang);
+        $req->bindParam(":urlImage", $urlImage);
+        $req->bindParam(":idQuizz", $idQuizz);
 
-        return $req->execute();
+        return $this->pdo->lastInsertId();
     }
 
     /**
@@ -165,20 +165,15 @@ class QuestionDAO{
     }
 
     /**
-     * @brief Méthode pour récupérer les attributs des quizz
+     * @brief Méthode pour récupérer les questions d'un quizz
      * @param $idQuizz identifiant du quizz
-     * @return Question
+     * @return array
      */
-    function findByQuizzId(int $idQuizz): ?Question{
+    function findByQuizzId(int $idQuizz): ?array{
         $sql = "SELECT * FROM " .DB_PREFIX. "question WHERE idQuizz = :idQuizz";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':idQuizz', $idQuizz, PDO::PARAM_INT);
-        $stmt->execute();
-        $row = $stmt->fetch();
-        if ($row == null){
-            return null;
-        }
 
-        return $this->hydrate($row);
+        return $this->hydrateAll($stmt->fetchAll());
     }
 }
