@@ -1,41 +1,67 @@
- function onYouTubeIframeAPIReady() { // Crée un objet YT.Player pour intégrer le lecteur YouTube
-    
+function onYouTubeIframeAPIReady() { // Crée un objet YT.Player pour intégrer le lecteur YouTube
+   
     var  player = new YT.Player('video', {
         height: 180,
         width: 320,
-        videoId: 'dQw4w9WgXcQ', // Remplacez VIDEO_ID par l'ID de votre vidéo YouTube_SjWyd7LxZ8
+        videoId: 'dQw4w9WgXcQ',
+        playerVars: {
+            autoplay: 1  // L'autoplay est activé avec la valeur 1
+        }, 
         events: {
-        'onReady': onPlayerReady,
+        'onReady': function(event) {
+            onPlayerReady(event, id);  // Passe des paramètres à onPlayerReady
+        },
         'onStateChange': onPlayerStateChange
         }
     });
-
     
-        
-    return(player);
     }
 
     // Fonction appelée lorsque le lecteur est prêt
-    function onPlayerReady(event) { // Vous pouvez maintenant utiliser les fonctions de l'API pour contrôler le lecteur
+    function onPlayerReady(event, id) { // Vous pouvez maintenant utiliser les fonctions de l'API pour contrôler le lecteur
         event.target.playVideo(); // Joue la vidéo
-    
+        console.log(event.target.getVideoData())
+        setInterval(function(){majVideo(id, event.target)},1000);
+        if (hote == true){
+            setInterval(function(){envoyerinfoVideo(id, event.target)},1000);
+        }
+
         event.target.setSize(document.getElementById("description").clientWidth,document.getElementById("description").clientWidth*9/16);
-        //majchat(1)
-        //majVideo(1, event.target);
+        
         window.addEventListener('resize', function() {
 				
             event.target.setSize(document.getElementById("description").clientWidth,document.getElementById("description").clientWidth*9/16)
     
             });
+
+        
         majdescription(event.target);
+
+        document.getElementById("ajouter").addEventListener("click", function() {
+            ajouerVideo(id , event.target);
+        });
+        document.getElementById("suivante").addEventListener("click", function() {
+            prochainVideo(id, event.target);
+        }); 
+        
+        document.getElementById("Message").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                envoyerMessage(id);
+            }
+        });
+        
+        
+
+
+   
         
     }
 
     function majdescription(player) {
-        console.log(player);
-        document.getElementById("dureeVideo").innerHTML = "duree : "+ Math.floor(player.getDuration() / 60) + "min " + player.getDuration() % 60;
+
+        document.getElementById("dureeVideo").innerHTML = "duree : "+ Math.floor(player.getDuration() / 60) + "min " + Math.round(player.getDuration() % 60);
         document.getElementById("titreVideo").innerHTML = "titre : "+player.videoTitle;
-        document.getElementById("lienVideo").innerHTML = "lien video : "+player.target.getVideoUrl();
+        document.getElementById("lienVideo").innerHTML = "lien video : "+player.getVideoUrl();
 
     }
 
@@ -52,7 +78,7 @@
         
             // Construire l'URL avec les paramètres
             const url = `index.php?controller=${controller}&methode=${methode}${parm}`;
-            console.log(url);
+
             // Envoyer une requête fetch
             const response = await fetch(url, {
                 method: 'GET', // Utilisez POST si nécessaire
@@ -75,7 +101,7 @@
         
        let url = callController('salle', 'prochainVideo', [["id", id]]);
          url.then(result => {
-            
+            console.log(url);
             var videoId = new URL(result).searchParams.get("v");
             
             if (videoId == null) {
@@ -94,18 +120,18 @@
 
     function ajouerVideo(id, player) {
         let url = document.getElementById("lien").value;
-        
-        let test =callController('salle', 'ajouterVideo', [["id", id],["url", url] ]);
+        if(filter_var($url, FILTER_VALIDATE_URL) !== false){
+        callController('salle', 'ajouterVideo', [["id", id],["url", url] ]);
+        }
         document.getElementById("lien").value = '';
         majVideo(id, player)
-       console.log(test);        
+        
         
     }
 
     function majchat(id) {
         let url = callController('salle', 'majChat', [["id", id]]);
         url.then(result =>  {
-            console.log(result[0]);
             if (result[0] == "{") {
             let data = JSON.parse(result);
             let messages = data.chat.messages;
@@ -140,7 +166,6 @@
 
     function envoyerMessage(id) {
         let message = document.getElementById("Message").value;
-        console.log(message);
         if (message != "") {
               
         callController('salle', 'envoyerMessage', [["id", id],["message", message]]);
@@ -167,20 +192,28 @@
                 videoIdlast = new URL(urllast).pathname.split('/')[1];
                 
             }
-            console.log(videoId);
             if (videoId != videoIdlast) {
             player.loadVideoById(videoId); 
+            majdescription(player);
             }
             let etat = data.video.etat;
-            if( etat != player.getPlayerState()) {
+            
+
             if (etat == 1 ) {
                 player.playVideo();
             } else {
                 player.pauseVideo();
             }
+
+            if( etat != player.getPlayerState()) {
+           
             let temps = data.video.temps;
             player.seekTo(temps);
-        }
+            
+            
+            }
+
+            
     
         }
 
@@ -192,13 +225,12 @@
 
     function envoyerinfoVideo(id, player) {
         
-        console.log(player);
-        console.log(player.getVideoUrl());
+    
        let url = player.getVideoUrl();
-       console.log(url);
+    
        let cc = url.replace("&", "\\");
        let test = callController('salle', 'envoyerinfoVideo', [["id", id],["temps", player.getCurrentTime()],["etat", player.getPlayerState()],["url", cc]]);
-        console.log(test);
+       
     }
 
 

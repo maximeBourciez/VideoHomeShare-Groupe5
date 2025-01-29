@@ -32,40 +32,29 @@
 				</div>
 				<script src="JS\Watch2Gether.js"></script>
 			<script>
-				var video = onYouTubeIframeAPIReady();
-				setInterval(function(){majVideo({{salle.idSalle}}, video)},1000);
+				var id = {{ salle.idSalle }}
 				{% if Hote == true %}
-					setInterval(function(){envoyerinfoVideo({{salle.idSalle}}, video)},1000);
+					var hote = true;
+				{% else %}
+					var hote = false;
 				{% endif %}
-				console.log(video);
-				console.log(video.target.getCurrentTime());
+				onYouTubeIframeAPIReady()
+								
 			
 				function onPlayerStateChange(event) {
             		console.log("L'état du lecteur a changé :", event.target.getPlayerState());
-					// recuperer l'etat du lecteur
-					console.log(event.target.getPlayerState());
+					majdescription(event.target);
 					
-					// set l'etat du lecteur
-					// event.target.playVideo()
-					// event.target.pauseVideo()
-					//recuperer le temps de la video
-					console.log(event.target.getCurrentTime());
-					// set le temps de la video
-					//event.target.seekTo(60);
-					// recuperer le id de la video
-					console.log(event.target.getVideoData().video_id);
-					// set le id de la video
-					//event.target.loadVideoById("_SjWyd7LxZ8");
- 
-					document.getElementById("dureeVideo").innerHTML = "durée : "+ Math.floor(event.target.getDuration() / 60) + "min " + Math.round(event.target.getDuration() % 60);
-        			document.getElementById("titreVideo").innerHTML = "titre : "+ event.target.videoTitle;
-       		 		document.getElementById("lienVideo").innerHTML =  "lien vidéo : "+ event.target.getVideoUrl();
 					{% if Hote == true %}
 						if(event.target.getVideoData().video_id != "dQw4w9WgXcQ"){
 							envoyerinfoVideo({{salle.idSalle}}, event.target);	
 						}
 						
+						
 					{% endif %}
+
+
+					
 				}		
 
 				window.onbeforeunload = function (event) {
@@ -84,7 +73,7 @@
 					</p>
 
 					
-					<p id="dureeVideo" class="ms-2" onclick="envoyerinfoVideo({{salle.idSalle}}, video)">
+					<p id="dureeVideo" class="ms-2" >
 						duree
 					</p>
 
@@ -92,12 +81,12 @@
 					
 						<div class=" row mx-2 mb-3	"> 
 						 <input type="text" class="  rounded col-8" id="lien" placeholder="lien de la video">
-						 <button class="btn btn-primary col-4 "  onclick="ajouerVideo({{salle.idSalle}}, video)">ajouter</button>
+						 <button class="btn btn-primary col-4 " id="ajouter" >ajouter</button>
 						</div>
 
-						<button class="btn btn-primary ms-2 my-2" onclick="prochainVideo({{salle.idSalle}}, video)"> passe a la prochaine video</button>
+						<button class="btn btn-primary ms-2 my-2" id="suivante"> passe a la prochaine video</button>
 						
-					<a class="btn btn-primary ms-2" href="index.php?controller=salle&methode=fermerSalle&id={{salle.idSalle}}"> fermer la salle </a>
+						<a class="btn btn-primary ms-2" href="index.php?controller=salle&methode=fermerSalle&id={{salle.idSalle}}"> fermer la salle </a>
 					
 					
 					{% endif %}
@@ -121,7 +110,7 @@
 				</button>
 
 			</div>
-			<script> setInterval(function(){majchat({{salle.idSalle}})},1000);</script>
+			<script> setInterval(function(){majchat({{salle.idSalle}})},1000); </script>
 
 		</div>
 

@@ -30,6 +30,12 @@ class ControllerSalle extends Controller
 
     public function afficherSalle(){
         $id = isset($_GET['id']) ?  htmlspecialchars($_GET['id']) : null;
+        if (!isset($_SESSION['utilisateur'])){
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
+            exit();
+        }
+
 
         $managersalle = new SalleDAO($this->getPdo());
         $salle = $managersalle->find($id);
@@ -52,10 +58,15 @@ class ControllerSalle extends Controller
             $managerUtilisateur->connexion();
             exit();
         }
+
         
         
         $managersalle = new SalleDAO($this->getPdo());
         $salle = $managersalle->findByCode($code);
+        if ($salle == null){
+            $this->accueilWatch2Gether();
+            exit();
+        }
         $salle->setPlaceDisponible($salle->getPlaceDisponible()-1);
         if($salle->getPlaceDisponible() < 0){
             $this->accueilWatch2Gether();
@@ -320,7 +331,7 @@ class ControllerSalle extends Controller
                 // $matches[1] contient l'ID de la vidéo
                 $idVideo= $matches[1];
             }
-            $data['video']['id'] = $idVideo;
+            $data['video']['url'] = $idVideo;
             file_put_contents("jsonW2G/salle$id.json", json_encode($data));
 
         }
