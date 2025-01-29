@@ -451,4 +451,46 @@ class MessageDAO
 
         return $stmt->fetchColumn();
     }
+
+    /**
+     * Méthode permettant de récupérer les nouveaux messages d'un fil
+     * 
+     * @param int $idFil Identifiant du fil
+     * @param int $dernierMessageId Identifiant du dernier message du fil
+     * 
+     * @return array<Message> Tableau d'objets Message
+     */
+    public function getNouveauxMessages($idFil, $dernierMessageId) {
+        $requete = "
+                    SELECT m.idMessage, m.idMessageParent, m.valeur, m.dateC, 
+                           m.idUtilisateur, u.pseudo, u.urlImageProfil,  
+                            ld1.nbLikes, 
+                            ld1.nbDislikes
+                FROM " . DB_PREFIX . "message m
+                LEFT JOIN (
+                    SELECT idMessage,
+                            SUM(CASE WHEN reaction = true THEN 1 ELSE 0 END) AS nbLikes,
+                            SUM(CASE WHEN reaction = false THEN 1 ELSE 0 END) AS nbDislikes
+                    FROM " . DB_PREFIX . "reagir
+                    GROUP BY idMessage
+                ) AS ld1 ON m.idMessage = ld1.idMessage
+                LEFT JOIN " . DB_PREFIX . "utilisateur u ON m.idUtilisateur = u.idUtilisateur
+                WHERE m.idFil = :id_fil 
+                AND m.idMessage > :dernier_id 
+                ORDER BY dateC ASC;";
+                    
+        $stmt = $this->pdo->prepare($requete);
+        $stmt->bindValue(':id_fil', $idFil, PDO::PARAM_INT);
+        $stmt->bindValue(':dernier_id', $dernierMessageId, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Formater les dates pour JSON
+        foreach ($messages as &$message) {
+            $message['dateC'] = (new DateTime($message['dateC']))->format('c');
+        }
+        
+        return $messages;
+    }
 }

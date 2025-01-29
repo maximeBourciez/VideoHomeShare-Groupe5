@@ -154,9 +154,40 @@ class WatchlistDAO
     }
 
     /**
-     * @brief Méthode pour récupérer une watchlist par son ID
+     * @brief Méthode pour supprimer une watchlist
      * 
-     * @param int $id Identifiant de la watchlist
+     * @param int $idWatchlist Identifiant de la watchlist à supprimer
+     * @return bool Vrai si l'opération a réussi, faux sinon
+     */
+    public function delete(int $idWatchlist): bool {
+        // Début de la transaction
+        $this->pdo->beginTransaction();
+        
+        try {
+            // Suppression des contenus associés dans la table de liaison
+            $sqlContenu = "DELETE FROM " . DB_PREFIX . "contenircontenu WHERE idWatchlist = :idWatchlist";
+            $stmtContenu = $this->pdo->prepare($sqlContenu);
+            $stmtContenu->execute([':idWatchlist' => $idWatchlist]);
+            
+            // Suppression de la watchlist
+            $sqlWatchlist = "DELETE FROM " . DB_PREFIX . "watchlist WHERE idWatchlist = :idWatchlist";
+            $stmtWatchlist = $this->pdo->prepare($sqlWatchlist);
+            $stmtWatchlist->execute([':idWatchlist' => $idWatchlist]);
+            
+            // Validation de la transaction
+            $this->pdo->commit();
+            return true;
+        } catch (Exception $e) {
+            // En cas d'erreur, annulation de la transaction
+            $this->pdo->rollBack();
+            return false;
+        }
+    }
+
+    /**
+     * @brief Méthode pour hydrater un tableau de données en objet Watchlist
+     * 
+     * @param array $data Tableau de données
      * @return Watchlist|null Objet Watchlist ou null si non trouvé
      */
     private function hydrate(array $data): Watchlist
