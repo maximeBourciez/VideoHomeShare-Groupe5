@@ -27,7 +27,10 @@ class ControllerSalle extends Controller
         echo $template->render(array( 'salles' => $salles));
     }
 
-
+    /**
+     * @brief Affiche la page de visionnage d'une salle publique
+     * @return void
+     */
     public function afficherSalle(){
         $id = isset($_GET['id']) ?  htmlspecialchars($_GET['id']) : null;
         if (!isset($_SESSION['utilisateur'])){
@@ -51,6 +54,11 @@ class ControllerSalle extends Controller
 
 
     }
+
+    /**
+     * @brief Rejoindre une salle privée
+     * @return void
+     */
     public function rejoindreSallePriver(){
         $code = isset($_POST['code']) ?  htmlspecialchars($_POST['code']) : null;
         if (!isset($_SESSION['utilisateur'])) {
@@ -79,7 +87,10 @@ class ControllerSalle extends Controller
         echo $template->render(array('salle' => $salle,'Hote' => $hote));
 
     }
-
+    /**
+     * @brief Creer une salle
+     * @return void
+     */
     public function createSalle(){
 
         // verifier si l'utilisateur est connecter
@@ -126,7 +137,10 @@ class ControllerSalle extends Controller
         echo $template->render(array('salle' => $salle,'Hote' => true));
     }
 
-
+    /**
+     * @brief Quitter une salle
+     * @return void
+     */
     public function quiter(){
 
         $id = isset($_GET['id']) ?  htmlspecialchars($_GET['id']) : null;
@@ -136,7 +150,10 @@ class ControllerSalle extends Controller
         $managersalle->update($salle);
 
     }
-
+    /**
+     * @brief Fermer une salle
+     * @return void
+     */
     public function fermerSalle(){
         $id = isset($_GET['id']) ?  htmlspecialchars($_GET['id']) : null;
         $managersalle = new SalleDAO($this->getPdo());
@@ -162,7 +179,10 @@ class ControllerSalle extends Controller
         $this->accueilWatch2Gether();
 
     }
-
+    /**
+     * @brief enrister un message dans le fichier json
+     * @return void
+     */
     public function envoyerMessage(){
 
         // verifier si l'utilisateur est connecter
@@ -189,7 +209,10 @@ class ControllerSalle extends Controller
         file_put_contents("jsonW2G/salle$id.json", json_encode($data));
     }
 
-
+    /**
+     * @brief  renvoie le json de la salle 
+     * @return void
+     */
     public function majChat(){
         // verifier si l'utilisateur est connecter
         if (!isset($_SESSION['utilisateur'])) {
@@ -213,7 +236,10 @@ class ControllerSalle extends Controller
 
     }
 
-
+     /**
+     * @brief  renvoie le json de la salle 
+     * @return void
+     */
     public function majVideo(){
         // verifier si l'utilisateur est connecter
         if (!isset($_SESSION['utilisateur'])) {
@@ -234,6 +260,9 @@ class ControllerSalle extends Controller
         echo json_encode($data);
     }
 
+    /**
+     * @brief  enregistrer les informations de la video dans le json
+     */
     public function envoyerinfoVideo(){
         // verifier si l'utilisateur est connecter
         if (!isset($_SESSION['utilisateur'])) {
@@ -256,7 +285,10 @@ class ControllerSalle extends Controller
         
 
     }
-
+    /**
+     * @brief  met a jour le rang de la video en bd et renvoie l'url de la prochaine video
+     * @return void
+     */
     public function prochainVideo(){
         $id = isset($_GET['id']) ?  htmlspecialchars($_GET['id']) : null;
         $managersalle = new SalleDAO($this->getPdo());
@@ -292,7 +324,10 @@ class ControllerSalle extends Controller
         echo $url;
 
     }
-
+    /**
+     * brief  ajouter une video a la salle en bd
+     * @return void
+     */
     public function ajouterVideo(){
         
         
