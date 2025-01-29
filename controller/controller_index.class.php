@@ -24,11 +24,11 @@ class ControllerIndex extends Controller
         $tendances = $this->addNotesToContenus($trends);
 
         // Récupérer les films d'action (genre ID 28)
-        $actionMovies = $tmdbApi->getPopularMoviesByGenre(28, 20);
+        $actionMovies = $tmdbApi->getPopularMoviesByGenre(28, 31);
         $actionMovies = $this->addNotesToContenus($actionMovies);
 
         // Récupérer les films d'aventure (genre ID 12)
-        $adventureMovies = $tmdbApi->getPopularMoviesByGenre(12, 20);
+        $adventureMovies = $tmdbApi->getPopularMoviesByGenre(12, 31);
         $adventureMovies = $this->addNotesToContenus($adventureMovies);
 
         // Récupérer les 3 fils les plus likés de la semaine
@@ -87,10 +87,21 @@ class ControllerIndex extends Controller
         $managerCollection = new CollectionDAO($this->getPdo());
         $collections = $managerCollection->searchByName($recherche);
 
-        // Récupérer les series
+        // Récupérer les series et traiter leurs images
         $managerSerie = new SerieDAO($this->getPdo());
         $series = $managerSerie->searchByName($recherche);
 
+        // Traitement des liens d'images pour les séries
+        foreach ($series as $serie) {
+            if ($serie->getLienAffiche()) {
+                $serie->setLienAfficheReduite('https://image.tmdb.org/t/p/w500' . $serie->getLienAffiche());
+                $serie->setLienAffiche('https://image.tmdb.org/t/p/original' . $serie->getLienAffiche());
+            } else {
+                // Image par défaut si pas d'affiche
+                $serie->setLienAfficheReduite('assets/images/no-poster.jpg');
+                $serie->setLienAffiche('assets/images/no-poster.jpg');
+            }
+        }
 
         // Récupérer les threads (fils)
         $filDAO = new FilDAO($this->getPdo());
