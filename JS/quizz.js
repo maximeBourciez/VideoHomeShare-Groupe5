@@ -13,9 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Créer un nouvel élément pour la réponse
         let zoneReponse = document.createElement('div');
-        zoneReponse.classList.add('card', 'mb-3');
         zoneReponse.innerHTML = `
-        <div class="card">
+        <div class="card bg-mydark mx-auto my-auto text-white rounded">
             <div class="card-body">
                 <label for="reponse_${nbReponses}">Réponse n°${nbReponses} :</label>
                 <input type="text" name="reponse_${nbReponses}" id="reponse_${nbReponses}" placeholder="Saisir la réponse..." class="form-control" required>

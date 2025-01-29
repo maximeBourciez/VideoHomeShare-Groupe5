@@ -5,8 +5,6 @@ var class_fil_d_a_o =
     [ "create", "class_fil_d_a_o.html#ae4832783f040078635b49ef54e177174", null ],
     [ "findAll", "class_fil_d_a_o.html#a73a1b0348919b6755e4f69dcc70eba64", null ],
     [ "findById", "class_fil_d_a_o.html#a7320e757c1ee831183e2ac33d0bcfcfa", null ],
-    [ "findFirstUserByFilId", "class_fil_d_a_o.html#a93a5768d966009c4b2955714e67f642d", null ],
-    [ "findMessagesByFilId", "class_fil_d_a_o.html#a1626e9027c4e9ff4c6182d2cc1af261d", null ],
     [ "getFilsLesPlusLikes", "class_fil_d_a_o.html#a8fecb8b28236032c3df49728bf63d04f", null ],
     [ "getPdo", "class_fil_d_a_o.html#a6e7560ad95a7986be67f7528c80e7f1a", null ],
     [ "hydrate", "class_fil_d_a_o.html#ab8a0b2c1ccabce7913458360159761c3", null ],

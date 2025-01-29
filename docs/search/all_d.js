@@ -1,10 +1,13 @@
 var searchData=
 [
-  ['nonnull_0',['nonNull',['../class_utilitaires.html#ae64c4ad161f95d2d01f1326d853fe600',1,'Utilitaires']]],
-  ['notification_1',['Notification',['../class_notification.html',1,'']]],
-  ['notification_2',['notification',['../class_controller_utilisateur.html#a30e85fd698eab48b5978e18e895b27eb',1,'ControllerUtilisateur']]],
-  ['notification_2eclass_2ephp_3',['notification.class.php',['../notification_8class_8php.html',1,'']]],
-  ['notification_2edao_2ephp_4',['notification.dao.php',['../notification_8dao_8php.html',1,'']]],
-  ['notificationdao_5',['NotificationDAO',['../class_notification_d_a_o.html',1,'']]],
-  ['notifierutilisateur_6',['notifierUtilisateur',['../class_controller_fil.html#aa220521316f4e3595b652715380b697f',1,'ControllerFil']]]
+  ['mailcorrectexistepas_0',['mailCorrectExistePas',['../class_utilitaires.html#a96ebb020ee98f3261993dd1ebbe71c6f',1,'Utilitaires']]],
+  ['makerequest_1',['makeRequest',['../class_collection_d_a_o.html#a0bfd8b4fb056eeb197ce8766a22a963a',1,'CollectionDAO\makeRequest()'],['../class_contenu_d_a_o.html#a0bfd8b4fb056eeb197ce8766a22a963a',1,'ContenuDAO\makeRequest()'],['../class_serie_d_a_o.html#a0bfd8b4fb056eeb197ce8766a22a963a',1,'SerieDAO\makeRequest()']]],
+  ['message_2',['Message',['../class_message.html',1,'']]],
+  ['message_2eclass_2ephp_3',['message.class.php',['../message_8class_8php.html',1,'']]],
+  ['message_2edao_2ephp_4',['message.dao.php',['../message_8dao_8php.html',1,'']]],
+  ['messagedao_5',['MessageDAO',['../class_message_d_a_o.html',1,'']]],
+  ['modeles_6',['Modeles',['../namespace_modeles.html',1,'']]],
+  ['modificationprofil_7',['modificationprofil',['../class_controller_utilisateur.html#a66c9b24a8e4d5283d3d6aec26134cb6a',1,'ControllerUtilisateur']]],
+  ['modifierwatchlist_8',['modifierWatchlist',['../class_controller_watchlist.html#a0945abded8f0c282f267b4c593827207',1,'ControllerWatchlist']]],
+  ['motdepassecorrect_9',['motDePasseCorrect',['../class_utilitaires.html#a423353e16f42f7f16d2e0e3c769ab5bd',1,'Utilitaires']]]
 ];

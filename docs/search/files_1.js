@@ -14,8 +14,10 @@ var searchData=
   ['controller_5ffil_2eclass_2ephp_11',['controller_fil.class.php',['../controller__fil_8class_8php.html',1,'']]],
   ['controller_5findex_2eclass_2ephp_12',['controller_index.class.php',['../controller__index_8class_8php.html',1,'']]],
   ['controller_5fnotification_2eclass_2ephp_13',['controller_notification.class.php',['../controller__notification_8class_8php.html',1,'']]],
-  ['controller_5fsignalement_2eclass_2ephp_14',['controller_signalement.class.php',['../controller__signalement_8class_8php.html',1,'']]],
-  ['controller_5futilisateur_2eclass_2ephp_15',['controller_utilisateur.class.php',['../controller__utilisateur_8class_8php.html',1,'']]],
-  ['controller_5fwatch2gether_2eclass_2ephp_16',['controller_watch2gether.class.php',['../controller__watch2gether_8class_8php.html',1,'']]],
-  ['controller_5fwatchlist_2eclass_2ephp_17',['controller_watchlist.class.php',['../controller__watchlist_8class_8php.html',1,'']]]
+  ['controller_5fquizz_2eclass_2ephp_14',['controller_quizz.class.php',['../controller__quizz_8class_8php.html',1,'']]],
+  ['controller_5fserie_2eclass_2ephp_15',['controller_serie.class.php',['../controller__serie_8class_8php.html',1,'']]],
+  ['controller_5fsignalement_2eclass_2ephp_16',['controller_signalement.class.php',['../controller__signalement_8class_8php.html',1,'']]],
+  ['controller_5futilisateur_2eclass_2ephp_17',['controller_utilisateur.class.php',['../controller__utilisateur_8class_8php.html',1,'']]],
+  ['controller_5fwatch2gether_2eclass_2ephp_18',['controller_watch2gether.class.php',['../controller__watch2gether_8class_8php.html',1,'']]],
+  ['controller_5fwatchlist_2eclass_2ephp_19',['controller_watchlist.class.php',['../controller__watchlist_8class_8php.html',1,'']]]
 ];

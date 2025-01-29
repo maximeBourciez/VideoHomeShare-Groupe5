@@ -112,7 +112,15 @@ class FilDAO
 
     }
 
-    // Méthode pour vérifier si un thème existe déjà
+    /**
+     * 
+     * @brief Méthode pour vérifier si un thème existe déjà dans les thèmes d'un fil
+     * 
+     * @param array $themes Tableau de thèmes d'un fil
+     * @param Theme $theme Thème à vérifier
+     * 
+     * @return bool Vrai si le thème existe déjà, faux sinon
+     */
     private function themeExisteDeja(array $themes, Theme $theme): bool
     {
         foreach ($themes as $t) {
@@ -197,56 +205,6 @@ class FilDAO
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         return $this->hydrateAll($stmt->fetchAll());
-    }
-
-
-    /**
-     * @brief Méthode pour trouver les messages d'un fil par son id
-     *
-     * @param integer $idFil
-     * @return array
-     * @warning non testée
-     */
-    public function findMessagesByFilId(int $idFil): array
-    {
-        $sql = "
-            SELECT m.*, u.idUtilisateur, u.pseudo, u.urlImageProfil
-            FROM " . DB_PREFIX . "message AS m
-            INNER JOIN " . DB_PREFIX . "utilisateur AS u ON m.idUtilisateur = u.idUtilisateur
-            WHERE m.idFil = :idFil
-            ORDER BY m.dateC ASC
-        ";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':idFil', $idFil, PDO::PARAM_INT);
-        $stmt->execute();
-        $stmt->setFetchMode(PDO::FETCH_ASSOC);
-        $messages = new MessageDAO($this->pdo);
-        return $messages->listerMessagesParFil($idFil);
-    }
-
-    /**
-     * @brief Méthode pour récupérer l'utilisateur ayant posté le premier message d'un fil
-     * 
-     * @param integer $idFil Identifiant du fil
-     * 
-     * @return Utilisateur|null
-     */
-    public function findFirstUserByFilId(int $idFil): ?Utilisateur
-    {
-        $sql = "
-            SELECT u.*
-            FROM " . DB_PREFIX . "message AS m
-            INNER JOIN " . DB_PREFIX . "utilisateur AS u ON m.idUtilisateur = u.idUtilisateur
-            WHERE m.idFil = :idFil
-            ORDER BY m.dateC ASC
-            LIMIT 1
-        ";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':idFil', $idFil, PDO::PARAM_INT);
-        $stmt->execute();
-        $stmt->setFetchMode(PDO::FETCH_ASSOC);
-        $user = new UtilisateurDAO($this->pdo);
-        return $user->hydrate($stmt->fetch());
     }
 
     /**

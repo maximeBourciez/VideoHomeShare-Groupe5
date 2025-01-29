@@ -1,0 +1,109 @@
+{% extends "base_template.html.twig" %}
+
+{% block title %}Tous les épisodes -
+	{{ serie.titre }}
+{% endblock %}
+
+{% block content %}
+	<div class="container-fluid py-5">
+		<div class="container">
+			<div class="row mb-4">
+				<div class="col-12">
+					<h1 class="text-center mb-4">{{ serie.titre }}
+						- Tous les épisodes</h1>
+				</div>
+			</div>
+
+			<div class="card bg-dark text-white rounded-4 shadow-lg p-3 mb-5">
+				<div class="table-responsive text-white">
+					<table id="episodesTable" class="table table-dark table-hover mb-0 text-white">
+						<thead>
+							<tr>
+								<th>Image</th>
+								<th>Saison</th>
+								<th>Épisode</th>
+								<th>Titre</th>
+								<th>Date de diffusion</th>
+								<th>Description</th>
+							</tr>
+						</thead>
+						<tbody class="text-white">
+							{% for numeroSaison, data in episodes %}
+								{% for episode in data.episodes %}
+									<tr>
+										<td>
+											{% if episode.getImage() %}
+												<img src="{{ episode.getImage() }}" alt="Episode {{ episode.getNumero() }}" class="episode-thumbnail" style="width: 120px; height: 68px; object-fit: cover; border-radius: 4px;" onerror="this.src='images/no-image.svg'">
+											{% else %}
+												<img src="images/no-image.svg" alt="No image" class="episode-thumbnail" style="width: 120px; height: 68px; object-fit: cover; border-radius: 4px;">
+											{% endif %}
+										</td>
+										<td>{{ numeroSaison }}</td>
+										<td>{{ episode.getNumero() }}</td>
+										<td>{{ episode.getTitre() }}</td>
+										<td>{{ episode.getDateDiffusion()|date('d/m/Y') }}</td>
+										<td>{{ episode.getDescription()|slice(0, 150) }}
+											{% if episode.getDescription()|length > 150 %}...
+											{% endif %}
+										</td>
+									</tr>
+								{% endfor %}
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block script %}
+	{{ parent() }}
+	<script>
+		$(document).ready(function () {
+$('#episodesTable').DataTable({
+responsive: true,
+language: {
+url: 'https://cdn.datatables.net/plug-ins/1.11.5/i18n/fr-FR.json'
+},
+order: [
+[
+1, 'asc'
+],
+[
+2, 'asc'
+]
+], // Tri par saison puis par numéro d'épisode
+pageLength: 15,
+dom: '<"row mx-2 text-white"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' + '<"row"<"col-sm-12"tr>>' + '<"row mx-2 text-white"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+columns: [
+{
+width: "15%",
+orderable: false
+},
+{
+width: "8%"
+},
+{
+width: "8%"
+},
+{
+width: "19%"
+}, {
+width: "15%"
+}, {
+width: "35%"
+}
+],
+// Ajout d'une fonction d'initialisation
+initComplete: function () {
+$('#episodesTable_wrapper').addClass('text-white');
+$('.dataTables_length').addClass('text-white');
+$('.dataTables_filter').addClass('text-white');
+$('.dataTables_info').addClass('text-white');
+$('.dataTables_paginate').addClass('text-white');
+}
+});
+});
+	</script>
+{% endblock %}

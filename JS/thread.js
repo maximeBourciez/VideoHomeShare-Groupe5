@@ -1,4 +1,12 @@
-
+/**
+ * @brief Gestionnaire des événements d'un thread
+ * 
+ * @details Ce gestionnaire d'événements est responsable de la gestion des événements suivants : 
+ * - Répondre à un message (Compléter la pop-up de réponse)
+ * - Signaler un message (Mettre à jour le contenu de la pop-up de signalement)
+ * - Afficher / Masquer les réponses à un message (Basculer l'affichage des réponses)
+ * - Mettre à jour le compteur de caractères dans les textareas des modals
+ */
 document.addEventListener("DOMContentLoaded", function () {
     // Sélectionne toutes les textareas dans les modals
     const textareas = document.querySelectorAll(".modal textarea");
@@ -90,6 +98,41 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.log("Message Introuvable");
             }
         });
+    });
+
+
+    /**
+     * @brief Afficahge / Masquage des réponses à un message
+     */
+    // Sélectionner tous les boutons toggle-responses
+    const toggleButtons = document.querySelectorAll('.toggle-responses');
+        
+    // Ajouter un écouteur d'événements à chaque bouton
+    toggleButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Trouver le conteneur de réponses associé
+            const messageId = this.getAttribute('data-message-id');
+            const responsesContainer = document.querySelector(`.responses-container[data-message-id="${messageId}"]`);
+            
+            // Vérifier si le conteneur existe
+            if (responsesContainer && responsesContainer.classList.contains('responses-container')) {
+                // Basculer l'affichage des réponses
+                if (responsesContainer.style.display === 'none') {
+                    responsesContainer.style.display = 'block';
+                    this.querySelector('.show-text').style.display = 'none';
+                    this.querySelector('.hide-text').style.display = 'inline';
+                    this.querySelector('.bi-chevron-down').classList.replace('bi-chevron-down', 'bi-chevron-up');
+                } else {
+                    responsesContainer.style.display = 'none';
+                    this.querySelector('.show-text').style.display = 'inline';
+                    this.querySelector('.hide-text').style.display = 'none';
+                    this.querySelector('.bi-chevron-up').classList.replace('bi-chevron-up', 'bi-chevron-down');
+                }
+            } else {
+                console.error('Container de réponses non trouvé pour le message:', messageId);
+            }
+        });
+    
     });
 });
 

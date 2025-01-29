@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['watchlist_0',['Watchlist',['../class_watchlist.html',1,'']]],
-  ['watchlistdao_1',['WatchlistDAO',['../class_watchlist_d_a_o.html',1,'']]]
+  ['theme_0',['Theme',['../class_theme.html',1,'']]],
+  ['themedao_1',['ThemeDAO',['../class_theme_d_a_o.html',1,'']]]
 ];

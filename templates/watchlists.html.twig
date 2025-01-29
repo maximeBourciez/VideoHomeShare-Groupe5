@@ -16,9 +16,14 @@
                     <div class="watchlist-container mb-4">
                         <div class="d-flex justify-content-between align-items-center">
                             <h3 class="watchlist-name">{{ watchlist.nom }}</h3>
-                            <button class="btn btn-myprimary" data-bs-toggle="modal" data-bs-target="#editWatchlistModal{{ watchlist.id }}">
-                                <i class="bi bi-pencil"></i>
-                            </button>
+                            <div class="btn-group">
+                                <button class="btn btn-myprimary me-2" data-bs-toggle="modal" data-bs-target="#editWatchlistModal{{ watchlist.id }}">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteWatchlistModal{{ watchlist.id }}">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
                         </div>
                         <div class="watchlist-grid d-flex overflow-hidden">
                             {% if watchlist.contenus is not empty %}
@@ -70,6 +75,29 @@
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                                             <button type="submit" class="btn btn-myprimary">Enregistrer</button>
                                         </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal Suppression pour cette watchlist spécifique -->
+                    <div class="modal fade" id="deleteWatchlistModal{{ watchlist.id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content bg-mydark text-white">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Confirmer la suppression</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Êtes-vous sûr de vouloir supprimer la watchlist "{{ watchlist.nom }}" ?</p>
+                                    <p class="text-danger">Cette action est irréversible.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                    <form action="index.php?controller=watchlist&methode=supprimerWatchlist" method="POST" class="d-inline">
+                                        <input type="hidden" name="id" value="{{ watchlist.id }}">
+                                        <button type="submit" class="btn btn-danger">Supprimer</button>
                                     </form>
                                 </div>
                             </div>
