@@ -12,9 +12,9 @@
 			<!-- Section Affiche -->
 			<div class="movie-poster me-5">
 				{% if collection.lienAffiche is not empty %}
-					<img src="{{ collection.lienAffiche }}" alt="{{ collection.titreCollection }}" class="movie-poster__image shadow img-fluid m-5 rounded" style="width: 525px; height: 750px; object-fit: cover;" loading="lazy" crossorigin="anonymous" referrerpolicy="no-referrer" onerror="this.src='images/no-image.svg'">
+					<img src="{{ collection.lienAffiche }}" alt="{{ collection.titre }}" class="movie-poster__image shadow img-fluid m-5 rounded" style="width: 525px; height: 750px; object-fit: cover;" loading="lazy" crossorigin="anonymous" referrerpolicy="no-referrer" onerror="this.src='images/no-image.svg'">
 				{% else %}
-					<img src="images/no-image.svg" alt="{{ collection.titreCollection }}" class="movie-poster__image img-fluid m-5 rounded" style="width: 525px; height: 750px; object-fit: cover;">
+					<img src="images/no-image.svg" alt="{{ collection.titre }}" class="movie-poster__image img-fluid m-5 rounded" style="width: 525px; height: 750px; object-fit: cover;">
 				{% endif %}
 			</div>
 
@@ -22,7 +22,7 @@
 			<div
 				class="movie-info col-6 d-flex flex-column justify-content-between">
 				<!-- Titre -->
-				<h1 class="movie-info__title mt-5 fw-bolder text-center">{{ collection.titreCollection }}</h1>
+				<h1 class="movie-info__title mt-5 fw-bolder text-center">{{ collection.titre }}</h1>
 
 				<!-- Date et Nombre de Films -->
 				<div class="movie-info__metadata d-flex justify-content-between fs-5 fw-bolder">
@@ -151,7 +151,7 @@ generateStarRating(note);
 			<div class="modal-content bg-mydark text-white">
 				<div class="modal-header">
 					<h5 class="modal-title" id="modalAvisLabel">Donner votre avis sur
-						{{ collection.titreCollection }}</h5>
+						{{ collection.titre }}</h5>
 					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
