@@ -22,7 +22,7 @@
 								<div
 									class="row g-4">
 									<!-- Image du film -->
-									<div class="col-12 col-md-6 text-center">
+									<div class="col-12 col-md-6 text-center img-film-container">
 										<img src="{{ film.0.lienAffiche }}" class="img-fluid rounded" style="width: auto; max-height: 500px; object-fit: contain;" alt="{{ film.titre }}">
 									</div>
 									<!-- Description du film -->
@@ -36,15 +36,14 @@
 												class="card-text">
 												<!-- Note et Avis -->
 												<div class="movie-info__rating">
-													<div class="movie-info__rating-stars d-flex text-center align-items-center">
-														<p class="m-0">Note :
-															{{ film.1.moyenne }}/5</p>
-														<div class="rating-container ms-5">
-															<div id="rating" data-note="{{ film.1.moyenne }}"></div>
-														</div>
+													<div class="rating mb-2">
+														<span class="badge bg-mydark">
+															{{ film.1.moyenne }}
+															<i class="bi bi-star-fill ms-1"></i>
+														</span>
 													</div>
-													<div class="movie-info__rating-count">
-														<p class="mb-5 mx-3 small fw-light">{{ film.1.nbAvis }}
+													<div class="d-flex align-items-left">
+														<p class="mb-5  small fw-light">{{ film.1.nbAvis }}
 															avis</p>
 													</div>
 												</div>
@@ -59,106 +58,103 @@
 							</div>
 						{% endfor %}
 					</div>
+					<button class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#filmCarousel" data-bs-slide="next">
+						<span class="carousel-control-next-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Suivant</span>
+					</button>
 				</div>
 			</div>
 		</div>
 
-		<!-- Script d'initialisation -->
-		<script>
-			document.addEventListener('DOMContentLoaded', function () { // Sélectionner tous les conteneurs de notation
-const ratingContainers = document.querySelectorAll('.rating-container');
+		<!-- Carousels des catégories -->
+		{% for category in ['action', 'adventure'] %}
+			<div class="movie-category bg-dark text-white rounded shadow my-4">
+				<h2 class="p-3">Films récents
+					{{ category == 'action' ? "d'action" : "d'aventure" }}</h2>
 
-// Pour chaque conteneur
-ratingContainers.forEach(container => { // Récupérer l'élément #rating dans ce conteneur
-const ratingElement = container.querySelector('#rating');
-// Récupérer la note depuis l'attribut data
-const note = parseFloat(ratingElement.dataset.note);
-// Générer les étoiles
-generateStarRating(note);
-});
-});
-		</script>
-
-		<button class="carousel-control-next" type="button" data-bs-target="#filmCarousel" data-bs-slide="next">
-			<span class="carousel-control-next-icon" aria-hidden="true"></span>
-			<span class="visually-hidden">Suivant</span>
-		</button>
-	</div>
-</div></div>{% for category in ['action', 'adventure'] %}
-<div class="movie-category bg-dark text-white rounded shadow my-4">
-	<h2 class="p-3">Films récents
-		{{ category == 'action' ? "d'action" : "d'aventure" }}</h2>
-
-	<div id="{{ category }}Carousel" class="carousel slide carousel-container" data-bs-ride="carousel" data-bs-touch="true">
-		<div class="carousel-inner px-4">
-			{% set movies = category == 'action' ? actionMovies : adventureMovies %}
-			{% for film in movies %}
-				{% if loop.index0 % 6 == 0 %}
-					<div class="carousel-item {% if loop.first %}active{% endif %}">
-						<div class="row g-3">
-						{% endif %}
-						<div class="col-6 col-sm-4 col-md-3 col-lg">
-							<div class="card h-100 bg-light hover-card">
-								<div class="card-img-wrapper position-relative pt-2 px-2">
-									<img src="{{ film.0.lienAfficheReduite }}" class="card-img-top rounded shadow" alt="{{ film.0.titre }}">
-								</div>
-								<div class="card-body d-flex flex-column p-2">
-									<div class="rating mb-2">
-										<span class="badge bg-mydark">
-											{{ film.1.moyenne }}
-											<i class="bi bi-star-fill ms-1"></i>
-										</span>
+				<div class="carousel-container">
+					<div id="{{ category }}Carousel" class="carousel slide" data-bs-ride="carousel" data-bs-touch="true">
+						<div class="carousel-inner px-4">
+							{% set movies = category == 'action' ? actionMovies : adventureMovies %}
+							{% for film in movies %}
+								{% if loop.index0 % 6 == 0 %}
+									<div class="carousel-item {% if loop.first %}active{% endif %}">
+										<div class="row g-3 {% if loop.index0 % 6 == (movies|length - 1) % 6 and movies|length % 6 == 1 %}d-flex justify-content-center{% endif %}">
+										{% endif %}
+										<div class="col-6 col-sm-4 col-md-3 col-lg">
+											<div class="card h-100 bg-light hover-card">
+												<div class="card-img-wrapper position-relative pt-2 px-2">
+													<img src="{{ film.0.lienAfficheReduite }}" class="card-img-top rounded shadow" alt="{{ film.0.titre }}">
+												</div>
+												<div class="card-body d-flex flex-column p-2">
+													<div class="rating mb-2">
+														<span class="badge bg-mydark">
+															{{ film.1.moyenne }}
+															<i class="bi bi-star-fill ms-1"></i>
+														</span>
+													</div>
+													<h5 class="card-title fs-6 mb-3">{{ film.0.titre }}</h5>
+													<a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ film.0.id }}" class="btn btn-primary btn-sm mt-auto">
+														<i class="bi bi-info-circle me-1 bouton-card"></i>Plus d'informations
+													</a>
+												</div>
+											</div>
+										</div>
+										{% if loop.index0 % 6 == 5 or loop.last %}
+										</div>
 									</div>
-									<h5 class="card-title fs-6 mb-3">{{ film.0.titre }}</h5>
-									<a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ film.0.id }}" class="btn btn-primary btn-sm mt-auto">
-										<i class="bi bi-info-circle me-1"></i>Plus d'informations
-									</a>
-								</div>
-							</div>
+								{% endif %}
+							{% endfor %}
 						</div>
-						{% if loop.index0 % 6 == 5 or loop.last %}
+
+						<!-- Contrôles du carousel -->
+						<button class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#{{ category }}Carousel" data-bs-slide="prev">
+							<i class="bi bi-chevron-left"></i>
+							<span class="visually-hidden">Précédent</span>
+						</button>
+						<button class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#{{ category }}Carousel" data-bs-slide="next">
+							<i class="bi bi-chevron-right"></i>
+							<span class="visually-hidden">Suivant</span>
+						</button>
+
+						<!-- Indicateurs -->
+						<div class="carousel-indicators position-relative mt-3">
+							{% for i in range(0, ((movies|length - 1) // 6)) %}
+								<button type="button" data-bs-target="#{{ category }}Carousel" data-bs-slide-to="{{ i }}" class="{{ i == 0 ? 'active' : '' }}" aria-current="{{ i == 0 ? 'true' : 'false' }}" aria-label="Slide {{ i + 1 }}"></button>
+							{% endfor %}
 						</div>
 					</div>
-				{% endif %}
-			{% endfor %}
-		</div>
-
-		<!-- Contrôles du carousel -->
-		<button class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#{{ category }}Carousel" data-bs-slide="prev">
-			<i class="bi bi-chevron-left"></i>
-			<span class="visually-hidden">Précédent</span>
-		</button>
-		<button class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#{{ category }}Carousel" data-bs-slide="next">
-			<i class="bi bi-chevron-right"></i>
-			<span class="visually-hidden">Suivant</span>
-		</button>
-
-		<!-- Indicateurs -->
-		<div class="carousel-indicators position-relative mt-3">
-			{% for i in range(0, ((movies|length - 1) // 6)) %}
-				<button type="button" data-bs-target="#{{ category }}Carousel" data-bs-slide-to="{{ i }}" class="{{ i == 0 ? 'active' : '' }}" aria-current="{{ i == 0 ? 'true' : 'false' }}" aria-label="Slide {{ i + 1 }}"></button>
-			{% endfor %}
-		</div>
-	</div>
-</div>{% endfor %}<!-- Thread les plus likés --><div class="container my-5">
-<div class="row">
-	<h2 class="ms-3 ms-md-5 mb-4">Threads les plus likés</h2>
-	{% for thread in fils %}
-		<div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch mb-4">
-			<div class="card mb-4 h-100 d-flex flex-column thread-card">
-				<div class="card-header">
-					<img src="{{ thread.getUtilisateur().getUrlImageProfil() }}" class="rounded-circle" style="width: 30px; height: 30px;" alt="{{ thread.getUtilisateur().getPseudo() }}">
-					<span class="ms-2">{{ thread.getUtilisateur().getPseudo() }}</span>
-				</div>
-				<div class="card-body d-flex flex-column">
-					<h5 class="card-title">{{ thread.titre }}</h5>
-					<p class="card-text">{{ thread.description }}</p>
-					<p class="card-text mt-auto">{{ thread.nbLikes }}
-						<i class="bi bi-heart-fill"></i>
-					</p>
-					<a href="index.php?controller=fil&methode=afficherFilParId&id_fil={{ thread.id }}" class="btn btn-primary mt-2">Voir le thread</a>
 				</div>
 			</div>
+		{% endfor %}
+
+
+		<!-- Thread les plus likés -->
+		<div class="container my-5">
+			<div class="row">
+				<h2 class="ms-3 ms-md-5 mb-4">Threads les plus likés</h2>
+				{% for thread in fils %}
+					<div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch mb-4">
+						<div class="card mb-4 h-100 d-flex flex-column thread-card">
+							<div class="card-header">
+								<img src="{{ thread.getUtilisateur().getUrlImageProfil() }}" class="rounded-circle" style="width: 30px; height: 30px;" alt="{{ thread.getUtilisateur().getPseudo() }}">
+								<span class="ms-2">{{ thread.getUtilisateur().getPseudo() }}</span>
+							</div>
+							<div class="card-body d-flex flex-column">
+								<h5 class="card-title">{{ thread.titre }}</h5>
+								<p class="card-text">{{ thread.description }}</p>
+								<p class="card-text mt-auto">{{ thread.nbLikes }}
+									<i class="bi bi-heart-fill"></i>
+								</p>
+								<a href="index.php?controller=fil&methode=afficherFilParId&id_fil={{ thread.id }}" class="btn btn-primary mt-2">Voir le thread</a>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
 		</div>
-	{% endfor %}
-</div></div></main>{% endblock %}{% block script %}{{ parent() }}<script type="text/javascript" src="JS/notation.js"></script>{% endblock %}
+	</main>
+{% endblock %}
+{% block script %}
+	{{ parent() }}<script type="text/javascript" src="JS/notation.js"></script>
+{% endblock %}
