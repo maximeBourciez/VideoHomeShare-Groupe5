@@ -25,24 +25,70 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="watchlist-grid d-flex overflow-hidden">
-                            {% if watchlist.contenus is not empty %}
-                                {% for contenu in watchlist.contenus %}
-                                    <div class="movie-card me-3">
-                                        <img 
-                                            src="{{ contenu.affiche }}" 
-                                            alt="{{ contenu.nom }}" 
-                                            class="movie-card__image shadow rounded"
-                                            style="width: 200px; height: 300px; object-fit: cover;"
-                                        >
-                                        <div class="movie-card__rating mt-2">{{ contenu.note }}/5</div>
-                                        <div class="movie-card__title">{{ contenu.nom }}</div>
+                        {% if watchlist.description is not empty %}
+                            <p class="watchlist-description">{{ watchlist.description }}</p>
+                        {% endif %}
+                        {% if watchlist.contenus is empty %}
+                            <p class="watchlist-description">Cette watchlist est vide.</p>
+                        {% else %}
+                            <div class="carousel-container">
+                                <div id="watchlistCarousel{{ watchlist.id }}" class="carousel slide" data-bs-ride="carousel" data-bs-touch="true">
+                                    <div class="carousel-inner px-4">
+                                        {% for contenu in watchlist.contenus %}
+                                            {% if loop.index0 % 6 == 0 %}
+                                                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                                    <div class="row g-3">
+                                            {% endif %}
+                                            
+                                            <div class="col-6 col-sm-4 col-md-3 col-lg">
+                                                <div class="card h-100 bg-light hover-card">
+                                                    <div class="card-img-wrapper position-relative pt-2 px-2">
+                                                        <img src="{{ contenu.affiche }}" class="card-img-top rounded shadow" alt="{{ contenu.nom }}">
+                                                    </div>
+                                                    <div class="card-body d-flex flex-column p-2">
+                                                        <div class="rating mb-2">
+                                                            <span class="badge bg-mydark">
+                                                                {{ contenu.note }} <i class="bi bi-star-fill ms-1"></i>
+                                                            </span>
+                                                        </div>
+                                                        <h5 class="card-title fs-6 mb-3">{{ contenu.nom }}</h5>
+                                                        <a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ contenu.id }}" class="btn btn-primary btn-sm mt-auto">
+                                                            <i class="bi bi-info-circle me-1"></i>Plus d'informations
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {% if loop.index0 % 6 == 5 or loop.last %}
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
                                     </div>
-                                {% endfor %}
-                            {% else %}
-                                <p class="text-center">Aucun contenu dans cette watchlist</p>
-                            {% endif %}
-                        </div>
+
+                                    <!-- Contrôles du carousel -->
+                                    <button class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#watchlistCarousel{{ watchlist.id }}" data-bs-slide="prev">
+                                        <i class="bi bi-chevron-left"></i>
+                                        <span class="visually-hidden">Précédent</span>
+                                    </button>
+                                    <button class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#watchlistCarousel{{ watchlist.id }}" data-bs-slide="next">
+                                        <i class="bi bi-chevron-right"></i>
+                                        <span class="visually-hidden">Suivant</span>
+                                    </button>
+
+                                    <!-- Indicateurs -->
+                                    <div class="carousel-indicators position-relative mt-3">
+                                        {% for i in range(0, ((watchlist.contenus|length - 1) // 6)) %}
+                                            <button type="button" data-bs-target="#watchlistCarousel{{ watchlist.id }}" data-bs-slide-to="{{ i }}" 
+                                                    class="{{ i == 0 ? 'active' : '' }}" 
+                                                    aria-current="{{ i == 0 ? 'true' : 'false' }}" 
+                                                    aria-label="Slide {{ i + 1 }}">
+                                            </button>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
 
                     <!-- Modal Édition pour cette watchlist spécifique -->
