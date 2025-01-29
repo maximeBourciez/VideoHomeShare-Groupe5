@@ -319,7 +319,7 @@
                 </div>
                 <form action="index.php?controller=watchlist&methode=ajouterAWatchlist" method="POST">
                     <div class="modal-body">
-                        <input type="hidden" name="idContenu" value="{{ contenu.tmdbId|escape('html_attr') }}">
+                        <input type="hidden" name="idContenu" value="{{ contenu.id|escape('html_attr') }}">
                         {% if watchlists is not empty %}
                             {% for watchlist in watchlists %}
                                 <div class="form-check">
