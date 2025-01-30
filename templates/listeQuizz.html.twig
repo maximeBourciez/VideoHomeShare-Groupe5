@@ -39,47 +39,38 @@
     </div>
     <div class="col">
 		{% for quiz in quizz %}
-			{% if boutonVoirAppuye is defined or messagederreur is defined %}
-				<!-- Afficher les quizz créés par d'autres utilisateurs -->
-				{% if quiz.getIdUtilisateur() != pseudoUtilisateur %}
-					<div class="row">
-						<div class="card mb-3 bg-mydark text-white rounded">
-							<div class="card-body">
-								<h5 class="card-title mb-3">{{ quiz.getTitre() }}</h5>
-								<p class="card-text">{{ quiz.getDescription() }}</p>
-								<small class="card-text">Difficulté : {{ quiz.getDifficulte() }}</small><br>
-								<small class="card-text">Fait le {{ quiz.getDate()|date("d/m/Y")}}</small><br>
+			{% if (boutonVoirAppuye is defined or messagederreur is defined and quiz.getIdUtilisateur() != pseudoUtilisateur) 
+				or (boutonGererAppuye is defined and quiz.getIdUtilisateur() == pseudoUtilisateur) %}
+				<div class="row">
+					<div class="card mb-3 bg-mydark text-white rounded">
+						<div class="card-body">
+							<h5 class="card-title mb-3">{{ quiz.getTitre() }}</h5>
+							<p class="card-text">{{ quiz.getDescription() }}</p>
+							<small class="card-text">Difficulté : {{ quiz.getDifficulte() }}</small><br>
+							<small class="card-text">Fait le {{ quiz.getDate()|date("d/m/Y") }}</small><br>
+							{% if boutonVoirAppuye is defined or messagederreur is defined %}
 								<small class="card-text">Par {{ quiz.getIdUtilisateur() }}</small><br>
-								<br>
-								<a href="index.php?controller=quizz&methode=jouerQuizz&idQuizz={{ quiz.getId() }}" class="btn btn-myprimary">
-									Jouer
-								</a>
-							</div>
-						</div>
-					</div>
-				{% endif %}
-			{% elseif boutonGererAppuye is defined %}
-				<!-- Afficher les quizz créés par l'utilisateur connecté -->
-				{% if quiz.getIdUtilisateur() == pseudoUtilisateur %}
-					<div class="row">
-						<div class="card mb-3 bg-mydark text-white rounded">
-							<div class="card-body">
-								<h5 class="card-title mb-3">{{ quiz.getTitre() }}</h5>
-								<p class="card-text">{{ quiz.getDescription() }}</p>
-								<small class="card-text">Difficulté : {{ quiz.getDifficulte() }}</small><br>
-								<small class="card-text">Fait le {{ quiz.getDate()|date("d/m/Y")}}</small><br>
-								<br>
+							{% endif %}
+							<br>
+							{% if boutonVoirAppuye is defined or messagederreur is defined %}
+								<form action="index.php?controller=quizz&methode=jouerQuizz" method="post">
+									<input type="hidden" name="idQuizz" value="{{ quiz.getId() }}">
+									<button type="submit" class="btn btn-myprimary">Jouer</button>
+								</form>
+							{% elseif boutonGererAppuye is defined %}
 								<div class="row">
-									<a href="index.php?controller=quizz&methode=supprimerQuizz&idQuizz={{ quiz.getId() }}" class="col btn btn-tercary">
-										🗑️ Supprimer
-									</a>
+									<form action="index.php?controller=quizz&methode=supprimerQuizz" method="post">
+										<input type="hidden" name="idQuizz" value="{{ quiz.getId() }}">
+										<button type="submit" class="col btn btn-tercary">🗑️ Supprimer</button>
+									</form>
 								</div>
-							</div>
+							{% endif %}
 						</div>
 					</div>
-				{% endif %}
+				</div>
 			{% endif %}
 		{% endfor %}
+
 		<!-- S'affiche quand l'utilisateur connecté n'a créé aucun quizz -->
         {% if idUtilisateur != null and quizz == null %}
 			<h5>Vous n'avez créé aucun quizz.</h5>

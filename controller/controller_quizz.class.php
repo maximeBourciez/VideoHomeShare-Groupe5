@@ -238,70 +238,37 @@ class ControllerQuizz extends Controller
      */
     public function supprimerQuizz(): void
     {
-        if (isset($_SESSION['utilisateur'])) {
-            //Récupération des infos de l'utilisateur connecté
-            $utilisateur = unserialize($_SESSION['utilisateur']);
-            $idUtilisateur = $utilisateur->getId();
-            $pseudoUtilisateur = $utilisateur->getPseudo();
-
-            //Récupération d'idQuizz
-            $idQuizz = $_GET['idQuizz'];
-
-            //Création des managers et des attributs dont on a besoin
-            $managerQuizz = new QuizzDAO($this->getPdo());
-            $quizz = $managerQuizz->find($idQuizz);
-            $this->supprimerQuestions($idQuizz);
-
-            //Vérification que le bon utilisateur supprime le quizz
-            if ($quizz->getIdUtilisateur() == $idUtilisateur) {
-                //Supprimer le quizz, les questions et les réponses
-                $etatRequete = $managerQuizz->delete($idQuizz);
-
-                if ($etatRequete == true) {
-                    $messageConfirmation = "Le quizz a bien été supprimé.";
-
-                    //Réaffichage de tous les quizz
-                    $quizz = $managerQuizz->findAllByUser($idUtilisateur);
-
-                    //Génération de la vue
-                    echo $this->getTwig()->render('listeQuizz.html.twig', [
-                        'quizz' => $quizz,
-                        'idUtilisateur' => $idUtilisateur,
-                        'pseudoUtilisateur' => $pseudoUtilisateur,
-                        'boutonGererAppuye' => true,
-                        'messageConfirmation' => $messageConfirmation
-                    ]);
-                } else {
-                    $messageErreur = "Erreur de suppression, veuillez réessayer plus tard.";
-                    //Réaffichage de tous les quizz
-                    $quizz = $managerQuizz->findAllByUser($idUtilisateur);
-
-                    //Génération de la vue
-                    echo $this->getTwig()->render('listeQuizz.html.twig', [
-                        'quizz' => $quizz,
-                        'boutonGererAppuye' => true,
-                        'boutonVoirAppuye' => false,
-                        'pseudoUtilisateur' => $pseudoUtilisateur,
-                        'messageErreur' => $messageErreur,
-                        'messageConfirmation' => false
-                    ]);
-                }
-            } else {
-                $messageErreur = "Vous n'avez pas l'autorisation de supprimer ce quizz.";
-                //Réaffichage de tous les quizz
-                $quizz = $managerQuizz->findAll();
-
-                //Génération de la vue
-                echo $this->getTwig()->render('listeQuizz.html.twig', [
-                    'quizz' => $quizz,
-                    'boutonGererAppuye' => false,
-                    'boutonVoirAppuye' => true,
-                    'pseudoUtilisateur' => $pseudoUtilisateur,
-                    'messageErreur' => $messageErreur,
-                    'messageConfirmation' => false
-                ]);
-            }
+        // Vérifier que la méthode est POST
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: index.php?controller=quizz&methode=afficherOngletGerer');
+            exit();
         }
+
+        // Vérifier la connexion
+        if (!isset($_SESSION['utilisateur'])) {
+            header('Location: index.php?controller=utilisateur&methode=connexion');
+            exit();
+        }
+
+        // Récupérer l'ID du quizz
+        $idQuizz = $_POST['idQuizz'];
+
+        // Supprimer le quizz 
+        $managerQuizz = new QuizzDAO($this->getPdo());
+        $supprOk = $managerQuizz->delete($idQuizz);
+
+        // Vérifier si la suppression a fonctionné
+        if ($supprOk) {
+            $this->supprimerQuestions($idQuizz);
+            echo $this->getTwig()->render('listeQuizz.html.twig', [
+                'messageConfirmation' => "Le quizz a bien été supprimé."
+            ]);
+        } else {
+            echo $this->getTwig()->render('listeQuizz.html.twig', [
+                'messageErreur' => "Une erreur est survenue lors de la suppression du quizz."
+            ]);
+        }
+
     }
 
     /**
