@@ -36,11 +36,10 @@ class ControllerQuizz extends Controller
         $managerQuizz = new QuizzDAO($this->getPdo());
         $quizz = $managerQuizz->findAll();
 
-        if (isset($_SESSION['utilisateur'])){
+        if (isset($_SESSION['utilisateur'])) {
             $utilisateur = unserialize($_SESSION['utilisateur']);
             $pseudoUtilisateur = $utilisateur->getPseudo();
-        }
-        else{
+        } else {
             $pseudoUtilisateur = null;
         }
         //Génération de la vue
@@ -59,17 +58,18 @@ class ControllerQuizz extends Controller
      *
      * @return void
      */
-    public function afficherQuizzParId(){
+    public function afficherQuizzParId()
+    {
         $idQuizz = $_GET['idQuizz'];
 
         // Récupérer les infos du quizz
         $quizzDAO = new QuizzDAO($this->getPdo());
         $quiz = $quizzDAO->find($idQuizz);
-        
+
         // Rendre le template avec les infos
         echo $this->getTwig()->render('listeQuizz.html.twig', [
             'quiz' => $quiz
-            
+
         ]);
     }
 
@@ -84,7 +84,7 @@ class ControllerQuizz extends Controller
     {
         $managerQuizz = new QuizzDAO($this->getPdo());
 
-        if (isset($_SESSION['utilisateur'])){
+        if (isset($_SESSION['utilisateur'])) {
             $utilisateur = unserialize($_SESSION['utilisateur']);
             $idUtilisateur = $utilisateur->getId();
             $pseudoUtilisateur = $utilisateur->getPseudo();
@@ -97,11 +97,10 @@ class ControllerQuizz extends Controller
                 'boutonGererAppuye' => true,
                 'quizz' => $quizz
             ]);
-        }
-        else{
+        } else {
             //Récupération des quizz
             $quizz = $managerQuizz->findAll();
-            
+
             //Génération de la vue
             echo $this->getTwig()->render('listeQuizz.html.twig', [
                 'quizz' => $quizz,
@@ -119,7 +118,7 @@ class ControllerQuizz extends Controller
      * @param $idQuestion
      * @return array
      */
-    public function recupererReponses(int $idQuestion) : array
+    public function recupererReponses(int $idQuestion): array
     {
         $reponses = [];
         $managerReponse = new ReponseDAO($this->getPdo());
@@ -135,9 +134,9 @@ class ControllerQuizz extends Controller
      *
      * @return void
      */
-    public function jouerQuizz() : void
+    public function jouerQuizz(): void
     {
-        if (isset($_SESSION['utilisateur'])){
+        if (isset($_SESSION['utilisateur'])) {
             $utilisateur = unserialize($_SESSION['utilisateur']);
             $idUtilisateur = $utilisateur->getId();
 
@@ -153,7 +152,7 @@ class ControllerQuizz extends Controller
             //Tableau des réponses de quizz
             $reponses = [];
 
-            foreach ($questions as $question){
+            foreach ($questions as $question) {
                 $idQuestion = $question->getIdQuestion();
                 $reponses[$idQuestion] = $this->recupererReponses($idQuestion);
             }
@@ -165,40 +164,38 @@ class ControllerQuizz extends Controller
                 'reponses' => $reponses
             ]);
             exit();
-        }
-        else{
+        } else {
             //Récupération des quizz
             $managerQuizz = new QuizzDAO($this->getPdo());
             $quizz = $managerQuizz->findAll();
-            
+
             //Génération de la vue
             echo $this->getTwig()->render('listeQuizz.html.twig', [
                 'quizz' => $quizz,
                 'messagederreur' => "Vous devez être connecté pour pouvoir jouer à un quizz."
-            ]); 
-        }  
+            ]);
+        }
     }
 
-    public function afficherPageCreerQuizz() : void
+    public function afficherPageCreerQuizz(): void
     {
-        if (isset($_SESSION['utilisateur'])){
+        if (isset($_SESSION['utilisateur'])) {
             $utilisateur = unserialize($_SESSION['utilisateur']);
             $idUtilisateur = $utilisateur->getId();
 
             echo $this->getTwig()->render('creationQuizz.html.twig', [
                 'idUtilisateur' => $idUtilisateur
             ]);
-        }
-        else{
+        } else {
             //Récupération des quizz
             $managerQuizz = new QuizzDAO($this->getPdo());
             $quizz = $managerQuizz->findAll();
-            
+
             //Génération de la vue
             echo $this->getTwig()->render('listeQuizz.html.twig', [
                 'quizz' => $quizz,
                 'messagederreur' => "Vous devez être connecté pour pouvoir créer un quizz."
-            ]);        
+            ]);
 
         }
     }
@@ -210,7 +207,8 @@ class ControllerQuizz extends Controller
      *
      * @return void
      */
-    public function supprimerQuestions(int $idQuizz) : void {
+    public function supprimerQuestions(int $idQuizz): void
+    {
         $managerQuestion = new QuestionDAO($this->getPdo());
         $questions = $managerQuestion->findByQuizzId($idQuizz);
 
@@ -218,16 +216,15 @@ class ControllerQuizz extends Controller
 
         //Variables nécessaires
         $i = 0;
-        
+
         foreach ($questions as $question) {
             $idQuestion = $question->getIdQuestion();
             $reponses = $managerReponse->findByQuestionId($idQuestion);
-            foreach ($reponses as $reponse)
-            {
+            foreach ($reponses as $reponse) {
                 $managerReponse->delete($reponse->getId());
             }
             $managerQuestion->delete($idQuestion);
-            
+
         }
 
     }
@@ -239,9 +236,9 @@ class ControllerQuizz extends Controller
      *
      * @return void Message de confirmation ou d'erreur dans le template
      */
-    public function supprimerQuizz() : void
+    public function supprimerQuizz(): void
     {
-        if (isset($_SESSION['utilisateur'])){
+        if (isset($_SESSION['utilisateur'])) {
             //Récupération des infos de l'utilisateur connecté
             $utilisateur = unserialize($_SESSION['utilisateur']);
             $idUtilisateur = $utilisateur->getId();
@@ -256,28 +253,25 @@ class ControllerQuizz extends Controller
             $this->supprimerQuestions($idQuizz);
 
             //Vérification que le bon utilisateur supprime le quizz
-            if ($quizz->getIdUtilisateur() == $idUtilisateur)
-            {
+            if ($quizz->getIdUtilisateur() == $idUtilisateur) {
                 //Supprimer le quizz, les questions et les réponses
                 $etatRequete = $managerQuizz->delete($idQuizz);
 
-                if ($etatRequete == true)
-                {
+                if ($etatRequete == true) {
                     $messageConfirmation = "Le quizz a bien été supprimé.";
-                    
+
                     //Réaffichage de tous les quizz
                     $quizz = $managerQuizz->findAllByUser($idUtilisateur);
 
                     //Génération de la vue
                     echo $this->getTwig()->render('listeQuizz.html.twig', [
-                    'quizz' => $quizz,
-                    'idUtilisateur' => $idUtilisateur,
-                    'pseudoUtilisateur' => $pseudoUtilisateur,
-                    'boutonGererAppuye' => true,
-                    'messageConfirmation' => $messageConfirmation
+                        'quizz' => $quizz,
+                        'idUtilisateur' => $idUtilisateur,
+                        'pseudoUtilisateur' => $pseudoUtilisateur,
+                        'boutonGererAppuye' => true,
+                        'messageConfirmation' => $messageConfirmation
                     ]);
-                }
-                else{
+                } else {
                     $messageErreur = "Erreur de suppression, veuillez réessayer plus tard.";
                     //Réaffichage de tous les quizz
                     $quizz = $managerQuizz->findAllByUser($idUtilisateur);
@@ -292,8 +286,7 @@ class ControllerQuizz extends Controller
                         'messageConfirmation' => false
                     ]);
                 }
-            }
-            else{
+            } else {
                 $messageErreur = "Vous n'avez pas l'autorisation de supprimer ce quizz.";
                 //Réaffichage de tous les quizz
                 $quizz = $managerQuizz->findAll();
@@ -308,7 +301,7 @@ class ControllerQuizz extends Controller
                     'messageConfirmation' => false
                 ]);
             }
-        } 
+        }
     }
 
     /**
@@ -318,11 +311,11 @@ class ControllerQuizz extends Controller
      *
      * @return int id du quizz créé
      */
-    public function creerQuizz(string $titre, string $description, int $difficulte, string $dateC, string $idUtilisateur) : int
+    public function creerQuizz(string $titre, string $description, int $difficulte, string $dateC, string $idUtilisateur): int
     {
         //Création de l'objet Quizz
         $managerQuizz = new QuizzDAO($this->getPdo());
-        $idQuizz = $managerQuizz->create($titre,$description,$difficulte,$dateC,$idUtilisateur);
+        $idQuizz = $managerQuizz->create($titre, $description, $difficulte, $dateC, $idUtilisateur);
 
         return $idQuizz;
     }
@@ -334,7 +327,7 @@ class ControllerQuizz extends Controller
      *
      * @return void
      */
-    public function afficherPageQuestions() : void
+    public function afficherPageQuestions(?string $messageErreur = null): void
     {
         //Récupération des informations
         $titre = htmlspecialchars($_POST['titre']);
@@ -347,135 +340,190 @@ class ControllerQuizz extends Controller
         $utilisateur = unserialize($_SESSION['utilisateur']);
         $idUtilisateur = $utilisateur->getId();
 
-        $idQuizz = $this->creerQuizz($titre,$description,$difficulte,$dateC,$idUtilisateur);
+        $idQuizz = $this->creerQuizz($titre, $description, $difficulte, $dateC, $idUtilisateur);
 
         echo $this->getTwig()->render('creationQuestion.html.twig', [
             'idQuizz' => $idQuizz,
             'numQuestion' => $numQuestion,
             'nbQuestions' => $nbQuestions,
-            'idUtilisateur' => $idUtilisateur
+            'idUtilisateur' => $idUtilisateur,
+            'messageErreur' => $messageErreur
         ]);
-    }
-
-    /**
-     * @brief Méthode qui crée une question
-     * 
-     * @details Méthode qui créer la question d'un quizz créé par l'utilisateur
-     * @return void
-     */
-    public function creerQuestion(string $valeur, int $rang, string $urlImage, int $idQuizz) : int
-    {
-        //Création de l'objet Question
-        $managerQuestion = new QuestionDAO($this->getPdo());
-        $idQuestion = $managerQuestion->create($valeur,$rang,$urlImage,$idQuizz);
-
-        return $idQuestion;
-    }
-
-    /**
-     * @brief Méthode qui crée une réponse
-     * 
-     * @details Méthode qui créer la réponse d'une question créé par l'utilisateur
-     * @return void
-     */
-    public function creerReponse(string $valeur, int $rang, bool $estVraie, int $idQuestion) : int
-    {
-        //Création de l'objet Reponse
-        $managerReponse = new ReponseDAO($this->getPdo());
-        $idReponse = $managerReponse->create($valeur,$rang,$estVraie,$idQuestion);
-
-        return $idReponse;
+        exit();
     }
 
     /**
      * @brief Méthode permettant de traiter l'image d'une question
      * 
-     * @details Méthode qui traiter l'image d'une question grâce au nom temporaire de l'image et son nom actuel
+     * @details Méthode qui traiter l'image d'une question grâce au nom temporaire de l'image et son nom actuel. Enregistre l'image
+     * 
+     * @param array $tabInfosImage Tableau contenant les informations de l'image
+     * @param int $idQuizz Identifiant du quizz
+     * @param int $noQuestion Numéro de la question
+     * 
      * @return string Chemin du fichier
      */
-    public function traiterImageQuestion(array $tabInfosImage) : string {
+    public function traiterImageQuestion(array $tabInfosImage, int $idQuizz, int $noQuestion): string
+    {
         //Récupération des infos de l'image
         $nomTmpImage = $tabInfosImage['tmp_name'];
         $nomImage = $tabInfosImage['name'];
-        $imageDest = 'images/' . basename($nomImage);  // Destination du fichier
-        move_uploaded_file($nomTmpImage, $imageDest);  // Déplacer l'image dans le dossier images
+        if ($tabInfosImage["EXTENSION"] !== "jpg" && $tabInfosImage["EXTENSION"] !== "jpeg" && $tabInfosImage["EXTENSION"] !== "png" && $tabInfosImage["EXTENSION"] !== "gif") {
+            $this->afficherPageQuestions("Le fichier n'est pas une image valide.");
+            exit();
+        } else if ($tabInfosImage["SIZE"] > 1000000) {
+            $this->afficherPageQuestions("Le fichier est trop volumineux.");
+            exit();
+        } else {
+            $nomImage = $idQuizz . '_' . $noQuestion . '_' . $nomImage;  // Nom de l'image
 
-        return $imageDest;
+            //Déplacement de l'image
+            $imageDest = 'images/' . $nomImage;
+            move_uploaded_file($nomTmpImage, $imageDest);
+
+            // Retourner l'image
+            return $imageDest;
+        }
+
+
     }
 
     /**
      * @brief Méthode permettant de créer les questions
      * 
-     * @details Méthode qui créer les questions d'un quizz créé par l'utilisateur
+     * @details Méthode qui crée une question d'un quizz créé par l'utilisateur
+     * 
      * @return void
+     * 
+     * @todo Gerer le succès de fin de quizz 
      */
-    public function traiterInfosQuestion() : void
+    public function ajouterQuestion(): void
     {
-        //Récupération des informations
-        $idQuizz = $_GET['idQuizz'];
-        $numQuestion = intval($_GET['numQuestion']) ?? 1;
-        $nbQuestions = intval($_GET['nbQuestions']);
-        $idUtilisateur = $_GET['idUtilisateur'];
-
-        //Traitement des infos
-        //Image (si présente)
-        if (isset($_FILES['image_' . $numQuestion]) && $_FILES['image_' . $numQuestion]['error'] === UPLOAD_ERR_OK) {
-            $tabInfosImage = $_FILES['image_' . $numQuestion];
-            $imageDest = traiterImageQuestion($tabInfosImage);
-            
-        } else {
-            $imageDest = null;
+        // Vérifier la méthode 
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: index.php?controller=quizz&methode=afficherPageQuestions');
+            exit();
         }
 
-        //Titre
-        if (isset($_GET['titre_' . $numQuestion]) && !empty($_GET['titre_' . $numQuestion])) {
-            $titre = htmlspecialchars($_GET['titre_' . $numQuestion]);
+        // Vérifier la connexion
+        if (!isset($_SESSION['utilisateur'])) {
+            header('Location: index.php?controller=utilisateur&methode=connexion');
+            exit();
         } else {
-            $titre = null;
+            $utilisateur = unserialize($_SESSION['utilisateur']);
+            $idUtilisateur = $utilisateur->getId();
         }
 
-        //Création de la question et des réponses
-        if ($titre && !empty($reponses)){
-            //Création de la question
-            $managerQuestion = new QuestionDAO();
-            $idQuestion = creerQuestion($titre, $numQuestion, $imageDest, $idQuizz);
-            
-            //Réponses
-            $reponses = []; //Tableau des réponses
-            $i = 0;
-            //Récupérer la variable qui va servir à compter le nombre de $reponses
-            $numReponse = 1;
+        try {
+            // Démarrer une transaction
+            $this->getPdo()->beginTransaction();
 
-            //Création de la réponse
-            $managerReponse = new ReponseDAO();
-            $estVraie = $_GET['veriteReponse'];
+            // Récupérer les données
+            $numQuestion = $_POST['numQuestion'];
+            $idQuizz = $_POST['idQuizz'];
+            $titre = $_POST['titre_' . $numQuestion];
+            $nbQuestions = $_POST['nbQuestions'];
+            $imagePath = 'images/default.jpg'; // Valeur par défaut pour l'image
 
-            while (isset($_GET['reponse_' . $numReponse])) {
-                $reponse = htmlspecialchars($_GET['reponse_' . $numReponse]);
-                if (!empty($reponse)) {
-                    $this->creerReponse($reponse['reponse_'. $numReponse], $numReponse, $estVraie, $idQuestion);
-                    $numReponse++;
-                    $i++;
+            // Vérifier et traiter l'image si elle existe
+            $imageKey = "image_" . $numQuestion;
+            if (isset($_FILES[$imageKey]) && $_FILES[$imageKey]['error'] === UPLOAD_ERR_OK && !empty($_FILES[$imageKey]['name'])) {
+                $image = $_FILES[$imageKey];
+
+                // Vérifier le type de fichier
+                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                if (!in_array($image['type'], $allowedTypes)) {
+                    throw new Exception("Le type de fichier n'est pas autorisé. Utilisez JPG, PNG ou GIF.");
+                }
+
+                // Vérifier la taille (1MB maximum)
+                if ($image['size'] > 1000000) {
+                    throw new Exception("L'image est trop volumineuse. Taille maximum: 1MB");
+                }
+
+                // Générer un nom de fichier unique
+                $extension = pathinfo($image['name'], PATHINFO_EXTENSION);
+                $newFileName = $idQuizz . '_' . $numQuestion . '_' . uniqid() . '.' . $extension;
+                $imagePath = 'images/' . $newFileName;
+
+                // Déplacer le fichier
+                if (!move_uploaded_file($image['tmp_name'], $imagePath)) {
+                    throw new Exception("Erreur lors du téléchargement de l'image");
                 }
             }
-        }
-        
-        //Question suivante
-        $numQuestion++;
 
-        //On vérifie que toutes les questions ont été créées
-        if ($numQuestion > $nbQuestions) {
-            $messageConfirmation = "Le quizz a bien été créé !";
-            header('Location: index.php?controller=quizz&methode=listeQuizz&messageConfirmation');
-            exit;
-        }
+            // Vérifier qu'au moins une réponse est correcte
+            $auMoinsUneReponseCorrecte = false;
+            for ($i = 0; $i < 4; $i++) {
+                if (isset($_POST["correcte_{$numQuestion}_{$i}"])) {
+                    $auMoinsUneReponseCorrecte = true;
+                    break;
+                }
+            }
 
-        echo $this->getTwig()->render('creationQuestion.html.twig', [
-            'idQuizz' => $idQuizz,
-            'numQuestion' => $numQuestion,
-            'nbQuestions' => $nbQuestions,
-            'idUtilisateur' => $idUtilisateur
-        ]);
+            if (!$auMoinsUneReponseCorrecte) {
+                throw new Exception("Vous devez sélectionner au moins une réponse correcte.");
+            }
+
+            // Créer la question
+            $managerQuestion = new QuestionDAO($this->getPdo());
+            $idQuestion = $managerQuestion->create($titre, $numQuestion, $imagePath, $idQuizz);
+
+            // Vérifier que l'ID de la question a bien été récupéré
+            if (!$idQuestion) {
+                throw new Exception("Erreur lors de la création de la question.");
+            }
+
+            // Créer les réponses
+            $managerReponses = new ReponseDAO($this->getPdo());
+            for ($i = 0; $i < 4; $i++) {
+                $reponseKey = "reponse_{$numQuestion}_{$i}";
+                $correcteKey = "correcte_{$numQuestion}_{$i}";
+
+                if (isset($_POST[$reponseKey])) {
+                    $reponse = trim($_POST[$reponseKey]);
+                    $estCorrecte = isset($_POST[$correcteKey]);
+
+                    $objetReponse = new Reponse(0,$reponse, $i+1, $estCorrecte, $idQuestion);
+                    if (!$managerReponses->create($objetReponse)) {
+                        throw new Exception("Erreur lors de la création d'une réponse.");
+                    }
+                }
+            }
+
+            // Valider la transaction
+            $this->getPdo()->commit();
+
+            // Vérifier si on a encore des questions à traiter
+            if ($numQuestion < $nbQuestions) {
+                $numQuestion++;
+                echo $this->getTwig()->render('creationQuestion.html.twig', [
+                    'idQuizz' => $idQuizz,
+                    'numQuestion' => $numQuestion,
+                    'nbQuestions' => $nbQuestions,
+                    'idUtilisateur' => $idUtilisateur
+                ]);
+            } else {
+                header('Location: index.php?controller=quizz&methode=afficherOngletGerer');
+            }
+            exit();
+
+        } catch (Exception $e) {
+            // En cas d'erreur, annuler la transaction
+            if ($this->getPdo()->inTransaction()) {
+                $this->getPdo()->rollBack();
+            }
+
+            // Afficher la page avec le message d'erreur
+            echo $this->getTwig()->render('creationQuestion.html.twig', [
+                'idQuizz' => $idQuizz,
+                'numQuestion' => $numQuestion,
+                'nbQuestions' => $nbQuestions,
+                'idUtilisateur' => $idUtilisateur,
+                'messageErreur' => $e->getMessage()
+            ]);
+            exit();
+        }
     }
 
     /**
@@ -494,19 +542,18 @@ class ControllerQuizz extends Controller
 
         //Manipulation de l'objet Jouer
         $managerJouer = new JouerDAO($this->getPdo());
-        if ($managerJouer->verifScoreUser($idQuizz, $idUtilisateur)){
-            $newScore = new Jouer($idUtilisateur,$idQuizz,$scoreUser);
+        if ($managerJouer->verifScoreUser($idQuizz, $idUtilisateur)) {
+            $newScore = new Jouer($idUtilisateur, $idQuizz, $scoreUser);
             $managerReponse->update($newScore);
-        }
-        else{
-            $newScore = new Jouer($idUtilisateur,$idQuizz,$scoreUser);
+        } else {
+            $newScore = new Jouer($idUtilisateur, $idQuizz, $scoreUser);
             $managerReponse->create($newScore);
         }
 
         //Manipulation du tableau des scores
         $tabScores[] = $managerReponse->findAllByQuizz($idQuizz);
         //Trie le tableau par ordre décroissant de scores
-        usort($tabScores, function($utilisateur1, $utilisateur2) {
+        usort($tabScores, function ($utilisateur1, $utilisateur2) {
             return $utilisateur2['score'] <=> $utilisateur1['score'];
         });
         $nbScores = range(1, sizeof($tabScores));

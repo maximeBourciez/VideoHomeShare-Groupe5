@@ -6,8 +6,10 @@ document.addEventListener('DOMContentLoaded', function () {
     gererReponses(MAX_BONNES_REPONSES);
 
     // Gérer l'image
+    gererImage();
 
     // Gérer l'intitulé de la question
+    gererIntitule();
 });
 
 
@@ -83,6 +85,81 @@ function gererReponses(MAX_BONNES_REPONSES) {
             btnValider.disabled = false;
         }
     }
+}
+
+/**
+ * @brief Méthode de gestion d'erreurs de l'intitulé de la question
+ * 
+ * @returns {void}
+ */
+function gererIntitule() {
+    let intitule = document.getElementById('titre');
+    let spanDanger = document.getElementById('erreurTitre');
+    let btnValider = document.getElementById('validerReponses');
+
+    // Ajouter l'écouteur d'évènements
+    intitule.addEventListener('input', function () {
+        // On vérifie les entrées
+        let longueurEntrée = intitule.value.trim().length;
+
+        // Vérification de la longueur de l'intitulé
+        if (longueurEntrée < 5) {
+            // Afficher le message d'erreur
+            spanDanger.classList.remove('d-none');
+            spanDanger.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i> L\'intitulé doit contenir au moins 5 caractères';
+
+            // Désactiver le bouton
+            btnValider.disabled = true;
+        }
+        // Si on a trop de caractères
+        else if(longueurEntrée > 50) {
+            // Afficher le message d'erreur
+            spanDanger.classList.remove('d-none');
+            spanDanger.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i> L\'intitulé doit contenir au plus 50 caractères';
+
+            // Désactiver le bouton
+            btnValider.disabled = true;
+        }
+        // Si tout est bon, réactiver le bouton
+        else {
+            // Cacher le message d'erreur
+            spanDanger.classList.add('d-none');
+            spanDanger.textContent = '';
+
+            // Réactiver le bouton
+            btnValider.disabled = false;
+        }
+    });
+}
+
+
+
+/**
+ * @brief Méthode de gestion de l'image
+ * 
+ * @returns {void}
+ */
+function gererImage() {
+    const imageInput = document.getElementById('image');
+    const errorSpan = document.getElementById('erreurImage');
+    const btnValider = document.getElementById('validerReponses');
+
+    imageInput.addEventListener('change', function() {
+        // Vérification si un fichier a été sélectionné
+        if (imageInput.files.length === 0) {
+            // Afficher le message d'erreur si aucun fichier n'est sélectionné
+            errorSpan.classList.remove('d-none');
+            errorSpan.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i> Veuillez sélectionner une image.';
+            // Désactiver le bouton
+            btnValider.disabled = true;
+        } else {
+            // Si un fichier est sélectionné, cacher l'erreur
+            errorSpan.classList.add('d-none');
+            errorSpan.textContent = '';
+            // Réactiver le bouton
+            btnValider.disabled = false;
+        }
+    });
 }
 
 

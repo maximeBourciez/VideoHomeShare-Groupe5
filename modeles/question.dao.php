@@ -56,16 +56,25 @@ class QuestionDAO{
     /**
      * @brief Méthode de création d'un quizz
      * 
-     * @param valeur, rang, urlImage et idQuizz
+     * @param string $valeur Valeur de la question
+     * @param int $rang Rang de la question
+     * @param string $urlImage URL de l'image de la question
+     * @param int $idQuizz Identifiant du quizz 
+     * 
      * @return int Confirmation ou non que la question a bien été créée
      */
     function create(string $valeur, int $rang, string $urlImage, int $idQuizz): int{
-        $req = $this->pdo->prepare("INSERT INTO Question (valeur, rang, urlImage, idQuizz) VALUES (:valeur, :rang, :urlImage, :idQuizz)");
-        $req->bindParam(":valeur", $valeur);
-        $req->bindParam(":rang", $rang);
-        $req->bindParam(":urlImage", $urlImage);
-        $req->bindParam(":idQuizz", $idQuizz);
+        // Préparer la requête
+        $req = $this->pdo->prepare("INSERT INTO " . DB_PREFIX ."question (valeur, rang, urlImage, idQuizz) VALUES (:valeur, :rang, :urlImage, :idQuizz)");
+        $req->bindParam(":valeur", $valeur, PDO::PARAM_STR);
+        $req->bindParam(":rang", $rang, PDO::PARAM_INT);
+        $req->bindParam(":urlImage", $urlImage, PDO::PARAM_STR);
+        $req->bindParam(":idQuizz", $idQuizz, PDO::PARAM_INT);
 
+        // Exécuter la requête
+        $req->execute();
+
+        // Retourner 
         return $this->pdo->lastInsertId();
     }
 

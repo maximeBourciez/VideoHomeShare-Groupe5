@@ -10,9 +10,16 @@
     <h1>Création des questions</h1>
     <br>
 
+    {% if messageErreur %}
+        <div class="alert alert-danger text-center" role="alert">
+            {{ messageErreur }}
+        </div>
+    {% endif %}
+
     <form id="quizzForm" action="index.php?controller=quizz&methode=ajouterQuestion" method="POST" enctype="mutipart/form-data">
         <input type="hidden" name="idQuizz" value="{{ idQuizz }}">
-        <input type="hidden" name="nummQuestion" value="{{ numQuestion }}">
+        <input type="hidden" name="numQuestion" value="{{ numQuestion }}">
+        <input type="hidden" name="nbQuestions" value="{{ nbQuestions }}">
 
         <h3>Question n°{{ numQuestion }}</h3>
         <div class="card bg-mydark mx-auto my-auto p-4 text-white rounded">
@@ -21,13 +28,15 @@
             <div class="row mb-4 d-flex justify-content-center align-items-center" style="margin: 1px;">
                 <label for="image_{{ numQuestion }}" class="col-form-label text-center">Ajouter une image</label>
                 <input type="file" name="image_{{ numQuestion }}" id="image" class="w-50 form-control form-control-sm align-left"/>
+                <span id="erreurImage" class="text-danger d-none text-center mt-2 d-block fs-5"></span>
             </div>
 
 
             <!-- Champ Titre -->
             <div class="row mb-4 d-flex justify-content-center align-items-center" style="margin: 1px;">
-                <label for="titre_{{ numQuestion }}" class="col-form-label text-center">Entrez la question</label>
+                <label for="titre_{{ numQuestion }}" class="col-form-label text-center" id="intitule">Entrez la question</label>
                 <textarea name="titre_{{ numQuestion }}" id="titre" class="rounded col-md-11" placeholder="Saisir la question..." required></textarea>
+                <span id="erreurTitre" class="text-danger d-none text-center mt-2 d-block fs-5"></span>
             </div>
 
     
