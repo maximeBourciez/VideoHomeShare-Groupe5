@@ -80,4 +80,8 @@ function handleLoadLess(event) {
   if (loaded <= baseVisible) {
     button.classList.add("d-none");
   }
+
+  if (container) {
+    container.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 }
