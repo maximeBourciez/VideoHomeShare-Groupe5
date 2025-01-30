@@ -56,7 +56,9 @@ class Episode
     }
 
     /**
-     * @return int|null
+     * @brief Retourne l'identifiant de l'épisode
+     * 
+     * @return int|null L'identifiant unique de l'épisode ou null si non défini
      */
     public function getId(): ?int
     {
@@ -64,7 +66,9 @@ class Episode
     }
 
     /**
-     * @return string
+     * @brief Retourne le titre de l'épisode
+     * 
+     * @return string Le titre de l'épisode
      */
     public function getTitre(): string
     {
@@ -72,7 +76,9 @@ class Episode
     }
 
     /**
-     * @return string
+     * @brief Retourne la description de l'épisode
+     * 
+     * @return string La description détaillée de l'épisode
      */
     public function getDescription(): string
     {
@@ -80,7 +86,9 @@ class Episode
     }
 
     /**
-     * @return int
+     * @brief Retourne le numéro de l'épisode
+     * 
+     * @return int Le numéro de l'épisode dans la saison
      */
     public function getNumero(): int
     {
@@ -88,7 +96,9 @@ class Episode
     }
 
     /**
-     * @return DateTime
+     * @brief Retourne la date de diffusion de l'épisode
+     * 
+     * @return DateTime La date de première diffusion de l'épisode
      */
     public function getDateDiffusion(): DateTime
     {
@@ -96,7 +106,9 @@ class Episode
     }
 
     /**
-     * @return string|null
+     * @brief Retourne l'URL de l'image de l'épisode
+     * 
+     * @return string|null L'URL de l'image ou null si aucune image n'est disponible
      */
     public function getImage(): ?string
     {

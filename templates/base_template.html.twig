@@ -110,7 +110,7 @@ f.parentNode.insertBefore(j, f);
 						<a href="index.php?controller=fil&methode=listerThreads">
 							<button class="btn btn-myprimary">Forum</button>
 						</a>
-						<a href="index.php?controller=watch2gether&methode=accueilWatch2Gether">
+						<a href="index.php?controller=salle&methode=accueilWatch2Gether">
 							<button class="btn btn-myprimary">Watch2Gether</button>
 						</a>
 						<a href="index.php?controller=watchlist&methode=afficherWatchlists">
@@ -186,17 +186,21 @@ f.parentNode.insertBefore(j, f);
 
 
 		{% block script %}
+
+			<script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+			<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+			<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+			<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+			<script src="node_modules/tarteaucitronjs/tarteaucitron.js"></script>
 			<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 			<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 			<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 			<script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 			<script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 			<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
-		{% endblock %}
-
-		<script type="text/javascript" src="/js/tarteaucitron/tarteaucitron.js"></script>
-		<script type="text/javascript">
-			tarteaucitron.init({
+			<script type="text/javascript" src="/js/tarteaucitron/tarteaucitron.js"></script>
+			<script type="text/javascript">
+				tarteaucitron.init({
 "privacyUrl": "/politique-de-confidentialite",
 "hashtag": "#tarteaucitron",
 "cookieName": "tarteaucitron",
@@ -240,7 +244,7 @@ ga('create', 'UA-XXXXXXX-X', 'auto');
 ga('send', 'pageview');
 }
 };
-		</script>
-
+			</script>
+		{% endblock %}
 	</body>
 </html>

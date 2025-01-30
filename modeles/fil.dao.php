@@ -142,22 +142,20 @@ class FilDAO
     {
         $sql = "
             SELECT f.*, 
-                    MAX(u.idUtilisateur) AS idUtilisateur,
-                    MAX(u.pseudo) AS pseudo,
-                    MAX(u.urlImageProfil) AS urlImageProfil,
-                    t.idTheme AS theme_id,
-                    t.nom AS theme_nom
-            FROM " . DB_PREFIX . "fil AS f
-            LEFT JOIN (
-                SELECT m.idFil, MIN(m.dateC) AS firstDate
-                FROM " . DB_PREFIX . "message AS m
-                GROUP BY m.idFil
-            ) AS first_message ON f.idFil = first_message.idFil
-            LEFT JOIN " . DB_PREFIX . "message AS m ON f.idFil = m.idFil AND m.dateC = first_message.firstDate
-            LEFT JOIN " . DB_PREFIX . "utilisateur AS u ON m.idUtilisateur = u.idUtilisateur
-            LEFT JOIN " . DB_PREFIX . "parlerdeTheme AS p ON f.idFil = p.idFil
-            LEFT JOIN " . DB_PREFIX . "theme AS t ON p.idTheme = t.idTheme
-            GROUP BY f.idFil, t.idTheme
+                (SELECT m.idUtilisateur FROM vhs_message AS m WHERE m.idFil = f.idFil ORDER BY m.dateC ASC LIMIT 1) AS idUtilisateur,
+                (SELECT u.pseudo FROM vhs_utilisateur u 
+                    WHERE u.idUtilisateur = 
+                        (SELECT m.idUtilisateur FROM vhs_message AS m WHERE m.idFil = f.idFil ORDER BY m.dateC ASC LIMIT 1)
+                ) AS pseudo,
+                (SELECT u.urlImageProfil FROM vhs_utilisateur u 
+                    WHERE u.idUtilisateur = 
+                        (SELECT m.idUtilisateur FROM vhs_message AS m WHERE m.idFil = f.idFil ORDER BY m.dateC ASC LIMIT 1)
+                ) AS urlImageProfil,
+                t.idTheme AS theme_id,
+                t.nom AS theme_nom
+            FROM vhs_fil AS f
+            LEFT JOIN vhs_parlerdeTheme AS p ON f.idFil = p.idFil
+            LEFT JOIN vhs_theme AS t ON p.idTheme = t.idTheme
             ORDER BY f.idFil DESC;";
 
         $stmt = $this->pdo->query($sql);

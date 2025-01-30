@@ -1,113 +1,167 @@
 {% extends 'base_template.html.twig' %}
 
 {% block content %}
-    <main class="watchlists-page container flex-grow-1">
+    <main class="flex-grow-1">
         <!-- Section "Vos Watchlists" -->
-        <section class="watchlist-section mb-5">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="watchlist-section__title mb-0">Mes Watchlists</h2>
-                <button class="btn btn-myprimary" data-bs-toggle="modal" data-bs-target="#createWatchlistModal">
-                    <i class="bi bi-plus-lg me-2"></i>Créer une watchlist
-                </button>
-            </div>
+        <div class="d-flex justify-content-between align-items-center mb-3 ms-5 me-5 mt-3">
+            <h2 class="watchlist-section__title mb-0">Mes Watchlists</h2>
+            <button class="btn btn-creer-watchlist " data-bs-toggle="modal" data-bs-target="#createWatchlistModal">
+                <i class="bi bi-plus-lg me-2"></i>Créer une watchlist
+            </button>
+        </div>
 
-            {% if watchlistsPerso is not empty %}
-                {% for watchlist in watchlistsPerso %}
-                    <div class="watchlist-container mb-4">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h3 class="watchlist-name">{{ watchlist.nom }}</h3>
-                            <div class="btn-group">
-                                <button class="btn btn-myprimary me-2" data-bs-toggle="modal" data-bs-target="#editWatchlistModal{{ watchlist.id }}">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
-                                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteWatchlistModal{{ watchlist.id }}">
-                                    <i class="bi bi-trash"></i>
-                                </button>
+        {% if watchlistsPerso is not empty %}
+            {% for watchlist in watchlistsPerso %}
+                <div class="movie-category bg-dark text-white rounded shadow my-4">
+                    <div class="d-flex justify-content-between align-items-center ms-5">
+                        <h3 class="watchlist-name mt-4">{{ watchlist.nom }}</h3>
+                        <div class="btn-group me-5 mt-4">
+                            <button class="btn btn-myprimary me-2" data-bs-toggle="modal" data-bs-target="#editWatchlistModal{{ watchlist.id }}">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-delete-watchlist btn-danger" data-bs-toggle="modal" data-bs-target="#deleteWatchlistModal{{ watchlist.id }}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    {% if watchlist.description is not empty %}
+                        <p class="watchlist-description ms-5">{{ watchlist.description }}</p>
+                    {% endif %}
+                    {% if watchlist.contenus is empty %}
+                    <div class="d-flex justify-content-center">
+                        <p class=" text-center my-3">Cette watchlist est vide.</p>
+                    </div>
+                    {% else %}
+                        <div class="carousel-container mt-3">
+                            <div id="watchlistCarousel{{ watchlist.id }}" class="carousel slide" data-bs-ride="carousel" data-bs-touch="true">
+                                <div class="carousel-inner px-4">
+                                    {% for contenu in watchlist.contenus %}
+                                        {% if loop.index0 % 6 == 0 %}
+                                            <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                                <div class="row g-3">
+                                        {% endif %}
+
+                                        <div class="col-12 col-sm-4 col-md-3 col-lg d-flex justify-content-center">
+                                            <div class="card h-100 bg-white hover-card" style="max-width: 200px;">
+                                                <div class="card-img-wrapper position-relative pt-2 px-2">
+                                                    <img src="{{ contenu.getLienAfficheReduite() }}" class="card-img-top rounded shadow" alt="{{ contenu.nom }}">
+                                                </div>
+                                                <div class="card-body d-flex flex-column p-2">
+                                                    <h5 class="card-title fs-6 mb-3">{{ contenu.getTitre() }}</h5>
+                                                    <div class="">
+                                                        <button href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ contenu.getId() }}" class="btn btn-plus-infos btn-sm w-100 mb-2">
+                                                            <i class="bi bi-info-circle me-1"></i>Plus d'infos
+                                                        </button>
+                                                        <form action="index.php?controller=watchlist&methode=supprimerDeWatchlist" method="POST">
+                                                            <input type="hidden" name="idWatchlist" value="{{ watchlist.id }}">
+                                                            <input type="hidden" name="idContenu" value="{{ contenu.getId() }}">
+                                                            <button type="submit" class="btn btn-delete-watchlist2 btn-sm w-100 ">
+                                                                <i class="bi bi-trash me-1"></i>Retirer le contenu
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {% if loop.index0 % 6 == 5 or loop.last %}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+
+                                <!-- Contrôles du carousel -->
+                                {% if watchlist.contenus|length > 6 %}
+                                    <button class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#watchlistCarousel{{ watchlist.id }}" data-bs-slide="prev">
+                                        <i class="bi bi-chevron-left"></i>
+                                        <span class="visually-hidden">Précédent</span>
+                                    </button>
+                                    <button class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#watchlistCarousel{{ watchlist.id }}" data-bs-slide="next">
+                                        <i class="bi bi-chevron-right"></i>
+                                        <span class="visually-hidden">Suivant</span>
+                                    </button>
+                                {% endif %}
+
+                                <!-- Indicateurs -->
+                                <div class="carousel-indicators position-relative mt-3">
+                                    {% if watchlist.contenus|length > 6 %}
+                                        {% for i in range(0, ((watchlist.contenus|length - 1) // 6)) %}
+                                            <button type="button" data-bs-target="#watchlistCarousel{{ watchlist.id }}" data-bs-slide-to="{{ i }}" 
+                                                    class="{{ i == 0 ? 'active' : '' }}" 
+                                                    aria-current="{{ i == 0 ? 'true' : 'false' }}" 
+                                                    aria-label="Slide {{ i + 1 }}">
+                                            </button>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
-                        <div class="watchlist-grid d-flex overflow-hidden">
-                            {% if watchlist.contenus is not empty %}
-                                {% for contenu in watchlist.contenus %}
-                                    <div class="movie-card me-3">
-                                        <img 
-                                            src="{{ contenu.affiche }}" 
-                                            alt="{{ contenu.nom }}" 
-                                            class="movie-card__image shadow rounded"
-                                            style="width: 200px; height: 300px; object-fit: cover;"
-                                        >
-                                        <div class="movie-card__rating mt-2">{{ contenu.note }}/5</div>
-                                        <div class="movie-card__title">{{ contenu.nom }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Modal Édition pour cette watchlist spécifique -->
+                <div class="modal fade" id="editWatchlistModal{{ watchlist.id }}" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content bg-mydark text-white">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Éditer ma watchlist</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="index.php?controller=watchlist&methode=modifierWatchlist" method="POST">
+                                    <input type="hidden" name="id" value="{{ watchlist.id }}">
+                                    <div class="mb-3">
+                                        <label for="watchlistName{{ watchlist.id }}" class="form-label">Nom de la watchlist</label>
+                                        <input type="text" class="form-control" id="watchlistName{{ watchlist.id }}" 
+                                                name="nom" value="{{ watchlist.nom }}" required>
                                     </div>
-                                {% endfor %}
-                            {% else %}
-                                <p class="text-center">Aucun contenu dans cette watchlist</p>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <!-- Modal Édition pour cette watchlist spécifique -->
-                    <div class="modal fade" id="editWatchlistModal{{ watchlist.id }}" tabindex="-1">
-                        <div class="modal-dialog">
-                            <div class="modal-content bg-mydark text-white">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Éditer ma watchlist</h5>
-                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form action="index.php?controller=watchlist&methode=modifierWatchlist" method="POST">
-                                        <input type="hidden" name="id" value="{{ watchlist.id }}">
-                                        <div class="mb-3">
-                                            <label for="watchlistName{{ watchlist.id }}" class="form-label">Nom de la watchlist</label>
-                                            <input type="text" class="form-control" id="watchlistName{{ watchlist.id }}" 
-                                                   name="nom" value="{{ watchlist.nom }}" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="watchlistDesc{{ watchlist.id }}" class="form-label">Description</label>
-                                            <textarea class="form-control" id="watchlistDesc{{ watchlist.id }}" 
-                                                      name="description" rows="3">{{ watchlist.description }}</textarea>
-                                        </div>
-                                        <div class="mb-3 form-check">
-                                            <input type="checkbox" class="form-check-input" id="watchlistPublic{{ watchlist.id }}" 
-                                                   name="estPublique" {% if watchlist.estPublique %}checked{% endif %}>
-                                            <label class="form-check-label" for="watchlistPublic{{ watchlist.id }}">Watchlist publique</label>
-                                        </div>
-                                        <div class="modal-footer border-0">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                            <button type="submit" class="btn btn-myprimary">Enregistrer</button>
-                                        </div>
-                                    </form>
-                                </div>
+                                    <div class="mb-3">
+                                        <label for="watchlistDesc{{ watchlist.id }}" class="form-label">Description</label>
+                                        <textarea class="form-control" id="watchlistDesc{{ watchlist.id }}" 
+                                                    name="description" rows="3">{{ watchlist.description }}</textarea>
+                                    </div>
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="watchlistPublic{{ watchlist.id }}" 
+                                                name="estPublique" {% if watchlist.estPublique %}checked{% endif %}>
+                                        <label class="form-check-label" for="watchlistPublic{{ watchlist.id }}">Watchlist publique</label>
+                                    </div>
+                                    <div class="modal-footer border-0">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                        <button type="submit" class="btn btn-myprimary">Enregistrer</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Modal Suppression pour cette watchlist spécifique -->
-                    <div class="modal fade" id="deleteWatchlistModal{{ watchlist.id }}" tabindex="-1">
-                        <div class="modal-dialog">
-                            <div class="modal-content bg-mydark text-white">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Confirmer la suppression</h5>
-                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>Êtes-vous sûr de vouloir supprimer la watchlist "{{ watchlist.nom }}" ?</p>
-                                    <p class="text-danger">Cette action est irréversible.</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                    <form action="index.php?controller=watchlist&methode=supprimerWatchlist" method="POST" class="d-inline">
-                                        <input type="hidden" name="id" value="{{ watchlist.id }}">
-                                        <button type="submit" class="btn btn-danger">Supprimer</button>
-                                    </form>
-                                </div>
+                <!-- Modal Suppression pour cette watchlist spécifique -->
+                <div class="modal fade" id="deleteWatchlistModal{{ watchlist.id }}" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content bg-mydark text-white">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Confirmer la suppression</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Êtes-vous sûr de vouloir supprimer la watchlist "{{ watchlist.nom }}" ?</p>
+                                <b class="bi bi-exclamation-triangle text-danger"> Cette action est irréversible.</b>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-myprimary" data-bs-dismiss="modal">Annuler</button>
+                                <form action="index.php?controller=watchlist&methode=supprimerWatchlist" method="POST" class="d-inline">
+                                    <input type="hidden" name="id" value="{{ watchlist.id }}">
+                                    <button type="submit" class="btn btn-delete-watchlist2 btn-danger">Supprimer</button>
+                                </form>
                             </div>
                         </div>
                     </div>
-                {% endfor %}
-            {% else %}
-                <p class="text-center">Vous n'avez pas encore de watchlists.</p>
-            {% endif %}
-        </section>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-center">Vous n'avez pas encore de watchlists.</p>
+        {% endif %}
     </main>
 
     <!-- Modale Création Watchlist -->
