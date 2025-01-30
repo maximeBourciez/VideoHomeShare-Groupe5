@@ -8,11 +8,11 @@
 <main class="container flex-fill">
     <br>
     <h2 class="mb-4">{{ quizz.getTitre() }}</h2>
-	{{ dump(quizz) }}
 	<form action="index.php?controller=quizz&methode=traiterResultatsQuestion" method="post">
-		<input type="hidden" name="idQuizz" value="{{ idQuizz }}">
+		<input type="hidden" name="idQuizz" value="{{ quizz.getId() }}">
 		<input type="hidden" name="idUtilisateur" value="{{ idUtilisateur }}">
-		<input type="hidden" name="idQuestion" value="{{ question.getId }}">
+		<input type="hidden" name="idQuestion" value="{{ question.getIdQuestion() }}">
+		<input type="hidden" name="derniereQuestion" value="{{ derniereQuestion }}">
 		<input type="hidden" name="nbBonnesReponses" value="{{ nbBonnesReponses }}">
 		<!-- URL de l'image de la question -->
 			<div class="row mb-4">

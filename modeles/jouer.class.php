@@ -3,13 +3,13 @@
 class Jouer {
 
     // Attributs
-    private ?int $idUtilisateur;
+    private ?string $idUtilisateur;
     private ?int $idQuizz;
     private ?int $score;
     
 
     // Constructeur
-    function __construct(?int $idUtilisateur = null, ?int $idQuizz = null, ?int $score = null){
+    function __construct(?string $idUtilisateur = null, ?int $idQuizz = null, ?int $score = null){
         $this->idUtilisateur = $idUtilisateur;
         $this->idQuizz = $idQuizz;
         $this->score = $score;
@@ -21,9 +21,9 @@ class Jouer {
 
     /**
      * Get the value of idUtilisateur
-     * @return int
+     * @return string
      */
-    public function getIdUtilisateur(): ?int
+    public function getIdUtilisateur(): ?string
     {
         return $this->idUtilisateur;
     }
@@ -50,10 +50,10 @@ class Jouer {
 
     /**
      * Set the value of idUtilisateur
-     * @param int $idUtilisateur
+     * @param string $idUtilisateur
      * @return void
      */
-    public function setIdUtilisateur(int $idUtilisateur): void
+    public function setIdUtilisateur(string $idUtilisateur): void
     {
         $this->idUtilisateur = $idUtilisateur;
     }

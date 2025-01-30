@@ -96,6 +96,22 @@ class ReponseDAO{
 
         return $this->hydrateAll($stmt->fetchAll());
     }
+
+    /**
+     * @brief Méthode permettant de créer une réponse en BD
+     * 
+     * @param Reponse $reponse
+     * 
+     * @return bool
+     */
+    public function create(Reponse $reponse): bool{
+        $sql = "INSERT INTO " . DB_PREFIX . "reponse (valeur, rang, estVraie, idQuestion) VALUES (:valeur, :rang, :estVraie, :idQuestion)";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':valeur', $reponse->getValeur(), PDO::PARAM_STR);
+        $stmt->bindValue(':rang', $reponse->getRang(), PDO::PARAM_INT);
+        $stmt->bindValue(':estVraie', $reponse->getVerite(), PDO::PARAM_BOOL);
+        $stmt->bindValue(':idQuestion', $reponse->getIdQuestion(), PDO::PARAM_INT);
+        return $stmt->execute();
+    }
 }
 
-?>

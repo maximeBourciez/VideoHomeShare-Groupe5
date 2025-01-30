@@ -143,13 +143,23 @@ class QuizzDAO{
      * @return Quizz
      */
     function find(int $idQuizz): ?Quizz{
-        $sql = "SELECT Q.*, U.pseudo FROM " .DB_PREFIX. "quizz Q JOIN " .DB_PREFIX. "utilisateur U ON Q.idUtilisateur = U.idUtilisateur WHERE idQuizz = :idQuizz";
-        $pdoStatement = $this->pdo->prepare($sql);
-        $pdoStatement->execute(array("idQuizz"=>$idQuizz));
-        $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Quizz');
-        $quizz = $pdoStatement->fetch();
+        if ($this->pdo === null) {
+            $this->getPdo();
+        }
+        $sql = "SELECT Q.*, U.pseudo
+                FROM " .DB_PREFIX. "quizz Q
+                JOIN " .DB_PREFIX. "utilisateur U ON Q.idUtilisateur = U.idUtilisateur
+                WHERE Q.idQuizz = :idQuizz";
+                
+        $pdo = $this->pdo->prepare($sql);
+        $pdo->bindValue(':idQuizz', $idQuizz, PDO::PARAM_INT);
+        $pdo->execute();
+        $row = $pdo->fetch();
+        if ($row == null){
+            return null;
+        }
 
-        return $quizz;
+        return $this->hydrate($row);
     }
 
     /**
