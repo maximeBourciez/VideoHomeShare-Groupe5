@@ -293,7 +293,11 @@ class ControllerUtilisateur extends Controller
                 $id = $personneConnect->getId();
             }
         } else {
+            if( $id != null){
             $personneConnect = null;
+            }else {
+                $this->connexion();
+            }
         }
 
         // instanciation des managers de base de données
