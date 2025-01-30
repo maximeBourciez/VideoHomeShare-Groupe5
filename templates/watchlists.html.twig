@@ -32,7 +32,7 @@
                         <p class=" text-center my-3">Cette watchlist est vide.</p>
                     </div>
                     {% else %}
-                        <div class="carousel-container">
+                        <div class="carousel-container mt-3">
                             <div id="watchlistCarousel{{ watchlist.id }}" class="carousel slide" data-bs-ride="carousel" data-bs-touch="true">
                                 <div class="carousel-inner px-4">
                                     {% for contenu in watchlist.contenus %}
@@ -48,9 +48,18 @@
                                                 </div>
                                                 <div class="card-body d-flex flex-column p-2">
                                                     <h5 class="card-title fs-6 mb-3">{{ contenu.getTitre() }}</h5>
-                                                    <a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ contenu.getId() }}" class="btn btn-primary btn-sm mt-auto">
-                                                        <i class="bi bi-info-circle me-1"></i>Plus d'informations
-                                                    </a>
+                                                    <div class="">
+                                                        <button href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ contenu.getId() }}" class="btn btn-plus-infos btn-sm w-100 mb-2">
+                                                            <i class="bi bi-info-circle me-1"></i>Plus d'infos
+                                                        </button>
+                                                        <form action="index.php?controller=watchlist&methode=supprimerDeWatchlist" method="POST">
+                                                            <input type="hidden" name="idWatchlist" value="{{ watchlist.id }}">
+                                                            <input type="hidden" name="idContenu" value="{{ contenu.getId() }}">
+                                                            <button type="submit" class="btn btn-delete-watchlist2 btn-sm w-100 ">
+                                                                <i class="bi bi-trash me-1"></i>Retirer le contenu
+                                                            </button>
+                                                        </form>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

@@ -669,6 +669,7 @@ $bp-xl: 1200px;
   }
 }
 
+// Boutons créer watchlist
 .btn-creer-watchlist {
   @include button-base;
   background-color: $primary !important;
@@ -689,3 +690,26 @@ $bp-xl: 1200px;
     font-size: 1.2rem;
   }
 }
+
+// Boutons plus d'infos
+.btn-plus-infos {
+  @include button-base;
+  background-color: $primary !important;
+  color: black !important;
+  border-color: $primary !important;
+  width: 125px;
+  height: 38px;
+  padding: 8px 0 !important;
+  gap: 10px;
+
+  @include media-breakpoint-down(md) {
+    width: 75px;
+    padding: 8px 0;
+    font-size: 0.6rem;
+  }
+
+  i {
+    font-size: 1.2rem;
+  }
+}
+

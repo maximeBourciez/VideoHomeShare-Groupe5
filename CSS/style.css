@@ -12394,4 +12394,32 @@ body {
   font-size: 1.2rem;
 }
 
+.btn-plus-infos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  background-color: #f2ac0f !important;
+  color: black !important;
+  border-color: #f2ac0f !important;
+  width: 125px;
+  height: 38px;
+  padding: 8px 0 !important;
+  gap: 10px;
+}
+.btn-plus-infos:hover {
+  transform: scale(1.05);
+}
+@media (max-width: 767.98px) {
+  .btn-plus-infos {
+    width: 75px;
+    padding: 8px 0;
+    font-size: 0.6rem;
+  }
+}
+.btn-plus-infos i {
+  font-size: 1.2rem;
+}
+
 /*# sourceMappingURL=style.css.map */
