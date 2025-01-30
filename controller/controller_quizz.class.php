@@ -27,28 +27,60 @@ class ControllerQuizz extends Controller
 
     /**
      * @bref permet d'afficher la page d'accueil des quizz
+     * 
+     * @param string|null $message Message à afficher
+     * @param bool|null $etatMessage Etat du message (true = succès, false = erreur)
      *
      * @return void
      */
-    public function listeQuizz(): void
+    public function listeQuizz(?string $message = null, ?bool $etatMessage = null): void
     {
         //Recupération des quizz
         $managerQuizz = new QuizzDAO($this->getPdo());
         $quizz = $managerQuizz->findAll();
 
+        // Vérifier si l'utilisateur est connecté
         if (isset($_SESSION['utilisateur'])) {
             $utilisateur = unserialize($_SESSION['utilisateur']);
             $pseudoUtilisateur = $utilisateur->getPseudo();
         } else {
             $pseudoUtilisateur = null;
         }
-        //Génération de la vue
+
+        // Initialisation des messages
+        $messageConfirmation = null;
+        $messagederreur = null;
+
+        if ($message !== null) {
+            if ($etatMessage) {
+                echo $this->getTwig()->render('listeQuizz.html.twig', [
+                    'quizz' => $quizz,
+                    'boutonGererAppuye' => false,
+                    'boutonVoirAppuye' => true,
+                    'pseudoUtilisateur' => $pseudoUtilisateur,
+                    'messageConfirmation' => $message
+                ]);
+                exit();
+            } else {
+                echo $this->getTwig()->render('listeQuizz.html.twig', [
+                    'quizz' => $quizz,
+                    'boutonGererAppuye' => false,
+                    'boutonVoirAppuye' => true,
+                    'pseudoUtilisateur' => $pseudoUtilisateur,
+                    'messagederreur' => $message
+                ]);
+                exit();
+            }
+        }
+
+        // Génération de la vue
         echo $this->getTwig()->render('listeQuizz.html.twig', [
             'quizz' => $quizz,
             'boutonGererAppuye' => false,
             'boutonVoirAppuye' => true,
             'pseudoUtilisateur' => $pseudoUtilisateur
         ]);
+        exit();
     }
 
     /**
@@ -259,10 +291,8 @@ class ControllerQuizz extends Controller
 
         // Vérifier si la suppression a fonctionné
         if ($supprOk) {
-            $this->supprimerQuestions($idQuizz);
-            echo $this->getTwig()->render('listeQuizz.html.twig', [
-                'messageConfirmation' => "Le quizz a bien été supprimé."
-            ]);
+            $this->listeQuizz("Le quizz a bien été supprimé.", true);
+            exit();
         } else {
             echo $this->getTwig()->render('listeQuizz.html.twig', [
                 'messageErreur' => "Une erreur est survenue lors de la suppression du quizz."
@@ -451,7 +481,7 @@ class ControllerQuizz extends Controller
                     $reponse = trim($_POST[$reponseKey]);
                     $estCorrecte = isset($_POST[$correcteKey]);
 
-                    $objetReponse = new Reponse(0,$reponse, $i+1, $estCorrecte, $idQuestion);
+                    $objetReponse = new Reponse(0, $reponse, $i + 1, $estCorrecte, $idQuestion);
                     if (!$managerReponses->create($objetReponse)) {
                         throw new Exception("Erreur lors de la création d'une réponse.");
                     }
