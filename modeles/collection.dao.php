@@ -272,17 +272,16 @@ class CollectionDAO
         return $uniquePersonnalites;
     }
 
-
     /**
-     * Methode de recherche d'une collection par son nom
+     * Méthode de recherche d'une collection par son nom, en filtrant les collections contenant des films adultes
      * 
-     * @param string $nom Recherhche de la collection par son nom
+     * @param string $query Recherche de la collection par son nom
      * 
-     * @return array<Collection>|null La collection trouvée ou null si non trouvée
+     * @return array<Collection>|null La liste des collections filtrées ou null si aucune trouvée
      */
     public function searchByName(?string $query): ?array
     {
-        $url = "{$this->baseUrl}/search/collection?api_key={$this->apiKey}&query=" . urlencode($query) . "&language=fr-FR";
+        $url = "{$this->baseUrl}/search/collection?api_key={$this->apiKey}&query=" . urlencode($query) . "&language=fr-FR&include_adult=false";
         $response = file_get_contents($url);
 
         if ($response === false) {
@@ -291,20 +290,60 @@ class CollectionDAO
 
         $collectionData = json_decode($response, true);
 
-        if ($collectionData) {
-            $collections = [];
-            foreach ($collectionData['results'] as $result) {
-                $collections[] = new Collection(
-                    $result['id'],
-                    $result['name'], // Correspond au titre de la collection
-                    null, // Date non disponible dans l'API
-                    $result['overview'] ?? null,
-                    $result['poster_path'] ? "https://image.tmdb.org/t/p/w500" . $result['poster_path'] : null,
-                    null // Nombre de films non fourni par l'API
-                );
-            }
-            return $collections;
+        if (!$collectionData || empty($collectionData['results'])) {
+            return null;
         }
-        return null;
+
+        $collections = [];
+
+        foreach ($collectionData['results'] as $result) {
+            $collectionId = $result['id'];
+
+            // Vérifier si la collection contient des films adultes
+            if ($this->hasAdultMovies($collectionId)) {
+                continue; // Passer cette collection
+            }
+
+            // Ajouter la collection si elle ne contient pas de films adultes
+            $collections[] = new Collection(
+                $collectionId,
+                $result['name'], // Correspond au titre de la collection
+                null, // Date non disponible dans l'API
+                $result['overview'] ?? null,
+                $result['poster_path'] ? "https://image.tmdb.org/t/p/w500" . $result['poster_path'] : null,
+                null // Nombre de films non fourni par l'API
+            );
+        }
+
+        return !empty($collections) ? $collections : null;
+    }
+
+    /**
+     * Vérifie si une collection contient des films adultes
+     * 
+     * @param int $collectionId ID de la collection à vérifier
+     * 
+     * @return bool True si un des films est adulte, sinon False
+     */
+    private function hasAdultMovies(int $collectionId): bool
+    {
+        $url = "{$this->baseUrl}/collection/{$collectionId}?api_key={$this->apiKey}&language=fr-FR";
+        $response = file_get_contents($url);
+
+        if ($response === false) {
+            return false; // En cas d'erreur, on suppose que la collection est valide
+        }
+
+        $collectionDetails = json_decode($response, true);
+
+        if (isset($collectionDetails['parts'])) {
+            foreach ($collectionDetails['parts'] as $movie) {
+                if (!empty($movie['adult']) && $movie['adult'] === true) {
+                    return true; // La collection contient un film adulte
+                }
+            }
+        }
+
+        return false;
     }
 }

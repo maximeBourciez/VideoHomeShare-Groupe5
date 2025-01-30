@@ -45,7 +45,7 @@ class SerieDAO
      */
     public function getSerieFromTMDB(int $tmdbId): ?Serie
     {
-        $url = "{$this->baseUrl}/tv/{$tmdbId}?api_key={$this->apiKey}&language=fr-FR&append_to_response=credits,keywords,reviews";
+        $url = "{$this->baseUrl}/tv/{$tmdbId}?api_key={$this->apiKey}&language=fr-FR&include_adult=false&append_to_response=credits,keywords,reviews";
         $response = file_get_contents($url);
 
         if ($response === false) {
