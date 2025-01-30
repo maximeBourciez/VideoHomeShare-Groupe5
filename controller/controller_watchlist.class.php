@@ -185,4 +185,48 @@ class ControllerWatchlist extends Controller {
 
         $this->afficherWatchlists();
     }
+
+    /**
+     * @brief Supprime un contenu d'une watchlist
+     */
+    public function supprimerDeWatchlist(): void {
+        if (!isset($_SESSION['utilisateur']) || !isset($_POST['idWatchlist']) || !isset($_POST['idContenu'])) {
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
+            return;
+        }
+
+        $idUtilisateur = htmlspecialchars(unserialize($_SESSION['utilisateur'])->getId());
+        $idWatchlist = filter_var($_POST['idWatchlist'], FILTER_VALIDATE_INT);
+        $idContenu = filter_var($_POST['idContenu'], FILTER_VALIDATE_INT);
+        
+        if ($idWatchlist === false || $idContenu === false) {
+            throw new Exception("ID de watchlist ou de contenu invalide");
+        }
+
+        $watchlistDAO = new WatchlistDAO($this->getPdo());
+        
+        // Vérification des droits d'accès
+        $watchlists = $watchlistDAO->findByUser($idUtilisateur);
+        $watchlistAppartientUtilisateur = false;
+        
+        foreach ($watchlists as $watchlist) {
+            if ($watchlist->getId() === $idWatchlist) {
+                $watchlistAppartientUtilisateur = true;
+                break;
+            }
+        }
+
+        if (!$watchlistAppartientUtilisateur) {
+            throw new Exception("Vous n'avez pas les droits pour modifier cette watchlist");
+        }
+
+        $success = $watchlistDAO->removeContenuFromWatchlist($idWatchlist, $idContenu);
+        
+        if (!$success) {
+            throw new Exception("Erreur lors de la suppression du contenu de la watchlist");
+        }
+
+        $this->afficherWatchlists();
+    }
 }
