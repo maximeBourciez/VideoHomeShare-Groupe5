@@ -10,49 +10,61 @@
     <h1>Création des questions</h1>
     <br>
 
-    <form id="quizzForm" action="index.php" method="get">
-        <input type="hidden" name="controller" value="quizz">
-        <input type="hidden" name="methode" value="creerQuestion">
+    <form id="quizzForm" action="index.php?controller=quizz&methode=ajouterQuestion" method="POST" enctype="mutipart/form-data">
         <input type="hidden" name="idQuizz" value="{{ idQuizz }}">
+        <input type="hidden" name="nummQuestion" value="{{ numQuestion }}">
 
         <h3>Question n°{{ numQuestion }}</h3>
         <div class="card bg-mydark mx-auto my-auto p-4 text-white rounded">
+
             <!-- Champ Image -->
-            <div class="row mb-4" style=" margin: 1px;">
-                <label for="image_{{ numQuestion }}" class="col-form-label">Ajouter une image</label>
-                <input type="file" name="image_{{ numQuestion }}" id="image"/>
+            <div class="row mb-4 d-flex justify-content-center align-items-center" style="margin: 1px;">
+                <label for="image_{{ numQuestion }}" class="col-form-label text-center">Ajouter une image</label>
+                <input type="file" name="image_{{ numQuestion }}" id="image" class="w-50 form-control form-control-sm align-left"/>
             </div>
+
+
             <!-- Champ Titre -->
-            <div class="row mb-4" style=" margin: 1px;">
-                <label for="titre_{{ numQuestion }}">Entrez la question</label>
-                <textarea name="titre_{{ numQuestion }}" id="titre" class="rounded" placeholder="Saisir la question..." required></textarea>
+            <div class="row mb-4 d-flex justify-content-center align-items-center" style="margin: 1px;">
+                <label for="titre_{{ numQuestion }}" class="col-form-label text-center">Entrez la question</label>
+                <textarea name="titre_{{ numQuestion }}" id="titre" class="rounded col-md-11" placeholder="Saisir la question..." required></textarea>
             </div>
-            <!-- Bouton d'ajout de réponses -->
-            <div class="row" style=" margin: 1px;">
-                <button type="button" class="btn btn-primary" id="addReponseBtn">
-                    <i class="bi bi-pencil" style="font-size: 1.3rem; margin-right: 0.2 rem;"></i>
-                    <b>Ajouter une réponse</b>
-                </button>
-            </div>
+
+    
             <!-- Champ des réponses -->
-            <div id="reponsesContainer">
+            <div id="reponsesContainer" class="row row-3 mt-5 d-flex justify-content-around">
+                {% for i in 0..3 %}
+                    <div class="col-md-5 mb-3 d-flex flex-column align-items-center text-center">
+                        <label for="reponse_{{ numQuestion }}_{{ i }}">Réponse {{ i + 1 }}</label>
+                        <input type="text" name="reponse_{{ numQuestion }}_{{ i }}" id="reponse_{{ numQuestion }}_{{ i }}" 
+                            class="rounded text-center inputReponse w-100" 
+                            placeholder="Saisir la réponse..." required/>
+                        <div class="d-flex align-items-center mt-2">
+                            <input type="checkbox" name="correcte_{{ numQuestion }}_{{ i }}" id="correcte_{{ numQuestion }}_{{ i }}" class="rounded checkCorrect"/>
+                            <label for="correcte_{{ numQuestion }}_{{ i }}" class="ms-2">Correcte</label>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
+            <span id="erreurReponses" class="text-danger d-none text-center mt-2 d-block fs-5"></span>
+
             <!-- Boutons de manipulation de la page -->
-            <div class="row text-center mt-4">
-                <div class="row col mt-4 mb-2 me-4">
-                    <a href="index.php?controller=quizz&methode=listeQuizz" class="btn btn-primary">
-                        <b>Annuler</b>
-                    </a>
-                </div>
-                <div class="row col mb-2 mt-4">
-                    <a href="index.php?controller=quizz&methode=traiterInfosQuestion&idQuizz={{ idQuizz }}&numQuestion={{ numQuestion }}&nbQuestions={{ nbQuestions }}&idUtilisateur={{ idUtilisateur }}" class="btn btn-primary">
-                        <b>Suivant</b>
-                    </a>
-                </div>
+            <div class="d-flex justify-content-center mt-4 gap-1 row row-3">
+                <button type="submit" name="methode" value="listeQuizz" class="btn btn-primary fw-bold col-md-5 me-2">Annuler</button>
+                <button type="submit" name="methode" value="traiterInfosQuestion" class="btn btn-primary fw-bold col-md-5 ms-2" id="validerReponses">Suivant</button>
             </div>
+
         </div>
     </form>
 </main>
+
+<style>
+    .inputReponse {
+        height: 50px; /* Ajuste la valeur selon ce que tu souhaites */
+    }
+    </style>
+
+
 
 <script src="js/quizz.js"></script>
 

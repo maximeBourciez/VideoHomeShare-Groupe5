@@ -64,7 +64,7 @@ class ControllerQuizz extends Controller
 
         // Récupérer les infos du quizz
         $quizzDAO = new QuizzDAO($this->getPdo());
-        $quiz = $quizzDAO->findById($idQuizz);
+        $quiz = $quizzDAO->find($idQuizz);
         
         // Rendre le template avec les infos
         echo $this->getTwig()->render('listeQuizz.html.twig', [
@@ -518,5 +518,4 @@ class ControllerQuizz extends Controller
             'nbScores' => $nbScores
         ]);
     }
-
 }
