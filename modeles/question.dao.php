@@ -56,17 +56,26 @@ class QuestionDAO{
     /**
      * @brief Méthode de création d'un quizz
      * 
-     * @param Question
-     * @return bool
+     * @param string $valeur Valeur de la question
+     * @param int $rang Rang de la question
+     * @param string $urlImage URL de l'image de la question
+     * @param int $idQuizz Identifiant du quizz 
+     * 
+     * @return int Confirmation ou non que la question a bien été créée
      */
-    function create(Question $question): bool{
-        $req = $this->pdo->prepare("INSERT INTO Question (valeur, rang, urlImage, idQuizz) VALUES (:valeur, :rang, :urlImage, :idQuizz)");
-        $req->bindParam(":valeur", $question->getValeur());
-        $req->bindParam(":rang", $question->geRang());
-        $req->bindParam(":urlImage", $question->getUrlImage());
-        $req->bindParam(":idQuizz", $question->getIdQuizz());
+    function create(string $valeur, int $rang, string $urlImage, int $idQuizz): int{
+        // Préparer la requête
+        $req = $this->pdo->prepare("INSERT INTO " . DB_PREFIX ."question (valeur, rang, urlImage, idQuizz) VALUES (:valeur, :rang, :urlImage, :idQuizz)");
+        $req->bindParam(":valeur", $valeur, PDO::PARAM_STR);
+        $req->bindParam(":rang", $rang, PDO::PARAM_INT);
+        $req->bindParam(":urlImage", $urlImage, PDO::PARAM_STR);
+        $req->bindParam(":idQuizz", $idQuizz, PDO::PARAM_INT);
 
-        return $req->execute();
+        // Exécuter la requête
+        $req->execute();
+
+        // Retourner 
+        return $this->pdo->lastInsertId();
     }
 
     /**
@@ -165,20 +174,17 @@ class QuestionDAO{
     }
 
     /**
-     * @brief Méthode pour récupérer les attributs des quizz
+     * @brief Méthode pour récupérer les questions d'un quizz
      * @param $idQuizz identifiant du quizz
-     * @return Question
+     * @return array
      */
-    function findByQuizzId(int $idQuizz): ?Question{
+    function findByQuizzId(int $idQuizz): ?array{
         $sql = "SELECT * FROM " .DB_PREFIX. "question WHERE idQuizz = :idQuizz";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':idQuizz', $idQuizz, PDO::PARAM_INT);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $stmt->execute();
-        $row = $stmt->fetch();
-        if ($row == null){
-            return null;
-        }
 
-        return $this->hydrate($row);
+        return $this->hydrateAll($stmt->fetchAll());
     }
 }

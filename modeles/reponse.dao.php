@@ -19,8 +19,6 @@ class ReponseDAO{
     }
 
     //Methodes
-    //A tester quand la BD sera mise en place
-    //Methodes find
     public function find(?int $id): ?Reponse{
         $sql="SELECT * FROM ".DB_PREFIX. "reponse WHERE id= :id";
         $pdoStatement = $this->pdo->prepare($sql);
@@ -67,10 +65,11 @@ class ReponseDAO{
     //Methodes hydrate
     public function hydrate($tableauAssoc): ?Reponse
     {
-        $reponse = new Reponse($tableauAssoc['id'], 
-                                   $tableauAssoc['valeur'], 
-                                   $tableauAssoc['rang'], 
-                                   $tableauAssoc['estVraie']);
+        $reponse = new Reponse($tableauAssoc['idReponse'], 
+                                $tableauAssoc['valeur'], 
+                                $tableauAssoc['rang'], 
+                                $tableauAssoc['estVraie'],
+                                $tableauAssoc['idQuestion']);
 
         return $reponse;
     }
@@ -87,16 +86,32 @@ class ReponseDAO{
     }
     //But : Créer les reponses avec les valeurs assignées aux attributs correspondants
 
-    public function findByQuestionId($idQuestion): ?array
+    public function findByQuestionId(int $idQuestion): ?array
     {
         $sql="SELECT * FROM ".DB_PREFIX. "reponse WHERE idQuestion = :idQuestion";
-        $pdoStatement = $this->pdo->prepare($sql);
-        $pdoStatement->execute(array("idQuestion"=>$idQuestion));
-        $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Reponse');
-        $reponses = $pdoStatement->fetchAll();
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':idQuestion', $idQuestion, PDO::PARAM_INT);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $stmt->execute();
 
-        return $reponses;
+        return $this->hydrateAll($stmt->fetchAll());
+    }
+
+    /**
+     * @brief Méthode permettant de créer une réponse en BD
+     * 
+     * @param Reponse $reponse
+     * 
+     * @return bool
+     */
+    public function create(Reponse $reponse): bool{
+        $sql = "INSERT INTO " . DB_PREFIX . "reponse (valeur, rang, estVraie, idQuestion) VALUES (:valeur, :rang, :estVraie, :idQuestion)";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':valeur', $reponse->getValeur(), PDO::PARAM_STR);
+        $stmt->bindValue(':rang', $reponse->getRang(), PDO::PARAM_INT);
+        $stmt->bindValue(':estVraie', $reponse->getVerite(), PDO::PARAM_BOOL);
+        $stmt->bindValue(':idQuestion', $reponse->getIdQuestion(), PDO::PARAM_INT);
+        return $stmt->execute();
     }
 }
 
-?>
