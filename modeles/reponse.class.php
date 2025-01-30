@@ -6,7 +6,7 @@ class Reponse{
     private ?string $valeur; //Valeur de la reponse
     private ?string $rang; //Rang de la reponse
     private ?bool $estVraie; //Indicateur de vérité d'une réponse
-    private ?int $idQuestion;
+    private ?int $idQuestion; //Identifiant de la question
 
     // Constructeur
     public function __construct(?int $id = null, ?string $valeur = null, ?string $rang = null, ?bool $estVraie = null, ?int $idQuestion = null){
@@ -14,7 +14,7 @@ class Reponse{
         $this->valeur = $valeur;
         $this->rang = $rang;
         $this->estVraie = $estVraie;
-        $this->idQuestion;
+        $this->idQuestion = $idQuestion;
     }
     
     // Encapsulation

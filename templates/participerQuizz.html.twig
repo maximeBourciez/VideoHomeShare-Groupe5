@@ -5,49 +5,62 @@
 {% endblock %}
 
 {% block content %}
-<main class="container min-vh-100">
+<main class="container flex-fill">
     <br>
-    <h2>{{ quizz.getTitre() }}</h2>
-    <br>
+    <h2 class="mb-4">{{ quizz.getTitre() }}</h2>
+
 	{% set bonnesReponses = 0 %}
 
     {% for question in questions %}
 	<!-- URL de l'image de la question -->
-        <div class="row">
+        <div class="row mb-4">
             <img src="images/{{ question.getUrlImage() }}" alt="Image de la question">
         </div>
 		<!-- Carte de la question -->
-		<h4 class="row">Question n°{{ question.getRang() }}</h4>
-		<div class="row">
-			<div class="card">
+		<h4 class="row mb-4">Question n°{{ question.getRang() }}</h4>
+		<div class="row mb-4">
+			<div class="card bg-mydark mx-auto my-auto text-white rounded">
 				<div class="card-body">
 					{{ question.getValeur() }}
 				</div>
 			</div>
         </div>
-		{% for reponse in reponses %}
-		<!-- Afficher 2 par 2 si le nombre de questions est pair-->
-			{% if loop.index is even %}
-        		<div class="row">
-    		{% endif %}
-		<!-- Cartes des réponses -->
-			<div class="col-md-6">
-				<div class="card">
-					<div class="card-body">
-					Réponse n°{{ reponse.getRang() }} :<br>
-						{{ reponse.getValeur() }}
+		<div class="col card bg-mydark mx-auto my-auto p-4 text-white rounded">
+			{% for reponse in reponses[question.getIdQuestion()] %}
+				<!-- Afficher 2 par 2 si le nombre de questions est pair-->
+				{% if loop.index is even %}
+					<div class="row mb-4">
+				{% endif %}
+				<!-- Cartes des réponses -->
+				<div class="col mb-4">
+					<div class="card">
+						<div class="card-body">
+							Réponse n°{{ reponse.getRang() }} :
+							{{ reponse.getValeur() }}
+						</div>
+						<!-- Si la réponse est vraie, ajouter 1 au nombre de bonnes réponses -->
+						{% if reponse.getVerite() %}
+							{% set bonnesReponses = bonnesReponses + 1 %}
+						{% endif %}
 					</div>
-					<!-- Si la réponse est vraie, ajouter 1 au nombre de bonnes réponses -->
-					{% if reponse.getVerite() %}
-                        {% set bonnesReponses = bonnesReponses + 1 %}
-                    {% endif %}
 				</div>
-        	</div>
-			<br>
+				{% if loop.index is even %}
+					</div>
+				{% endif %}
+			{% endfor %}
 		{% endfor %}
-    {% endfor %}
-	<a href="index.php?controller=quizz&methode=afficherResultats&idUtilisateur &idQuizz={{ quizz.getId() }}&bonnesReponses" class="btn btn-primary">
-		<b>Voir les résultats</b>
-	</a>
+        <!-- Boutons "Suivant" ou "Voir les résultats" si c'est la dernière question -->
+        <div class="row mt-4">
+            {% if loop.last %}
+                <a href="index.php?controller=quizz&methode=afficherResultats&idUtilisateur={{ idUtilisateur }}&idQuizz={{ quizz.getId() }}&bonnesReponses={{ bonnesReponses }}" class="btn btn-primary mx-auto">
+                    <b>Voir les résultats</b>
+                </a>
+            {% else %}
+                <a href="index.php?controller=quizz&methode=jouerQuizz&idUtilisateur={{ idUtilisateur }}&idQuizz={{ quizz.getId() }}&question={{ loop.index + 1 }}" class="btn btn-primary mx-auto">
+                    <b>Suivant</b>
+                </a>
+            {% endif %}
+        </div>
+
 </main>
 {% endblock %}

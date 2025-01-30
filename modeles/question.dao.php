@@ -173,6 +173,8 @@ class QuestionDAO{
         $sql = "SELECT * FROM " .DB_PREFIX. "question WHERE idQuizz = :idQuizz";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':idQuizz', $idQuizz, PDO::PARAM_INT);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $stmt->execute();
 
         return $this->hydrateAll($stmt->fetchAll());
     }

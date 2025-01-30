@@ -76,7 +76,7 @@ class ControllerQuizz extends Controller
     /**
      * @brief Méthode qui affiche les quizz de l'utilisateur connecté
      * 
-     * @details Méthode permettant d'afficher les quizz de l'utilisateur connecté avec la possibilité de les gérer (modifier ou supprimer)
+     * @details Méthode permettant d'afficher les quizz de l'utilisateur connecté avec la possibilité de les supprimer
      *
      * @return void
      */
@@ -113,9 +113,25 @@ class ControllerQuizz extends Controller
     }
 
     /**
+     * @brief Méthode qui permet de récupérer la question et ses réponses envoyés vers la page
+     * 
+     * @details Méthode permettant d'afficher la question et réponses associés au quizz
+     * @param $idQuestion
+     * @return array
+     */
+    public function recupererReponses(int $idQuestion) : array
+    {
+        $reponses = [];
+        $managerReponse = new ReponseDAO($this->getPdo());
+        $reponses = $managerReponse->findByQuestionId($idQuestion);
+
+        return $reponses;
+    }
+
+    /**
      * @brief Méthode qui permet de jouer au quizz
      * 
-     * @details Méthode permettant d'afficher les questions et réponses du associés au quizz
+     * @details Méthode permettant d'afficher les questions et réponses associés au quizz
      *
      * @return void
      */
@@ -125,14 +141,22 @@ class ControllerQuizz extends Controller
             $utilisateur = unserialize($_SESSION['utilisateur']);
             $idUtilisateur = $utilisateur->getId();
 
+            //Récupération du quizz par son ID
             $managerQuizz = new QuizzDAO($this->getPdo());
             $idQuizz = $_GET['idQuizz'];
             $quizz = $managerQuizz->find($idQuizz);
 
+            //Récupération des questions
             $managerQuestion = new QuestionDAO($this->getPdo());
             $questions = $managerQuestion->findByQuizzId($idQuizz);
 
-            $reponses = $this->reponsesDuneQuestion($questions);
+            //Tableau des réponses de quizz
+            $reponses = [];
+
+            foreach ($questions as $question){
+                $idQuestion = $question->getIdQuestion();
+                $reponses[$idQuestion] = $this->recupererReponses($idQuestion);
+            }
 
             echo $this->getTwig()->render('participerQuizz.html.twig', [
                 'idUtilisateur' => $idUtilisateur,
@@ -140,6 +164,7 @@ class ControllerQuizz extends Controller
                 'questions' => $questions,
                 'reponses' => $reponses
             ]);
+            exit();
         }
         else{
             //Récupération des quizz
@@ -152,24 +177,6 @@ class ControllerQuizz extends Controller
                 'messagederreur' => "Vous devez être connecté pour pouvoir jouer à un quizz."
             ]); 
         }  
-    }
-
-    /**
-     * @brief Méthode qui retourne toutes les réponses de chaque question
-     * 
-     * @details Méthode permettant de retourner toutes les réponses d'une question sous forme de tableau
-     *
-     * @return array
-     */
-    public function reponsesDuneQuestion(array $questions) : array
-    {
-        $tabReponses = [];
-        foreach ($questions as $question){
-            $managerReponse = new ReponseDAO($this->getPdo());
-            $tabReponses[] = $managerReponse->findByQuestionId($question.getIdQuestion());
-        };
-
-        return $tabReponses;
     }
 
     public function afficherPageCreerQuizz() : void
@@ -323,7 +330,7 @@ class ControllerQuizz extends Controller
     /**
      * @brief Méthode permettant d'afficher la page des questions après avoir créé le quizz
      * 
-     * @details Méthode qui redirige l'utilisateur vers la page des questions pour créer ou modifier sa question
+     * @details Méthode qui redirige l'utilisateur vers la page des questions pour créer sa question
      *
      * @return void
      */

@@ -65,10 +65,11 @@ class ReponseDAO{
     //Methodes hydrate
     public function hydrate($tableauAssoc): ?Reponse
     {
-        $reponse = new Reponse($tableauAssoc['id'], 
-                                   $tableauAssoc['valeur'], 
-                                   $tableauAssoc['rang'], 
-                                   $tableauAssoc['estVraie']);
+        $reponse = new Reponse($tableauAssoc['idReponse'], 
+                                $tableauAssoc['valeur'], 
+                                $tableauAssoc['rang'], 
+                                $tableauAssoc['estVraie'],
+                                $tableauAssoc['idQuestion']);
 
         return $reponse;
     }
@@ -85,12 +86,13 @@ class ReponseDAO{
     }
     //But : Créer les reponses avec les valeurs assignées aux attributs correspondants
 
-    public function findByQuestionId($idQuestion): ?array
+    public function findByQuestionId(int $idQuestion): ?array
     {
         $sql="SELECT * FROM ".DB_PREFIX. "reponse WHERE idQuestion = :idQuestion";
         $stmt = $this->pdo->prepare($sql);
-        $pdoStatement->execute(array("idQuestion"=>$idQuestion));
         $stmt->bindValue(':idQuestion', $idQuestion, PDO::PARAM_INT);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $stmt->execute();
 
         return $this->hydrateAll($stmt->fetchAll());
     }
