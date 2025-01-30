@@ -143,9 +143,6 @@ class QuizzDAO{
      * @return Quizz
      */
     function find(int $idQuizz): ?Quizz{
-        if ($this->pdo === null) {
-            $this->getPdo();
-        }
         $sql = "SELECT Q.*, U.pseudo
                 FROM " .DB_PREFIX. "quizz Q
                 JOIN " .DB_PREFIX. "utilisateur U ON Q.idUtilisateur = U.idUtilisateur
@@ -186,6 +183,7 @@ class QuizzDAO{
         $stmt->bindValue(":idUtilisateur", $idUtilisateur);
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $stmt->execute();
+
         return $this->hydrateAll($stmt->fetchAll());
     }
 
