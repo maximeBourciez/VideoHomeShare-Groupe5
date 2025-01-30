@@ -84,7 +84,7 @@ class WatchlistDAO
     public function getWatchlistContent(int $watchlistId): array
     {
         // 1. Récupérer les IDs de contenus liés à la watchlist
-        $sql = "SELECT idContenuTmdb FROM " . DB_PREFIX . "contenirContenu WHERE idWatchlist = :watchlistId";
+        $sql = "SELECT idContenuTmdb FROM " . DB_PREFIX . "contenirContenu WHERE idWatchlist = :watchlistId ORDER BY rang";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':watchlistId' => $watchlistId]);
         $contentIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
@@ -118,13 +118,14 @@ class WatchlistDAO
         $sql = "SELECT MAX(rang) FROM " . DB_PREFIX . "contenirContenu WHERE idWatchlist = (:watchlistId)";
         $stmt = $this->pdo->prepare($sql);
         $max = $stmt->execute([':watchlistId' => $watchlistId]);
+        $rang = ($max == null ? 1 : $max + 1);
 
-        $sql = "INSERT INTO " . DB_PREFIX . "contenirContenu (idWatchlist, idContenuTmdb, rang) VALUES (:watchlistId, :contenuId, :max + 1)";
+        $sql = "INSERT INTO " . DB_PREFIX . "contenirContenu (idWatchlist, idContenuTmdb, rang) VALUES (:watchlistId, :contenuId, :rang)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             ':watchlistId' => $watchlistId,
             ':contenuId' => $contenuId,
-            ':max' => $max
+            ':rang' => $rang
         ]);
     }
 
