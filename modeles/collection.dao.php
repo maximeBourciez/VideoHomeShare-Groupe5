@@ -9,16 +9,17 @@
  * @author François Barlic <<francois.barlic57@gmail.com>>
  * @version 1.0
  */
-class CollectionDAO {
+class CollectionDAO
+{
     /** @var PDO|null Instance de connexion à la base de données */
     private ?PDO $pdo;
-    
+
     /** @var string Clé d'API pour l'accès à TMDB */
     private string $apiKey;
-    
+
     /** @var string URL de base de l'API TMDB */
     private string $baseUrl;
-    
+
     /** @var string URL de base pour les images TMDB */
     private string $imageBaseUrl;
 
@@ -28,7 +29,8 @@ class CollectionDAO {
      * @param PDO|null $pdo Instance de connexion à la base de données
      * @param string $apiKey Clé API TMDB
      */
-    public function __construct(?PDO $pdo = null, string $apiKey = TMDB_API_KEY) {
+    public function __construct(?PDO $pdo = null, string $apiKey = TMDB_API_KEY)
+    {
         $this->pdo = $pdo;
         $this->apiKey = $apiKey;
         $this->baseUrl = TMDB_BASE_URL;
@@ -41,7 +43,8 @@ class CollectionDAO {
      * @param int $tmdbId Identifiant TMDB de la collection
      * @return Collection|null La collection trouvée ou null si non trouvée
      */
-    public function getCollectionFromTMDB(int $tmdbId): ?Collection {
+    public function getCollectionFromTMDB(int $tmdbId): ?Collection
+    {
         $url = "{$this->baseUrl}/collection/{$tmdbId}?api_key={$this->apiKey}&language=fr-FR&append_to_response=keywords,credits,reviews";
         $response = file_get_contents($url);
 
@@ -50,11 +53,11 @@ class CollectionDAO {
         }
 
         $collectionData = json_decode($response, true);
-        
+
         if ($collectionData && !($collectionData['adult'] ?? false)) {
             return $this->convertToCollection($collectionData);
         }
-        
+
         return null;
     }
 
@@ -64,9 +67,10 @@ class CollectionDAO {
      * @param int|Collection $collection ID ou objet Collection
      * @return array Liste des personnalités
      */
-    public function getPersonnalitesCollection($collection): array {
+    public function getPersonnalitesCollection($collection): array
+    {
         $collectionId = is_object($collection) ? $collection->getId() : $collection;
-        
+
         if (!is_int($collectionId)) {
             return [];
         }
@@ -74,12 +78,12 @@ class CollectionDAO {
         $url = "{$this->baseUrl}/collection/{$collectionId}?api_key={$this->apiKey}&language=fr-FR&append_to_response=credits";
         $collectionData = $this->makeRequest($url);
         $personnalites = [];
-        
+
         if (isset($collectionData['parts'])) {
             foreach ($collectionData['parts'] as $movie) {
                 $movieUrl = "{$this->baseUrl}/movie/{$movie['id']}?api_key={$this->apiKey}&language=fr-FR&append_to_response=credits";
                 $movieData = $this->makeRequest($movieUrl);
-                
+
                 if ($movieData) {
                     // Ajouter réalisateurs
                     foreach ($movieData['credits']['crew'] ?? [] as $crew) {
@@ -88,14 +92,14 @@ class CollectionDAO {
                                 null,
                                 $crew['name'],
                                 '',
-                                !empty($crew['profile_path']) 
-                                    ? $this->imageBaseUrl . $crew['profile_path'] 
+                                !empty($crew['profile_path'])
+                                    ? $this->imageBaseUrl . $crew['profile_path']
                                     : null,
                                 'Réalisateur'
                             );
                         }
                     }
-                    
+
                     // Ajouter acteurs principaux
                     $actors = array_slice($movieData['credits']['cast'] ?? [], 0, 5);
                     foreach ($actors as $actor) {
@@ -103,8 +107,8 @@ class CollectionDAO {
                             null,
                             $actor['name'],
                             '',
-                            !empty($actor['profile_path']) 
-                                ? $this->imageBaseUrl . $actor['profile_path'] 
+                            !empty($actor['profile_path'])
+                                ? $this->imageBaseUrl . $actor['profile_path']
                                 : null,
                             'Acteur'
                         );
@@ -112,7 +116,7 @@ class CollectionDAO {
                 }
             }
         }
-        
+
         // Éliminer doublons
         return $this->removeDuplicatePersonnalites($personnalites);
     }
@@ -123,19 +127,20 @@ class CollectionDAO {
      * @param int $collectionId ID de la collection
      * @return array Liste des contenus de la collection
      */
-    public function getMoviesFromCollection(int $collectionId): array {
+    public function getMoviesFromCollection(int $collectionId): array
+    {
         $collection = $this->getCollectionFromTMDB($collectionId);
         if (!$collection) {
             return [];
         }
-        
+
         $movies = [];
         $description = $collection->getDescription();
         preg_match_all('/- (.+) \((\d{4})\) \[(\d+)\]/', $description, $matches);
 
         if (!empty($matches[1])) {
             $contenuDAO = new ContenuDAO($this->pdo, $this->apiKey);
-            
+
             for ($i = 0; $i < count($matches[1]); $i++) {
                 $movieId = $matches[3][$i];
                 $contenu = $contenuDAO->getContentFromTMDB($movieId);
@@ -148,7 +153,7 @@ class CollectionDAO {
         return $movies;
     }
 
-    
+
     /**
      * @brief Récupère une collection par son identifiant
      * 
@@ -158,7 +163,8 @@ class CollectionDAO {
      * @param int $id Identifiant de la collection à rechercher
      * @return Collection|null La collection trouvée ou null si non trouvée
      */
-    public function getCollectionById(int $id): ?Collection {
+    public function getCollectionById(int $id): ?Collection
+    {
         $sql = 'SELECT * FROM collections WHERE id = :id';
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
@@ -168,7 +174,7 @@ class CollectionDAO {
         if ($result) {
             return new Collection(
                 $result['id'],
-                $result['titreCollection'],
+                $result['titre'],
                 new DateTime($result['date']),
                 $result['description'],
                 $result['lienAffiche'],
@@ -182,27 +188,29 @@ class CollectionDAO {
     /**
      * @brief Effectue une requête HTTP vers l'API TMDB
      */
-    private function makeRequest(string $url): ?array {
+    private function makeRequest(string $url): ?array
+    {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        
+
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        
+
         curl_close($ch);
 
         if ($httpCode === 200) {
             return json_decode($response, true);
         }
-        
+
         return null;
     }
 
     /**
      * @brief Convertit les données TMDB en objet Collection
      */
-    private function convertToCollection(array $collectionData): Collection {
+    private function convertToCollection(array $collectionData): Collection
+    {
         $date = new DateTime('now');
         if (!empty($collectionData['release_date'])) {
             try {
@@ -217,7 +225,7 @@ class CollectionDAO {
             $collectionData['name'],
             $date,
             $this->formatDescription($collectionData),
-            !empty($collectionData['poster_path']) 
+            !empty($collectionData['poster_path'])
                 ? 'https://image.tmdb.org/t/p/original' . $collectionData['poster_path']
                 : null,
             count($collectionData['parts'] ?? [])
@@ -227,13 +235,14 @@ class CollectionDAO {
     /**
      * @brief Formate la description d'une collection
      */
-    private function formatDescription(array $collectionData): string {
+    private function formatDescription(array $collectionData): string
+    {
         $description = '';
-        
+
         if (!empty($collectionData['overview'])) {
             $description .= $collectionData['overview'] . "\n\n";
         }
-        
+
         if (!empty($collectionData['parts'])) {
             $description .= "Films de la collection :\n";
             foreach ($collectionData['parts'] as $film) {
@@ -248,30 +257,31 @@ class CollectionDAO {
     /**
      * @brief Élimine les doublons de personnalités
      */
-    private function removeDuplicatePersonnalites(array $personnalites): array {
+    private function removeDuplicatePersonnalites(array $personnalites): array
+    {
         $uniquePersonnalites = [];
         $seenNames = [];
-        
+
         foreach ($personnalites as $personnalite) {
             if (!in_array($personnalite->getNom(), $seenNames)) {
                 $seenNames[] = $personnalite->getNom();
                 $uniquePersonnalites[] = $personnalite;
             }
         }
-        
+
         return $uniquePersonnalites;
     }
 
-
     /**
-     * Methode de recherche d'une collection par son nom
+     * Méthode de recherche d'une collection par son nom, en filtrant les collections contenant des films adultes
      * 
-     * @param string $nom Recherhche de la collection par son nom
+     * @param string $query Recherche de la collection par son nom
      * 
-     * @return array<Collection>|null La collection trouvée ou null si non trouvée
+     * @return array<Collection>|null La liste des collections filtrées ou null si aucune trouvée
      */
-    public function searchByName(?string $query): ?array {
-        $url = "{$this->baseUrl}/search/collection?api_key={$this->apiKey}&query=" . urlencode($query) . "&language=fr-FR";
+    public function searchByName(?string $query): ?array
+    {
+        $url = "{$this->baseUrl}/search/collection?api_key={$this->apiKey}&query=" . urlencode($query) . "&language=fr-FR&include_adult=false";
         $response = file_get_contents($url);
 
         if ($response === false) {
@@ -279,21 +289,61 @@ class CollectionDAO {
         }
 
         $collectionData = json_decode($response, true);
-        
-        if ($collectionData) {
-            $collections = [];
-            foreach ($collectionData['results'] as $result) {
-                $collections[] = new Collection(
-                    $result['id'],
-                    $result['name'], // Correspond au titre de la collection
-                    null, // Date non disponible dans l'API
-                    $result['overview'] ?? null,
-                    $result['poster_path'] ? "https://image.tmdb.org/t/p/w500" . $result['poster_path'] : null,
-                    null // Nombre de films non fourni par l'API
-                );
-            }
-            return $collections;
+
+        if (!$collectionData || empty($collectionData['results'])) {
+            return null;
         }
-        return null;
+
+        $collections = [];
+
+        foreach ($collectionData['results'] as $result) {
+            $collectionId = $result['id'];
+
+            // Vérifier si la collection contient des films adultes
+            if ($this->hasAdultMovies($collectionId)) {
+                continue; // Passer cette collection
+            }
+
+            // Ajouter la collection si elle ne contient pas de films adultes
+            $collections[] = new Collection(
+                $collectionId,
+                $result['name'], // Correspond au titre de la collection
+                null, // Date non disponible dans l'API
+                $result['overview'] ?? null,
+                $result['poster_path'] ? "https://image.tmdb.org/t/p/w500" . $result['poster_path'] : null,
+                null // Nombre de films non fourni par l'API
+            );
+        }
+
+        return !empty($collections) ? $collections : null;
+    }
+
+    /**
+     * Vérifie si une collection contient des films adultes
+     * 
+     * @param int $collectionId ID de la collection à vérifier
+     * 
+     * @return bool True si un des films est adulte, sinon False
+     */
+    private function hasAdultMovies(int $collectionId): bool
+    {
+        $url = "{$this->baseUrl}/collection/{$collectionId}?api_key={$this->apiKey}&language=fr-FR";
+        $response = file_get_contents($url);
+
+        if ($response === false) {
+            return false; // En cas d'erreur, on suppose que la collection est valide
+        }
+
+        $collectionDetails = json_decode($response, true);
+
+        if (isset($collectionDetails['parts'])) {
+            foreach ($collectionDetails['parts'] as $movie) {
+                if (!empty($movie['adult']) && $movie['adult'] === true) {
+                    return true; // La collection contient un film adulte
+                }
+            }
+        }
+
+        return false;
     }
 }

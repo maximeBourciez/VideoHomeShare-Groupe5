@@ -357,7 +357,7 @@ class ContenuDAO
     public function searchMoviesByName(string $query): ?array
     {
         // Construire l'URL pour la recherche par nom
-        $url = "https://api.themoviedb.org/3/search/movie?api_key={$this->apiKey}&language=fr-FR&query=" . urlencode($query);
+        $url = "https://api.themoviedb.org/3/search/movie?api_key={$this->apiKey}&language=fr-FR&query=" . urlencode($query) . "&include_adult=false";
 
         // Récupérer les résultats
         $response = file_get_contents($url);
