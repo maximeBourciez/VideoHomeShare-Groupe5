@@ -117,11 +117,15 @@ class ControllerUtilisateur extends Controller
         // vérification des informations saisies lors de l'inscription
         $verficationTailleMail = Utilitaires::comprisEntre($mail, 320, 6, "le mail doit contenir", $message);
         $verficationTailleId = Utilitaires::comprisEntre($id, 20, 3, "l'identifiant doit contenir", $message);
+       
         $verficationTaillePseudo = Utilitaires::comprisEntre($pseudo, 50, 3, "le pseudo doit contenir", $message);
+        
         $verficationTailleNom = Utilitaires::comprisEntre($nom, 50, 3, "le nom doit contenir", $message);
         $verficationTailleMdp = Utilitaires::comprisEntre($mdp, null, 8, "le mot de passe doit contenir", $message);
         $verficationTailleVmdp = Utilitaires::comprisEntre($vmdp, null, 8, "le mot de passe de confirmation doit contenir", $message);
+        
         $verficationRobuste = Utilitaires::estRobuste($mdp, $message);
+        var_dump($message);
         $verficationAge = Utilitaires::ageCorrect($date, 13, $message);
         $verficationMailExistePas = Utilitaires::mailCorrectExistePas($mail, $message, $managerutilisateur);
         $verficationEgale = Utilitaires::egale($mdp, $vmdp, "Les mots de passe", $message);
@@ -129,8 +133,9 @@ class ControllerUtilisateur extends Controller
         $verficationProfaniteId = !Utilitaires::verificationDeNom($id, "l'Identifiant ", $message);
         $verficationProfanitePseudo = !Utilitaires::verificationDeNom($pseudo, "le pseudo", $message);
         $verficationProfaniteNom = !Utilitaires::verificationDeNom($nom, "le nom", $message);
+        
         $verficationCGURcocher = Utilitaires::verifiecasecocher($CGU, $message, " les conditions générales d'utilisation");
-
+        
         if (
             $verficationTailleMail && $verficationTailleId && $verficationTaillePseudo && $verficationTailleNom && $verficationTailleMdp && $verficationTailleVmdp &&
             $verficationRobuste && $verficationAge && $verficationMailExistePas && $verficationEgale && $verficationIdExistePas && $verficationProfaniteId && $verficationProfanitePseudo
