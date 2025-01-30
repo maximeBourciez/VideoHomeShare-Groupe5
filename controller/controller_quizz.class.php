@@ -349,41 +349,6 @@ class ControllerQuizz extends Controller
         exit();
     }
 
-    /**
-     * @brief Méthode permettant de traiter l'image d'une question
-     * 
-     * @details Méthode qui traiter l'image d'une question grâce au nom temporaire de l'image et son nom actuel. Enregistre l'image
-     * 
-     * @param array $tabInfosImage Tableau contenant les informations de l'image
-     * @param int $idQuizz Identifiant du quizz
-     * @param int $noQuestion Numéro de la question
-     * 
-     * @return string Chemin du fichier
-     */
-    public function traiterImageQuestion(array $tabInfosImage, int $idQuizz, int $noQuestion): string
-    {
-        //Récupération des infos de l'image
-        $nomTmpImage = $tabInfosImage['tmp_name'];
-        $nomImage = $tabInfosImage['name'];
-        if ($tabInfosImage["EXTENSION"] !== "jpg" && $tabInfosImage["EXTENSION"] !== "jpeg" && $tabInfosImage["EXTENSION"] !== "png" && $tabInfosImage["EXTENSION"] !== "gif") {
-            $this->afficherPageQuestions("Le fichier n'est pas une image valide.");
-            exit();
-        } else if ($tabInfosImage["SIZE"] > 1000000) {
-            $this->afficherPageQuestions("Le fichier est trop volumineux.");
-            exit();
-        } else {
-            $nomImage = $idQuizz . '_' . $noQuestion . '_' . $nomImage;  // Nom de l'image
-
-            //Déplacement de l'image
-            $imageDest = 'images/' . $nomImage;
-            move_uploaded_file($nomTmpImage, $imageDest);
-
-            // Retourner l'image
-            return $imageDest;
-        }
-
-
-    }
 
     /**
      * @brief Méthode permettant de créer les questions
@@ -412,42 +377,25 @@ class ControllerQuizz extends Controller
         }
 
         try {
-            // Démarrer une transaction
-            $this->getPdo()->beginTransaction();
 
             // Récupérer les données
             $numQuestion = $_POST['numQuestion'];
             $idQuizz = $_POST['idQuizz'];
             $titre = $_POST['titre_' . $numQuestion];
             $nbQuestions = $_POST['nbQuestions'];
-            $imagePath = 'images/default.jpg'; // Valeur par défaut pour l'image
+            $imageKey = "image_" . $numQuestion;
+            $imagePath = __DIR__ .'/../images/quizz/default.jpg'; // Valeur par défaut
 
             // Vérifier et traiter l'image si elle existe
-            $imageKey = "image_" . $numQuestion;
-            if (isset($_FILES[$imageKey]) && $_FILES[$imageKey]['error'] === UPLOAD_ERR_OK && !empty($_FILES[$imageKey]['name'])) {
+            if (isset($_FILES[$imageKey]) && $_FILES[$imageKey]['error'] === UPLOAD_ERR_OK) {
                 $image = $_FILES[$imageKey];
-
-                // Vérifier le type de fichier
-                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-                if (!in_array($image['type'], $allowedTypes)) {
-                    throw new Exception("Le type de fichier n'est pas autorisé. Utilisez JPG, PNG ou GIF.");
-                }
-
-                // Vérifier la taille (1MB maximum)
-                if ($image['size'] > 1000000) {
-                    throw new Exception("L'image est trop volumineuse. Taille maximum: 1MB");
-                }
-
-                // Générer un nom de fichier unique
-                $extension = pathinfo($image['name'], PATHINFO_EXTENSION);
-                $newFileName = $idQuizz . '_' . $numQuestion . '_' . uniqid() . '.' . $extension;
-                $imagePath = 'images/' . $newFileName;
-
-                // Déplacer le fichier
+                $imagePath = __DIR__ . '/../images/quizz/' . basename($image['name']);
+                
                 if (!move_uploaded_file($image['tmp_name'], $imagePath)) {
-                    throw new Exception("Erreur lors du téléchargement de l'image");
+                    throw new Exception("Erreur lors du téléchargement de l'image.");
                 }
-            }
+            } 
+            // On continue même si pas d'image (utilisation de l'image par défaut)
 
             // Vérifier qu'au moins une réponse est correcte
             $auMoinsUneReponseCorrecte = false;
@@ -488,8 +436,6 @@ class ControllerQuizz extends Controller
                 }
             }
 
-            // Valider la transaction
-            $this->getPdo()->commit();
 
             // Vérifier si on a encore des questions à traiter
             if ($numQuestion < $nbQuestions) {
@@ -506,11 +452,6 @@ class ControllerQuizz extends Controller
             exit();
 
         } catch (Exception $e) {
-            // En cas d'erreur, annuler la transaction
-            if ($this->getPdo()->inTransaction()) {
-                $this->getPdo()->rollBack();
-            }
-
             // Afficher la page avec le message d'erreur
             echo $this->getTwig()->render('creationQuestion.html.twig', [
                 'idQuizz' => $idQuizz,
