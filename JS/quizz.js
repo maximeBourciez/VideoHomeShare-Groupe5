@@ -2,14 +2,14 @@ document.addEventListener('DOMContentLoaded', function() {
     let nbReponses = 0; // Nombre de réponses ajoutées
     const maxResponses = 4; // Limite de réponses
 
-    // Fonction pour ajouter une nouvelle réponse
+    //Fonction pour ajouter une nouvelle réponse
     document.getElementById('addReponseBtn').addEventListener('click', function() {
         if (nbReponses >= maxResponses){
             alert("Vous avez atteint la limite de réponses !");
             return;
         }
 
-        nbReponses++; // Incrémenter le compteur des réponses
+        nbReponses++;
 
         // Créer un nouvel élément pour la réponse
         let zoneReponse = document.createElement('div');
