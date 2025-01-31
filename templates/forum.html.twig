@@ -74,36 +74,52 @@
 					</div>
 					<form action="index.php?controller=fil&methode=creerFil" method="POST" class="modal-body text-white">
 						<div class="row my-4">
-							<div class="col-8">
-								<input type="text" name="titre" class="form-control bg-mylight text-black" placeholder="Titre de votre discussion..." maxlength="50" required>
-							</div>
-							<div class="col-4 position-relative">
-								<div class="custom-select-wrapper">
-									<div class="custom-select bg-mylight text-black" id="themeSelect">
-										<span class="custom-select-placeholder">Choisissez des thèmes</span>
-										<div class="custom-select-dropdown">
-											{% for theme in themes %}
-												<label class="custom-select-option">
-													<input type="checkbox" name="themes[]" value="{{ theme.getId() }}">
-													{{ theme.getNom() }}
-												</label>
-											{% endfor %}
+							<div class="col-12">
+								<label for="titre" class="form-label">Titre du fil de discussion * </label>
+								<div class="d-flex justify-content-between">
+									<div class="me-2">
+										<input type="text" name="titre" class="form-control bg-mylight" placeholder="Titre de votre discussion..." maxlength="50" required>
+									</div>
+									<div class="custom-select-wrapper">
+										<div class="custom-select" id="themeSelect">
+											<span class="custom-select-placeholder text-white ms-3">Choisissez des thèmes <i class="bi bi-chevron-down"></i></span>
+											<div class="custom-select-dropdown">
+												{% for theme in themes %}
+													<label class="custom-select-option text-black">
+														<input type="checkbox" name="themes[]" value="{{ theme.getId() }}" class="text-black">
+														{{ theme.getNom() }}
+													</label>
+												{% endfor %}
+											</div>
 										</div>
 									</div>
 								</div>
 							</div>
+							<span id="errorTitle" class="d-none"></span>
+							<div class="col-4 position-relative mt-2"></div>
+						</div>
+
+						<div class="d-flex flex-row justify-content-between">
+							<label for="descriptionThread" class="form-label">Description du fil de discussion * </label>
+							<span id="countDescriptionThread">0/100</span>
 						</div>
 						<textarea name="description" class="form-control mt-1 bg-mylight text-black p-3 mb-4" rows="4" placeholder="Description du fil de discussion" maxlength="100" id="descriptionThread" required></textarea>
-						<span id="countDescriptionThread">0/100</span>
-						<textarea name="premierMessage" class="form-control mt-1 bg-mylight text-black p-3" rows="4" placeholder="Ecrivez le premier message du fil" maxlength="1000" id="premierMessage" required></textarea>
-						<span id="countPremierMsg">0/1000</span>
-						<div class="modal-footer">
+
+						<div class="d-flex flex-row justify-content-between">
+							<label for="premierMessage" class="form-label">Premier message du fil * </label>
+							<span id="countPremierMsg">0/1000</span>
+						</div>
+						<textarea name="premierMessage" class="form-control mt-1 bg-mylight text-black p-3" rows="4" placeholder="Écrivez le premier message du fil" maxlength="1000" id="premierMessage" required></textarea>
+
+						<div class="modal-footer d-flex justify-content-between">
+							<p>* Champs obligatoires</p>
 							<button type="submit" class="btn btn-xs btn-myprimary">
 								<i class="bi bi-send"></i>
-								Envoyer
+								Créer
 							</button>
 						</div>
 					</form>
+
 				</div>
 			</div>
 		</div>

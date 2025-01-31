@@ -59,4 +59,10 @@ document.addEventListener("DOMContentLoaded", function () {
       "Element 'descriptionThread' ou 'countTitreThread' non trouvé !"
     );
   }
+
+
+
+  /**
+   * Prévention des erreurs via les messages d'erreur
+   */
 });
