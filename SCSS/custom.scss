@@ -700,7 +700,7 @@ $bp-xl: 1200px;
   width: 125px;
   height: 38px;
   padding: 8px 0 !important;
-  gap: 10px;
+  gap: 4px !important;
 
   @include media-breakpoint-down(md) {
     width: 75px;

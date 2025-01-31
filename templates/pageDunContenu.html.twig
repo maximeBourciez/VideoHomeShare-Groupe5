@@ -316,7 +316,7 @@ sliderValue.textContent = slider.value;
 						{% if watchlists is not empty %}
 							{% for watchlist in watchlists %}
 								<div class="form-check">
-									<input class="form-check-input" type="checkbox" name="watchlists[]" value="{{ watchlist.id }}" id="watchlist{{ watchlist.id }}">
+									<input class="form-check-input" {% if watchlists|length == 1 %} checked="true" {% endif %} type="checkbox" name="watchlists[]" value="{{ watchlist.id }}" id="watchlist{{ watchlist.id }}">
 									<label class="form-check-label" for="watchlist{{ watchlist.id }}">
 										{{ watchlist.nom }}
 									</label>
