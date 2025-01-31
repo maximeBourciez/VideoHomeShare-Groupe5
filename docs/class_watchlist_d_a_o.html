@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
-<meta name="generator" content="Doxygen 1.12.0"/>
+<meta name="generator" content="Doxygen 1.11.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>VideoHomeShare: Référence de la classe WatchlistDAO</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
@@ -35,7 +35,7 @@
 </table>
 </div>
 <!-- end header part -->
-<!-- Généré par Doxygen 1.12.0 -->
+<!-- Généré par Doxygen 1.11.0 -->
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
 var searchBox = new SearchBox("searchBox", "search/",'.html');
@@ -98,34 +98,61 @@ $(function(){initNavTree('class_watchlist_d_a_o.html',''); initResizable(true); 
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Fonctions membres publiques</a> &#124;
+<a href="#pri-methods">Fonctions membres privées</a> &#124;
 <a href="#pri-attribs">Attributs privés</a>  </div>
   <div class="headertitle"><div class="title">Référence de la classe WatchlistDAO</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Classe d'accès aux données pour les watchlists.  
+ <a href="#details">Plus de détails...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Fonctions membres publiques</h2></td></tr>
 <tr class="memitem:a547eaaa1e35bdd4cab1800ac47b3a3b0" id="r_a547eaaa1e35bdd4cab1800ac47b3a3b0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a547eaaa1e35bdd4cab1800ac47b3a3b0">__construct</a> (?PDO $pdo=null)</td></tr>
 <tr class="separator:a547eaaa1e35bdd4cab1800ac47b3a3b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a10d4e1dd3a73cf1fe42148163199416a" id="r_a10d4e1dd3a73cf1fe42148163199416a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a10d4e1dd3a73cf1fe42148163199416a">createWatchlist</a> (<a class="el" href="class_watchlist.html">Watchlist</a> $watchlist)</td></tr>
-<tr class="separator:a10d4e1dd3a73cf1fe42148163199416a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa662ed89eac3b22189acabd5e6a77762" id="r_aa662ed89eac3b22189acabd5e6a77762"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa662ed89eac3b22189acabd5e6a77762">create</a> (string $nom, string $description, bool $estPublique, string $idUtilisateur)</td></tr>
+<tr class="memdesc:aa662ed89eac3b22189acabd5e6a77762"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode pour créer une nouvelle watchlist.  <br /></td></tr>
+<tr class="separator:aa662ed89eac3b22189acabd5e6a77762"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2577242a8d68e3507824ab4694629db5" id="r_a2577242a8d68e3507824ab4694629db5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2577242a8d68e3507824ab4694629db5">update</a> (int $idWatchlist, string $nom, string $description, bool $estPublique)</td></tr>
+<tr class="memdesc:a2577242a8d68e3507824ab4694629db5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode pour modifier une watchlist.  <br /></td></tr>
+<tr class="separator:a2577242a8d68e3507824ab4694629db5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6787f3d15a1ad4117b8096f87191800c" id="r_a6787f3d15a1ad4117b8096f87191800c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6787f3d15a1ad4117b8096f87191800c">findByUser</a> (string $userId)</td></tr>
+<tr class="memdesc:a6787f3d15a1ad4117b8096f87191800c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode pour récupérer les watchlists d'un utilisateur par son ID.  <br /></td></tr>
 <tr class="separator:a6787f3d15a1ad4117b8096f87191800c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0050f13c08e237683c6e77e01fba7c73" id="r_a0050f13c08e237683c6e77e01fba7c73"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0050f13c08e237683c6e77e01fba7c73">getWatchlistContent</a> (int $watchlistId)</td></tr>
+<tr class="memdesc:a0050f13c08e237683c6e77e01fba7c73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode pour récupérer les contenus d'une watchlist.  <br /></td></tr>
 <tr class="separator:a0050f13c08e237683c6e77e01fba7c73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af8bdfe675e14ad2c85de80f0a756b093" id="r_af8bdfe675e14ad2c85de80f0a756b093"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af8bdfe675e14ad2c85de80f0a756b093">addContenuToWatchlist</a> (int $watchlistId, int $contenuId)</td></tr>
+<tr class="memdesc:af8bdfe675e14ad2c85de80f0a756b093"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode pour ajouter un contenu à une watchlist.  <br /></td></tr>
 <tr class="separator:af8bdfe675e14ad2c85de80f0a756b093"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adbb4c269d1cc079b4bbc725075a46cf6" id="r_adbb4c269d1cc079b4bbc725075a46cf6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adbb4c269d1cc079b4bbc725075a46cf6">removeContenuFromWatchlist</a> (int $watchlistId, int $contenuId)</td></tr>
+<tr class="memdesc:adbb4c269d1cc079b4bbc725075a46cf6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode pour supprimer un contenu d'une watchlist.  <br /></td></tr>
 <tr class="separator:adbb4c269d1cc079b4bbc725075a46cf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aecbbe8912ec11da2fb6023e5d27e0b73" id="r_aecbbe8912ec11da2fb6023e5d27e0b73"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aecbbe8912ec11da2fb6023e5d27e0b73">getPublicWatchlists</a> ()</td></tr>
+<tr class="memdesc:aecbbe8912ec11da2fb6023e5d27e0b73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode pour récupérer les watchlists publiques.  <br /></td></tr>
 <tr class="separator:aecbbe8912ec11da2fb6023e5d27e0b73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40ab18fa014b0353ca789ad0751c386f" id="r_a40ab18fa014b0353ca789ad0751c386f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a40ab18fa014b0353ca789ad0751c386f">delete</a> (int $idWatchlist)</td></tr>
+<tr class="memdesc:a40ab18fa014b0353ca789ad0751c386f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode pour supprimer une watchlist.  <br /></td></tr>
+<tr class="separator:a40ab18fa014b0353ca789ad0751c386f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff5345901332681ac0f68dca41986092" id="r_aff5345901332681ac0f68dca41986092"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aff5345901332681ac0f68dca41986092">hydrateAll</a> (array $dataArray)</td></tr>
+<tr class="memdesc:aff5345901332681ac0f68dca41986092"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode pour hydrater un tableau de données en objets <a class="el" href="class_watchlist.html" title="Classe représentant une watchlist.">Watchlist</a>.  <br /></td></tr>
+<tr class="separator:aff5345901332681ac0f68dca41986092"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
+Fonctions membres privées</h2></td></tr>
+<tr class="memitem:a4ffd29b37acdf3a126f9d79d63f1e04e" id="r_a4ffd29b37acdf3a126f9d79d63f1e04e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4ffd29b37acdf3a126f9d79d63f1e04e">hydrate</a> (array $data)</td></tr>
+<tr class="memdesc:a4ffd29b37acdf3a126f9d79d63f1e04e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode pour hydrater un tableau de données en objet <a class="el" href="class_watchlist.html" title="Classe représentant une watchlist.">Watchlist</a>.  <br /></td></tr>
+<tr class="separator:a4ffd29b37acdf3a126f9d79d63f1e04e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Attributs privés</h2></td></tr>
 <tr class="memitem:a9db61e1721b616500bce6ed60491752a" id="r_a9db61e1721b616500bce6ed60491752a"><td class="memItemLeft" align="right" valign="top">PDO&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9db61e1721b616500bce6ed60491752a">$pdo</a></td></tr>
 <tr class="separator:a9db61e1721b616500bce6ed60491752a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Documentation des constructeurs et destructeur</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Description détaillée</h2>
+<div class="textblock"><p>Classe d'accès aux données pour les watchlists. </p>
+</div><h2 class="groupheader">Documentation des constructeurs et destructeur</h2>
 <a id="a547eaaa1e35bdd4cab1800ac47b3a3b0" name="a547eaaa1e35bdd4cab1800ac47b3a3b0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a547eaaa1e35bdd4cab1800ac47b3a3b0">&#9670;&#160;</a></span>__construct()</h2>
 
@@ -163,22 +190,83 @@ Attributs privés</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Méthode pour ajouter un contenu à une watchlist. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$watchlistId</td><td>Identifiant de la watchlist </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$contenuId</td><td>Identifiant du contenu</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>bool Vrai si l'opération a réussi, faux sinon </dd></dl>
+
 </div>
 </div>
-<a id="a10d4e1dd3a73cf1fe42148163199416a" name="a10d4e1dd3a73cf1fe42148163199416a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a10d4e1dd3a73cf1fe42148163199416a">&#9670;&#160;</a></span>createWatchlist()</h2>
+<a id="aa662ed89eac3b22189acabd5e6a77762" name="aa662ed89eac3b22189acabd5e6a77762"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa662ed89eac3b22189acabd5e6a77762">&#9670;&#160;</a></span>create()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">createWatchlist </td>
+          <td class="memname">create </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_watchlist.html">Watchlist</a></td>          <td class="paramname"><span class="paramname"><em>$watchlist</em></span></td><td>)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$nom</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$description</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>$estPublique</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$idUtilisateur</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Méthode pour créer une nouvelle watchlist. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$nom</td><td>Nom de la watchlist </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$description</td><td>Description de la watchlist </td></tr>
+    <tr><td class="paramtype">bool</td><td class="paramname">$estPublique</td><td>Statut public/privé de la watchlist </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$idUtilisateur</td><td>Identifiant de l'utilisateur créateur </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a40ab18fa014b0353ca789ad0751c386f" name="a40ab18fa014b0353ca789ad0751c386f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40ab18fa014b0353ca789ad0751c386f">&#9670;&#160;</a></span>delete()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">delete </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$idWatchlist</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Méthode pour supprimer une watchlist. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$idWatchlist</td><td>Identifiant de la watchlist à supprimer </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>bool Vrai si l'opération a réussi, faux sinon </dd></dl>
 
 </div>
 </div>
@@ -197,6 +285,15 @@ Attributs privés</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Méthode pour récupérer les watchlists d'un utilisateur par son ID. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$id</td><td>Identifiant de l'utilisateur </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>array Tableau d'objets <a class="el" href="class_watchlist.html" title="Classe représentant une watchlist.">Watchlist</a> </dd></dl>
+
 </div>
 </div>
 <a id="aecbbe8912ec11da2fb6023e5d27e0b73" name="aecbbe8912ec11da2fb6023e5d27e0b73"></a>
@@ -214,6 +311,9 @@ Attributs privés</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Méthode pour récupérer les watchlists publiques. </p>
+<dl class="section return"><dt>Renvoie</dt><dd>array Tableau d'objets <a class="el" href="class_watchlist.html" title="Classe représentant une watchlist.">Watchlist</a> </dd></dl>
+
 </div>
 </div>
 <a id="a0050f13c08e237683c6e77e01fba7c73" name="a0050f13c08e237683c6e77e01fba7c73"></a>
@@ -230,6 +330,75 @@ Attributs privés</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Méthode pour récupérer les contenus d'une watchlist. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$watchlistId</td><td>Identifiant de la watchlist </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>array Tableau d'objets <a class="el" href="class_contenu.html" title="Classe représentant un contenu multimédia.">Contenu</a> </dd></dl>
+
+</div>
+</div>
+<a id="a4ffd29b37acdf3a126f9d79d63f1e04e" name="a4ffd29b37acdf3a126f9d79d63f1e04e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ffd29b37acdf3a126f9d79d63f1e04e">&#9670;&#160;</a></span>hydrate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">hydrate </td>
+          <td>(</td>
+          <td class="paramtype">array</td>          <td class="paramname"><span class="paramname"><em>$data</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Méthode pour hydrater un tableau de données en objet <a class="el" href="class_watchlist.html" title="Classe représentant une watchlist.">Watchlist</a>. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">array</td><td class="paramname">$data</td><td>Tableau de données </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>Watchlist|null Objet <a class="el" href="class_watchlist.html" title="Classe représentant une watchlist.">Watchlist</a> ou null si non trouvé </dd></dl>
+
+</div>
+</div>
+<a id="aff5345901332681ac0f68dca41986092" name="aff5345901332681ac0f68dca41986092"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff5345901332681ac0f68dca41986092">&#9670;&#160;</a></span>hydrateAll()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">hydrateAll </td>
+          <td>(</td>
+          <td class="paramtype">array</td>          <td class="paramname"><span class="paramname"><em>$dataArray</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Méthode pour hydrater un tableau de données en objets <a class="el" href="class_watchlist.html" title="Classe représentant une watchlist.">Watchlist</a>. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">array</td><td class="paramname">$dataArray</td><td>Tableau de données </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>array Tableau d'objets <a class="el" href="class_watchlist.html" title="Classe représentant une watchlist.">Watchlist</a> </dd></dl>
 
 </div>
 </div>
@@ -251,6 +420,58 @@ Attributs privés</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Méthode pour supprimer un contenu d'une watchlist. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$watchlistId</td><td>Identifiant de la watchlist </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$contenuId</td><td>Identifiant du contenu</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>bool Vrai si l'opération a réussi, faux sinon </dd></dl>
+
+</div>
+</div>
+<a id="a2577242a8d68e3507824ab4694629db5" name="a2577242a8d68e3507824ab4694629db5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2577242a8d68e3507824ab4694629db5">&#9670;&#160;</a></span>update()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">update </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$idWatchlist</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$nom</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$description</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>$estPublique</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Méthode pour modifier une watchlist. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$nom</td><td>Nom de la watchlist </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$description</td><td>Description de la watchlist </td></tr>
+    <tr><td class="paramtype">bool</td><td class="paramname">$estPublique</td><td>Statut public/privé de la watchlist </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$idUtilisateur</td><td>Identifiant de l'utilisateur créateur </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -286,7 +507,7 @@ Attributs privés</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_watchlist_d_a_o.html">WatchlistDAO</a></li>
-    <li class="footer">Généré par <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0 </li>
+    <li class="footer">Généré par <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.11.0 </li>
   </ul>
 </div>
 </body>

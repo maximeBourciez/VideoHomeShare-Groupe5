@@ -12302,4 +12302,124 @@ body {
   }
 }
 
+.btn-delete-watchlist {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  background-color: #de0918 !important;
+  color: white !important;
+  border-color: #de0918 !important;
+  width: 75px;
+  height: 38px;
+  padding: 8px 0;
+  gap: 10px;
+}
+.btn-delete-watchlist:hover {
+  transform: scale(1.05);
+}
+@media (max-width: 767.98px) {
+  .btn-delete-watchlist {
+    width: 75px;
+    padding: 8px 0;
+    font-size: 0.6rem;
+  }
+}
+.btn-delete-watchlist i {
+  font-size: 1.2rem;
+}
+.btn-delete-watchlist:hover {
+  background-color: rgb(172.987012987, 7.012987013, 18.7012987013) !important;
+  border-color: rgb(172.987012987, 7.012987013, 18.7012987013) !important;
+}
+
+.btn-delete-watchlist2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  background-color: #de0918 !important;
+  color: white !important;
+  border-color: #de0918 !important;
+  width: 125px;
+  height: 38px;
+  padding: 8px 0;
+  gap: 10px;
+}
+.btn-delete-watchlist2:hover {
+  transform: scale(1.05);
+}
+@media (max-width: 767.98px) {
+  .btn-delete-watchlist2 {
+    width: 75px;
+    padding: 8px 0;
+    font-size: 0.6rem;
+  }
+}
+.btn-delete-watchlist2 i {
+  font-size: 1.2rem;
+}
+.btn-delete-watchlist2:hover {
+  background-color: rgb(172.987012987, 7.012987013, 18.7012987013) !important;
+  border-color: rgb(172.987012987, 7.012987013, 18.7012987013) !important;
+}
+
+.btn-creer-watchlist {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  background-color: #f2ac0f !important;
+  color: black !important;
+  border-color: #f2ac0f !important;
+  width: 125px;
+  height: 38px;
+  padding: 24px 0 !important;
+  gap: 10px;
+}
+.btn-creer-watchlist:hover {
+  transform: scale(1.05);
+}
+@media (max-width: 767.98px) {
+  .btn-creer-watchlist {
+    width: 75px;
+    padding: 8px 0;
+    font-size: 0.6rem;
+  }
+}
+.btn-creer-watchlist i {
+  font-size: 1.2rem;
+}
+
+.btn-plus-infos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  background-color: #f2ac0f !important;
+  color: black !important;
+  border-color: #f2ac0f !important;
+  width: 125px;
+  height: 38px;
+  padding: 8px 0 !important;
+  gap: 10px;
+}
+.btn-plus-infos:hover {
+  transform: scale(1.05);
+}
+@media (max-width: 767.98px) {
+  .btn-plus-infos {
+    width: 75px;
+    padding: 8px 0;
+    font-size: 0.6rem;
+  }
+}
+.btn-plus-infos i {
+  font-size: 1.2rem;
+}
+
 /*# sourceMappingURL=style.css.map */

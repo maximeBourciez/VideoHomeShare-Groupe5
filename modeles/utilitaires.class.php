@@ -25,7 +25,7 @@ class Utilitaires
      * @return bool true si la valeur est compris entre les deux valeurs false sinon
      * 
      */
-    public static function comprisEntre(string $val, ?string $valmax, string $valmin, string $contenu , string & $messageErreur): bool
+    public static function comprisEntre(string $val, ?int $valmax, int $valmin, string $contenu , string & $messageErreur): bool
     {
         $valretour = true;
         // si la valeur est plus petite que la valeur minimal
@@ -36,11 +36,12 @@ class Utilitaires
             $valretour = false;
         }
         // si la valeur est plus grande que la valeur maximal
-        if (strlen($val) > $valmax and $valmax != null) {
+        if (strlen($val) > $valmax && $valmax != null ) {
 
             
             $messageErreur = $contenu . " au maximum " . $valmax . " caractères";
             $valretour = false;
+            var_dump($messageErreur);
         }
         
         return $valretour;
@@ -215,7 +216,7 @@ class Utilitaires
      * @param string $messageErreur le message d'erreur que l'on veut renvoyer
      * @return bool 
      */
-    public static function estRobuste(string $mdp, string &$messageErreur): bool
+    public static function estRobuste(string $mdp, string &$messageErreurRandu): bool
     {
         $valretour = true;
         $messageErreur = "Le mot de passe doit contenir";
@@ -243,9 +244,9 @@ class Utilitaires
 
             $messageErreur = ($messageErreur == "Le mot de passe doit contenir") ? $messageErreur . " au moins un caractère spécial" : $messageErreur . " et au moins un caractère spécial";
         }
-        if ($valretour == true) {
+        if ($valretour == false) {
             
-            $messageErreur= "";
+            $messageErreurRandu= $messageErreur;
         }
         return $valretour;
     }

@@ -14,8 +14,10 @@ var searchData=
   ['controllerfil_11',['ControllerFil',['../class_controller_fil.html',1,'']]],
   ['controllerindex_12',['ControllerIndex',['../class_controller_index.html',1,'']]],
   ['controllernotification_13',['ControllerNotification',['../class_controller_notification.html',1,'']]],
-  ['controllersignalement_14',['ControllerSignalement',['../class_controller_signalement.html',1,'']]],
-  ['controllerutilisateur_15',['ControllerUtilisateur',['../class_controller_utilisateur.html',1,'']]],
-  ['controllerwatch2gether_16',['ControllerWatch2Gether',['../class_controller_watch2_gether.html',1,'']]],
-  ['controllerwatchlist_17',['ControllerWatchlist',['../class_controller_watchlist.html',1,'']]]
+  ['controllerquizz_14',['ControllerQuizz',['../class_controller_quizz.html',1,'']]],
+  ['controllerserie_15',['ControllerSerie',['../class_controller_serie.html',1,'']]],
+  ['controllersignalement_16',['ControllerSignalement',['../class_controller_signalement.html',1,'']]],
+  ['controllerutilisateur_17',['ControllerUtilisateur',['../class_controller_utilisateur.html',1,'']]],
+  ['controllerwatch2gether_18',['ControllerWatch2Gether',['../class_controller_watch2_gether.html',1,'']]],
+  ['controllerwatchlist_19',['ControllerWatchlist',['../class_controller_watchlist.html',1,'']]]
 ];

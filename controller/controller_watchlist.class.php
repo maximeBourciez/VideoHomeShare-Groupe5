@@ -38,7 +38,7 @@ class ControllerWatchlist extends Controller {
     }
 
     /**
-     * @brief Ajoute un contenu à une ou plusieurs watchlists
+     * @brief Affiche les détails d'une watchlist
      */
     public function ajouterAWatchlist(): void {
         if (!isset($_SESSION['utilisateur']) || !isset($_POST['watchlists']) || !isset($_POST['idContenu'])) {
@@ -48,15 +48,16 @@ class ControllerWatchlist extends Controller {
         }
     
         $watchlistDAO = new WatchlistDAO($this->getPdo());
+    
         $contenuId = filter_var($_POST['idContenu'], FILTER_VALIDATE_INT);
         if ($contenuId === false) {
             throw new Exception("ID de contenu invalide");
         }
-        
-        $watchlists = array_map('intval', (array)$_POST['watchlists']); // Cast en array et conversion en integers
+    
+        $watchlists = array_map('intval', (array)$_POST['watchlists']); // Convertit les valeurs en entiers dans un tableau
     
         foreach ($watchlists as $watchlistId) {
-            if ($watchlistId > 0) { // Validation basique de l'ID
+            if (!$watchlistDAO->isContenuInWatchlist($watchlistId, $contenuId)) { // Vérifie pour chaque watchlist individuellement
                 $watchlistDAO->addContenuToWatchlist($watchlistId, $contenuId);
             }
         }
@@ -144,44 +145,88 @@ class ControllerWatchlist extends Controller {
     }
 
     /**
- * @brief Supprime une watchlist existante
- */
-public function supprimerWatchlist(): void {
-    if (!isset($_SESSION['utilisateur']) || !isset($_POST['id'])) {
-        $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
-        $managerUtilisateur->connexion();
-        return;
-    }
-
-    $idUtilisateur = htmlspecialchars(unserialize($_SESSION['utilisateur'])->getId());
-    $idWatchlist = filter_var($_POST['id'], FILTER_VALIDATE_INT);
-    if ($idWatchlist === false) {
-        throw new Exception("ID de watchlist invalide");
-    }
-
-    $watchlistDAO = new WatchlistDAO($this->getPdo());
-    
-    // Vérification des droits d'accès
-    $watchlists = $watchlistDAO->findByUser($idUtilisateur);
-    $watchlistAppartientUtilisateur = false;
-    
-    foreach ($watchlists as $watchlist) {
-        if ($watchlist->getId() === $idWatchlist) {
-            $watchlistAppartientUtilisateur = true;
-            break;
+     * @brief Supprime une watchlist existante
+     */
+    public function supprimerWatchlist(): void {
+        if (!isset($_SESSION['utilisateur']) || !isset($_POST['id'])) {
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
+            return;
         }
+
+        $idUtilisateur = htmlspecialchars(unserialize($_SESSION['utilisateur'])->getId());
+        $idWatchlist = filter_var($_POST['id'], FILTER_VALIDATE_INT);
+        if ($idWatchlist === false) {
+            throw new Exception("ID de watchlist invalide");
+        }
+
+        $watchlistDAO = new WatchlistDAO($this->getPdo());
+        
+        // Vérification des droits d'accès
+        $watchlists = $watchlistDAO->findByUser($idUtilisateur);
+        $watchlistAppartientUtilisateur = false;
+        
+        foreach ($watchlists as $watchlist) {
+            if ($watchlist->getId() === $idWatchlist) {
+                $watchlistAppartientUtilisateur = true;
+                break;
+            }
+        }
+
+        if (!$watchlistAppartientUtilisateur) {
+            throw new Exception("Vous n'avez pas les droits pour supprimer cette watchlist");
+        }
+
+        $success = $watchlistDAO->delete($idWatchlist);
+        
+        if (!$success) {
+            throw new Exception("Erreur lors de la suppression de la watchlist");
+        }
+
+        $this->afficherWatchlists();
     }
 
-    if (!$watchlistAppartientUtilisateur) {
-        throw new Exception("Vous n'avez pas les droits pour supprimer cette watchlist");
-    }
+    /**
+     * @brief Supprime un contenu d'une watchlist
+     */
+    public function supprimerDeWatchlist(): void {
+        if (!isset($_SESSION['utilisateur']) || !isset($_POST['idWatchlist']) || !isset($_POST['idContenu'])) {
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
+            return;
+        }
 
-    $success = $watchlistDAO->delete($idWatchlist);
-    
-    if (!$success) {
-        throw new Exception("Erreur lors de la suppression de la watchlist");
-    }
+        $idUtilisateur = htmlspecialchars(unserialize($_SESSION['utilisateur'])->getId());
+        $idWatchlist = filter_var($_POST['idWatchlist'], FILTER_VALIDATE_INT);
+        $idContenu = filter_var($_POST['idContenu'], FILTER_VALIDATE_INT);
+        
+        if ($idWatchlist === false || $idContenu === false) {
+            throw new Exception("ID de watchlist ou de contenu invalide");
+        }
 
-    $this->afficherWatchlists();
-}
+        $watchlistDAO = new WatchlistDAO($this->getPdo());
+        
+        // Vérification des droits d'accès
+        $watchlists = $watchlistDAO->findByUser($idUtilisateur);
+        $watchlistAppartientUtilisateur = false;
+        
+        foreach ($watchlists as $watchlist) {
+            if ($watchlist->getId() === $idWatchlist) {
+                $watchlistAppartientUtilisateur = true;
+                break;
+            }
+        }
+
+        if (!$watchlistAppartientUtilisateur) {
+            throw new Exception("Vous n'avez pas les droits pour modifier cette watchlist");
+        }
+
+        $success = $watchlistDAO->removeContenuFromWatchlist($idWatchlist, $idContenu);
+        
+        if (!$success) {
+            throw new Exception("Erreur lors de la suppression du contenu de la watchlist");
+        }
+
+        $this->afficherWatchlists();
+    }
 }

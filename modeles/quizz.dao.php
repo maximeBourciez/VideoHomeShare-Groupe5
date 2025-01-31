@@ -96,7 +96,7 @@ class QuizzDAO{
      * @return bool
      */
     function delete(int $idQuizz): bool{
-        $req = $this->pdo->prepare("DELETE FROM Quizz WHERE idQuizz = :idQuizz");
+        $req = $this->pdo->prepare("DELETE FROM " . DB_PREFIX . "quizz WHERE idQuizz = :idQuizz");
         $req->bindParam(":idQuizz", $idQuizz);
 
         return $req->execute();
@@ -143,11 +143,15 @@ class QuizzDAO{
      * @return Quizz
      */
     function find(int $idQuizz): ?Quizz{
-        $sql = "SELECT Q.*, U.pseudo FROM " .DB_PREFIX. "quizz Q JOIN " .DB_PREFIX. "utilisateur U ON Q.idUtilisateur = U.idUtilisateur WHERE idQuizz = :idQuizz";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':idQuizz', $idQuizz, PDO::PARAM_INT);
-        $stmt->execute();
-        $row = $stmt->fetch();
+        $sql = "SELECT Q.*, U.pseudo
+                FROM " .DB_PREFIX. "quizz Q
+                JOIN " .DB_PREFIX. "utilisateur U ON Q.idUtilisateur = U.idUtilisateur
+                WHERE Q.idQuizz = :idQuizz";
+                
+        $pdo = $this->pdo->prepare($sql);
+        $pdo->bindValue(':idQuizz', $idQuizz, PDO::PARAM_INT);
+        $pdo->execute();
+        $row = $pdo->fetch();
         if ($row == null){
             return null;
         }

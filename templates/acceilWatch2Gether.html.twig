@@ -1,0 +1,116 @@
+{% extends 'base_template.html.twig' %}
+
+
+{% block content %}
+	<main class="container flex-grow-1">
+		<div >
+            <div class="d-flex justify-content-center my-3" >
+			    <img src="{{ constant('WEBSITE_LOGO') }}" height="95" width="155" alt="VHS Logo" >
+            </div>
+			<h1 class="h2 text-center">Watch2Gether</h1>
+            
+		</div>
+		<div class="text-center my-5 ">
+			<a class=" btn btn-primary w-sm-25 w-50" data-bs-toggle="modal" data-bs-target="#rejoindre">
+				Rejoindre une salle
+			</a>
+		</div>
+		{# pop-up pour rejoindre une salle #}
+		<div class="modal fade " id="rejoindre" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog  modal-dialog-centered">
+				<div class="modal-content bg-mydark" style="border: 1px solid #F2AC0F;">
+
+					<div class="modal-header border-bottom-0">
+						<h5 class="modal-title text-white">Entrer le code pour la rejoindre</h5>
+						<button type="button" class="btn-close btn-close-white " data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body pt-0 ">
+						<form class="" action="index.php?controller=salle&methode=rejoindreSallePriver" method="POST">
+							<div class="form-check my-auto p-0">
+								<label class=" text-start form-check-label mb-0 text-white ">code de la salle</label>
+								<input type="number" name="code" class="form-control w-75 "  max="9999" min="1" required >
+							</div>
+
+							<input type="submit" class="btn btn-primary ms-auto  mt-4" value="Rejoindre">
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="text-center my-5">
+			<a class="text-center btn btn-primary w-sm-25 w-50" data-bs-toggle="modal" data-bs-target="#creer">
+				Crée une salle
+			</a>
+		</div>
+		{# pop-up pour créer une salle #}
+		<div class="modal fade " id="creer" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog  modal-dialog-centered">
+				<div class="modal-content bg-mydark" style="border: 1px solid #F2AC0F;">
+
+					<div class="modal-header border-bottom-0">
+						<h5 class="modal-title text-white">Créer une salle</h5>
+						<button type="button" class="btn-close btn-close-white " data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body pt-0">
+						<form class="row text-white"  action="index.php?controller=salle&methode=createSalle" method="POST">
+							<div class="form-group mb-3">
+								<label for="nom" class="d-block text-start mb-0">Nom de la salle
+								</label>
+								<input type="text" name="nom" id="nom" class="form-control" minlength="3" maxlength="50" required>
+							</div>
+							<div class="form-group mb-3">
+								<label for="capacité" class="d-block text-start mb-0">Capacité
+								</label>
+								<input type="number" name="capaciter" id="capaciter" class="form-control" min="1" max="99" required>
+							</div>
+							<div class="form-group mb-3">
+								<label for="themeSelect" class="d-block text-start mb-0">Genre 
+								</label>
+								<input type="text" name="genre" id="genre" class="form-control" minlength="3" maxlength="50" >
+							</div>
+
+							<div class="form-check form-switch mb-4 ms-3">
+								<input type="checkbox" name="Publique" id="Publique" role="switch"class="form-check-input">
+								<label class="d-block text-start form-check-label mb-0" for="Publique">
+									Publique
+								</label>
+							</div>
+
+							<input type="submit" class="btn btn-primary w-25 mx-auto" value="Créer">
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+        <div >
+            <h2 class="h2 mb-5">Salles publiques</h2>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 ">
+                {% for salle in salles %}
+                    <div class="col my-4">
+                        <div class="card h-100">    
+                            <div class="card-body bg-mydark text-white rounded ">    
+                                <h5 class="card-title">{{ salle.getNom() }}</h5>
+								{% if salle.placedisponible == 1 %}
+								<p class="card-text">{{ salle.placedisponible }} place restante</p>
+								{% else %}
+									
+                                <p class="card-text">{{ salle.placedisponible }} places restantes</p>
+								{% endif %}
+								{% if salle.genre != "" or  salle.genre is not null %}
+                                <p class="card-text">genre : {{ salle.genre }}</p>
+								{% endif %}
+                                <a href="index.php?controller=salle&methode=afficherSalle&id={{ salle.idSalle }}" class="btn btn-primary ms-auto">Rejoindre</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+
+	</main>
+
+
+{% endblock %}

@@ -84,7 +84,7 @@ class WatchlistDAO
     public function getWatchlistContent(int $watchlistId): array
     {
         // 1. Récupérer les IDs de contenus liés à la watchlist
-        $sql = "SELECT idContenuTmdb FROM " . DB_PREFIX . "contenirContenu WHERE idWatchlist = :watchlistId";
+        $sql = "SELECT idContenuTmdb FROM " . DB_PREFIX . "contenirContenu WHERE idWatchlist = :watchlistId ORDER BY rang";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':watchlistId' => $watchlistId]);
         $contentIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
@@ -115,11 +115,17 @@ class WatchlistDAO
      * @return bool Vrai si l'opération a réussi, faux sinon
      */
     public function addContenuToWatchlist(int $watchlistId, int $contenuId): bool {
-        $sql = "INSERT INTO " . DB_PREFIX . "contenirContenu (idWatchlist, idContenuTmdb) VALUES (:watchlistId, :contenuId)";
+        $sql = "SELECT MAX(rang) FROM " . DB_PREFIX . "contenirContenu WHERE idWatchlist = (:watchlistId)";
+        $stmt = $this->pdo->prepare($sql);
+        $max = $stmt->execute([':watchlistId' => $watchlistId]);
+        $rang = ($max == null ? 1 : $max + 1);
+
+        $sql = "INSERT INTO " . DB_PREFIX . "contenirContenu (idWatchlist, idContenuTmdb, rang) VALUES (:watchlistId, :contenuId, :rang)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             ':watchlistId' => $watchlistId,
-            ':contenuId' => $contenuId
+            ':contenuId' => $contenuId,
+            ':rang' => $rang
         ]);
     }
 
@@ -221,4 +227,24 @@ class WatchlistDAO
         }
         return $watchlists;
     }
+
+    /**
+     * @brief Méthode pour vérifier si un contenu est dans une watchlist
+     * 
+     * @param int $watchlistId Identifiant de la watchlist
+     * @param int $contenuId Identifiant du contenu
+     * 
+     * @return bool Vrai si le contenu est dans la watchlist, faux sinon
+     */
+    public function isContenuInWatchlist(int $watchlistId, int $contenuId): bool
+    {
+        $sql = "SELECT COUNT(*) FROM " . DB_PREFIX . "contenirContenu WHERE idWatchlist = :watchlistId AND idContenuTmdb = :contenuId";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            ':watchlistId' => $watchlistId,
+            ':contenuId' => $contenuId
+        ]);
+        return intval($stmt->fetchColumn()) > 0;
+    }   
 }
+

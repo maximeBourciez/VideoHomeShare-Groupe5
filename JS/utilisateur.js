@@ -22,13 +22,13 @@ function verifieregau( element1 , element2 ){
 
 }
 
-function cachermessage(){
+function cachermessage(nb){
 
     var compteur =0;
     for (let i = 0; i < document.getElementById("message").children.length; i++) {
         if (document.getElementById("message").children[i].tagName == "A" ){
             compteur ++
-            if (compteur > 6){
+            if (compteur > nb){
                 document.getElementById("message").children[i].style.display = "none"
 
             }
