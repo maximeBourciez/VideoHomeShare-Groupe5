@@ -126,7 +126,7 @@ class Quizz {
      */
     public function setDate(string $dateC): void
     {
-        $this->date = $dateC;
+        $this->dateC = $dateC;
     }
 
     /**

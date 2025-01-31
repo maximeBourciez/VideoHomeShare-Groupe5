@@ -84,28 +84,6 @@ class ControllerQuizz extends Controller
     }
 
     /**
-     * @brief Méthode d'affichage d'un quizz par son identifiant
-     * 
-     * @details Méthode permettant d'afficher un quizz par son identifiant, et ainsi de permettre l'afficahge de la discussion sous-jacente
-     *
-     * @return void
-     */
-    public function afficherQuizzParId()
-    {
-        $idQuizz = $_GET['idQuizz'];
-
-        // Récupérer les infos du quizz
-        $quizzDAO = new QuizzDAO($this->getPdo());
-        $quiz = $quizzDAO->find($idQuizz);
-
-        // Rendre le template avec les infos
-        echo $this->getTwig()->render('listeQuizz.html.twig', [
-            'quiz' => $quiz
-
-        ]);
-    }
-
-    /**
      * @brief Méthode qui affiche les quizz de l'utilisateur connecté
      * 
      * @details Méthode permettant d'afficher les quizz de l'utilisateur connecté avec la possibilité de les supprimer
@@ -159,6 +137,80 @@ class ControllerQuizz extends Controller
         return $reponses;
     }
 
+    public function verifierReponses(int $nbBonnesReponses, array $reponses) : int
+    {
+        foreach ($reponses as $reponse){
+            $rangReponse = $reponse->getRang();
+            if (isset($_POST['reponse_' . $rangReponse]) && $reponse->getVerite()){
+                $nbBonnesReponses++;
+            }
+        }
+
+        return $nbBonnesReponses;
+    }
+
+    /**
+     * @brief Méthode qui permet de vérifier si la bonne réponse a été cochée qui renvoie vers la question suivante
+     * 
+     * @details Méthode qui récupère la question et les réponses, accorde ou non le point puis renvoie vers la page avec la question suivante
+     *
+     * @return void
+     */
+    public function traiterResultatsQuestion() : void
+    {
+        //Récupérer le nombre de bonnes réponses
+        $nbBonnesReponses = $_POST['nbBonnesReponses'];
+
+        //Récupérer le quizz et ses questions
+        $idQuizz = intval($_POST['idQuizz']);
+        $managerQuizz = new QuizzDAO($this->getPdo());
+        $quizz = $managerQuizz->find($idQuizz);
+        $managerQuestion = new QuestionDAO($this->getPdo());
+        $questions = $managerQuestion->findByQuizzId($idQuizz);
+
+        //Récupérer l'identifiant de la question et son rang
+        $idQuestion = intval($_POST['idQuestion']);
+
+        $derniereQuestion = false; //false par défaut
+
+        //Récupérer la question et son rang
+        $question = $managerQuestion->find($idQuestion);
+        $rangQuestion = $question->getRang();
+
+        if ($rangQuestion == sizeof($questions)) {
+            $derniereQuestion = true;
+        }
+
+        //Récupérer l'id utilisateur pour le renvoyer
+        $idUtilisateur = $_POST['idUtilisateur'];
+        
+        //Récupérer les réponses et compter le nombre de bonnes réponses
+        $managerReponse = new ReponseDAO($this->getPdo());
+        $reponses = $managerReponse->findByQuestionId($idQuestion);
+        $nbBonnesReponses = $this->verifierReponses($nbBonnesReponses, $reponses);
+
+        //Afficher les résultats
+        if ($derniereQuestion) {
+            $this->afficherResultats($idUtilisateur, $nbBonnesReponses, $idQuizz);
+            exit();
+        }
+
+        //Incrémenter l'id de la question pour passer à la question suivante
+        $idQuestion++;
+        //Récupérer les réponses de la prochaine question
+        $reponses = $this->recupererReponses($idQuestion);
+
+        echo $this->getTwig()->render('participerQuizz.html.twig', [
+            'idUtilisateur' => $idUtilisateur,
+            'quizz' => $quizz,
+            'question' => $question,
+            'reponses' => $reponses,
+            'derniereQuestion' => $derniereQuestion,
+            'nbBonnesReponses' => $nbBonnesReponses
+        ]);
+        exit();
+    }
+
     /**
      * @brief Méthode qui permet de jouer au quizz
      * 
@@ -174,26 +226,35 @@ class ControllerQuizz extends Controller
 
             //Récupération du quizz par son ID
             $managerQuizz = new QuizzDAO($this->getPdo());
-            $idQuizz = $_GET['idQuizz'];
+            $idQuizz = intval($_POST['idQuizz']);
             $quizz = $managerQuizz->find($idQuizz);
 
-            //Récupération des questions
+            //Variable pour savoir si c'est la dernière question
+            $derniereQuestion = false; //false par défaut
+
+            //Récupération de la 1re question
             $managerQuestion = new QuestionDAO($this->getPdo());
             $questions = $managerQuestion->findByQuizzId($idQuizz);
+            $question = $questions[0];
 
             //Tableau des réponses de quizz
             $reponses = [];
 
-            foreach ($questions as $question) {
-                $idQuestion = $question->getIdQuestion();
-                $reponses[$idQuestion] = $this->recupererReponses($idQuestion);
+            $idQuestion = $question->getIdQuestion();
+            $reponses[$idQuestion] = $this->recupererReponses($idQuestion);
+
+            //Vérifier que la question soit la dernière
+            if ($question->getRang() == sizeof($questions)){
+                $derniereQuestion = true;
             }
 
             echo $this->getTwig()->render('participerQuizz.html.twig', [
                 'idUtilisateur' => $idUtilisateur,
                 'quizz' => $quizz,
-                'questions' => $questions,
-                'reponses' => $reponses
+                'question' => $question,
+                'reponses' => $reponses,
+                'derniereQuestion' => $derniereQuestion,
+                'nbBonnesReponses' => 0
             ]);
             exit();
         } else {
@@ -230,35 +291,6 @@ class ControllerQuizz extends Controller
             ]);
 
         }
-    }
-
-    /**
-     * @brief Méthode permettant de supprimer les questions d'un quizz
-     * 
-     * @details Méthode qui supprime toutes les questions d'un quizz
-     *
-     * @return void
-     */
-    public function supprimerQuestions(int $idQuizz): void
-    {
-        $managerQuestion = new QuestionDAO($this->getPdo());
-        $questions = $managerQuestion->findByQuizzId($idQuizz);
-
-        $managerReponse = new ReponseDAO($this->getPdo());
-
-        //Variables nécessaires
-        $i = 0;
-
-        foreach ($questions as $question) {
-            $idQuestion = $question->getIdQuestion();
-            $reponses = $managerReponse->findByQuestionId($idQuestion);
-            foreach ($reponses as $reponse) {
-                $managerReponse->delete($reponse->getId());
-            }
-            $managerQuestion->delete($idQuestion);
-
-        }
-
     }
 
     /**
@@ -311,7 +343,7 @@ class ControllerQuizz extends Controller
     public function creerQuizz(string $titre, string $description, int $difficulte, string $dateC, string $idUtilisateur): int
     {
         //Création de l'objet Quizz
-        $managerQuizz = new QuizzDAO($this->getPdo());
+        $managerQuizz = new QuizzDAO($this->getPdo($this->getPdo()));
         $idQuizz = $managerQuizz->create($titre, $description, $difficulte, $dateC, $idUtilisateur);
 
         return $idQuizz;
@@ -436,7 +468,6 @@ class ControllerQuizz extends Controller
                 }
             }
 
-
             // Vérifier si on a encore des questions à traiter
             if ($numQuestion < $nbQuestions) {
                 $numQuestion++;
@@ -471,36 +502,51 @@ class ControllerQuizz extends Controller
      *
      * @return void
      */
-    public function afficherResultats(): void
+    public function afficherResultats(string $idUtilisateur, int $scoreUser, int $idQuizz): void
     {
-        //Récupération des infos
-        $scoreUser = $_GET['bonnesReponses'];
-        $idQuizz = $_GET['idQuizz'];
-        $idUtilisateur = $_GET['idUtilisateur'];
+        //Création du tableau des scores
+        $tabScores = [];
 
         //Manipulation de l'objet Jouer
         $managerJouer = new JouerDAO($this->getPdo());
-        if ($managerJouer->verifScoreUser($idQuizz, $idUtilisateur)) {
-            $newScore = new Jouer($idUtilisateur, $idQuizz, $scoreUser);
-            $managerReponse->update($newScore);
-        } else {
-            $newScore = new Jouer($idUtilisateur, $idQuizz, $scoreUser);
-            $managerReponse->create($newScore);
+
+        if ($managerJouer->verifScoreExistant($idQuizz, $idUtilisateur)){
+            if (!$this->memesScores($idUtilisateur, $idQuizz, $scoreUser)){
+                //Si les scores sont différents, alors on update le score sinon non
+                $managerJouer->update($idUtilisateur,$idQuizz,$scoreUser);
+            }
+        }
+        else{
+            $managerJouer->create($idUtilisateur,$idQuizz,$scoreUser);
         }
 
         //Manipulation du tableau des scores
-        $tabScores[] = $managerReponse->findAllByQuizz($idQuizz);
-        //Trie le tableau par ordre décroissant de scores
-        usort($tabScores, function ($utilisateur1, $utilisateur2) {
-            return $utilisateur2['score'] <=> $utilisateur1['score'];
-        });
-        $nbScores = range(1, sizeof($tabScores));
-
+        $tabScores = $managerJouer->findAllByQuizz($idQuizz);
+        //Récupération des infos du quizz
+        $managerQuizz = new QuizzDAO($this->getPdo());
+        $quizz = $managerQuizz->find($idQuizz);
 
         echo $this->getTwig()->render('pageResultats.html.twig', [
-            'idQuizz' => $idQuizz,
             'scores' => $tabScores,
-            'nbScores' => $nbScores
+            'quizz' => $quizz
         ]);
+    }
+
+    /**
+     * @brief Méthode qui vérifie 2 scores d'un utilisateur sur un quizz
+     * 
+     * @details Méthode qui prend en paramètre un quizz, un score et un utilisateur, puis compare les deux scores
+     * @return bool
+     */
+    public function memesScores(string $idUtilisateur, int $idQuizz, int $scoreUser) : bool
+    {
+        $managerJouer = new JouerDAO($this->getPdo());
+        $jouer = $managerJouer->findByQuizzUser($idQuizz, $idUtilisateur);
+
+        if ($jouer && $jouer->getScore() == $scoreUser){
+            return true;
+        }
+
+        return false;
     }
 }

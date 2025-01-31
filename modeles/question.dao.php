@@ -86,9 +86,9 @@ class QuestionDAO{
      */
     function update(Question $question): bool{
         $req = $this->pdo->prepare("UPDATE Question SET idQuestion = :idQuestion, valeur = :valeur, rang = :rang, urlImage = :urlImage, idQuizz = :idQuizz WHERE idQuestion = :idQuestion, idQuizz = :idQuizz");
-        $req->bindParam(":idQuestion", $question->getId());
+        $req->bindParam(":idQuestion", $question->getIdQuestion());
         $req->bindParam(":valeur", $question->getValeur());
-        $req->bindParam(":rang", $question->geRang());
+        $req->bindParam(":rang", $question->getRang());
         $req->bindParam(":urlImage", $question->getUrlImage());
         $req->bindParam(":idQuizz", $question->getIdQuizz());
 
@@ -148,7 +148,7 @@ class QuestionDAO{
      * @return Question
      */
     function find(int $idQuestion): ?Question{
-        $sql = "SELECT * FROM Question WHERE idQuestion = :idQuestion";
+        $sql = "SELECT * FROM " . DB_PREFIX . "question WHERE idQuestion = :idQuestion";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':idQuestion', $idQuestion, PDO::PARAM_INT);
         $stmt->execute();

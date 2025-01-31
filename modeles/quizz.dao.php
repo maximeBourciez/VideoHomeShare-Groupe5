@@ -12,8 +12,7 @@
  * 
  * @author Marylou Lohier
  */
-class QuizzDAO
-{
+class QuizzDAO{
     // Attributs
     /**
      * @var PDO|null $pdo Connexion à la base de données
@@ -26,8 +25,7 @@ class QuizzDAO
      * 
      * @param PDO|null $pdo Connexion à la base de données
      */
-    function __construct(?PDO $pdo = null)
-    {
+    function __construct(?PDO $pdo = null){
         $this->pdo = $pdo;
     }
 
@@ -61,8 +59,7 @@ class QuizzDAO
      * @param quizz
      * @return int
      */
-    function create(string $titre, string $description, int $difficulte, string $dateC, string $idUtilisateur): int
-    {
+    function create(string $titre, string $description, int $difficulte, string $dateC, string $idUtilisateur): int{
         $req = $this->pdo->prepare("INSERT INTO vhs_quizz (titre, description, difficulte, dateC, idUtilisateur) VALUES (:titre, :description, :difficulte, :dateC, :idUtilisateur)");
         $req->bindParam(":titre", $titre);
         $req->bindParam(":description", $description);
@@ -80,8 +77,7 @@ class QuizzDAO
      * @param quizz
      * @return bool
      */
-    function update(Quizz $quizz): bool
-    {
+    function update(Quizz $quizz): bool{
         $req = $this->pdo->prepare("UPDATE Quizz SET titre = :titre, description = :description, difficulte = :difficulte, dateC = :dateC WHERE id = :id, idUtilisateur = :idUtilisateur");
         $req->bindParam(":idQuizz", $quizz->getId());
         $req->bindParam(":titre", $quizz->getTitre());
@@ -99,8 +95,7 @@ class QuizzDAO
      * @param idQuizz //identifiant du quizz
      * @return bool
      */
-    function delete(int $idQuizz): bool
-    {
+    function delete(int $idQuizz): bool{
         $req = $this->pdo->prepare("DELETE FROM " . DB_PREFIX . "quizz WHERE idQuizz = :idQuizz");
         $req->bindParam(":idQuizz", $idQuizz);
 
@@ -113,8 +108,7 @@ class QuizzDAO
      * @param array //tableau des attributs du quizz
      * @return Quizz
      */
-    function hydrate(array $row): Quizz
-    {
+    function hydrate(array $row): Quizz{
         // Récupération des valeurs
         $id = $row['idQuizz'];
         $titre = $row['titre'];
@@ -133,10 +127,9 @@ class QuizzDAO
      * @param array //tableau des attributs des quizz
      * @return array
      */
-    function hydrateAll(array $rows): array
-    {
+    function hydrateAll(array $rows): array{
         $quizz = [];
-        foreach ($rows as $row) {
+        foreach($rows as $row){
             $quiz = $this->hydrate($row);
             array_push($quizz, $quiz);  // Ajout du Quizz au tableau 
         }
@@ -149,14 +142,17 @@ class QuizzDAO
      * @param $id //identifiant du quizz
      * @return Quizz
      */
-    function find(int $idQuizz): ?Quizz
-    {
-        $sql = "SELECT Q.*, U.pseudo FROM " . DB_PREFIX . "quizz Q JOIN " . DB_PREFIX . "utilisateur U ON Q.idUtilisateur = U.idUtilisateur WHERE idQuizz = :idQuizz";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':idQuizz', $idQuizz, PDO::PARAM_INT);
-        $stmt->execute();
-        $row = $stmt->fetch();
-        if ($row == null) {
+    function find(int $idQuizz): ?Quizz{
+        $sql = "SELECT Q.*, U.pseudo
+                FROM " .DB_PREFIX. "quizz Q
+                JOIN " .DB_PREFIX. "utilisateur U ON Q.idUtilisateur = U.idUtilisateur
+                WHERE Q.idQuizz = :idQuizz";
+                
+        $pdo = $this->pdo->prepare($sql);
+        $pdo->bindValue(':idQuizz', $idQuizz, PDO::PARAM_INT);
+        $pdo->execute();
+        $row = $pdo->fetch();
+        if ($row == null){
             return null;
         }
 
@@ -168,39 +164,37 @@ class QuizzDAO
      * 
      * @return array
      */
-    function findAll(): array
-    {
-        $sql = "SELECT Q.*, U.pseudo FROM " . DB_PREFIX . "quizz Q JOIN " . DB_PREFIX . "utilisateur U ON Q.idUtilisateur = U.idUtilisateur";
+    function findAll(): array{
+        $sql = "SELECT Q.*, U.pseudo FROM " .DB_PREFIX. "quizz Q JOIN " .DB_PREFIX. "utilisateur U ON Q.idUtilisateur = U.idUtilisateur";
         $stmt = $this->pdo->query($sql);
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
 
         return $this->hydrateAll($stmt->fetchAll());
     }
 
-    /**
+        /**
      * @brief Méthode pour récupérer les attributs des quizz d'un utilisateur
      * @param $idUtilisateur id de l'utilisateur
      * @return array
      */
-    function findAllByUser(string $idUtilisateur): ?array
-    {
-        $sql = "SELECT Q.*, U.pseudo FROM " . DB_PREFIX . "quizz Q JOIN " . DB_PREFIX . "utilisateur U ON Q.idUtilisateur = U.idUtilisateur WHERE Q.idUtilisateur = :idUtilisateur";
+    function findAllByUser(string $idUtilisateur): ?array{
+        $sql = "SELECT Q.*, U.pseudo FROM " .DB_PREFIX. "quizz Q JOIN " .DB_PREFIX. "utilisateur U ON Q.idUtilisateur = U.idUtilisateur WHERE Q.idUtilisateur = :idUtilisateur";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(":idUtilisateur", $idUtilisateur);
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $stmt->execute();
+
         return $this->hydrateAll($stmt->fetchAll());
     }
 
-    function findByTitreUser(string $titre, string $idUtilisateur): ?Quizz
-    {
-        $sql = "SELECT Q.*, U.pseudo FROM " . DB_PREFIX . "quizz Q JOIN " . DB_PREFIX . "utilisateur U ON Q.idUtilisateur = U.idUtilisateur WHERE Q.titre = :titre AND Q.idUtilisateur = :idUtilisateur";
+    function findByTitreUser(string $titre, string $idUtilisateur): ?Quizz{
+        $sql = "SELECT Q.*, U.pseudo FROM " .DB_PREFIX. "quizz Q JOIN " .DB_PREFIX. "utilisateur U ON Q.idUtilisateur = U.idUtilisateur WHERE Q.titre = :titre AND Q.idUtilisateur = :idUtilisateur";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':titre', $titre);
         $stmt->bindValue(':idUtilisateur', $idUtilisateur);
         $stmt->execute();
         $row = $stmt->fetch();
-        if ($row == null) {
+        if ($row == null){
             return null;
         }
 

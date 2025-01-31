@@ -8,59 +8,64 @@
 <main class="container flex-fill">
     <br>
     <h2 class="mb-4">{{ quizz.getTitre() }}</h2>
-
-	{% set bonnesReponses = 0 %}
-
-    {% for question in questions %}
-	<!-- URL de l'image de la question -->
-        <div class="row mb-4">
-            <img src="images/{{ question.getUrlImage() }}" alt="Image de la question">
-        </div>
-		<!-- Carte de la question -->
-		<h4 class="row mb-4">Question n°{{ question.getRang() }}</h4>
-		<div class="row mb-4">
-			<div class="card bg-mydark mx-auto my-auto text-white rounded">
+	<form action="index.php?controller=quizz&methode=traiterResultatsQuestion" method="post">
+		<input type="hidden" name="idQuizz" value="{{ quizz.getId() }}">
+		<input type="hidden" name="idUtilisateur" value="{{ idUtilisateur }}">
+		<input type="hidden" name="idQuestion" value="{{ question.getIdQuestion() }}">
+		<input type="hidden" name="derniereQuestion" value="{{ derniereQuestion }}">
+		<input type="hidden" name="nbBonnesReponses" value="{{ nbBonnesReponses }}">
+		<!-- URL de l'image de la question -->
+			<div class="row mb-4">
+				<img src="images/{{ question.getUrlImage() }}" alt="Image de la question">
+			</div>
+			<!-- Carte de la question -->
+			<div class="col card bg-mydark mx-auto my-auto p-4 text-white rounded">
 				<div class="card-body">
-					{{ question.getValeur() }}
+					<h4 class="row mb-4">Question n°{{ question.getRang() }}</h4>
+					<div class="row mb-2">
+						{{ question.getValeur() }}
+					</div>
+				</div>
+				{% for reponse in reponses[question.getIdQuestion()] %}
+					<!-- Afficher 2 par 2 si le nombre de questions est pair-->
+					{% if reponses|length is even %}
+						<div class="row">
+					{% endif %}
+					<!-- Cartes des réponses -->
+					<div class="col mb-4">
+						<div class="card">
+							<label for="reponse_{{ reponse.getRang() }}">
+								<input class="card-body" type="checkbox" id="reponse_{{ reponse.getRang() }}" name="reponse_{{ reponse.getRang() }}"/>
+								{{ reponse.getValeur() }}
+							</label>
+						</div>
+					</div>
+					{% if reponses|length is even %}
+						</div>
+					{% endif %}
+				{% endfor %}
+			<!-- Boutons "Retour", "Suivant" ou "Voir les résultats" si c'est la dernière question -->
+			<div class="row">
+				<div class="row col mt-4 mb-2 me-4">
+					<a href="index.php?controller=quizz&methode=listeQuizz" class="btn btn-primary mx-auto">
+						<b>Retour</b>
+					</a>
+				</div>
+				<div class="row col mt-4 mb-2">
+					{% if derniereQuestion %}
+						<button type="submit" class="btn btn-primary mx-auto">
+							<b>Voir les résultats</b>
+						</button>
+					{% else %}
+						<button type="submit" class="btn btn-primary mx-auto">
+							<b>Suivant</b>
+						</button>
+					{% endif %}
 				</div>
 			</div>
-        </div>
-		<div class="col card bg-mydark mx-auto my-auto p-4 text-white rounded">
-			{% for reponse in reponses[question.getIdQuestion()] %}
-				<!-- Afficher 2 par 2 si le nombre de questions est pair-->
-				{% if loop.index is even %}
-					<div class="row mb-4">
-				{% endif %}
-				<!-- Cartes des réponses -->
-				<div class="col mb-4">
-					<div class="card">
-						<div class="card-body">
-							Réponse n°{{ reponse.getRang() }} :
-							{{ reponse.getValeur() }}
-						</div>
-						<!-- Si la réponse est vraie, ajouter 1 au nombre de bonnes réponses -->
-						{% if reponse.getVerite() %}
-							{% set bonnesReponses = bonnesReponses + 1 %}
-						{% endif %}
-					</div>
-				</div>
-				{% if loop.index is even %}
-					</div>
-				{% endif %}
-			{% endfor %}
-		{% endfor %}
-        <!-- Boutons "Suivant" ou "Voir les résultats" si c'est la dernière question -->
-        <div class="row mt-4">
-            {% if loop.last %}
-                <a href="index.php?controller=quizz&methode=afficherResultats&idUtilisateur={{ idUtilisateur }}&idQuizz={{ quizz.getId() }}&bonnesReponses={{ bonnesReponses }}" class="btn btn-primary mx-auto">
-                    <b>Voir les résultats</b>
-                </a>
-            {% else %}
-                <a href="index.php?controller=quizz&methode=jouerQuizz&idUtilisateur={{ idUtilisateur }}&idQuizz={{ quizz.getId() }}&question={{ loop.index + 1 }}" class="btn btn-primary mx-auto">
-                    <b>Suivant</b>
-                </a>
-            {% endif %}
-        </div>
-
+	</form>
 </main>
+
+<script src="js/participerQuizz.js"></script>
+
 {% endblock %}
