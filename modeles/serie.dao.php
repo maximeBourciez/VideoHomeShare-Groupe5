@@ -224,13 +224,26 @@ class SerieDAO
             'equipe' => []
         ];
 
+        // Tableau de correspondance des métiers en anglais vers le français
+        $traductionsRoles = [
+            'Director' => 'Réalisateur',
+            'Writer' => 'Scénariste',
+            'Creator' => 'Créateur',
+            'Executive Producer' => 'Producteur exécutif',
+            'Producer' => 'Producteur',
+            'Editor' => 'Monteur',
+            'Composer' => 'Compositeur',
+            'Cinematographer' => 'Directeur de la photographie',
+            'Production Designer' => 'Chef décorateur'
+        ];
+
         if ($response) {
-            // Récupérer les acteurs principaux (max 5)
+            // Récupérer les acteurs principaux
             if (isset($response['cast'])) {
                 foreach ($response['cast'] as $acteur) {
                     $personnalites['acteurs'][] = [
                         'nom' => $acteur['name'],
-                        'role' => $acteur['character'],
+                        'role' => $acteur['character'], // Déjà en français si dispo
                         'photo' => !empty($acteur['profile_path'])
                             ? $this->imageBaseUrl . $acteur['profile_path']
                             : null
@@ -238,25 +251,28 @@ class SerieDAO
                 }
             }
 
-            // Récupérer les membres clés de l'équipe (réalisateur, scénariste, etc.)
+            // Récupérer les membres clés de l'équipe
             if (isset($response['crew'])) {
-                $rolesRecherches = ['Director', 'Writer', 'Creator', 'Executive Producer'];
                 foreach ($response['crew'] as $membre) {
-                    if (in_array($membre['job'], $rolesRecherches)) {
-                        $personnalites['equipe'][] = [
-                            'nom' => $membre['name'],
-                            'role' => $membre['job'],
-                            'photo' => !empty($membre['profile_path'])
-                                ? $this->imageBaseUrl . $membre['profile_path']
-                                : null
-                        ];
+                    $role = $membre['job'];
+                    if (array_key_exists($role, $traductionsRoles)) {
+                        $role = $traductionsRoles[$role];
                     }
+
+                    $personnalites['equipe'][] = [
+                        'nom' => $membre['name'],
+                        'role' => $role,
+                        'photo' => !empty($membre['profile_path'])
+                            ? $this->imageBaseUrl . $membre['profile_path']
+                            : null
+                    ];
                 }
             }
         }
 
         return $personnalites;
     }
+
 
     /**
      * @brief Récupère tous les épisodes d'une série
