@@ -115,11 +115,17 @@ class WatchlistDAO
      * @return bool Vrai si l'opération a réussi, faux sinon
      */
     public function addContenuToWatchlist(int $watchlistId, int $contenuId): bool {
-        $sql = "SELECT MAX(rang) FROM " . DB_PREFIX . "contenirContenu WHERE idWatchlist = (:watchlistId)";
+        $sql = "SELECT MAX(rang) AS maximum FROM " . DB_PREFIX . "contenirContenu WHERE idWatchlist = (:watchlistId)";
         $stmt = $this->pdo->prepare($sql);
-        $max = $stmt->execute([':watchlistId' => $watchlistId]);
-        $rang = ($max == null ? 1 : $max + 1);
-
+        $stmt->execute([':watchlistId' => $watchlistId]);
+        $tab = $stmt->fetch();
+        $max = $tab['maximum'];
+        if ($max >= 1) {
+            $rang = $max + 1;
+        } else {
+            $rang = 1;
+        }
+        
         $sql = "INSERT INTO " . DB_PREFIX . "contenirContenu (idWatchlist, idContenuTmdb, rang) VALUES (:watchlistId, :contenuId, :rang)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([

@@ -49,9 +49,9 @@
                                                 <div class="card-body d-flex flex-column p-2">
                                                     <h5 class="card-title fs-6 mb-3">{{ contenu.getTitre() }}</h5>
                                                     <div class="">
-                                                        <button href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ contenu.getId() }}" class="btn btn-plus-infos btn-sm w-100 mb-2">
+                                                        <a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ contenu.getId() }}" class="btn btn-plus-infos btn-sm w-100 mb-2">
                                                             <i class="bi bi-info-circle me-1"></i>Plus d'infos
-                                                        </button>
+                                                        </a>
                                                         <form action="index.php?controller=watchlist&methode=supprimerDeWatchlist" method="POST">
                                                             <input type="hidden" name="idWatchlist" value="{{ watchlist.id }}">
                                                             <input type="hidden" name="idContenu" value="{{ contenu.getId() }}">
