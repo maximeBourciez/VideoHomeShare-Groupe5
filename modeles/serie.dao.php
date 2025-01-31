@@ -106,7 +106,7 @@ class SerieDAO
     public function searchByName(?string $query): ?array
     {
         $url = "{$this->baseUrl}/search/tv?api_key={$this->apiKey}&query=" . urlencode($query) . "&language=fr-FR";
-        $response = file_get_contents($url);
+        $response = @file_get_contents($url);
 
         if ($response === false) {
             return null;
