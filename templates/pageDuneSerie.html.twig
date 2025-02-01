@@ -53,7 +53,7 @@
 				<!-- Genres -->
 				<div class="movie-info__genres d-flex justify-content-left align-items-center mt-2">
 					{% for theme in themes %}
-						<span class="movie-info__genre-tag bg-mydark text-white p-2 px-3 rounded me-3 {% if theme|length > 10 %}fs-6{% endif %}">
+						<span class="movie-info__genre-tag bg-mydark text-white p-2 px-3 rounded me-3 mb-2 {% if theme|length > 10 %}fs-6{% endif %}">
 							{{ theme }}
 						</span>
 					{% endfor %}
@@ -197,7 +197,7 @@ generateStarRating(note);
 		</div>
 	</main>
 
-	<!-- Modal Avis -->
+	<!-- Modal Commenter serie -->
 	<div class="modal fade" id="commenterContenu" tabindex="-1" aria-labelledby="modalAvisLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content bg-mydark text-white">
@@ -207,11 +207,12 @@ generateStarRating(note);
 					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<form action="index.php?controller=commentaire&methode=createCommentaire" method="POST">
+					<form id="avisForm" action="index.php?controller=commentaire&methode=createCommentaire" method="POST" novalidate>
 						<input type="hidden" name="idSerie" value="{{ serie.id }}">
 						<div class="mb-3">
 							<label for="titre" class="form-label">Titre de votre avis</label>
-							<input type="text" class="form-control" id="titre" name="titre" required placeholder="Ex : J'ai adoré cette serie !" maxlength="100">
+							<input type="text" class="form-control" id="titre" name="titre" required placeholder="Ex : J'ai adoré cette serie !" maxlength="100" minlength="3">
+							<div class="invalid-feedback">Le titre doit contenir au moins 3 caractères.</div>
 						</div>
 						<div class="mb-3">
 							<label for="note" class="form-label">Note :
@@ -219,17 +220,10 @@ generateStarRating(note);
 							</label>
 							<input type="range" class="form-range" id="note" name="note" min="1" max="5" step="1" value="3" required>
 						</div>
-
-						<script>
-							const slider = document.getElementById('note');
-const sliderValue = document.getElementById('sliderValue');
-slider.addEventListener('input', () => {
-sliderValue.textContent = slider.value;
-});
-						</script>
 						<div class="mb-3">
 							<label for="commentaire" class="form-label">Votre commentaire</label>
-							<textarea class="form-control" id="commentaire" name="commentaire" rows="4" required placeholder="Ex : Cette serie est vraiment géniale car..." maxlength="1000"></textarea>
+							<textarea class="form-control" id="commentaire" name="commentaire" rows="4" required placeholder="Ex : Cette serie est vraiment géniale car..." maxlength="1000" minlength="10"></textarea>
+							<div class="invalid-feedback">Le commentaire doit contenir au moins 10 caractères.</div>
 						</div>
 						<div class="modal-footer border-0">
 							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
@@ -262,4 +256,5 @@ sliderValue.textContent = slider.value;
 {% block script %}
 	{{ parent() }}
 	<script type="text/javascript" src="JS/notation.js"></script>
+	<script type="text/javascript" src="JS/validationForm.js"></script>
 {% endblock %}
