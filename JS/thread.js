@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
             modal.querySelector("span").textContent = "0 / 1000";
         });
     });
-    
+
     textareas.forEach(textarea => {
         // Trouve le compteur associé dans le même modal
         const counter = textarea.closest(".modal").querySelector(".modal-body span");
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Sélectionne tous les boutons "Répondre"
     const repondreButtons = document.querySelectorAll(".btn[data-bs-target='#repondreModal']");
-    
+
     /**
      * @brief Ouvre la modale "Répondre" et met à jour le contenu de la modale
      * @param {Event} event
@@ -54,11 +54,11 @@ document.addEventListener("DOMContentLoaded", function () {
             messageOriginal.textContent = messageText.trim();
             auteurOriginal.textContent = pseudoAuteur.textContent.trim();
             modalTextarea.placeholder = `Répondre à ${pseudoAuteur.textContent.trim()}...`;
-            modalTextarea.value = ""; 
-            compteur.textContent = "0 / 1000"; 
+            modalTextarea.value = "";
+            compteur.textContent = "0 / 1000";
         });
     });
-    
+
     // Ajout de la logique pour mettre à jour l'ID du message parent
     repondreModal.addEventListener("show.bs.modal", function (event) {
         const button = event.relatedTarget; // Bouton qui a déclenché la modale
@@ -69,8 +69,38 @@ document.addEventListener("DOMContentLoaded", function () {
             inputIdMessageParent.value = idMessageParent;
         }
     });
-   
 
+
+    // Prévention des erreurs dans le textarea de la modale "Répondre"
+    let spanErrorReponse = document.getElementById("errorReponse");
+    let textareaReponse = document.getElementById("reponseArea");
+    let formReponse = document.getElementById("formReponse");
+    const MIN_LENGTH_MESSAGE = 10;
+
+    formReponse.addEventListener("submit", function (event) {
+        console.log("Validation soumise"); // Vérifie si l'événement est bien déclenché
+
+        let hasError = false;
+        let message = textareaReponse.value.trim();
+
+        console.log("Message après trim:", message);
+        console.log("Longueur du message:", message.length);
+
+        if (message.length < MIN_LENGTH_MESSAGE) {
+            hasError = true;
+            spanErrorReponse.textContent = `Votre réponse doit contenir au moins ${MIN_LENGTH_MESSAGE} caractères`;
+        } else if (message.length > textareaReponse.maxLength) {
+            hasError = true;
+            spanErrorReponse.textContent = "Votre réponse doit contenir moins de 1000 caractères";
+        } else {
+            spanErrorReponse.textContent = "";
+        }
+
+        if (hasError) {
+            console.log("Formulaire bloqué !");
+            event.preventDefault(); // Bloque bien l'envoi
+        }
+    });
 
 
     /**
@@ -80,14 +110,14 @@ document.addEventListener("DOMContentLoaded", function () {
      */
     // Écouteur d'événements pour les boutons "Signaler"
     const signalerButtons = document.querySelectorAll('[data-bs-target="#signalement"]');
-        
+
     signalerButtons.forEach(button => {
         button.addEventListener('click', function () {
             // Récupérer les données
             const messageId = this.getAttribute('data-id-message');
             const messageToSignal = document.querySelector(`.message[data-id-message="${messageId}"]`);
             var hiddenInputIdMessage = document.getElementById("id_message_signalement");
-            
+
             // Mettre à jour le contenu de la modale
             if (messageToSignal) {
                 // Mettre les données à jour
@@ -106,14 +136,14 @@ document.addEventListener("DOMContentLoaded", function () {
      */
     // Sélectionner tous les boutons toggle-responses
     const toggleButtons = document.querySelectorAll('.toggle-responses');
-        
+
     // Ajouter un écouteur d'événements à chaque bouton
     toggleButtons.forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             // Trouver le conteneur de réponses associé
             const messageId = this.getAttribute('data-message-id');
             const responsesContainer = document.querySelector(`.responses-container[data-message-id="${messageId}"]`);
-            
+
             // Vérifier si le conteneur existe
             if (responsesContainer && responsesContainer.classList.contains('responses-container')) {
                 // Basculer l'affichage des réponses
@@ -132,7 +162,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.error('Container de réponses non trouvé pour le message:', messageId);
             }
         });
-    
+
     });
 });
 
