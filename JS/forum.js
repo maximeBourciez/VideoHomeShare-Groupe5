@@ -13,7 +13,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Récupérer les options sélectionnées
   options.forEach((option) => {
-    option.addEventListener("change", updateSelectedThemes);
+    option.addEventListener("change", function () {
+      if (document.querySelectorAll(".custom-select-option input:checked").length > 3) {
+        this.checked = false; // Désélectionne l'option si plus de 3 sont sélectionnées
+        alert("Vous ne pouvez sélectionner que 3 thèmes maximum.");
+      }
+      updateSelectedThemes();
+    });
   });
 
   function updateSelectedThemes() {
@@ -59,10 +65,4 @@ document.addEventListener("DOMContentLoaded", function () {
       "Element 'descriptionThread' ou 'countTitreThread' non trouvé !"
     );
   }
-
-
-
-  /**
-   * Prévention des erreurs via les messages d'erreur
-   */
 });
