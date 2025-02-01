@@ -283,13 +283,15 @@
 						<h5 class="modal-title w-100" id="nouveauMessageLabel">Nouveau message</h5>
 						<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
 					</div>
-					<form action="index.php?controller=fil&methode=ajouterMessage" method="POST" class="modal-body text-white">
+					<form action="index.php?controller=fil&methode=ajouterMessage" method="POST" class="modal-body text-white formEntreeMessage">
+						<input type="hidden" name="id_fil" value="{{ fil.0.getId() }}">
 						<div class="d-flex justify-content-between mt-2">
-							<p>Votre message :</p>
+							<p>Votre réponse :</p>
 							<span>0 / 1000</span>
 						</div>
-						<input type="hidden" name="id_fil" value="{{ fil.0.getId() }}">
-						<textarea name="message" class="form-control mt-1 bg-mylight text-black p-3" rows="4" placeholder="Exprimez-vous..." maxlength="1000" required></textarea>
+						<textarea class="form-control bg-mylight text-black p-3" rows="4" name="message" placeholder="Répondre à {{ message.getUtilisateur().getPseudo() }}" maxlength="1000" id="messageArea" required></textarea>
+						<span id="errorReponse" class="text-danger mt-1 mb-2"></span>
+						
 						<div class="modal-footer">
 							<button type="submit" class="btn btn-xs btn-myprimary">
 								<i class="bi bi-send"></i>
@@ -305,22 +307,25 @@
 		<!-- Modal de réponse à un autre message -->
 		<div class="modal fade" id="repondreModal" tabindex="-1" aria-labelledby="repondreModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered modal-lg" style="height: 80vh;">
-				<form action="index.php?controller=fil&methode=ajouterMessage" method="POST" class="modal-content popup-content bg-mydark" id="popUpRepondre">
+				<form action="index.php?controller=fil&methode=ajouterMessage" method="POST" class="modal-content popup-content bg-mydark formEntreeMessage">
 					<div class="modal-header text-white text-center">
 						<h5 class="modal-title w-100" id="repondreModalLabel">Répondre</h5>
 						<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
 					</div>
-					<div class="modal-body text-white">
-						<div class="message-original bg-mylight text-black p-3">
+					<div class="modal-body text-white d-flex flex-column">
+						<p class="text-white">Répondre à :</h5>
+						<div class="message-original bg-mylight text-black p-3 mb-3">
 							<strong>{{ message.getUtilisateur().getPseudo() }}</strong>
 							<p>{{ message.valeur }}</p>
 						</div>
 						<input type="hidden" name="id_fil" value="{{ fil.0.getId() }}">
 						<input type="hidden" name="id_message_parent" value="{{ reponse.getIdMessage() }}">
-						<textarea class="form-control mt-3 bg-mylight text-black p-3" rows="4" name="message" placeholder="Répondre à {{ message.getUtilisateur().getPseudo() }}" maxlength="1000" required></textarea>
-						<div class="text-end mt-2">
+						<div class="d-flex justify-content-between mt-2">
+							<p>Votre réponse :</p>
 							<span>0 / 1000</span>
 						</div>
+						<textarea class="form-control bg-mylight text-black p-3" rows="4" name="message" placeholder="Répondre à {{ message.getUtilisateur().getPseudo() }}" maxlength="1000" id="messageArea" required></textarea>
+						<span id="errorReponse" class="text-danger mt-1 mb-2"></span>
 					</div>
 					<div class="modal-footer">
 						<button type="submit" class="btn btn-xs btn-myprimary">
@@ -329,7 +334,6 @@
 						</button>
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
 					</div>
-
 				</form>
 			</div>
 		</div>
@@ -352,10 +356,11 @@
 							<p class="mt-2" style="color: #F2AC0F;">Pour la raison :</p>
 							<select name="raison" class="form-select" required>
 								<option value="" disabled selected>Choisissez une raison</option>
-								{% for raison in raisonSignalement %}
+								{% for raison in raisonsSignalement %}
 									<option value="{{ raison }}">{{ raison }}</option>
 								{% endfor %}
 							</select>
+							<span id="erreurSignalement" class="text-danger mt-1 mb-2"></span>
 							<input type="hidden" name="id_message" value="" id="id_message_signalement">
 							<input type="hidden" name="id_fil" value="{{ fil.0.getId() }}">
 						</div>
