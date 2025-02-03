@@ -22,43 +22,43 @@
 
 				<!-- Champ Identifiant -->
 				<div class="form-group mb-3">
-					<label for="idantifiant" class="d-block text-start mb-0">Identifiant</label>
-					<input type="text" name="idantifiant" id="idantifiant" class="form-control" minlength="3" maxlength="20" required>
+					<label for="idantifiant" class="d-block text-start mb-0">Identifiant *</label>
+					<input type="text" name="idantifiant" id="idantifiant" class="form-control" minlength="3" maxlength="20" placeholder="Identifiant" required>
 				</div>
 
 				<!-- Champ Pseudo -->
 				<div class="form-group mb-3">
-					<label for="pseudo" class="d-block text-start mb-0">Pseudo</label>
-					<input type="text" name="pseudo" id="pseudo" class="form-control" minlength="3" maxlength="50" required>
+					<label for="pseudo" class="d-block text-start mb-0">Pseudo *</label>
+					<input type="text" name="pseudo" id="pseudo" class="form-control" minlength="3" maxlength="50" placeholder="Pseudo" required>
 				</div>
 
 				<!-- Champ Nom -->
 				<div class="form-group mb-3">
-					<label for="nom" class="d-block text-start mb-0">Nom réel</label>
-					<input type="text" name="nom" id="nom" class="form-control" minlength="3" maxlength="50" required>
+					<label for="nom" class="d-block text-start mb-0">Nom réel *</label>
+					<input type="text" name="nom" id="nom" class="form-control" minlength="3" maxlength="50" placeholder="Nom réel" required>
 				</div>
 				<!-- Champ date naisance -->
 				<div class="form-group mb-3">
-					<label for="date" class="d-block text-start mb-0">Votre date de naisance</label>
+					<label for="date" class="d-block text-start mb-0">Date de naisance *</label>
 					<input type="date" name="date" id="date" class="form-control" required>
 				</div>
 
 				<!-- Champ Mail -->
 				<div class="form-group mb-3">
-					<label for="mail" class="d-block text-start mb-0">Mail</label>
-					<input type="email" name="mail" id="mail" class="form-control" minlength="6" maxlength="320" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="adresse mail non valide " required>
+					<label for="mail" class="d-block text-start mb-0">Mail *</label>
+					<input type="email" name="mail" id="mail" class="form-control" minlength="6" maxlength="320" placeholder="Mail" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="adresse mail non valide " required>
 				</div>
 
 				<!-- Champ Mot de Passe -->
 				<div class="form-group mb-3">
-					<label for="mdp" class="d-block text-start mb-0">Mot de passe</label>
-					<input type="password" name="mdp" id="mdp" class="form-control" minlength="8" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" required title="Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.">
+					<label for="mdp" class="d-block text-start mb-0">Mot de passe *</label>
+					<input type="password" name="mdp" id="mdp" class="form-control" minlength="8" placeholder="Mot de passe" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" required title="Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.">
 				</div>
 
 				<!-- Champ Vérification Mot de Passe -->
 				<div class="form-group mb-4">
-					<label for="vmdp" class="d-block text-start mb-0 bor">Vérification mot de passe</label>
-					<input type="password" name="vmdp" id="vmdp" class="form-control" minlength="8" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" required title="Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.">
+					<label for="vmdp" class="d-block text-start mb-0 bor">Confirmez le mot de passe *</label>
+					<input type="password" name="vmdp" id="vmdp" class="form-control" minlength="8" placeholder="Mot de passe de confirmation" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" required title="Le mot de passe doit contenir au moins 8 caractères, une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial.">
 				</div>
 				<!-- Champ  Accepter les conditions d'utilisation-->
 				<div class="form-check mb-4">
@@ -70,7 +70,7 @@
 						</a>
 					</label>
 				</div>
-
+				<p class="text-start" > * Champs obligatoires</p>
 				<!-- Bouton de soumission -->
 				<input
 				type="submit" class="btn btn-myprimary my-2 w-50 mx-auto" value="Créer le compte">
@@ -82,7 +82,7 @@
 				
 				<!-- Lien vers le modal des condition d'utilisation-->
 				{% include 'modals.html.twig' with { 'last_update_date': '08/01/2025' } %}
-
+				
 			</form>
 			<script src ="JS/utilisateur.js" > </script>
 			<script>
@@ -93,6 +93,17 @@
 
 					// Appel de verifieregau pour vérifier les valeurs
 					verifieregau(mdp, vmdp);
+					verificcationMail("mail")
+					verificcationMDP("mdp");
+					verificcationMDP("vmdp");
+					tropcourt("mdp",8);
+					tropcourt("vmdp",8);
+					tropcourt("mail",6)
+					tropcourt("pseudo",3)
+					tropcourt("idantifiant",3)
+					troplong("mail",320);
+					troplong("pseudo",50)
+					troplong("idantifiant",20)
 				});
  			</script>
 		</main>
