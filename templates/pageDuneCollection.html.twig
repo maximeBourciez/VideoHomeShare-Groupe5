@@ -183,21 +183,7 @@ generateStarRating(note);
 		</div>
 	</div>
 
-	<!-- Modal Veuillez vous connecter -->
-	<div class="modal fade" id="veuillezVousConnecter" tabindex="-1" aria-labelledby="modalAvisLabel" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content bg-mydark text-white">
-				<div class="modal-body text-center">
-					<p class="fs-3">Si vous voulez laisser un avis et participer à la communauté, vous devez d'abord vous connecter 😏</p>
-				</div>
-				<div class="modal-footer border-0 justify-content-center">
-					<a href="index.php?controller=utilisateur&methode=connexion">
-						<button type="button" class="btn btn-myprimary">Connexion</button>
-					</a>
-				</div>
-			</div>
-		</div>
-	</div>
+	{% include 'modals.html.twig' %}
 
 {% endblock %}
 
