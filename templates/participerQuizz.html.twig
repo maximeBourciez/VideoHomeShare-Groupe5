@@ -30,13 +30,16 @@
 					<!-- Cartes des réponses -->
 					<div class="col mb-4">
 						<div class="card">
-							<label for="reponse_{{ reponse.getRang() }}">
-								<input class="card-body" type="checkbox" id="reponse_{{ reponse.getRang() }}" name="reponse_{{ reponse.getRang() }}"/>
+							<label for="reponse_{{ reponse.getRang() }}" class="btn btn-outline-tertiary">
+								<input class="checkbox d-none card-body" type="checkbox" id="reponse_{{ reponse.getRang() }}" name="reponse_{{ reponse.getRang() }}"/>
 								{{ reponse.getValeur() }}
 							</label>
 						</div>
 					</div>
 				{% endfor %}
+				
+			<p><i>Veuillez choisir au maximum 3 réponses.</i></p>
+
 			<!-- Boutons "Retour", "Suivant" ou "Voir les résultats" si c'est la dernière question -->
 			<div class="row">
 				<div class="row col mt-4 mb-2 me-4">
