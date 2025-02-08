@@ -86,7 +86,7 @@ class ReponseDAO{
     }
     //But : Créer les reponses avec les valeurs assignées aux attributs correspondants
 
-    public function findByQuestionId(int $idQuestion): ?array
+    public function findAllByQuestionId(int $idQuestion): ?array
     {
         $sql="SELECT * FROM ".DB_PREFIX. "reponse WHERE idQuestion = :idQuestion";
         $stmt = $this->pdo->prepare($sql);

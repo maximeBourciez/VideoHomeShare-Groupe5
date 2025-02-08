@@ -110,12 +110,11 @@ class JouerDAO{
      */
     public function hydrate(array $row): Jouer{
         // Récupération des valeurs
-        $idUtilisateur = $row['idUtilisateur'];
         $idQuizz = $row['idQuizz'];
         $score = $row['score'];
-        //$pseudo = $row['pseudo'];
+        $pseudo = $row['pseudo'];
 
-        return new Jouer($idUtilisateur, $idQuizz, $score);
+        return new Jouer($pseudo, $idQuizz, $score);
     }
 
     /**
@@ -141,10 +140,11 @@ class JouerDAO{
      * @return Jouer
      */
     public function findByQuizzUser(int $idQuizz, string $idUtilisateur): Jouer{
-        $sql = "SELECT *
-                FROM " .DB_PREFIX. "jouer
+        $sql = "SELECT J.*, U.pseudo
+                FROM " .DB_PREFIX. "jouer J
+                JOIN " .DB_PREFIX. "utilisateur U ON J.idUtilisateur = U.idUtilisateur
                 WHERE idQuizz = :idQuizz
-                AND idUtilisateur = :idUtilisateur";
+                AND J.idUtilisateur = :idUtilisateur";
 
         $pdo = $this->pdo->prepare($sql);
         $pdo->bindValue(':idQuizz', $idQuizz, PDO::PARAM_INT);
@@ -195,10 +195,12 @@ class JouerDAO{
         JOIN " .DB_PREFIX. "utilisateur U ON J.idUtilisateur = U.idUtilisateur
         WHERE idQuizz = :idQuizz
         ORDER BY J.score DESC";
-        $pdo = $this->pdo->prepare($sql);
-        $pdo->bindValue(':idQuizz', $idQuizz, PDO::PARAM_INT);
-        $pdo->execute();
 
-        return $this->hydrateAll($pdo->fetchAll());
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':idQuizz', $idQuizz);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $stmt->execute();
+
+        return $this->hydrateAll($stmt->fetchAll());
     }
 }

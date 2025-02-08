@@ -26,11 +26,7 @@
 						{{ question.getValeur() }}
 					</div>
 				</div>
-				{% for reponse in reponses[question.getIdQuestion()] %}
-					<!-- Afficher 2 par 2 si le nombre de questions est pair-->
-					{% if reponses|length is even %}
-						<div class="row">
-					{% endif %}
+				{% for reponse in reponses %}
 					<!-- Cartes des réponses -->
 					<div class="col mb-4">
 						<div class="card">
@@ -40,15 +36,12 @@
 							</label>
 						</div>
 					</div>
-					{% if reponses|length is even %}
-						</div>
-					{% endif %}
 				{% endfor %}
 			<!-- Boutons "Retour", "Suivant" ou "Voir les résultats" si c'est la dernière question -->
 			<div class="row">
 				<div class="row col mt-4 mb-2 me-4">
 					<a href="index.php?controller=quizz&methode=listeQuizz" class="btn btn-primary mx-auto">
-						<b>Retour</b>
+						<b>Retour aux quizz</b>
 					</a>
 				</div>
 				<div class="row col mt-4 mb-2">
