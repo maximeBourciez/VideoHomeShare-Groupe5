@@ -1,32 +1,29 @@
-{% extends "base_template.html.twig" %}
+{% extends "templateAdmin.html.twig" %}
 
-{% block content %}
+{% block signalement %}
+    border-bottom border-2 border-dark
+{% endblock %}
+
+{% block pageContent %}
 
 <main class="  flex-grow-1">
-
-<div class=" container  my-4  bg-mydark text-white rounded">
-
+    <div class=" container  my-4  bg-mydark text-white rounded">
             {% if signalements  is null %}
 			<div class="py-2   d-flex align-items-center">
-
-				<p class="col-7 col-md-9 mb-1 ">il y a aucun sigalemen</p>
+				<p class="col-7 col-md-9 mb-1 ">il n'y a aucun sigalement pour le moment.</p>
             </div>
             {% else %}
-                
                 <div class="py-2 border-primary row border-bottom border-1  d-flex align-items-center">
                     <p class="col-7 col-md-9 mb-1 ">il y a {{ nbSignalements }} signalements</p>
-                    
                 </div>
                 <div class="py-2 row border-primary border-bottom border-1  d-flex align-items-center">
-                    <p class="mb-0 col-4 col-md-6 border-primary border-end border-1"> contenu du message </p>
-                    <p class="mb-0 col-2  border-primary border-end border-1">raison(s)</p>
-                    <p class="mb-0 col-2 ">nombre de signalement </p>
-                    
+                    <p class="mb-0 col-4 col-md-6 border-primary border-end border-1"> Contenu du message </p>
+                    <p class="mb-0 col-2  border-primary border-end border-1">Raison(s)</p>
+                    <p class="mb-0 col-2 ">Nombre de signalements </p>
                 </div>
-
                 {% for signalement in signalements %}
                     <div class=" py-2 ">
-                        <form action="index.php?controller=signalement&methode=supprimerMessageSignale" method="post" class="row">
+                        <form action="index.php?controller=dashboard&methode=supprimerMessageSignale" method="post" class="row">
                             <input type="hidden" name="idMessage" value="{{signalement.idMessage}}">
                             <a href="index.php?controller=fil&methode=afficherFilParId&id_fil={{signalement.idFil}}#{{signalement.idMessage}}" class="my-auto col-4 col-md-6  border-primary border-end border-1">{{signalement.valeur}}</a>
                             <p class="mb-0 col-2  border-primary border-end border-1">{{signalement.raisons}}</p>

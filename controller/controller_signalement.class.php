@@ -13,7 +13,7 @@
  * 
  * @author Sylvain Trouilh <strouilh@iutbayonne.unniv-pau.fr>
  */
-class ControllerSignalement extends Controller
+class ControllerDashboard extends Controller
 {
     /**
      * @brief Constructeur de la classe ControllerSignalement
@@ -93,6 +93,24 @@ class ControllerSignalement extends Controller
 
         // Redirection vers la page des signalements
         $this->afficheSignalements();
+    }
+
+
+    // Fonctions à compléter
+    function afficherUtilisateurs(?string $eventuelsFiltres){
+
+    }
+
+    function afficherAdministration(){
+
+    }
+
+    function bannirUtilisateur(?string $idUtilisateur){
+
+    }
+
+    function debannirUtilisateur(?string $idUtilisateur){
+
     }
 
 }
