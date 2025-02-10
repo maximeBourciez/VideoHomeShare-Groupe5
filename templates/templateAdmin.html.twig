@@ -1,0 +1,24 @@
+{% extends 'base_template.html.twig' %}
+
+{% block content %}
+    <div class="row row-cols-sm-3 row-cols-1 w-75 mx-auto mt-5">
+        <div>
+            <a href="index.php?controller=dashboard&methode=afficherSignalements" class="btn btn-primary border {% block signalement %}  {% endblock %} w-100 mb-2">Signalements</a>
+        </div>
+        <div>
+            <a href="index.php?controller=dashboard&methode=afficherUtilisateurs" class="btn btn-primary {% block users %}  {% endblock %}  w-100 mb-2">Utilisateurs</a>
+        </div>
+        <div>
+            <a href="index.php?controller=dashboard&methode=administration" class="btn btn-primary {% block admin %} {% endblock %}   w-100 mb-2">Administration</a>
+        </div>
+    </div>
+
+
+    {% block pageContent %}
+
+
+    {% endblock %}
+
+
+
+{% endblock %}
