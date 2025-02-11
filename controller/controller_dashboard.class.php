@@ -156,6 +156,34 @@ class ControllerDashboard extends Controller
             catch(Exception $e){
                 $this->afficherAdministration(/* Afficher le message derreur */);
             }
+        }else{
+            // Redirection vers la page d'accueil
+            header("Location: index.php?controller=index&methode=index");
+        }
+    }
+
+
+    /**
+     * @brief Méthode de sauvegarde de la base de données
+     * 
+     * @return void
+     */
+    public function sauvegarderBD(){
+        // Vérifier que l'utilisateur est bien un Modérateur
+        if($this->utilisateurEstModerateur()){
+            // Sauvegarder la BD
+            $managerBD = BD::getInstance();
+
+            // Sauvegarder la BD
+            try {
+                $managerBD->sauvegarder();
+                $this->afficherAdministration();
+            }catch(Exception $e){
+                $this->afficherAdministration(/* Afficher le message derreur */);
+            }
+        }else{
+            // Redirection vers la page d'accueil
+            header("Location: index.php?controller=index&methode=index");
         }
     }
 

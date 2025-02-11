@@ -50,7 +50,6 @@ class Bd
         } catch (PDOException $e) {
             die('Connexion à la base de données échouée : ' . $e->getMessage());
         }
-
     }
 
     /**
@@ -82,10 +81,7 @@ class Bd
      * Cette méthode est privée pour empêcher la création d'une nouvelle
      * instance via le clonage de l'objet.
      */
-    private function __clone()
-    {
-
-    }
+    private function __clone() {}
 
     /**
      * Empêche la désérialisation de l'instance Bd.
@@ -133,7 +129,7 @@ class Bd
                 // Exporter la structure de la table
                 $res = $pdo->query("SHOW CREATE TABLE `$table`");
                 $row = $res->fetch(PDO::FETCH_ASSOC);
-                $tableStructures[$table] = "-- Structure de la table `$table` --\n DROP TABLE IF EXISTS `$table` \n" . $row['Create Table'] . ";\n\n";
+                $tableStructures[$table] = "-- Structure de la table `$table` --\n DROP TABLE IF EXISTS `$table`; \n" . $row['Create Table'] . ";\n\n";
 
                 // Exporter les données
                 $res = $pdo->query("SELECT * FROM `$table`");
@@ -188,9 +184,9 @@ class Bd
         $backupDir = realpath(dirname(__FILE__)) . '/../backupsBD';
         $latestBackup = null;
         $oldestBackup = null;
+        $oldestBackupDate = null;
         $latestBackupDate = null;
         $nombreBackups = 0;
-        $deleteOldest = false;
 
         if (is_dir($backupDir)) {
             $files = scandir($backupDir);
@@ -205,8 +201,9 @@ class Bd
                     }
 
                     // Récupérer la plus ancienne backup si on doit être amené à la supprimer
-                    if ($oldestBackup === null || $date < $oldestBackup) {
+                    if ($oldestBackupDate === null || $date < $oldestBackupDate) {
                         $oldestBackup = $file;
+                        $oldestBackupDate = $date;
                     }
 
                     $nombreBackups++;
@@ -214,16 +211,34 @@ class Bd
             }
         }
 
-        // Vérifier si la base doit être sauvegardée
-        if ($latestBackupDate === null || $latestBackupDate->diff(new DateTime())->days >= 2) {
-            // Supprimer l'ancienne sauvegarde si on en a trop
-            if ($nombreBackups > SAUVEGARDE_MAX_NUMBER) {
-                unlink($backupDir . '/' . $oldestBackup);
-            }
+        var_dump("Dernière backup trouvée : ", $latestBackupDate);
+        $now = new DateTime();
+        var_dump("Date actuelle : ", $now);
 
+        var_dump("=== ÉVALUATION CONDITION ===");
+        if ($latestBackupDate === null) {
+            var_dump("Pas de backup existante - sauvegarde nécessaire");
             $this->sauvegarder();
+        } else {
+            $interval = $latestBackupDate->diff($now);
+            var_dump("Différence en jours : " . $interval->days);
+            var_dump("Condition $interval->days >= 2 : " . ($interval->days >= 2 ? 'true' : 'false'));
+
+            if ($interval->days >= 2) {
+                var_dump("=== SAUVEGARDE DÉCLENCHÉE ===");
+                if ($nombreBackups > SAUVEGARDE_MAX_NUMBER) {
+                    var_dump("Suppression ancienne backup");
+                    unlink($backupDir . '/' . $oldestBackup);
+                }
+                $this->sauvegarder();
+                var_dump("=== SAUVEGARDE EFFECTUÉE ===");
+            } else {
+                var_dump("=== PAS DE SAUVEGARDE NÉCESSAIRE ===");
+            }
         }
+        var_dump("=== FIN VÉRIFICATION ===");
     }
+
 
 
     /**
@@ -235,19 +250,20 @@ class Bd
      * 
      * @return void
      */
-    public function restore(string $fileToRestore){
-        $backupFolder = "backups/";
-        if (!file_exists($backupFolder.$fileToRestore)) {
+    public function restore(string $fileToRestore)
+    {
+        $backupFolder = "backupsBD/";
+        if (!file_exists($backupFolder . $fileToRestore)) {
             throw new Exception("Fichier de backup non trouvé");
         }
-        
+
         // Désactiver les contraintes de clés étrangères
         $this->pdo->exec("SET FOREIGN_KEY_CHECKS = 0");
-        
+
         // Lire et exécuter le fichier SQL
         $sqlContent = file_get_contents($fileToRestore);
         $sqlStatements = explode(';', $sqlContent);
-        
+
         foreach ($sqlStatements as $statement) {
             $statement = trim($statement);
             if (!empty($statement)) {
@@ -259,7 +275,7 @@ class Bd
                 }
             }
         }
-        
+
         // Réactiver les contraintes de clés étrangères
         $this->pdo->exec("SET FOREIGN_KEY_CHECKS = 1");
     }
