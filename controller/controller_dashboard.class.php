@@ -115,24 +115,32 @@ class ControllerDashboard extends Controller
      * 
      * @details Récupère les backups de la BD et les derniers mots de la liste de mots interdits pour les afficher
      * 
+     * @param bool $erreur Indique si une erreur est survenue
+     * @param string $message Message à afficher (erreur ou succès) 
+     * 
      * @return void 
      */
-    public function afficherAdministration(){
-        if($this->utilisateurEstModerateur()){
+    public function afficherAdministration(?bool $erreur = false, ?string $message = "") {
+        if ($this->utilisateurEstModerateur()) {
             // Récupération des backups
             $backups = $this->recupererBackups();
-
+    
             // Récupération des mots interdits ajoutés (les plus loins dans la liste)
             $motsInterdits = $this->recupererMotsInterdits();
-
+    
+            // Déterminer la clé pour le message
+            $messageKey = $erreur ? 'messageErreur' : 'messageSucces';
+    
             // Affichage de la page d'administration
             $template = $this->getTwig()->load('pageAdministration.html.twig');
-            echo $template->render(array(
-                "backups" => $backups, 
-                "motsInterdits" => $motsInterdits
-            ));
+            echo $template->render([
+                "backups" => $backups,
+                "motsInterdits" => $motsInterdits,
+                $messageKey => $message
+            ]);
         }
     }
+    
 
 
     /**
@@ -152,10 +160,11 @@ class ControllerDashboard extends Controller
                 // Restaurer 
                 $managerBD = BD::getInstance();
                 $managerBD->restore($fileToRestore);
-                header("Location: index.php?controller=dashboard&methode=afficherAdministration");
+                $this->afficherAdministration(false, "La restauration a été effectuée avec succès");
+                exit();
             }
             catch(Exception $e){
-                $this->afficherAdministration(/* Afficher le message derreur */);
+                $this->afficherAdministration(true, "Une erreur est survenue lors de la restauration : " . $e->getMessage());
             }
         }else{
             // Redirection vers la page d'accueil
@@ -178,10 +187,10 @@ class ControllerDashboard extends Controller
             // Sauvegarder la BD
             try {
                 $managerBD->sauvegarder();
-                header("Location: index.php?controller=dashboard&methode=afficherAdministration");
+                $this->afficherAdministration(false, "La sauvegarde a été effectuée avec succès");
                 exit();
             }catch(Exception $e){
-                $this->afficherAdministration(/* Afficher le message derreur */);
+                $this->afficherAdministration(true, "Une erreur est survenue lors de la sauvegarde : " . $e->getMessage());
                 exit();
             }
         }else{

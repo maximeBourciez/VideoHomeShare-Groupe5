@@ -7,6 +7,8 @@
 
 {% block pageContent %}
 
+    
+
     <div class="w-100 d-flex flex-column align-items-center bg-dark mt-3" >
         <!-- En-tête de la section -->
         <div class="d-flex justify-content-between container mt-2">
@@ -52,4 +54,32 @@
             </div>
         </div>
     </div>
+
+    <!-- Messages erreur et succes -->
+    {% if messageSucces or messageErreur %}
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div class="toast {{ messageSucces ? 'bg-success' : 'bg-danger' }} text-white" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-body">
+                    {{ messageSucces ? messageSucces : messageErreur }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.1/js/bootstrap.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+            var toastList = toastElList.map(function (toastEl) {
+                return new bootstrap.Toast(toastEl, { delay: 5000 });
+            });
+            toastList.forEach(toast => toast.show());
+        });
+    </script>
+
 {% endblock %}
