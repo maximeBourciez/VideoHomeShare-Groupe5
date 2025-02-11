@@ -93,6 +93,8 @@ class Bd
         throw new Exception("Un singleton ne doit pas être deserialisé");
     }
 
+    
+
     /**
      * Sauvegarde la base de données dans un fichier SQL.
      * 
@@ -102,72 +104,54 @@ class Bd
      */
     public function sauvegarder(): void
     {
-        $date = new DateTime();
-
-        // Nom du fichier de sauvegarde
-        $filename = 'backup_' . $date->format('Y-m-d_H-i-s') . '.sql';
-        $path = "../backupsBD/{$filename}";
-
-        try {
-            $pdo = $this->getConnexion();
-            $sql = "-- Sauvegarde de la base " . DB_NAME . " - " . $date->format('Y-m-d H:i:s') . "\n\n";
-
-            // Désactiver les contraintes de clés étrangères
-            $sql .= "SET FOREIGN_KEY_CHECKS = 0;\n\n";
-
-            // Lister les tables
-            $tables = [];
-            $result = $pdo->query("SHOW TABLES");
-            while ($row = $result->fetch(PDO::FETCH_NUM)) {
-                $tables[] = $row[0];
-            }
-
-            $tableStructures = [];
-            $tableData = [];
-
-            foreach ($tables as $table) {
-                // Exporter la structure de la table
-                $res = $pdo->query("SHOW CREATE TABLE `$table`");
-                $row = $res->fetch(PDO::FETCH_ASSOC);
-                $tableStructures[$table] = "-- Structure de la table `$table` --\n DROP TABLE IF EXISTS `$table`; \n" . $row['Create Table'] . ";\n\n";
-
-                // Exporter les données
-                $res = $pdo->query("SELECT * FROM `$table`");
-                while ($row = $res->fetch(PDO::FETCH_ASSOC)) {
-                    $values = array_map(function ($value) use ($pdo) {
-                        return $value === null ? 'NULL' : $pdo->quote($value);
-                    }, array_values($row));
-                    $tableData[$table][] = "INSERT INTO `$table` (`" . implode("`, `", array_keys($row)) . "`) VALUES (" . implode(", ", $values) . ");";
-                }
-            }
-
-            // Écrire d'abord toutes les structures
-            foreach ($tableStructures as $table => $createSQL) {
-                $sql .= $createSQL;
-            }
-
-            // Activer les contraintes de clés étrangères
-            $sql .= "\nSET FOREIGN_KEY_CHECKS = 1;\n\n";
-
-            // Ajouter les données après les créations de tables
-            foreach ($tableData as $table => $data) {
-                $sql .= "-- Données de la table `$table` --\n";
-                $sql .= implode("\n", $data) . "\n\n";
-            }
-
-            // Sauvegarder dans un fichier
-            $backupDir = realpath(dirname(__FILE__)) . '/../backupsBD';
-            if (!is_dir($backupDir)) {
-                mkdir($backupDir, 0777, true);
-            }
-
-            file_put_contents($backupDir . '/' . $filename, $sql);
-
-            // Mise à jour de la dernière sauvegarde
-            $this->lastBackup = $date;
-        } catch (Exception $e) {
-            echo "Erreur lors de la sauvegarde : " . $e->getMessage() . "\n";
+        // Générer un nom de fichier unique basé sur la date
+        $backupDir = "backupsBD/";
+        if (!file_exists($backupDir)) {
+            mkdir($backupDir, 0755, true);
         }
+        $backupFile = $backupDir . 'backup_' .date('Y-m-d_H-i-s'). '.sql';
+        
+        // Récupérer la liste des tables
+        $tables = $this->getTables();
+        
+        // Ouvrir le fichier de backup
+        $handle = fopen($backupFile, 'w');
+        
+        // En-tête SQL
+        fwrite($handle, "-- Database: " . DB_NAME . "\n");
+        fwrite($handle, "-- Backup Date: " . date('Y-m-d H:i:s') . "\n\n");
+        
+        // Désactiver les contraintes de clés étrangères
+        fwrite($handle, "SET FOREIGN_KEY_CHECKS = 0;\n\n");
+        
+        // Sauvegarder les structures et données de chaque table
+        foreach ($tables as $table) {
+            // Structure de la table
+            $stmt = $this->pdo->query("SHOW CREATE TABLE `$table`");
+            $createTable = $stmt->fetch(PDO::FETCH_ASSOC)['Create Table'];
+            fwrite($handle, "DROP TABLE IF EXISTS `$table`;\n");
+            fwrite($handle, $createTable . ";\n\n");
+            
+            // Données de la table
+            $stmt = $this->pdo->query("SELECT * FROM `$table`");
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            if (!empty($rows)) {
+                fwrite($handle, "INSERT INTO `$table` VALUES \n");
+                $valueStrings = [];
+                foreach ($rows as $row) {
+                    $rowValues = array_map(function($value) {
+                        return $value === null ? 'NULL' : $this->pdo->quote($value);
+                    }, $row);
+                    $valueStrings[] = '(' . implode(',', $rowValues) . ')';
+                }
+                fwrite($handle, implode(",\n", $valueStrings) . ";\n\n");
+            }
+        }
+        
+        // Réactiver les contraintes de clés étrangères
+        fwrite($handle, "SET FOREIGN_KEY_CHECKS = 1;\n");
+        fclose($handle);
     }
 
 
@@ -211,32 +195,20 @@ class Bd
             }
         }
 
-        var_dump("Dernière backup trouvée : ", $latestBackupDate);
         $now = new DateTime();
-        var_dump("Date actuelle : ", $now);
-
-        var_dump("=== ÉVALUATION CONDITION ===");
         if ($latestBackupDate === null) {
-            var_dump("Pas de backup existante - sauvegarde nécessaire");
             $this->sauvegarder();
         } else {
             $interval = $latestBackupDate->diff($now);
-            var_dump("Différence en jours : " . $interval->days);
-            var_dump("Condition $interval->days >= 2 : " . ($interval->days >= 2 ? 'true' : 'false'));
 
             if ($interval->days >= 2) {
                 var_dump("=== SAUVEGARDE DÉCLENCHÉE ===");
                 if ($nombreBackups > SAUVEGARDE_MAX_NUMBER) {
-                    var_dump("Suppression ancienne backup");
                     unlink($backupDir . '/' . $oldestBackup);
                 }
                 $this->sauvegarder();
-                var_dump("=== SAUVEGARDE EFFECTUÉE ===");
-            } else {
-                var_dump("=== PAS DE SAUVEGARDE NÉCESSAIRE ===");
             }
         }
-        var_dump("=== FIN VÉRIFICATION ===");
     }
 
 
@@ -261,7 +233,8 @@ class Bd
         $this->pdo->exec("SET FOREIGN_KEY_CHECKS = 0");
 
         // Lire et exécuter le fichier SQL
-        $sqlContent = file_get_contents($fileToRestore);
+        $pathToBackup = realpath($backupFolder . $fileToRestore);
+        $sqlContent = file_get_contents($pathToBackup);
         $sqlStatements = explode(';', $sqlContent);
 
         foreach ($sqlStatements as $statement) {
@@ -278,5 +251,16 @@ class Bd
 
         // Réactiver les contraintes de clés étrangères
         $this->pdo->exec("SET FOREIGN_KEY_CHECKS = 1");
+    }
+
+
+    /**
+     * @brief Méthode pour récupérer la liste des tables de la base de données.
+     * 
+     * @return array
+     */
+    private function getTables(): array {
+        $stmt = $this->getConnexion()->query("SHOW TABLES");
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 }

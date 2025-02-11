@@ -152,6 +152,7 @@ class ControllerDashboard extends Controller
                 // Restaurer 
                 $managerBD = BD::getInstance();
                 $managerBD->restore($fileToRestore);
+                header("Location: index.php?controller=dashboard&methode=afficherAdministration");
             }
             catch(Exception $e){
                 $this->afficherAdministration(/* Afficher le message derreur */);
@@ -177,13 +178,16 @@ class ControllerDashboard extends Controller
             // Sauvegarder la BD
             try {
                 $managerBD->sauvegarder();
-                $this->afficherAdministration();
+                header("Location: index.php?controller=dashboard&methode=afficherAdministration");
+                exit();
             }catch(Exception $e){
                 $this->afficherAdministration(/* Afficher le message derreur */);
+                exit();
             }
         }else{
             // Redirection vers la page d'accueil
             header("Location: index.php?controller=index&methode=index");
+            exit();
         }
     }
 
