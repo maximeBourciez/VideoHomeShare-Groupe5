@@ -133,7 +133,7 @@ class Bd
                 // Exporter la structure de la table
                 $res = $pdo->query("SHOW CREATE TABLE `$table`");
                 $row = $res->fetch(PDO::FETCH_ASSOC);
-                $tableStructures[$table] = "-- Structure de la table `$table` --\n" . $row['Create Table'] . ";\n\n";
+                $tableStructures[$table] = "-- Structure de la table `$table` --\n DROP TABLE IF EXISTS `$table` \n" . $row['Create Table'] . ";\n\n";
 
                 // Exporter les données
                 $res = $pdo->query("SELECT * FROM `$table`");
@@ -223,8 +223,44 @@ class Bd
 
             $this->sauvegarder();
         }
-
-
     }
 
+
+    /**
+     * @brief méthode de restauration de la base de données
+     * 
+     * @param string $fileToRestore Nom du fichier à restaurer
+     * 
+     * @throws Exception e En cas d'echec de la restoration
+     * 
+     * @return void
+     */
+    public function restore(string $fileToRestore){
+        $backupFolder = "backups/";
+        if (!file_exists($backupFolder.$fileToRestore)) {
+            throw new Exception("Fichier de backup non trouvé");
+        }
+        
+        // Désactiver les contraintes de clés étrangères
+        $this->pdo->exec("SET FOREIGN_KEY_CHECKS = 0");
+        
+        // Lire et exécuter le fichier SQL
+        $sqlContent = file_get_contents($fileToRestore);
+        $sqlStatements = explode(';', $sqlContent);
+        
+        foreach ($sqlStatements as $statement) {
+            $statement = trim($statement);
+            if (!empty($statement)) {
+                try {
+                    $this->pdo->exec($statement);
+                } catch (PDOException $e) {
+                    // Log ou gérer l'erreur selon vos besoins
+                    error_log("Erreur lors de la restauration : " . $e->getMessage());
+                }
+            }
+        }
+        
+        // Réactiver les contraintes de clés étrangères
+        $this->pdo->exec("SET FOREIGN_KEY_CHECKS = 1");
+    }
 }

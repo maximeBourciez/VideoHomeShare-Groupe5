@@ -7,4 +7,49 @@
 
 {% block pageContent %}
 
+    <div class="w-100 d-flex flex-column align-items-center bg-dark mt-3" >
+        <!-- En-tête de la section -->
+        <div class="d-flex justify-content-between container mt-2">
+            <div class="text-light">
+                <h2>Base de données</h2>
+            </div>
+            <div>
+                <a href="index.php?controller=dashboard&methode=sauvegarderBD" class="btn btn-secondary"> 
+                    Effectuer une sauvegarde 
+                </a>
+            </div>
+        </div>
+
+
+        <!-- Informations (backups, dates, etc) -->
+        <div class="bg-dark text-white rounded-4 shadow-lg p-3 my-5" style="width: 80%">
+            <div class="table-responsive text-white">
+                <table id="backupsTable" class="table table-dark table-hover mb-0 text-white">
+                    <thead>
+                        <tr>
+                            <th>Nom du fichier</th>
+                            <th>Date</th>
+                            <th>Taille du fichier</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-white">
+                        {% for backup in backups %}
+                            <tr>
+                                <td>{{ backup.nom }}</td>
+                                <td>{{ backup.date }}</td>
+                                <td>{{ backup.taille }}</td>
+                                <td>
+                                    <form method="POST" action="index.php?controller=dashboard&methode=restaurerSauvegarde"> 
+                                        <input type="hidden" value="{{ backup.nom }}" name="backup">
+                                        <button type="submit" class="btn btn-primary"> Restaurer </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 {% endblock %}
