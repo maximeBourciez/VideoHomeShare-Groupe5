@@ -82,14 +82,14 @@
             <div class="p-4 gap-2" style="width: 25%">
                 <h5 class="text-center mb-5">Actions sur la liste :</h5>
                 
-                <form method="post" action="" class="d-flex mb-3">
+                <form method="post" action="index.php?controller=dashboard&methode=ajouterMotInterdit" class="d-flex mb-3">
                     <input type="text" name="mot" class="form-control me-2" placeholder="Ajouter un mot..." required style="width: 70%">
-                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                    <button type="submit" class="btn btn-primary" id="btnAjouter">Ajouter</button>
                 </form>
 
-                <form method="post" action="" class="d-flex">
+                <form method="post" action="index.php?controller=dashboard&methode=supprimerMotInterdit" class="d-flex">
                     <input type="text" name="mot" class="form-control me-2" placeholder="Mot à supprimer..." required style="width: 70%">
-                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                    <button type="submit" class="btn btn-danger" id="btnSupprimer">Supprimer</button>
                 </form>
             </div>
         </div>
