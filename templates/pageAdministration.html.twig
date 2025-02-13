@@ -58,48 +58,42 @@
 
 
     <!-- Mots interdits -->
-<div class="mt-5 bg-dark text-light p-4">
-    <!-- Titre -->
-    <div class="p-3 mb-3">
-        <h2 class="m-0 ms-5">Liste de mots interdits</h2>
-    </div>
-
-    <!-- Contenu principal -->
-    <div class="d-flex flex-md-row justify-content-around">
-        <!-- Liste des mots -->
-        <div class="p-4 d-flex flex-column gap-2" style="width: 50%">
-            <h4 class="m-0">Derniers mots ajoutés :</h4>
-            <p> 
-            {% for mot in motsInterdits %}
-                {{ mot }}{% if not loop.last %}, {% endif %}
-            {% else %}
-                <em>Aucun mot interdit enregistré.</em>
-            {% endfor %}
-            </p>
+    <div class="my-5 bg-dark text-light p-4">
+        <!-- Titre -->
+        <div class="p-3 mb-3">
+            <h2 class="m-0 ms-5">Liste de mots interdits</h2>
         </div>
 
-        <!-- Formulaires -->
-        <div class="p-4 gap-2" style="width: 25%">
-            <h5 class="text-center mb-5">Actions sur la liste :</h5>
-            
-            <form method="post" action="" class="d-flex mb-3">
-                <input type="text" name="mot" class="form-control me-2" placeholder="Ajouter un mot..." required style="width: 70%">
-                <button type="submit" class="btn btn-primary">Ajouter</button>
-            </form>
+        <!-- Contenu principal -->
+        <div class="d-flex flex-md-row justify-content-around">
+            <!-- Liste des mots -->
+            <div class="p-4 d-flex flex-column gap-2" style="width: 50%">
+                <h4 class="m-0">Derniers mots ajoutés :</h4>
+                <p> 
+                {% for mot in motsInterdits %}
+                    {{ mot }}{% if not loop.last %}, {% endif %}
+                {% else %}
+                    <em>Aucun mot interdit enregistré.</em>
+                {% endfor %}
+                </p>
+            </div>
 
-            <form method="post" action="" class="d-flex">
-                <input type="text" name="mot" class="form-control me-2" placeholder="Mot à supprimer..." required style="width: 70%">
-                <button type="submit" class="btn btn-danger">Supprimer</button>
-            </form>
+            <!-- Formulaires -->
+            <div class="p-4 gap-2" style="width: 25%">
+                <h5 class="text-center mb-5">Actions sur la liste :</h5>
+                
+                <form method="post" action="" class="d-flex mb-3">
+                    <input type="text" name="mot" class="form-control me-2" placeholder="Ajouter un mot..." required style="width: 70%">
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                </form>
+
+                <form method="post" action="" class="d-flex">
+                    <input type="text" name="mot" class="form-control me-2" placeholder="Mot à supprimer..." required style="width: 70%">
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-
-
-
-
-    
-    
 
 
     <!-- Messages erreur et succes -->

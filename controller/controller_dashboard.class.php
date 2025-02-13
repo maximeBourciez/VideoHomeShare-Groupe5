@@ -1,5 +1,9 @@
 <?php
 
+// Fichier des mots interdits
+define("FICHIER_JSON", "config/nomincorect.json");
+
+
 /**
  * @brief Classe ControllerSignalement
  * 
@@ -265,5 +269,88 @@ class ControllerDashboard extends Controller
 
         // Retourner un tableau vide en cas d'erreur
         return [];
+    }  
+
+
+    /**
+     * Charge les mots interdits depuis le fichier JSON.
+     */
+    public function chargerMotsInterdits() {
+        if (!file_exists(FICHIER_JSON)) {
+            return [];
+        }
+        $contenu = file_get_contents(FICHIER_JSON);
+        return json_decode($contenu, true) ?? [];
+    }
+
+    /**
+     * Sauvegarde    la liste des mots interdits dans le fichier JSON.
+     */
+    public function sauvegarderMotsInterdits($mots) {
+        file_put_contents(FICHIER_JSON, json_encode($mots, JSON_PRETTY_PRINT));
+    }
+
+
+    /**
+     * @brief Focntion de gestion des demandes sur la liste des mots interdits
+     * 
+     * @return void
+     */
+    public function gererMotsInterdits(){
+        // Vérifier que l'utilisateur est bien un Modérateur
+        if ($this->utilisateurEstModerateur()) {
+            // Récupérer l'action à effectuer
+            $action = $_POST["action"];
+
+            // Effectuer l'action demandée
+            switch ($action) {
+                case "ajouter":
+                    $mot = htmlspecialchars($_POST["mot"]);
+                    $resultat = $this->ajouterMot($mot);
+                    $this->afficherAdministration(!$resultat["success"], $resultat["message"]);
+                    break;
+                case "supprimer":
+                    $mot = htmlspecialchars($_POST["mot"]);
+                    $resultat = $this->supprimerMot($mot);
+                    $this->afficherAdministration(!$resultat["success"], $resultat["message"]);
+                    break;
+                default:
+                    $this->afficherAdministration(true, "Action non reconnue");
+                    break;
+            }
+        }
+    }
+
+
+    /**
+     * Ajoute un mot interdit dans le fichier JSON.
+     */
+    public function ajouterMot($mot) {
+        $mots = $this->chargerMotsInterdits();
+        
+        if (in_array($mot, $mots)) {
+            return ["success" => false, "message" => "Le mot '$mot' est déjà interdit."];
+        }
+        
+        $mots[] = $mot;
+        $this->sauvegarderMotsInterdits($mots);
+        
+        return ["success" => true, "message" => "Mot '$mot' ajouté avec succès."];
+    }
+
+    /**
+     * Supprime un mot interdit de la liste.
+     */
+    public function supprimerMot($mot) {
+        $mot = trim(strtolower($mot));
+        $mots = $this->chargerMotsInterdits();
+
+        if (!in_array($mot, $mots)) {
+            return ["success" => false, "message" => "Le mot '$mot' n'existe pas dans la liste."];
+        }
+
+        $mots = array_values(array_diff($mots, [$mot]));
+        $this->sauvegarderMots($mots);
+        return ["success" => true, "message" => "Mot '$mot' supprimé avec succès."];
     }
 }
