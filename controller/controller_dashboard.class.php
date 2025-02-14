@@ -1,5 +1,9 @@
 <?php
 
+// Fichier des mots interdits
+define("FICHIER_JSON", "config/nomincorect.json");
+
+
 /**
  * @brief Classe ControllerSignalement
  * 
@@ -31,7 +35,7 @@ class ControllerDashboard extends Controller
      * 
      * @return void
      */
-    public function afficheSignalements() : void
+    public function afficheSignalements(): void
     {
         // Vérification de la session
         if (isset($_SESSION['utilisateur'])) {
@@ -41,7 +45,6 @@ class ControllerDashboard extends Controller
                 $managerAccueil = new ControllerIndex($this->getTwig(), $this->getLoader());
                 $managerAccueil->index();
             }
-
         } else {
             // Redirection vers la page de connexion
             $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
@@ -54,7 +57,7 @@ class ControllerDashboard extends Controller
 
         // Affichage de la page des signalements
         $template = $this->getTwig()->load('signalement.html.twig');
-        echo $template->render(array("signalements" => $signalements , "nbSignalements" => count($signalements)));
+        echo $template->render(array("signalements" => $signalements, "nbSignalements" => count($signalements)));
     }
 
     /**
@@ -62,7 +65,7 @@ class ControllerDashboard extends Controller
      * 
      * @return void
      */
-    public function supprimerMessageSignale() : void
+    public function supprimerMessageSignale(): void
     {
         // Vérification de la session
         if (isset($_SESSION['utilisateur'])) {
@@ -73,7 +76,6 @@ class ControllerDashboard extends Controller
                 $managerAccueil = new ControllerIndex($this->getTwig(), $this->getLoader());
                 $managerAccueil->index();
             }
-
         } else {
             // Redirection vers la page de connexion
             $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
@@ -97,18 +99,12 @@ class ControllerDashboard extends Controller
 
 
     // Fonctions à compléter
-    function afficherUtilisateurs(?string $eventuelsFiltres){
-
-    }
+    function afficherUtilisateurs(?string $eventuelsFiltres) {}
 
 
-    function bannirUtilisateur(?string $idUtilisateur){
+    function bannirUtilisateur(?string $idUtilisateur) {}
 
-    }
-
-    function debannirUtilisateur(?string $idUtilisateur){
-
-    }
+    function debannirUtilisateur(?string $idUtilisateur) {}
 
     /**
      * @brief Fonction d'affichage de la page d'administration
@@ -120,17 +116,18 @@ class ControllerDashboard extends Controller
      * 
      * @return void 
      */
-    public function afficherAdministration(?bool $erreur = false, ?string $message = "") {
+    public function afficherAdministration(?bool $erreur = false, ?string $message = "")
+    {
         if ($this->utilisateurEstModerateur()) {
             // Récupération des backups
             $backups = $this->recupererBackups();
-    
+
             // Récupération des mots interdits ajoutés (les plus loins dans la liste)
             $motsInterdits = $this->recupererMotsInterdits();
-    
+
             // Déterminer la clé pour le message
             $messageKey = $erreur ? 'messageErreur' : 'messageSucces';
-    
+
             // Affichage de la page d'administration
             $template = $this->getTwig()->load('pageAdministration.html.twig');
             echo $template->render([
@@ -140,7 +137,7 @@ class ControllerDashboard extends Controller
             ]);
         }
     }
-    
+
 
 
     /**
@@ -148,25 +145,25 @@ class ControllerDashboard extends Controller
      * 
      * @return void
      */
-    public function restaurerSauvegarde(){
+    public function restaurerSauvegarde()
+    {
         // Vérifier que l'utilisateur est bien un Modérateur
-        if($this->utilisateurEstModerateur()){
+        if ($this->utilisateurEstModerateur()) {
 
             // Récupérer la Backup à restaurer
             $fileToRestore = $_POST["backup"];
 
             // Tenter une restoration de la BD
-            try{
+            try {
                 // Restaurer 
                 $managerBD = BD::getInstance();
                 $managerBD->restore($fileToRestore);
                 $this->afficherAdministration(false, "La restauration a été effectuée avec succès");
                 exit();
-            }
-            catch(Exception $e){
+            } catch (Exception $e) {
                 $this->afficherAdministration(true, "Une erreur est survenue lors de la restauration : " . $e->getMessage());
             }
-        }else{
+        } else {
             // Redirection vers la page d'accueil
             header("Location: index.php?controller=index&methode=index");
         }
@@ -178,9 +175,10 @@ class ControllerDashboard extends Controller
      * 
      * @return void
      */
-    public function sauvegarderBD(){
+    public function sauvegarderBD()
+    {
         // Vérifier que l'utilisateur est bien un Modérateur
-        if($this->utilisateurEstModerateur()){
+        if ($this->utilisateurEstModerateur()) {
             // Sauvegarder la BD
             $managerBD = BD::getInstance();
 
@@ -189,11 +187,11 @@ class ControllerDashboard extends Controller
                 $managerBD->sauvegarder();
                 $this->afficherAdministration(false, "La sauvegarde a été effectuée avec succès");
                 exit();
-            }catch(Exception $e){
+            } catch (Exception $e) {
                 $this->afficherAdministration(true, "Une erreur est survenue lors de la sauvegarde : " . $e->getMessage());
                 exit();
             }
-        }else{
+        } else {
             // Redirection vers la page d'accueil
             header("Location: index.php?controller=index&methode=index");
             exit();
@@ -206,11 +204,12 @@ class ControllerDashboard extends Controller
      * 
      * @return bool $estModerateur Indique si l'utilisateur est modérateur
      */
-    private function utilisateurEstModerateur(){
+    private function utilisateurEstModerateur()
+    {
         // Vérifier que l'utilisateur est connecté et modérateur
-        if(isset($_SESSION["utilisateur"])){
+        if (isset($_SESSION["utilisateur"])) {
             $utilisateur = unserialize($_SESSION["utilisateur"]);
-            if($utilisateur->getRole()->toString() != "Moderateur"){
+            if ($utilisateur->getRole()->toString() != "Moderateur") {
                 // Redirection vers la page d'accueil
                 header("Location: index.php?controller=index&methode=index");
                 return false;
@@ -231,16 +230,17 @@ class ControllerDashboard extends Controller
      * 
      * @return array $backups Tableau contenant les backups de la base de données
      */
-    private function recupererBackups(){
+    private function recupererBackups()
+    {
         $backups = array();
         $dossier = "backupsBD/";
         $fichiers = scandir($dossier);
-        foreach($fichiers as $fichier){
-            if($fichier != "." && $fichier != ".."){ // On entre dans les fichiers 
-                
+        foreach ($fichiers as $fichier) {
+            if ($fichier != "." && $fichier != "..") { // On entre dans les fichiers 
+
                 // Récupérer les données qui nous intéressent (nom du fichier, date de création, taille)
-                $infosFichier = stat($dossier.$fichier);
-                $taille = round($infosFichier["size"]/1024, 2);
+                $infosFichier = stat($dossier . $fichier);
+                $taille = round($infosFichier["size"] / 1024, 2);
                 $date = date("d/m/Y H:i:s", $infosFichier["mtime"]);
                 $backups[] = array("nom" => $fichier, "date" => $date, "taille" => $taille);
             }
@@ -254,23 +254,123 @@ class ControllerDashboard extends Controller
      * 
      * @return array $motsInterdits Tableau contenant les 40 derniers mots interdits ajoutés
      */
-    private function recupererMotsInterdits(){
-        // Récupérer le fichier contenant les mots interdits
-        $fichier = fopen("config/nomincorect.json", "r");
+    private function recupererMotsInterdits()
+    {
+        // Lire le contenu du fichier JSON
+        $contenu = file_get_contents("config/nomincorect.json");
 
-        // Récupérer les mots interdits
-        $motsInterdits = array();
-        while(!feof($fichier)){
-            $ligne = fgets($fichier);
-            $mot = json_decode($ligne, true);
-            if (isset($mot['nom'])) {
-                $motsInterdits[] = $mot['nom'];
-            }
+        // Décoder le JSON en tableau associatif
+        $data = json_decode($contenu, true);
+
+        // Vérifier si la clé "nom" existe et est un tableau
+        if (isset($data['nom']) && is_array($data['nom'])) {
+            return $data['nom'];
         }
 
-        // Fermer le fichier
-        fclose($fichier);
+        // Retourner un tableau vide en cas d'erreur
+        return [];
+    }  
 
-        return array_slice($motsInterdits, -40);
+
+    /**
+     * @brief Fonction d'ajout d'un mot interdit
+     * 
+     * @return void
+     */
+    public function ajouterMotInterdit(){
+        // Vérifier que l'utilisateur est bien un Modérateur
+        if ($this->utilisateurEstModerateur()) {
+            // Récupérer le mot interdit à ajouter
+            $motInterdit = htmlspecialchars($_POST["mot"]);
+
+            // Lire le contenu du fichier JSON
+            $contenu = file_get_contents(FICHIER_JSON);
+
+            // Décoder le JSON en tableau associatif
+            $data = json_decode($contenu, true);
+
+            // Vérifier si la clé "nom" existe et est un tableau
+            if (!isset($data['nom']) || !is_array($data['nom'])) {
+                $data['nom'] = [];
+            }
+
+            // Vérifier si le mot interdit n'existe pas déjà
+            if (in_array($motInterdit, $data['nom'])) {
+                // Redirection vers la page d'administration
+                $this->afficherAdministration(true, "Le mot interdit existe déjà");
+                exit();
+            }
+
+            // Ajouter le mot interdit
+            $data['nom'][] = $motInterdit;
+
+            // Encoder le tableau en JSON
+            $contenu = json_encode($data);
+
+            // Écrire le contenu dans le fichier
+            file_put_contents(FICHIER_JSON, $contenu);
+
+            // Redirection vers la page d'administration
+            $this->afficherAdministration(false, "Le mot interdit a été ajouté avec succès");
+            exit();
+        } else {
+            // Redirection vers la page d'accueil
+            header("Location: index.php?controller=index&methode=index");
+            exit();
+        }
+    }
+
+
+    /**
+     * @brief Fonction de suppression d'un mot interdit
+     * 
+     * @return void
+     */
+    public function supprimerMotInterdit(){
+        // Vérifier que l'utilisateur est bien un Modérateur
+        if ($this->utilisateurEstModerateur()) {
+            // Récupérer le mot interdit à supprimer
+            $motInterdit = htmlspecialchars($_POST["mot"]);
+
+            // Lire le contenu du fichier JSON
+            $contenu = file_get_contents(FICHIER_JSON);
+
+            // Décoder le JSON en tableau associatif
+            $data = json_decode($contenu, true);
+
+            // Vérifier si la clé "nom" existe et est un tableau
+            if (isset($data['nom']) && is_array($data['nom'])) {
+                // Vérifier si le mot interdit existe
+                if (!in_array($motInterdit, $data['nom'])) {
+                    // Redirection vers la page d'administration
+                    $this->afficherAdministration(true, "Le mot interdit n'existe pas");
+                    exit();
+                }
+
+                // Supprimer le mot interdit
+                $index = array_search($motInterdit, $data['nom']);
+                if ($index !== false) {
+                    unset($data['nom'][$index]);
+                }
+
+                // Encoder le tableau en JSON
+                $contenu = json_encode($data);
+
+                // Écrire le contenu dans le fichier
+                file_put_contents(FICHIER_JSON, $contenu);
+
+                // Redirection vers la page d'administration
+                $this->afficherAdministration(false, "Le mot interdit a été supprimé avec succès");
+                exit();
+            } else {
+                // Redirection vers la page d'accueil
+                header("Location: index.php?controller=index&methode=index");
+                exit();
+            }
+        } else {
+            // Redirection vers la page d'accueil
+            header("Location: index.php?controller=index&methode=index");
+            exit();
+        }
     }
 }
