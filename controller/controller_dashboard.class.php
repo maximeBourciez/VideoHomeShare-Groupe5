@@ -340,6 +340,13 @@ class ControllerDashboard extends Controller
 
             // Vérifier si la clé "nom" existe et est un tableau
             if (isset($data['nom']) && is_array($data['nom'])) {
+                // Vérifier si le mot interdit existe
+                if (!in_array($motInterdit, $data['nom'])) {
+                    // Redirection vers la page d'administration
+                    $this->afficherAdministration(true, "Le mot interdit n'existe pas");
+                    exit();
+                }
+
                 // Supprimer le mot interdit
                 $index = array_search($motInterdit, $data['nom']);
                 if ($index !== false) {
