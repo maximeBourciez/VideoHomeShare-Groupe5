@@ -95,6 +95,41 @@ class ControllerDashboard extends Controller
         $this->afficheSignalements();
     }
 
+    /**
+     * @brief Supprime les signalement  un message signalé
+     * 
+     * @return void
+     */
+    public function supprimerSignalement() : void
+    {
+        // Vérification de la session
+        if (isset($_SESSION['utilisateur'])) {
+            $utilisateur = unserialize($_SESSION['utilisateur']);
+            // Vérification  si l'utilisateur est un modérateur
+            if ($utilisateur->getRole()->toString() != "Moderateur") {
+                // Redirection vers la page d'accueil
+                $managerAccueil = new ControllerIndex($this->getTwig(), $this->getLoader());
+                $managerAccueil->index();
+            }
+
+        } else {
+            // Redirection vers la page de connexion
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
+        }
+
+        // Récupération de l'identifiant du message signalé
+        $idMessage = htmlspecialchars($_POST['idMessage']);
+
+        
+        //suppression des signalements associés
+        $managerSignalement = new SignalementDAO($this->getPdo());
+        $managerSignalement->supprimerSignalementMessage($idMessage);
+
+        // Redirection vers la page des signalements
+        $this->afficheSignalements();
+    }
+
 
     // Fonctions à compléter
     function afficherUtilisateurs(?string $eventuelsFiltres){
@@ -105,7 +140,19 @@ class ControllerDashboard extends Controller
 
     }
 
-    function bannirUtilisateur(?string $idUtilisateur){
+    function bannirUtilisateur(?string $idUtilisateur = null){
+
+        $idMessage = htmlspecialchars($_POST['idMessage']);
+        $raison = htmlspecialchars($_POST['raison']);
+        $managerBannissement = new BannissementDAO($this->getPdo());
+
+        $managerMessage = new MessageDAO($this->getPdo());
+        $messge = $managerMessage->chercherMessageParId($idMessage);
+        $idUtilisateur = $messge->getUtilisateur()->getId();
+        $managerBannissement->create($raison,$idUtilisateur);
+
+        // affichage de la page des signalements
+        $this->afficherUtilisateurs(null);   
 
     }
 

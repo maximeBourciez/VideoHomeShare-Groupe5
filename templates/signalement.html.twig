@@ -25,8 +25,8 @@
                                 <td><p class="">{{signalement.raisons}}</p></td>
                                 <td><p class="my-auto ">{{signalement.nbSignalement}}</p></td>
                                 <td><form action="index.php?controller=dashboard&methode=supprimerMessageSignale" method="post" class="row">
-                                    <input type="hidden" name="idMessage" value="{{signalement.idMessage}}"><div class="row">
-                                    <input type="submit" class="btn btn btn-tercary col mx-1 " value="Supprimer"> <a class="btn btn-primary col mx-1" data-bs-toggle="modal" data-bs-target="#gereMessage{{signalement.idMessage}}">Gérer</a> </div></form> </td>
+                                    <input type="hidden" name="idMessage" value="{{signalement.idMessage}}">
+                                    <input type="submit" class=" btn btn-tercary col m-1 " value="Supprimer"> <a class="btn btn-primary col m-1" data-bs-toggle="modal" data-bs-target="#gereMessage{{signalement.idMessage}}">Gérer</a></form> </td>
                             </tr>
 
 								{% endfor %}
@@ -42,6 +42,9 @@
                         url: 'https://cdn.datatables.net/plug-ins/1.11.5/i18n/fr-FR.json'
                         },
                         pageLength: 15,
+                        dom: '<"row mx-2 text-white"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+                        '<"row"<"col-12"tr>>' +
+                        '<"row mx-2 text-white"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
                         columns: [
                         {
                         width: "40%",
@@ -55,6 +58,7 @@
                         {
                         width: "40%"
                         }],
+
                         initComplete: function () {
                             $('#episodesTable_wrapper').addClass('text-white');
                             $('.dataTables_length').addClass('text-white');
@@ -66,22 +70,51 @@
                         </script>
 					{% for signalement in signalements %}
                     <div class="modal fade " id="gereMessage{{signalement.idMessage}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog  modal-dialog-centered">
+                        <div class="modal-dialog  modal-dialog-centered modal-lg">
                             <div class="modal-content bg-mydark" style="border: 1px solid #F2AC0F;">
 
                                 <div class="modal-header border-bottom-0">
-                                    <h5 class="modal-title text-white">Entrer le code pour la rejoindre</h5>
+                                    <h5 class="modal-title text-white">Gérer le signalement</h5>
                                     <button type="button" class="btn-close btn-close-white " data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body pt-0 ">
-                                    <form class="" action="index.php?controller=salle&methode=rejoindreSallePriver" method="POST">
-                                        <div class="form-check my-auto p-0">
-                                            <label class=" text-start form-check-label mb-0 text-white ">code de la salle</label>
-                                            <input type="number" name="code" class="form-control w-75 "  max="9999" min="1" required >
-                                        </div>
+                                    <label> Elément concerné </label>
+                                    <p>{{signalement.valeur}}</p>   
+                                    <label> Raison du signalement </label>
+                                    
+                                    <p>{{signalement.raisons}}</p>
 
-                                        <input type="submit" class="btn btn-primary ms-auto  mt-4" value="Rejoindre">
-                                    </form>
+                                    <label> Que souhaitez-vous faire ? </label>
+                                    <div class="row row-cols-lg-3 row-cols-1 align-items-start    ">
+                                        <form action="index.php?controller=dashboard&methode=supprimerMessageSignale" method="post" class="col m-1">
+                                        <input type="hidden" name="idMessage" value="{{signalement.idMessage}}">
+                                        <input type="submit" class="btn btn-tercary text-center col w-100" value="Supprimer le message">
+                                        </form>
+                                        {% if signalement.nbSignalement == 1 %}
+                                        <form action="index.php?controller=dashboard&methode=supprimerSignalement" method="post" class="col m-1">
+                                        <input type="hidden" name="idMessage" value="{{signalement.idMessage}}">
+                                        <input type="submit" class="btn btn-secondary text-center w-100" value="Supprimer le signalement">
+                                        </form>
+                                        
+                                        {% else %}
+                                        <form action="index.php?controller=dashboard&methode=supprimerSignalement" method="post" class="col m-1">
+                                        <input type="hidden" name="idMessage" value="{{signalement.idMessage}}">
+                                        <input type="submit" class="btn btn-secondary text-center col w-100" value="Supprimer les signalements">
+                                        </form>
+                                        
+                                        {% endif %}
+                                        <div class="col m-1">
+                                        <a class="btn btn-tercary w-100" data-bs-toggle="modal" data-bs-target="#Banirutilisateur{{signalement.idMessage}}">Bannir l’utilisateur</a>
+                                        </div>
+                                        
+                                        {# <form action="index.php?controller=dashboard&methode=supprimerSignalement" method="post" class="col m-1">
+                                        <input type="hidden" name="idMessage" value="{{signalement.idMessage}}">
+                                        <input type="submit" class="col btn btn-tercary text-center w-100" value="Bannir l’utilisateur">
+                                        </form> #}
+                                    
+                                    </div>
+
+
                                 </div>
                             </div>
                         </div>
