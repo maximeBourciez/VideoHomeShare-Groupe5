@@ -109,7 +109,8 @@ class ControllerDashboard extends Controller
             if ($utilisateur->getRole()->toString() != "Moderateur") {
                 // Redirection vers la page d'accueil
                 $managerAccueil = new ControllerIndex($this->getTwig(), $this->getLoader());
-                $managerAccueil->index();
+                header('Location: index.php?controller=dashboard&methode=afficheSignalements');
+                exit();
             }
 
         } else {
@@ -141,6 +142,14 @@ class ControllerDashboard extends Controller
     }
 
     function bannirUtilisateur(?string $idUtilisateur = null){
+
+        $utilisateur = unserialize($_SESSION['utilisateur']);
+        if ($utilisateur->getRole()->toString() != "Moderateur") {
+            // Redirection vers la page d'accueil
+            $managerAccueil = new ControllerIndex($this->getTwig(), $this->getLoader());
+            $managerAccueil->index();
+            exit();
+        }
 
         $idMessage = htmlspecialchars($_POST['idMessage']);
         $raison = htmlspecialchars($_POST['raison']);
