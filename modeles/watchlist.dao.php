@@ -251,6 +251,19 @@ class WatchlistDAO
             ':contenuId' => $contenuId
         ]);
         return intval($stmt->fetchColumn()) > 0;
-    }   
+    }
+    
+    /**
+     * @brief Méthode pour récupérer les watchlists publiques
+     * 
+     * @return array Tableau d'objets Watchlist
+     */
+    public function getWatchlistPublic(): array
+    {
+        $sql = "SELECT * FROM " . DB_PREFIX . "watchlist WHERE estPublique = 1";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        return $this->hydrateAll($stmt->fetchAll(PDO::FETCH_ASSOC));
+    }
 }
 
