@@ -362,247 +362,62 @@ body {
 .dataTables_wrapper {
   color: white;
   
-  .dataTables_length,
-  .dataTables_filter,
-  .dataTables_info,
-  .dataTables_paginate {
-    color: white !important;
-    margin: 1rem 0;
-    
-    @media (max-width: 768px) {
-      text-align: center;
-      margin: 0.75rem 0;
-      width: 100%;
-    }
-  }
-  
-  .dataTables_filter input,
-  .dataTables_length select {
-    background-color: rgba($dark, 0.7) !important;
-    color: white !important;
-    border: 1px solid rgba($primary, 0.2) !important;
-    border-radius: 0.5rem;
-    padding: 0.5rem;
-    margin: 0 0.5rem;
-    
-    @media (max-width: 768px) {
-      width: 100%;
-      margin: 0.5rem 0;
-      max-width: 90%;
-    }
-    
-    &:focus {
-      border-color: $primary !important;
-      box-shadow: 0 0 0 0.2rem rgba($primary, 0.25) !important;
-    }
-    
-    &::placeholder {
-      color: rgba(255, 255, 255, 0.7);
-    }
-  }
-  
-  .card {
-    background: rgba($dark, 0.95) !important;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba($primary, 0.1);
-    
-    @media (max-width: 768px) {
-      padding: 0.5rem !important;
-    }
-    
-    .table-responsive {
-      border-radius: 0.5rem;
-      -webkit-overflow-scrolling: touch;
-    }
-  }
-  
-  table.table-dark {
+  // Style de base pour la table
+  table.dataTable {
+    width: 100% !important;
     margin: 0 !important;
-    background-color: transparent;
     
-    thead th {
-      background-color: rgba(darken($dark, 5%), 0.5);
-      border-bottom: 2px solid rgba($primary, 0.2);
-      color: $primary;
-      font-weight: bold;
-      padding: 1rem;
-      
-      @media (max-width: 768px) {
-        padding: 0.75rem 0.5rem;
-        font-size: 0.9rem;
-      }
+    // Style des cellules
+    td, th {
+      padding: 0.75rem !important;
+      vertical-align: middle;
+      white-space: normal;
+      word-break: break-word;
     }
     
-    tbody tr {
-      &:hover {
-        background-color: rgba(lighten($dark, 5%), 0.5) !important;
-      }
-      
+    // Style spécifique pour mobile
+    @media (max-width: 768px) {
       td {
-        vertical-align: middle;
-        padding: 1rem;
-        border-color: rgba(255, 255, 255, 0.1);
+        min-width: 100px; // Évite les cellules trop étroites
         
-        @media (max-width: 768px) {
-          padding: 0.75rem 0.5rem;
-          font-size: 0.9rem;
-        }
-      }
-      
-      // Styles pour l'affichage détaillé sur mobile
-      &.child {
-        padding: 0 !important;
-        
-        td {
-          padding: 0 !important;
-          background-color: rgba(lighten($dark, 3%), 0.8);
-          border-top: none;
+        // Style pour le contenu mobile
+        .episode-mobile-info {
+          .episode-title {
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+          }
           
-          .episode-details-container {
-            margin: 0.5rem 1rem 1rem 1rem;
-            
-            .episode-detail-item {
-              margin-bottom: 0.5rem;
-              border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-              padding-bottom: 0.5rem;
-              
-              &:last-child {
-                border-bottom: none;
-                margin-bottom: 0;
-              }
-              
-              .episode-detail-label {
-                font-weight: bold;
-                color: $primary;
-                margin-right: 0.5rem;
-              }
-              
-              .episode-detail-value {
-                color: rgba(255, 255, 255, 0.9);
-              }
-            }
+          .episode-details {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 0.25rem;
+          }
+          
+          .episode-desc {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
           }
         }
       }
     }
   }
   
-  // Styles pour les contrôles cachés/affichés conditionnellement
-  table.dataTable.dtr-inline.collapsed>tbody>tr>td.dtr-control {
-    position: relative;
-    padding-left: 30px;
-    cursor: pointer;
+  // Amélioration du responsive
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     
-    &:before {
-      // Icône pour afficher les détails
-      content: '+';
-      background-color: $primary;
-      color: black;
-      border: 1px solid $primary;
-      border-radius: 50%;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-      height: 20px;
-      width: 20px;
-      line-height: 18px;
-      text-align: center;
-      font-weight: bold;
-      position: absolute;
-      top: 50%;
-      left: 10px;
-      transform: translateY(-50%);
-    }
-  }
-  
-  table.dataTable.dtr-inline.collapsed>tbody>tr.parent>td.dtr-control:before {
-    // Icône pour fermer les détails
-    content: '-';
-  }
-  
-  .dtr-details {
-    width: 100%;
-  }
-  
-  // Styles pour les images sur mobile
-  .episode-thumbnail {
-    @media (max-width: 768px) {
-      width: 100px !important;
-      height: 56px !important;
+    &::-webkit-scrollbar {
+      height: 8px;
     }
     
-    @media (max-width: 576px) {
-      width: 80px !important;
-      height: 45px !important;
-    }
-  }
-  
-  // Pagination optimisée
-  .page-item {
-    margin: 0 2px;
-    
-    @media (max-width: 576px) {
-      margin: 0 1px;
+    &::-webkit-scrollbar-track {
+      background: rgba($dark, 0.3);
     }
     
-    &.active .page-link {
-      background-color: $primary !important;
-      border-color: $primary !important;
-      color: black !important;
-    }
-    
-    &.disabled .page-link {
-      background-color: rgba($dark, 0.5) !important;
-      border-color: rgba(255, 255, 255, 0.1) !important;
-      color: rgba(255, 255, 255, 0.5) !important;
-    }
-    
-    .page-link {
-      background-color: $dark !important;
-      border-color: rgba(255, 255, 255, 0.1) !important;
-      color: white !important;
-      border-radius: 0.5rem;
-      padding: 0.5rem 1rem;
-      
-      @media (max-width: 576px) {
-        padding: 0.4rem 0.75rem;
-        font-size: 0.85rem;
-      }
-      
-      &:hover {
-        background-color: lighten($dark, 10%) !important;
-        border-color: $primary !important;
-      }
-      
-      &:focus {
-        box-shadow: 0 0 0 0.2rem rgba($primary, 0.25);
-      }
-    }
-  }
-  
-  // Optimisations pour mobile
-  @media (max-width: 768px) {
-    .dataTables_length, 
-    .dataTables_filter {
-      float: none;
-      display: block;
-      
-      label {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-      }
-    }
-    
-    .dataTables_paginate {
-      .pagination {
-        justify-content: center;
-        flex-wrap: wrap;
-      }
-    }
-    
-    .dataTables_info {
-      text-align: center;
-      padding-top: 0.5rem !important;
+    &::-webkit-scrollbar-thumb {
+      background: $primary;
+      border-radius: 4px;
     }
   }
 }

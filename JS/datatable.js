@@ -1,32 +1,9 @@
 $(document).ready(function () {
-  $("#episodesTable").DataTable({
+  const table = $("#episodesTable").DataTable({
     responsive: {
       details: {
         type: "column",
         target: "tr",
-        renderer: function (api, rowIdx, columns) {
-          // Créer un contenu détaillé pour l'affichage mobile
-          var data = $.map(columns, function (col, i) {
-            // Ne pas inclure la colonne d'image ou les colonnes vides dans les détails
-            if (col.hidden && col.data && i !== 0) {
-              return (
-                '<div class="episode-detail-item">' +
-                '<span class="episode-detail-label">' +
-                col.title +
-                ":</span> " +
-                '<span class="episode-detail-value">' +
-                col.data +
-                "</span>" +
-                "</div>"
-              );
-            }
-            return "";
-          }).join("");
-
-          return data
-            ? '<div class="episode-details-container">' + data + "</div>"
-            : false;
-        },
       },
     },
     language: {
@@ -37,37 +14,81 @@ $(document).ready(function () {
       [2, "asc"],
     ],
     pageLength: 15,
-    dom:
-      '<"row mx-2 text-white"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
-      '<"row"<"col-sm-12"tr>>' +
-      '<"row mx-2 text-white"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+
+    // Configuration des colonnes
     columnDefs: [
-      // Image toujours visible
       {
+        // Colonne image
         targets: 0,
-        responsivePriority: 1, // Priorité maximale pour toujours afficher l'image
-        width: "15%",
+        width: "100px",
         orderable: false,
+        responsivePriority: 1,
       },
-      // Titre toujours visible
       {
+        // Saison
+        targets: 1,
+        width: "80px",
+        responsivePriority: 3,
+      },
+      {
+        // Épisode
+        targets: 2,
+        width: "80px",
+        responsivePriority: 4,
+      },
+      {
+        // Titre
         targets: 3,
-        responsivePriority: 2, // Haute priorité pour le titre
-        width: "19%",
+        responsivePriority: 1,
+        render: function (data, type, row) {
+          if (type === "display") {
+            const mobileView = window.innerWidth <= 768;
+            if (mobileView) {
+              return `
+                <div class="episode-mobile-info">
+                  <div class="episode-title">${data}</div>
+                  <div class="episode-details">S${row[1]} E${row[2]} - ${row[4]}</div>
+                  <div class="episode-desc">${row[5]}</div>
+                </div>
+              `;
+            }
+            return data;
+          }
+          return data;
+        },
       },
-      // Colonnes moins importantes
       {
-        targets: [1, 2, 4, 5],
-        responsivePriority: 3, // Ces colonnes disparaîtront en premier
+        // Date
+        targets: 4,
+        responsivePriority: 2,
+      },
+      {
+        // Description
+        targets: 5,
+        responsivePriority: 5,
       },
     ],
+
+    // Configuration du DOM
+    dom:
+      '<"row mx-2"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+      '<"row"<"col-sm-12"tr>>' +
+      '<"row mx-2"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+
     // Initialisation
     initComplete: function () {
+      this.api().columns.adjust().responsive.recalc();
+
+      // Ajout des classes pour le style
       $("#episodesTable_wrapper").addClass("text-white");
-      $(".dataTables_length").addClass("text-white");
-      $(".dataTables_filter").addClass("text-white");
-      $(".dataTables_info").addClass("text-white");
-      $(".dataTables_paginate").addClass("text-white");
+      $(
+        ".dataTables_length, .dataTables_filter, .dataTables_info, .dataTables_paginate"
+      ).addClass("text-white");
     },
+  });
+
+  // Gestion du redimensionnement
+  $(window).on("resize", function () {
+    table.columns.adjust().responsive.recalc();
   });
 });
