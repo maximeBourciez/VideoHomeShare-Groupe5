@@ -1,6 +1,12 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Variables nécessaires
     const MAX_BONNES_REPONSES = 2;
+    const MAX_CARACTERES_TITRE = 50;
+    const MAX_CARACTERES_DESC = 100;
+    const MAX_CARACTERES_QUESTION_REPONSES = 125;
+
+    //Gestion des décomptes
+    gererDecomptes(MAX_CARACTERES_TITRE, MAX_CARACTERES_DESC, MAX_CARACTERES_QUESTION_REPONSES);
 
     // Gestion des réponses
     gererReponses(MAX_BONNES_REPONSES);
@@ -12,6 +18,78 @@ document.addEventListener('DOMContentLoaded', function () {
     gererIntitule();
 });
 
+/**
+ * @brief Méthode de gestion des décomptes
+ * 
+ * @param {Number} //MAX_CARACTERES_TITRE, MAX_CARACTERES_DESC, MAX_CARACTERES_QUESTION_REPONSES
+ * 
+ * @returns {void}
+ */
+function gererDecomptes(MAX_CARACTERES_TITRE, MAX_CARACTERES_DESC, MAX_CARACTERES_QUESTION_REPONSES) {
+    //Variables utiles
+    //Quizz
+    let titre = document.getElementById('titre'); //Titre du quizz
+    let desc = document.getElementById('description'); //Description du quizz
+    //Question
+    let titreQuestion = document.getElementById('titreQuestion'); //Titre de la question
+    let reponses = document.querySelectorAll('.inputReponse'); //Réponses d'une question
+
+    //Containers
+    let containerTitre = document.getElementById('containerNbDecomptesTitre');
+    let containerDesc = document.getElementById('containerNbDecomptesDesc');
+    let containerVal = document.getElementById('containerNbDecomptesVal');
+    let containerRep = document.querySelectorAll('.containerNbDecomptesRep');
+
+    //Décompte titre
+    titre.addEventListener('input', function(){
+        const TAILLE_TITRE = titre.value.length;
+        let nbCaracteresRestantsTitre = MAX_CARACTERES_TITRE - TAILLE_TITRE;
+        
+        containerTitre.textContent = `Caractères restants : ${nbCaracteresRestantsTitre}`;
+
+        if (nbCaracteresRestantsTitre < 1){
+            titre.value = titre.value.substring(0, MAX_CARACTERES_TITRE);
+        };
+    });
+
+    //Décompte description
+    desc.addEventListener('input', function(){
+        const TAILLE_DESC = desc.value.length;
+        let nbCaracteresRestantsDesc = MAX_CARACTERES_DESC - TAILLE_DESC;
+        
+        containerDesc.textContent = `Caractères restants : ${nbCaracteresRestantsDesc}`;
+
+        if (nbCaracteresRestantsDesc < 1){
+            desc.value = desc.value.substring(0, MAX_CARACTERES_DESC);
+        };
+    });
+
+    //Décompte valeur question
+    titreQuestion.addEventListener('input', function(){
+        const TAILLE_QUESTION = titreQuestion.value.length;
+        let nbCaracteresRestantsVal = MAX_CARACTERES_QUESTION_REPONSES - TAILLE_QUESTION;
+        
+        containerVal.textContent = `Caractères restants : ${nbCaracteresRestantsVal}`;
+
+        if (nbCaracteresRestantsVal < 1){
+            titreQuestion.value = titreQuestion.value.substring(0, MAX_CARACTERES_QUESTION_REPONSES);
+        };
+    });
+
+    //Décompte réponses
+    reponses.forEach((reponse, index) => {
+        reponse.addEventListener('input', function(){
+            const TAILLE_REPONSE = reponse.value.length;
+            let nbCaracteresRestantsRep = MAX_CARACTERES_QUESTION_REPONSES - TAILLE_REPONSE;
+
+            containerRep[index].textContent = `Caractères restants : ${nbCaracteresRestantsRep}`;
+
+            if (nbCaracteresRestantsRep < 1){
+                reponse.value = reponse.value.substring(0, MAX_CARACTERES_QUESTION_REPONSES);
+            };
+        });
+    });
+};
 
 /**
  * @brief Méthode de gestion des réponses
@@ -93,7 +171,7 @@ function gererReponses(MAX_BONNES_REPONSES) {
  * @returns {void}
  */
 function gererIntitule() {
-    let intitule = document.getElementById('titre');
+    let intitule = document.getElementById('titreQuestion');
     let spanDanger = document.getElementById('erreurTitre');
     let btnValider = document.getElementById('validerReponses');
 

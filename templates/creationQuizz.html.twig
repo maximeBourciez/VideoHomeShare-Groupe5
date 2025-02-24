@@ -9,18 +9,20 @@
 <main class="container flex-fill">
 	<h1 class="mt-4 mb-4">Création d'un quizz</h1>
 	<form action="index.php?controller=quizz&methode=afficherPageQuestions" method="post" class="card bg-mydark mx-auto my-auto p-4 text-white rounded">
-	<!-- Champ Titre -->
+		<!-- Champ Titre -->
 		<div class="row mb-4">
-			<label for="titre">Titre du quizz</label>
+			<label for="titre">Titre</label>
     		<input type="text" name="titre" id="titre" class="rounded" required/>
+			<small id="containerNbDecomptesTitre"></small>
 		</div>
 		<!-- Champ Description -->
 		<div class="row mb-4">
 			<label for="description">Description</label>
     		<textarea name="description" id="description" class="rounded" required></textarea>
+			<small id="containerNbDecomptesDesc"></small>
 		</div>
 		<!-- Champ Difficulté -->
-		<div class="form-group row  mb-4">
+		<div class="form-group row mb-4">
 			<label for="difficulte" class="col-sm-2 col-form-label d-flex justify-content-start">Difficulté</label>
 			<input type="number" name="difficulte" id="difficulte" min="1" max="4" value="1" step="1" style="width: 9%;" class="rounded" required></input>
 		<!-- Champ Nombre de questions -->
@@ -28,9 +30,8 @@
     		<input type="number" name="nbQuestions" id="nbQuestions" min="4" max="8" value="4" step="1" style="width: 9%" class="rounded" required></input>
 		</div>
 		<!-- Bouton pour passer à la création des questions -->
-		<button type="submit" class="row btn btn-primary ">
-			<b>Suivant</b>
-		</button>
+		<button type="submit" class="row btn btn-primary fw-bold">Suivant</button>
 	</form>
 </main>
+<script src="js/quizz.js"></script>
 {% endblock %}
