@@ -13,7 +13,8 @@
  */
 
 
- class BannissementDAO {
+class BannissementDAO
+{
 
     /**
      * @var PDO|null $pdo Connexion à la base de données
@@ -26,7 +27,8 @@
      * 
      * @param PDO|null $pdo Connexion à la base de données
      */
-    function __construct(?PDO $pdo = null){
+    function __construct(?PDO $pdo = null)
+    {
         $this->pdo = $pdo;
     }
 
@@ -90,7 +92,7 @@
      * @param Bannissement $bannissement Bannissement à créer
      * @return bool
      */
-    public function create( string $raison , string $idUtilisateur ): bool
+    public function create(string $raison, string $idUtilisateur): bool
     {
         $stmt = $this->pdo->prepare("INSERT INTO ".DB_PREFIX."bannissement (raison, dateB , idUtilisateur) VALUES (:raison, now() , :idUtilisateur)");
         $stmt->bindParam(":raison", $raison);
@@ -121,3 +123,4 @@
     }
 
  }
+}
