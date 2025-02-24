@@ -565,6 +565,10 @@ class ControllerUtilisateur extends Controller
         
         // Envoi du mail
         if (mail($destinataire, $sujet, $contenuMail, $headers)) {
+            // Déconnecter l'utilisateur 
+            $this->deconnexion();
+
+            // Afficher l'accueil 
             header('Location: index.php?');
         } else {
             header('Location: index.php?controller=utilisateur&methode=show&id_utilisateur=' . $idUtilisateur);
