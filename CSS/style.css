@@ -12422,4 +12422,13 @@ body {
   font-size: 1.2rem;
 }
 
+#suppressionCompte {
+  background-color: #dc3545;
+  color: white;
+  transition: all 0.3s ease;
+}
+#suppressionCompte:hover {
+  transform: scale(1.05);
+}
+
 /*# sourceMappingURL=style.css.map */
