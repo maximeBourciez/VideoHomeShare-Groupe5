@@ -102,7 +102,7 @@ class ControllerDashboard extends Controller
      * @brief Fonction de suppression d'un signalement
      * @return void
      */
-    public function supprimerSignalement() : void
+    public function supprimerSignalement(): void
     {
         // Vérification de la session
         if (isset($_SESSION['utilisateur'])) {
@@ -124,7 +124,7 @@ class ControllerDashboard extends Controller
         // Récupération de l'identifiant du message signalé
         $idMessage = htmlspecialchars($_POST['idMessage']);
 
-        
+
         //suppression des signalements associés
         $managerSignalement = new SignalementDAO($this->getPdo());
         $managerSignalement->supprimerSignalementMessage($idMessage);
@@ -135,36 +135,50 @@ class ControllerDashboard extends Controller
 
 
     // Fonctions à compléter
-    function afficherUtilisateurs(?string $eventuelsFiltres) {}
+    function afficherUtilisateurs(?string $eventuelsFiltres)
+    {
+    }
 
     /**
      * @brief Fonction de bannissement d'un utilisateur
      * @param string|null $idUtilisateur
      * @return void
      */
-    function bannirUtilisateur(?string $idUtilisateur = null){
+    function bannirUtilisateur(?string $idUtilisateur = null)
+    {
+        if (isset($_SESSION['utilisateur'])) {
 
-        $utilisateur = unserialize($_SESSION['utilisateur']);
-        if ($utilisateur->getRole()->toString() != "Moderateur") {
-            // Redirection vers la page d'accueil
-            $managerAccueil = new ControllerIndex($this->getTwig(), $this->getLoader());
-            $managerAccueil->index();
+            $utilisateur = unserialize($_SESSION['utilisateur']);
+            if ($utilisateur->getRole()->toString() != "Moderateur") {
+                // Redirection vers la page d'accueil
+                $managerAccueil = new ControllerIndex($this->getTwig(), $this->getLoader());
+                $managerAccueil->index();
+                exit();
+            }
+        } else {
+            // Redirection vers la page de connexion
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
             exit();
+
         }
 
         $idUtilisateur = htmlspecialchars($_POST['idUtilisateur']);
         $raison = htmlspecialchars($_POST['raison']);
+        $dateF = new DateTime(htmlspecialchars($_POST['dateF']));
         $managerBannissement = new BannissementDAO($this->getPdo());
 
-        
-        $managerBannissement->create($raison,$idUtilisateur);
+
+        $managerBannissement->create($raison, $idUtilisateur, $dateF);
 
         // affichage de la page des signalements
-        $this->afficherUtilisateurs(null);   
+        $this->afficherUtilisateurs(null);
 
     }
 
-    function debannirUtilisateur(?string $idUtilisateur) {}
+    function debannirUtilisateur(?string $idUtilisateur)
+    {
+    }
 
     /**
      * @brief Fonction d'affichage de la page d'administration
@@ -329,7 +343,7 @@ class ControllerDashboard extends Controller
 
         // Retourner un tableau vide en cas d'erreur
         return [];
-    }  
+    }
 
 
     /**
@@ -337,7 +351,8 @@ class ControllerDashboard extends Controller
      * 
      * @return void
      */
-    public function ajouterMotInterdit(){
+    public function ajouterMotInterdit()
+    {
         // Vérifier que l'utilisateur est bien un Modérateur
         if ($this->utilisateurEstModerateur()) {
             // Récupérer le mot interdit à ajouter
@@ -386,7 +401,8 @@ class ControllerDashboard extends Controller
      * 
      * @return void
      */
-    public function supprimerMotInterdit(){
+    public function supprimerMotInterdit()
+    {
         // Vérifier que l'utilisateur est bien un Modérateur
         if ($this->utilisateurEstModerateur()) {
             // Récupérer le mot interdit à supprimer
@@ -437,7 +453,8 @@ class ControllerDashboard extends Controller
      * @brif affiche la page de banissement
      * @return void
      */
-    public function afficherBanisement(){
+    public function afficherBanisement()
+    {
         // Vérification de la session
         if (isset($_SESSION['utilisateur'])) {
             $utilisateur = unserialize($_SESSION['utilisateur']);
@@ -459,9 +476,10 @@ class ControllerDashboard extends Controller
 
         // Récupération des utilisateurs
         $managerUtilisateur = new UtilisateurDAO($this->getPdo());
-        $utilisateur =$managerUtilisateur->find($message->getUtilisateur()->getId()); ;
+        $utilisateur = $managerUtilisateur->find($message->getUtilisateur()->getId());
+        ;
         $banisements = $managerBannissement->toutlesBanUsuer($utilisateur->getId());
-        
+
         // Affichage de la page des signalements
         $template = $this->getTwig()->load('bannirUtilisateur.html.twig');
         echo $template->render(array("utilisateur" => $utilisateur, "banisements" => $banisements));

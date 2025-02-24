@@ -38,10 +38,8 @@ class Utilitaires
         // si la valeur est plus grande que la valeur maximal
         if (strlen($val) > $valmax && $valmax != null) {
 
-
             $messageErreur = $contenu . " au maximum " . $valmax . " caractères";
             $valretour = false;
-            var_dump($messageErreur);
         }
 
         return $valretour;
@@ -520,7 +518,7 @@ class Utilitaires
         $banni = $bannissementDAO->find($utilisateur->getId());
         if ($banni != null) {
 
-            $messageErreur = "vous avez été banni";
+            $messageErreur = "vous avez été banni pour la raison suivante : " . $banni->getRaison(). " jusqu'au " . $banni->getDateF()->format('d/m/Y');
             $valretour = false;
         }
         return $valretour;
