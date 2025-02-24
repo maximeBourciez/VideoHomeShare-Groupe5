@@ -67,6 +67,7 @@ class BannissementDAO
         $bannissement->setId($row['id']);
         $bannissement->setRaison($row['raison']);
         $bannissement->setDateB(new DateTime($row['dateB']));
+        $bannissement->setDateF(new DateTime($row['dateF']));
         $bannissement->setIdUtilisateur($row['idUtilisateur']);
         return $bannissement;
     }
@@ -111,7 +112,13 @@ class BannissementDAO
         $stmt = $this->pdo->prepare("SELECT * FROM ".DB_PREFIX."bannissement WHERE idUtilisateur = :idUtilisateur AND dateF > date(now())");
         $stmt->bindParam(":idUtilisateur", $idUtilisateur);
         $stmt->execute();
-        return $stmt->fetch();
+        $fetch = $stmt->fetch();
+        if($fetch == false){
+        $valeurRetoure = $stmt->fetch();
+        }else{
+            $valeurRetoure = $this->hydrate($fetch);
+        }
+        return $valeurRetoure;
     }
 
     /**
