@@ -61,7 +61,7 @@ class ControllerFil extends Controller
      */
     public function afficherFilParId(?int $idFil = null, ?string $messageErreur = null)
     {
-        if($idFil === null){
+        if($idFil === null) {
             $idFil = $_GET['id_fil'];
         }
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -70,11 +70,11 @@ class ControllerFil extends Controller
         // Récupérer le fil
         $filDAO = new FilDAO($this->getPdo());
         $fil = $filDAO->findById($idFil);
-        
+
         // Récupérer les messages paginés
         $messageDAO = new MessageDAO($this->getPdo());
         $messages = $messageDAO->getMessagesPagines($idFil, $page, $messagesParPage);
-        
+
         // Calculer le nombre total de pages
         $totalMessages = $messageDAO->getNombreMessagesParent($idFil);
         $nombrePages = ceil($totalMessages / $messagesParPage);
@@ -103,22 +103,20 @@ class ControllerFil extends Controller
      * @return void
      */
     public function ajouterMessage()
-    {   
+    {
         // Récupérer l'id du fil
         $idFil = intval($_POST['id_fil']);
 
         // Vérifier la méthode HTTP
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->afficherFilParId($idFil, "Méthode HTTP invalide");
-            exit();
-        }
+        $this->verifierHttp($idFil);
 
         // Vérifier que l'utilisateur est connecté
-        if (!isset($_SESSION['utilisateur'])) {
-            $this->afficherFilParId($idFil, "Vous devez être connecté pour ajouter un message");
+        $idUtilisateur = $this->verifierConnexion("thread", $idFil);
+
+        // Arrêter le traitement s'il n'y a pas d'utilisateur connecté
+        if ($idUtilisateur === null) {
             exit();
         }
-        $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
 
         // Vérifier et nettoyer le message
         $message = htmlspecialchars($_POST['message']);
@@ -126,13 +124,14 @@ class ControllerFil extends Controller
         $contenuErreur = "Un message doit contenir";
         $messageEstValide = Utilitaires::comprisEntre($message, 1024, 10, $contenuErreur, $messageErreur);
         if (!$messageEstValide) {
-            $this->afficherFilParId($idFil, $messageErreur);	
+            $this->afficherFilParId($idFil, $messageErreur);
             exit();
         }
 
         // Vérifier la profanité du message
         $messageEstProfane = Utilitaires::verificationDeNom($message, "Le message ", $messageErreur);
         if ($messageEstProfane) {
+            $this->signalerMessage($message);
             $this->afficherFilParId($idFil, $messageErreur);
             exit();
         }
@@ -146,7 +145,7 @@ class ControllerFil extends Controller
         // Récupérer l'ID du message parent (si présent)
         $idMessageParent = isset($_POST['id_message_parent']) ? intval($_POST['id_message_parent']) : null;
         if (isset($_POST['id_message_parent']) && $idMessageParent === 0) {
-            $this->afficherFilParId($idFil,"ID de message parent invalide");
+            $this->afficherFilParId($idFil, "ID de message parent invalide");
             exit();
         }
 
@@ -178,17 +177,14 @@ class ControllerFil extends Controller
         $idFil = intval($_POST['id_fil']);
 
         // Vérifier la méthode HTTP
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->afficherFilParId($idFil, "Méthode HTTP invalide");
-            exit();
-        }
+        $this->verifierHttp($idFil);
 
         // Vérifier que l'utilisateur est connecté
-        if (!isset($_SESSION['utilisateur'])) {
-            $this->afficherFilParId($idFil, "Vous devez être connecté pour réagir à un message");
+        $idUtilisateur = $this->verifierConnexion("thread", $idFil);
+
+        // Arrêter le traitement s'il n'y a pas d'utilisateur connecté
+        if ($idUtilisateur === null) {
             exit();
-        } else {
-            $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
         }
 
         // Récupérer les infos du message
@@ -218,17 +214,14 @@ class ControllerFil extends Controller
         $idFil = intval($_POST['id_fil']);
 
         // Vérifier la méthode HTTP
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->afficherFilParId($idFil, "Méthode HTTP invalide");
-            exit();
-        }
+        $this->verifierHttp($idFil);
 
         // Vérifier que l'utilisateur est connecté
-        if (!isset($_SESSION['utilisateur'])) {
-            $this->afficherFilParId($idFil, "Vous devez être connecté pour réagir à un message");
+        $idUtilisateur = $this->verifierConnexion("thread", $idFil);
+
+        // Arrêter le traitement s'il n'y a pas d'utilisateur connecté
+        if ($idUtilisateur === null) {
             exit();
-        } else {
-            $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
         }
 
         // Récupérer les infos du message
@@ -255,17 +248,14 @@ class ControllerFil extends Controller
     public function creerFil()
     {
         // Vérifier la méthode HTTP
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->listerThreads( "Méthode HTTP invalide");
-            exit();
-        }
+        $this->verifierHttp(null);
 
         // Vérifier que l'utilisateur est connecté
-        if (!isset($_SESSION['utilisateur'])) {
-            $this->listerThreads("Vous devez être connecté pour créer un fil");
+        $idUtilisateur = $this->verifierConnexion("forum", null);
+
+        // Arrêter le traitement s'il n'y a pas d'utilisateur connecté
+        if ($idUtilisateur === null) {
             exit();
-        } else {
-            $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
         }
 
         // Vérifier le titre
@@ -282,6 +272,7 @@ class ControllerFil extends Controller
         // vérifier la profanité du titre
         $titreEstProfane = Utilitaires::verificationDeNom($titre, "Le titre ", $messageErreur);
         if ($titreEstProfane) {
+            $this->signalerMessage("Tentative de création d'un thread : " . $titre);
             $this->listerThreads($messageErreur);
             exit();
         }
@@ -303,6 +294,7 @@ class ControllerFil extends Controller
         // Vérifier la profanité du premier message
         $premierMessageEstProfane = Utilitaires::verificationDeNom($premierMessage, "Le message ", $messageErreur);
         if ($premierMessageEstProfane) {
+            $this->signalerMessage($premierMessage);
             $this->listerThreads($messageErreur);
             exit();
         }
@@ -317,6 +309,7 @@ class ControllerFil extends Controller
         // Vérifier la profanité de la description
         $descriptionEstProfane = Utilitaires::verificationDeNom($description, "La description ", $messageErreur);
         if ($descriptionEstProfane) {
+            $this->signalerMessage("Tentaticve de création d'un thread (description): " . $description);
             $this->listerThreads($messageErreur);
             exit();
         }
@@ -349,17 +342,14 @@ class ControllerFil extends Controller
         $idFil = intval($_POST['id_fil']);
 
         // Vérifier la méthode HTTP
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->afficherFilParId($idFil,"Méthode HTTP invalide");
-            exit();
-        }
+        $this->verifierHttp($idFil);
 
         // Vérifier que l'utilisateur est connecté
-        if (!isset($_SESSION['utilisateur'])) {
-            $this->afficherFilParId($idFil, "Vous devez être connecté pour supprimer un message");
+        $idUtilisateur = $this->verifierConnexion("thread", $idFil);
+
+        // Arrêter le traitement s'il n'y a pas d'utilisateur connecté
+        if ($idUtilisateur === null) {
             exit();
-        } else {
-            $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
         }
 
         // Récupérer les infos depuis le formulaire
@@ -371,7 +361,7 @@ class ControllerFil extends Controller
         $indiquePropriete = $managerMessage->checkProprieteMessage($idMessageASuppr, $idUtilisateur);
 
         if (!$indiquePropriete) {
-            $this->afficherFilParId($idFil,"Vous ne pouvez pas supprimer ce message, il ne vous appartient pas");
+            $this->afficherFilParId($idFil, "Vous ne pouvez pas supprimer ce message, il ne vous appartient pas");
             exit();
         }
 
@@ -393,41 +383,55 @@ class ControllerFil extends Controller
      * 
      * @return void
      */
-    public function signalerMessage()
+    public function signalerMessage(?string $contenuSignale = null)
     {
         // Récupérer l'id du fil
-        $idFil = intval($_POST['id_fil']);
+        $idFil = isset($_POST['id_fil']) ? intval($_POST['id_fil']) : null;
 
         // Vérifier la méthode HTTP
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->afficherFilParId($idFil,"Méthode HTTP invalide");
-            exit();
-        }
+        $this->verifierHttp($idFil);
 
         // Vérifier que l'utilisateur est connecté
-        if (!isset($_SESSION['utilisateur'])) {
-            $this->afficherFilParId($idFil,"Vous devez être connecté pour signaler un message");
-            exit();
+        if ($idFil !== null) {
+            $idUtilisateur = $this->verifierConnexion("", $idFil);
         } else {
-            $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
+            $idUtilisateur = $this->verifierConnexion("thread", $idFil);
         }
 
-        // Récupérer les données du formulaire
-        $idMessage = intval($_POST['id_message']);
-        $raison = $_POST['raison'];
-        
-
-        // Vérifier la raison
-        if (!RaisonSignalement::isValidReason($raison)) {
-            $this->afficherFilParId();
+        // Arrêter le traitement s'il n'y a pas d'utilisateur connecté
+        if ($idUtilisateur === null) {
             exit();
+        }
+
+        // Récupérer les données du formulaire si le signalement est manuel
+        if (!isset($contenuSignale)) {
+            $idMessage = intval($_POST['id_message']);
+            $raison = $_POST['raison'];
+
+            // Vérifier la raison
+            if (!RaisonSignalement::isValidReason($raison)) {
+                $this->afficherFilParId($idFil, "Raison de signalement invalide");
+                exit();
+            }
+        } else {
+            $raison = "Contenu inapproprié";
+            $idMessage = null;
         }
 
         // Créer l'objet signalement
         $signalement = new Signalement();
-        $signalement->setIdMessage($idMessage);
+
         $signalement->setIdUtilisateur($idUtilisateur);
-        $signalement->setRaison(RaisonSignalement::fromString($raison));
+        if (isset($contenuSignale)) {
+            $signalement->setRaison(RaisonSignalement::fromString("Contenu inapproprié"));
+            $signalement->setEstAutomatique(true);
+            $signalement->setContenu($contenuSignale);
+        } else {
+            $signalement->setRaison(RaisonSignalement::fromString($raison));
+            $signalement->setEstAutomatique(false);
+            $signalement->setIdMessage($idMessage);
+            $signalement->setContenu("");
+        }
 
         // Insérer le signalement en BD
         $managerSignalement = new SignalementDAO($this->getPdo());
@@ -447,9 +451,10 @@ class ControllerFil extends Controller
      * 
      * @return void
      */
-    private function notifierUtilisateur(string $type, int $idMessage, int $idFil){
+    private function notifierUtilisateur(string $type, int $idMessage, int $idFil)
+    {
         // Récupérer l'utilisateur à l'origine de la notif (le connecté)
-        $pseudoEmetteur = unserialize($_SESSION['utilisateur'])->getPseudo(); 
+        $pseudoEmetteur = unserialize($_SESSION['utilisateur'])->getPseudo();
 
         // Réucpérer le nom du fil
         $managerFil = new FilDAO($this->getPdo());
@@ -460,15 +465,14 @@ class ControllerFil extends Controller
         $idReceveur = $managerMessage->findAuthor($idMessage);
 
         // Créer le contenu de la notification
-        $contenu = match($type) {
+        $contenu = match ($type) {
             "reponse" => "$pseudoEmetteur a répondu à un de vos messages dans le fil : $nomFil",
             "reaction" => "$pseudoEmetteur a réagi à un de vos messages dans le fil : $nomFil",
             default => null
         };
 
-        $managerNotification = new NotificationDAO($this->getPdo()); ;
-        $managerNotification->creation( $contenu , $idReceveur);
-
+        $managerNotification = new NotificationDAO($this->getPdo());;
+        $managerNotification->creation($contenu, $idReceveur);
     }
 
     /**
@@ -479,7 +483,8 @@ class ControllerFil extends Controller
      * 
      * @return never
      */
-    public function getNouveauxMessages() {
+    public function getNouveauxMessages()
+    {
         if (!isset($_GET['id_fil']) || !isset($_GET['dernierMessageId'])) {
             http_response_code(400);
             exit(json_encode(['error' => 'Paramètres manquants']));
@@ -487,18 +492,69 @@ class ControllerFil extends Controller
 
         $idFil = intval($_GET['id_fil']);
         $dernierMessageId = intval($_GET['dernierMessageId']);
-        
+
         $messageDAO = new MessageDAO($this->getPdo());
         $nouveauxMessages = json_encode($messageDAO->getNouveauxMessages($idFil, $dernierMessageId));
-        
+
         // S'assurer qu'aucun output n'a été envoyé avant
         if (ob_get_length()) ob_clean();
-        
+
         header('Content-Type: application/json');
         echo json_encode([
             'success' => true,
             'messages' => $nouveauxMessages
         ]);
         exit();
+    }
+
+
+    /**
+     * @brief vérification de la méthode d'appel du controller
+     * 
+     * @return void Affiche une vue 
+     */
+    private function verifierHttp(?int $idFil)
+    {
+        // Vérifier que la méthode HTTP est POST
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            if ($idFil === null) {
+                $this->listerThreads("Méthode HTTP invalide");
+            } else {
+                $this->afficherFilParId($idFil, "Méthode HTTP invalide");
+            }
+            exit();
+        }
+    }
+
+    /**
+     * @brief Vérifie que l'utilisateur est connecté et retourne son id le cas échéant
+     * 
+     * @details Retourne une vue en cas de non-connexion de l'utilisateur
+     * 
+     * @param string|null $source Source de l'appel de la méthode (Forum ou thread) -> pour renvoyer la bonne vue en cas d'erreur
+     * @param int|null $idFil Identifiant du fil de discussion
+     * 
+     * @return string|null Identifiant de l'utilisateur connecté
+     */
+    private function verifierConnexion(?string $source, ?int $idFil): ?string
+    {
+        // Vérifier que l'utilisateur est connecté
+        if (!isset($_SESSION['utilisateur'])) {
+            // Renvoyer la bonne vue en cas d'erreur
+            switch ($source) {
+                case "thread":
+                    $this->afficherFilParId($idFil, "Vous devez être connecté pour signaler un message");
+                    break;
+                case "forum":
+                    $this->listerThreads("Vous devez être connecté pour signaler un message");
+                    break;
+                default:
+                    header("Location: index.php?controller=utilisateur&methode=connexion");
+                    break;
+            }
+            return null;
+        } else {
+            return unserialize($_SESSION['utilisateur'])->getId();
+        }
     }
 }

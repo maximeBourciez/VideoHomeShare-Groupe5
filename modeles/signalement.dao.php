@@ -131,7 +131,12 @@ class SignalementDAO{
      */
     public function hydrate($tableauAssoc): ?Signalement
     {
-        $signalement = new Signalement($tableauAssoc['id'], $tableauAssoc['raison']);
+        $signalement = new Signalement($tableauAssoc['id'], 
+                                   $tableauAssoc['raison'],
+                            $tableauAssoc['idUtilisateur'], 
+                                $tableauAssoc['idMessage'], 
+                           $tableauAssoc['estAutomatique'], 
+                                  $tableauAssoc['contenu']);
 
         return $signalement;
     }
@@ -164,11 +169,14 @@ class SignalementDAO{
     public function ajouterSignalement(Signalement $signalement): int{
         var_dump($signalement);
         // Préparer la requête
-        $sql = "INSERT INTO ".DB_PREFIX."signalement (raison, idMessage, idUtilisateur) VALUES (:raison, :idMessage, :idUtilisateur)";
+        $sql = "INSERT INTO ". DB_PREFIX ."signalement (raison, idMessage, idUtilisateur, estAutomatique, contenu)
+                VALUES (:raison, :idMessage, :idUtilisateur, :estAutomatique, :contenu)";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':raison', $signalement->getRaison()->toString(), PDO::PARAM_STR);
         $stmt->bindValue(':idMessage', $signalement->getIdMessage(), PDO::PARAM_INT);
         $stmt->bindValue(':idUtilisateur', $signalement->getIdUtilisateur(), PDO::PARAM_STR);
+        $stmt->bindValue(':estAutomatique', $signalement->getEstAutomatique(), PDO::PARAM_BOOL);
+        $stmt->bindValue(':contenu', $signalement->getContenu(), PDO::PARAM_STR);
 
         // Exécuter la requête et récupérer l'identifiant
         $stmt->execute();
