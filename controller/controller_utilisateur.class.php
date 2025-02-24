@@ -49,6 +49,8 @@ class ControllerUtilisateur extends Controller
         $mail = str_replace(' ', '', $mail);
 
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
+        $managerBannissement = new BannissementDAO($this->getPdo());
+        
         $message = "";
         // vérification des informations saisies
         $verficationTailleMail = Utilitaires::comprisEntre($mail, 320, 6, "le mail doit contenir", $message);
@@ -60,7 +62,9 @@ class ControllerUtilisateur extends Controller
             $verficationBruteForce = Utilitaires::isBruteForce($utilisateur->getId(), $message);
             $verficationMotDePasse = Utilitaires::motDePasseCorrect($mdp, $utilisateur->getMdp(), $utilisateur, $message);
             $verficationUtiliateurverifier = Utilitaires::verifUtiliateurverifier($utilisateur->getId(), $message, $managerutilisateur);
-            if ($verficationUtilisateurExiste && $verficationMotDePasse && $verficationUtiliateurverifier && !$verficationBruteForce) {
+            $verifierutilisateurbanni = Utilitaires::estbanni($utilisateur, $message, $managerBannissement);
+            
+            if ($verficationUtilisateurExiste && $verficationMotDePasse && $verficationUtiliateurverifier && !$verficationBruteForce && $verifierutilisateurbanni) {
 
                 $utilisateur->setMdp(null);
                 Utilitaires::resetBrutForce($utilisateur->getId());
