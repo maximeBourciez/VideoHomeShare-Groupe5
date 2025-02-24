@@ -176,8 +176,19 @@ class ControllerDashboard extends Controller
 
     }
 
-    function debannirUtilisateur(?string $idUtilisateur)
+    public function debannirUtilisateur()
     {
+        // Vérifier que l'utilisateur est bien le modérateur
+        if ($this->utilisateurEstModerateur()) {
+            // Récupérer l'identifiant de l'utilisateur 
+            $idUtilisateurADebannir = $_POST["idUtilisateur"];
+
+            // Débannir l'utilisateur 
+            $managerBannissement = new BannissementDAO($this->getPdo());
+            $managerBannissement->revokeBan($idUtilisateur);
+
+            // Réafficher la page avec un message
+        }
     }
 
     /**
