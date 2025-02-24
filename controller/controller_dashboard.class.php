@@ -152,13 +152,11 @@ class ControllerDashboard extends Controller
             exit();
         }
 
-        $idMessage = htmlspecialchars($_POST['idMessage']);
+        $idUtilisateur = htmlspecialchars($_POST['idUtilisateur']);
         $raison = htmlspecialchars($_POST['raison']);
         $managerBannissement = new BannissementDAO($this->getPdo());
 
-        $managerMessage = new MessageDAO($this->getPdo());
-        $messge = $managerMessage->chercherMessageParId($idMessage);
-        $idUtilisateur = $messge->getUtilisateur()->getId();
+        
         $managerBannissement->create($raison,$idUtilisateur);
 
         // affichage de la page des signalements
@@ -434,5 +432,38 @@ class ControllerDashboard extends Controller
             header("Location: index.php?controller=index&methode=index");
             exit();
         }
+    }
+    /**
+     * @brif affiche la page de banissement
+     * @return void
+     */
+    public function afficherBanisement(){
+        // Vérification de la session
+        if (isset($_SESSION['utilisateur'])) {
+            $utilisateur = unserialize($_SESSION['utilisateur']);
+            if ($utilisateur->getRole()->toString() != "Moderateur") {
+                // Redirection vers la page d'accueil
+                $managerAccueil = new ControllerIndex($this->getTwig(), $this->getLoader());
+                $managerAccueil->index();
+            }
+        } else {
+            // Redirection vers la page de connexion
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
+        }
+        $idMessage = htmlspecialchars($_POST['idmessage']);
+
+        $managerMessage = new MessageDAO($this->getPdo());
+        $managerBannissement = new BannissementDAO($this->getPdo());
+        $message = $managerMessage->chercherMessageParId($idMessage);
+
+        // Récupération des utilisateurs
+        $managerUtilisateur = new UtilisateurDAO($this->getPdo());
+        $utilisateur =$managerUtilisateur->find($message->getUtilisateur()->getId()); ;
+        $banisements = $managerBannissement->toutlesBanUsuer($utilisateur->getId());
+        
+        // Affichage de la page des signalements
+        $template = $this->getTwig()->load('bannirUtilisateur.html.twig');
+        echo $template->render(array("utilisateur" => $utilisateur, "banisements" => $banisements));
     }
 }

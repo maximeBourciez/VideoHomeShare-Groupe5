@@ -49,6 +49,8 @@ class ControllerUtilisateur extends Controller
         $mail = str_replace(' ', '', $mail);
 
         $managerutilisateur = new UtilisateurDAO($this->getPdo());
+        $managerBannissement = new BannissementDAO($this->getPdo());
+        
         $message = "";
         // vérification des informations saisies
         $verficationTailleMail = Utilitaires::comprisEntre($mail, 320, 6, "le mail doit contenir", $message);
