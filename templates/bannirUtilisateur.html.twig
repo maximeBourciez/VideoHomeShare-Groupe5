@@ -25,7 +25,7 @@
                     
                     {% for banisement in banisements %}
                     <p class="ms-5"> raison du bannissement : {{banisement.raison}}</p>
-                    <p class="ms-5"> date du bannissement : {{banisement.dateB.format('d-m-Y')}}</p>
+                    <p class="ms-5"> date du bannissement : {{banisement.dateB.format('d/m/Y')}}</p>
                     <br>
                     {% endfor %}
                 {% endif %}
@@ -35,6 +35,10 @@
                      <div class="form-group mb-3">
                         <label for="raison">Raison du bannissement</label>
                         <input type="text" name="raison" id="raison" class="form-control" required>
+                    </div>
+                     <div class="form-group mb-3">
+                        <label for="dateF">Date de fin de de bannisement </label>
+                        <input type="date" name="dateF" id="dateF" class="form-control" required>
                     </div>
                      <div class="form-group mb-3">
                         
