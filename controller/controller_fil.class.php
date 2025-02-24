@@ -133,6 +133,7 @@ class ControllerFil extends Controller
         // Vérifier la profanité du message
         $messageEstProfane = Utilitaires::verificationDeNom($message, "Le message ", $messageErreur);
         if ($messageEstProfane) {
+            $this->signalerMessage();
             $this->afficherFilParId($idFil, $messageErreur);
             exit();
         }
@@ -428,6 +429,8 @@ class ControllerFil extends Controller
         $signalement->setIdMessage($idMessage);
         $signalement->setIdUtilisateur($idUtilisateur);
         $signalement->setRaison(RaisonSignalement::fromString($raison));
+        $signalement->setEstAutomatique(false);
+        $signalement->setContenu("");
 
         // Insérer le signalement en BD
         $managerSignalement = new SignalementDAO($this->getPdo());
