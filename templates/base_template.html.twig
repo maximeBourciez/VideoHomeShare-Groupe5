@@ -125,8 +125,8 @@ f.parentNode.insertBefore(j, f);
 						</a>
 
 						{% if utilisateurConnecte is not null and utilisateurConnecte.getRole().toString() == "Moderateur" %}
-							<a href="index.php?controller=signalement&methode=afficheSignalements">
-								<button class="btn btn-myprimary">signalement</button>
+							<a href="index.php?controller=dashboard&methode=afficheSignalements">
+								<button class="btn btn-myprimary">Dashboard</button>
 							</a>
 						{% endif %}
 
@@ -198,18 +198,18 @@ f.parentNode.insertBefore(j, f);
 			<script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 			<script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 			<script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
-			<script type="text/javascript" src="/js/tarteaucitron/tarteaucitron.js"></script>
+			<script type="text/javascript" src="node_modules/tarteaucitronjs/tarteaucitron.js"></script>
 			<script type="text/javascript">
 				tarteaucitron.init({
 "privacyUrl": "/politique-de-confidentialite",
 "hashtag": "#tarteaucitron",
 "cookieName": "tarteaucitron",
 "orientation": "bottom",
-"showAlertSmall": true,
+"showAlertSmall": false,
 "cookieslist": true,
 "closePopup": false,
 "showIcon": true,
-"iconPosition": "BottomRight",
+"iconPosition": "BottomLeft",
 "AcceptAllCta": true,
 "highPrivacy": true,
 "handleBrowserDNTRequest": false,

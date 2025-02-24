@@ -79,13 +79,18 @@ class ControllerFil extends Controller
         $totalMessages = $messageDAO->getNombreMessagesParent($idFil);
         $nombrePages = ceil($totalMessages / $messagesParPage);
 
+        // Récupérer les raisons de signalement
+        $signalementDAO = new SignalementDAO($this->getPdo());
+        $raisonsSignalement = RaisonSignalement::getAllReasons();
+
         // Passer les données à la vue
         echo $this->getTwig()->render('fil.html.twig', [
             'fil' => $fil,
             'messages' => $messages,
             'page_courante' => $page,
             'nombre_pages' => $nombrePages,
-            'messageErreur' => $messageErreur
+            'messageErreur' => $messageErreur,
+            'raisonsSignalement' => $raisonsSignalement
         ]);
         exit();
     }
