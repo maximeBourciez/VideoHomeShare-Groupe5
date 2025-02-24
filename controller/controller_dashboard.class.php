@@ -185,9 +185,17 @@ class ControllerDashboard extends Controller
 
             // Débannir l'utilisateur 
             $managerBannissement = new BannissementDAO($this->getPdo());
-            $managerBannissement->revokeBan($idUtilisateur);
+            $sucess = $managerBannissement->revokeBan($idUtilisateur);
 
             // Réafficher la page avec un message
+            if($success){
+                $message = "Bannissement révoqué avec succès.";
+            }else {
+                $message = "Erreur lors de la révocation du bannissement.";
+            }
+
+            $this->afficherUtilisateurs($success, $message);
+            exit();
         }
     }
 
