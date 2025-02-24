@@ -6,22 +6,24 @@
 			{{ messagederreur }}
 		</div>
 	{% endif %}
+
 	<main class="movie-page container d-flex flex-column justify-content-center align-items-center flex-grow-1">
 		<div
-			class="movie-content d-flex">
+			class="movie-content row mt-3">
 			<!-- Section Affiche -->
-			<div class="movie-poster me-5">
+			<div class="movie-poster col-12 col-md-6 mb-4 mb-md-0 text-center">
 				{% if contenu.lienAffiche is not empty %}
-					<img src="{{ contenu.lienAffiche }}" alt="{{ contenu.titre }}" class="movie-poster__image shadow img-fluid m-5 rounded" style="width: 525px; height: 750px; object-fit: cover;">
+					<img src="{{ contenu.lienAffiche }}" alt="{{ contenu.titre }}" class="movie-poster__image shadow img-fluid rounded" style="max-width: 100%; height: auto; object-fit: cover;" loading="lazy" crossorigin="anonymous" referrerpolicy="no-referrer" onerror="this.src='images/no-image.svg'">
 				{% else %}
-					<img src="images/no-image.svg" alt="{{ contenu.titre }}" class="movie-poster__image img-fluid m-5 rounded" style="width: 525px; height: 750px; object-fit: cover;">
+					<img src="images/no-image.svg" alt="{{ contenu.titre }}" class="movie-poster__image img-fluid rounded" style="max-width: 100%; height: auto;">
 				{% endif %}
 			</div>
+
 			<!-- Section Informations -->
 			<div
-				class="movie-info col-6 d-flex flex-column justify-content-between">
+				class="movie-info col-12 col-md-6 d-flex flex-column justify-content-between">
 				<!-- Titre -->
-				<h1 class="movie-info__title mt-5 fw-bolder text-center">{{ contenu.titre }}</h1>
+				<h1 class="movie-info__title mt-3 mt-md-5 fw-bolder text-center">{{ contenu.titre }}</h1>
 
 				<!-- Date et Durée -->
 				<div class="movie-info__metadata d-flex justify-content-between fs-5 fw-bolder">
@@ -38,11 +40,9 @@
 					{% set descriptionmax_length = 500 %}
 					{% if description is not empty %}
 						{% if description|length > descriptionmax_length %}
-							<p class="fs-6">
-								{{ description}}</p>
+							<p class="fs-6">{{ description }}</p>
 						{% else %}
-							<p>
-								{{ description }}</p>
+							<p>{{ description }}</p>
 						{% endif %}
 					{% else %}
 						<p class="fs-6">Aucune description disponible pour ce film. Vous devez être un sacré connaisseur pour aller voir ce film !</p>
@@ -50,9 +50,9 @@
 				</div>
 
 				<!-- Genres -->
-				<div class="movie-info__genres d-flex justify-content-left align-items-center mt-2">
+				<div class="movie-info__genres d-flex flex-wrap mt-2">
 					{% for theme in themes %}
-						<span class="movie-info__genre-tag bg-mydark text-white p-2 px-3 rounded me-3 mb-2">{{ theme.nom }}</span>
+						<span class="movie-info__genre-tag bg-mydark text-white p-2 px-3 rounded me-2 mb-2">{{ theme.nom }}</span>
 					{% endfor %}
 				</div>
 
@@ -81,20 +81,19 @@ generateStarRating(note);
 				</script>
 
 				<!-- Boutons d'action -->
-				<div class="movie-actions mr-5">
-					<div class="movie-actions__buttons d-flex justify-content-right mb-5">
+				<div class="movie-actions mt-4">
+					<div class="movie-actions__buttons d-flex flex-wrap justify-content-center">
 						{% if utilisateurConnecte is not null %}
-							<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
-							<form action="index.php?controller=watchlist&methode=ajouterContenuAWatchlist" method="POST" class="me-4">
+							<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-2 mb-2" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
+							<form action="index.php?controller=watchlist&methode=ajouterContenuAWatchlist" method="POST" class="me-2 mb-2">
 								<input type="hidden" name="idContenu" value="{{ contenu.id|escape('html_attr') }}">
 								<button type="button" class="movie-actions__watchlist-btn btn btn-myprimary fw-normal bi bi-plus" data-bs-toggle="modal" data-bs-target="#choisirWatchlist">
 									Ajouter à sa Watchlist
 								</button>
 							</form>
-
 						{% else %}
-							<button class="movie-actions__watchlist-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Ajouter à la Watchlist</button>
-							<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Laisser un avis</button>
+							<button class="movie-actions__watchlist-btn btn btn-myprimary fw-normal me-2 mb-2" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Ajouter à la Watchlist</button>
+							<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-2 mb-2" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Laisser un avis</button>
 						{% endif %}
 					</div>
 				</div>
