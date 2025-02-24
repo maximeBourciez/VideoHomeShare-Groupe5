@@ -133,7 +133,7 @@ class ControllerFil extends Controller
         // Vérifier la profanité du message
         $messageEstProfane = Utilitaires::verificationDeNom($message, "Le message ", $messageErreur);
         if ($messageEstProfane) {
-            $this->signalerMessage();
+            $this->signalerMessage($message);
             $this->afficherFilParId($idFil, $messageErreur);
             exit();
         }
@@ -283,6 +283,7 @@ class ControllerFil extends Controller
         // vérifier la profanité du titre
         $titreEstProfane = Utilitaires::verificationDeNom($titre, "Le titre ", $messageErreur);
         if ($titreEstProfane) {
+            $this->signalerMessage("Tentative de création d'un thread : " . $titre);
             $this->listerThreads($messageErreur);
             exit();
         }
@@ -304,6 +305,7 @@ class ControllerFil extends Controller
         // Vérifier la profanité du premier message
         $premierMessageEstProfane = Utilitaires::verificationDeNom($premierMessage, "Le message ", $messageErreur);
         if ($premierMessageEstProfane) {
+            $this->signalerMessage($premierMessage);
             $this->listerThreads($messageErreur);
             exit();
         }
@@ -318,6 +320,7 @@ class ControllerFil extends Controller
         // Vérifier la profanité de la description
         $descriptionEstProfane = Utilitaires::verificationDeNom($description, "La description ", $messageErreur);
         if ($descriptionEstProfane) {
+            $this->signalerMessage("Tentaticve de création d'un thread (description): ". $description);
             $this->listerThreads($messageErreur);
             exit();
         }
@@ -394,47 +397,62 @@ class ControllerFil extends Controller
      * 
      * @return void
      */
-    public function signalerMessage()
+    public function signalerMessage(?string $contenuSignale = null)
     {
         // Récupérer l'id du fil
-        $idFil = intval($_POST['id_fil']);
+        $idFil = isset($_POST['id_fil']) ? intval($_POST['id_fil']) : null;
 
         // Vérifier la méthode HTTP
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->afficherFilParId($idFil,"Méthode HTTP invalide");
-            exit();
-        }
+        $this->verifierHttp($idFil);
 
         // Vérifier que l'utilisateur est connecté
-        if (!isset($_SESSION['utilisateur'])) {
-            $this->afficherFilParId($idFil,"Vous devez être connecté pour signaler un message");
-            exit();
-        } else {
-            $idUtilisateur = unserialize($_SESSION['utilisateur'])->getId();
+        if($idFil !== null){
+            $idUtilisateur = $this->verifierConnexion("", $idFil);
+        }else{
+            $idUtilisateur = $this->verifierConnexion("thread", $idFil);
         }
 
-        // Récupérer les données du formulaire
-        $idMessage = intval($_POST['id_message']);
-        $raison = $_POST['raison'];
+        // Arrêter le traitement s'il n'y a pas d'utilisateur connecté
+        if ($idUtilisateur === null) {
+            exit();
+        }
+
+        // Récupérer les données du formulaire si le signalement est manuel
+        if(!isset($contenuSignale)){
+            $idMessage = intval($_POST['id_message']);
+            $raison = $_POST['raison'];
+
+            // Vérifier la raison
+            if (!RaisonSignalement::isValidReason($raison)) {
+                $this->afficherFilParId($idFil, "Raison de signalement invalide");
+                exit();
+            }
+        }
+        else{
+            $raison = "Contenu inapproprié";
+            $idMessage = null;
+        }
         
-
-        // Vérifier la raison
-        if (!RaisonSignalement::isValidReason($raison)) {
-            $this->afficherFilParId();
-            exit();
-        }
-
         // Créer l'objet signalement
         $signalement = new Signalement();
-        $signalement->setIdMessage($idMessage);
+        
         $signalement->setIdUtilisateur($idUtilisateur);
-        $signalement->setRaison(RaisonSignalement::fromString($raison));
-        $signalement->setEstAutomatique(false);
-        $signalement->setContenu("");
+        if(isset($contenuSignale)){
+            $signalement->setRaison(RaisonSignalement::fromString("Contenu inapproprié"));
+            $signalement->setEstAutomatique(true);
+            $signalement->setContenu($contenuSignale);
+        } else {
+            $signalement->setRaison(RaisonSignalement::fromString($raison));
+            $signalement->setEstAutomatique(false);
+            $signalement->setIdMessage($idMessage);
+            $signalement->setContenu("");            
+        }
 
         // Insérer le signalement en BD
         $managerSignalement = new SignalementDAO($this->getPdo());
         $managerSignalement->ajouterSignalement($signalement);
+
+        var_dump($signalement);
 
         header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
         exit();
@@ -503,5 +521,50 @@ class ControllerFil extends Controller
             'messages' => $nouveauxMessages
         ]);
         exit();
+    }   
+
+    
+    /**
+     * @brief vérification de la méthode d'appel du controller
+     * 
+     * @return void Affiche une vue 
+     */
+    private function verifierHttp(?int $idFil){
+        // Vérifier que la méthode HTTP est POST
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->afficherFilParId($idFil, "Méthode HTTP invalide");
+            exit();
+        }
+    }
+
+    /**
+     * @brief Vérifie que l'utilisateur est connecté et retourne son id le cas échéant
+     * 
+     * @details Retourne une vue en cas de non-connexion de l'utilisateur
+     * 
+     * @param string|null $source Source de l'appel de la méthode (Forum ou thread) -> pour renvoyer la bonne vue en cas d'erreur
+     * @param int|null $idFil Identifiant du fil de discussion
+     * 
+     * @return string|null Identifiant de l'utilisateur connecté
+     */
+    private function verifierConnexion(?string $source, ?int $idFil): ?string{
+        // Vérifier que l'utilisateur est connecté
+        if (!isset($_SESSION['utilisateur'])) {
+            // Renvoyer la bonne vue en cas d'erreur
+            switch($source){
+                case "thread":
+                    $this->afficherFilParId($idFil, "Vous devez être connecté pour signaler un message");
+                    break;
+                case "forum":
+                    $this->listerThreads("Vous devez être connecté pour signaler un message");
+                    break;
+                default:
+                    header("Location: index.php?controller=utilisateur&methode=connexion");
+                    break;
+            }
+            return null;
+        } else {
+            return unserialize($_SESSION['utilisateur'])->getId();
+        }
     }
 }
