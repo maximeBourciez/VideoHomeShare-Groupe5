@@ -202,7 +202,6 @@ class Bd
             $interval = $latestBackupDate->diff($now);
 
             if ($interval->days >= 2) {
-                var_dump("=== SAUVEGARDE DÉCLENCHÉE ===");
                 if ($nombreBackups > SAUVEGARDE_MAX_NUMBER) {
                     unlink($backupDir . '/' . $oldestBackup);
                 }
