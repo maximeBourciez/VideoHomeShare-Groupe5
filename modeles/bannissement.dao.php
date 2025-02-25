@@ -62,7 +62,7 @@ class BannissementDAO
      * @return Bannissement
      */
     public function hydrate(array $row): Bannissement
-    {   
+    {
         $bannissement = new Bannissement();
         $bannissement->setId($row['id']);
         $bannissement->setRaison($row['raison']);
@@ -80,7 +80,7 @@ class BannissementDAO
     public function hydrateAll(array $rows): array
     {
         $bannissements = [];
-        foreach($rows as $row){
+        foreach ($rows as $row) {
             $bannissements[] = $this->hydrate($row);
         }
         return $bannissements;
@@ -95,7 +95,7 @@ class BannissementDAO
      */
     public function create(string $raison, string $idUtilisateur, DateTime $dateF): bool
     {
-        $stmt = $this->pdo->prepare("INSERT INTO ".DB_PREFIX."bannissement (raison, dateB , idUtilisateur,dateF ) VALUES (:raison, now() , :idUtilisateur, :dateF)");
+        $stmt = $this->pdo->prepare("INSERT INTO " . DB_PREFIX . "bannissement (raison, dateB , idUtilisateur,dateF ) VALUES (:raison, now() , :idUtilisateur, :dateF)");
         $stmt->bindParam(":raison", $raison);
         $stmt->bindParam(":idUtilisateur", $idUtilisateur);
         $formattedDateF = $dateF->format('Y-m-d');
@@ -107,15 +107,16 @@ class BannissementDAO
      * @brief trouver un utilisateur banni
      * 
      */
-    public function find(string $idUtilisateur){
+    public function find(string $idUtilisateur)
+    {
 
-        $stmt = $this->pdo->prepare("SELECT * FROM ".DB_PREFIX."bannissement WHERE idUtilisateur = :idUtilisateur AND dateF > date(now())");
+        $stmt = $this->pdo->prepare("SELECT * FROM " . DB_PREFIX . "bannissement WHERE idUtilisateur = :idUtilisateur AND dateF > date(now())");
         $stmt->bindParam(":idUtilisateur", $idUtilisateur);
         $stmt->execute();
         $fetch = $stmt->fetch();
-        if($fetch == false){
-        $valeurRetoure = $stmt->fetch();
-        }else{
+        if ($fetch == false) {
+            $valeurRetoure = $stmt->fetch();
+        } else {
             $valeurRetoure = $this->hydrate($fetch);
         }
         return $valeurRetoure;
@@ -124,12 +125,11 @@ class BannissementDAO
     /**
      * @brief trouver les bannisement d'un utilisateur
      */
-    public function toutlesBanUsuer(string $idUtilisateur){
-        $stmt = $this->pdo->prepare("SELECT * FROM ".DB_PREFIX."bannissement WHERE idUtilisateur = :idUtilisateur");
+    public function toutlesBanUsuer(string $idUtilisateur)
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM " . DB_PREFIX . "bannissement WHERE idUtilisateur = :idUtilisateur");
         $stmt->bindParam(":idUtilisateur", $idUtilisateur);
         $stmt->execute();
         return $this->hydrateAll($stmt->fetchAll());
     }
-
- }
-
+}
