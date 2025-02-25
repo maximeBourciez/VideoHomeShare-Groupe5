@@ -13,20 +13,20 @@
 		<div class="row mb-4">
 			<label for="titre">Titre</label>
     		<input type="text" name="titre" id="titre" class="rounded" required/>
-			<small id="containerNbDecomptesTitre"></small>
+			<small id="containerNbDecomptesTitre">50 caractères restants</small>
 		</div>
 		<!-- Champ Description -->
 		<div class="row mb-4">
 			<label for="description">Description</label>
     		<textarea name="description" id="description" class="rounded" required></textarea>
-			<small id="containerNbDecomptesDesc"></small>
+			<small id="containerNbDecomptesDesc">100 caractères restants</small>
 		</div>
 		<!-- Champ Difficulté -->
 		<div class="form-group row mb-4">
-			<label for="difficulte" class="col-sm-2 col-form-label d-flex justify-content-start">Difficulté</label>
+			<label for="difficulte" class="col-sm-2 col-form-label d-flex justify-content-start">Difficulté <i class="ms-2 bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="1 : Facile; 2 : Moyen; 3 : Difficile; 4 : Expert"></i></label>
 			<input type="number" name="difficulte" id="difficulte" min="1" max="4" value="1" step="1" style="width: 9%;" class="rounded" required></input>
 		<!-- Champ Nombre de questions -->
-			<label for="nbQuestions" class="col-sm-7 col-form-label text-right d-flex justify-content-end">Nombre de questions</label>
+			<label for="nbQuestions" class="col-sm-7 col-form-label text-right d-flex justify-content-end">Nombre de questions <i class="ms-2 bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="Le quizz doit avoir 4 à 8 questions"></i></label>
     		<input type="number" name="nbQuestions" id="nbQuestions" min="4" max="8" value="4" step="1" style="width: 9%" class="rounded" required></input>
 		</div>
 		<!-- Bouton pour passer à la création des questions -->

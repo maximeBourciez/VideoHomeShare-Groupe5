@@ -37,39 +37,43 @@ function gererDecomptes(MAX_CARACTERES_TITRE, MAX_CARACTERES_DESC, MAX_CARACTERE
     //Containers
     let containerTitre = document.getElementById('containerNbDecomptesTitre');
     let containerDesc = document.getElementById('containerNbDecomptesDesc');
-    let containerVal = document.getElementById('containerNbDecomptesVal');
-    let containerRep = document.querySelectorAll('.containerNbDecomptesRep');
+    let containerVal = document.getElementById('containerDecompteQuest');
+    let containersRep = document.querySelectorAll('.containerNbDecomptesRep');
 
     //Décompte titre
-    titre.addEventListener('input', function(){
-        const TAILLE_TITRE = titre.value.length;
-        let nbCaracteresRestantsTitre = MAX_CARACTERES_TITRE - TAILLE_TITRE;
-        
-        containerTitre.textContent = `Caractères restants : ${nbCaracteresRestantsTitre}`;
-
-        if (nbCaracteresRestantsTitre < 1){
-            titre.value = titre.value.substring(0, MAX_CARACTERES_TITRE);
-        };
-    });
+    if (titre != null){
+        titre.addEventListener('input', function(){
+            let tailleTitre = titre.value.length;
+            let nbCaracteresRestantsTitre = MAX_CARACTERES_TITRE - tailleTitre;
+            
+            containerTitre.textContent = `${nbCaracteresRestantsTitre} caractères restants`;
+    
+            if (nbCaracteresRestantsTitre < 1){
+                titre.value = titre.value.substring(0, MAX_CARACTERES_TITRE);
+            };
+        });
+    };
 
     //Décompte description
-    desc.addEventListener('input', function(){
-        const TAILLE_DESC = desc.value.length;
-        let nbCaracteresRestantsDesc = MAX_CARACTERES_DESC - TAILLE_DESC;
-        
-        containerDesc.textContent = `Caractères restants : ${nbCaracteresRestantsDesc}`;
-
-        if (nbCaracteresRestantsDesc < 1){
-            desc.value = desc.value.substring(0, MAX_CARACTERES_DESC);
-        };
-    });
+    if (desc != null){
+        desc.addEventListener('input', function(){
+            let tailleDesc = desc.value.length;
+            let nbCaracteresRestantsDesc = MAX_CARACTERES_DESC - tailleDesc;
+            
+            containerDesc.textContent = `${nbCaracteresRestantsDesc} caractères restants`;
+    
+            if (nbCaracteresRestantsDesc < 1){
+                desc.value = desc.value.substring(0, MAX_CARACTERES_DESC);
+            };
+        });
+    }
 
     //Décompte valeur question
     titreQuestion.addEventListener('input', function(){
-        const TAILLE_QUESTION = titreQuestion.value.length;
-        let nbCaracteresRestantsVal = MAX_CARACTERES_QUESTION_REPONSES - TAILLE_QUESTION;
+        let tailleQuestion = titreQuestion.value.length;
+        let nbCaracteresRestantsVal = MAX_CARACTERES_QUESTION_REPONSES - tailleQuestion;
         
-        containerVal.textContent = `Caractères restants : ${nbCaracteresRestantsVal}`;
+        containerVal.textContent = `${nbCaracteresRestantsVal} caractères restants`;
 
         if (nbCaracteresRestantsVal < 1){
             titreQuestion.value = titreQuestion.value.substring(0, MAX_CARACTERES_QUESTION_REPONSES);
@@ -79,10 +83,10 @@ function gererDecomptes(MAX_CARACTERES_TITRE, MAX_CARACTERES_DESC, MAX_CARACTERE
     //Décompte réponses
     reponses.forEach((reponse, index) => {
         reponse.addEventListener('input', function(){
-            const TAILLE_REPONSE = reponse.value.length;
-            let nbCaracteresRestantsRep = MAX_CARACTERES_QUESTION_REPONSES - TAILLE_REPONSE;
+            let tailleRep = reponse.value.length;
+            let nbCaracteresRestantsRep = MAX_CARACTERES_QUESTION_REPONSES - tailleRep;
 
-            containerRep[index].textContent = `Caractères restants : ${nbCaracteresRestantsRep}`;
+            containersRep[index].textContent = `${nbCaracteresRestantsRep} caractères restants`;
 
             if (nbCaracteresRestantsRep < 1){
                 reponse.value = reponse.value.substring(0, MAX_CARACTERES_QUESTION_REPONSES);

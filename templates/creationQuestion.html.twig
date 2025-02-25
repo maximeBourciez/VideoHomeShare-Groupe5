@@ -35,16 +35,14 @@
                 <span id="erreurImage" class="alert alert-danger bg-tercary mx-5 text-white d-none mt-2 d-block fs-5"></span>
             </div>
 
-
             <!-- Champ Titre -->
-            <div class="row mb-4 d-flex justify-content-center align-items-center" style="margin: 1px;">
-                <label for="titre_{{ numQuestion }}" class="col-form-label" id="intitule">Entrez la question</label>
+            <div class="row mb-3 d-flex justify-content-center align-items-center" style="margin: 1px;">
+                <label for="titre_{{ numQuestion }}" class="col-form-label col-md-11" id="intitule">Entrez la question</label>
                 <textarea name="titre_{{ numQuestion }}" id="titreQuestion" class="rounded col-md-11" placeholder="Saisir la question..." required></textarea>
-                <small id="containerNbDecomptesVal"></small>
+                <small id="containerDecompteQuest" class="col-md-11">125 caractères restants</small>
                 <span id="erreurTitre" class="alert alert-danger bg-tercary mx-5 text-white d-none mt-2 d-block fs-5"></span>
             </div>
 
-    
             <!-- Champ des réponses -->
             <div id="reponsesContainer" class="row row-3 mt-5 d-flex justify-content-around">
                 {% for i in 0..3 %}
@@ -53,7 +51,7 @@
                         <input type="text" name="reponse_{{ numQuestion }}_{{ i }}" id="reponse_{{ numQuestion }}_{{ i }}" 
                             class="rounded inputReponse w-100" 
                             placeholder="Saisir la réponse..." required/>
-                        <small id="containerNbDecomptesRep"></small>    
+                        <small class="containerNbDecomptesRep">125 caractères restants</small>    
                         <div class="d-flex align-items-center mt-2">
                             <input type="checkbox" name="correcte_{{ numQuestion }}_{{ i }}" id="correcte_{{ numQuestion }}_{{ i }}" class="rounded checkCorrect"/>
                             <label for="correcte_{{ numQuestion }}_{{ i }}" class="ms-2">Correcte</label>
