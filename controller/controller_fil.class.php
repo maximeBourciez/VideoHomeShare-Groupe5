@@ -59,7 +59,7 @@ class ControllerFil extends Controller
      *
      * @return void
      */
-    public function afficherFilParId(?int $idFil = null, ?string $messageErreur = null)
+    public function afficherFilParId(?int $idFil = null, ?bool $indiqueSuccess = null, ?string $message = null)
     {
         if($idFil === null) {
             $idFil = $_GET['id_fil'];
@@ -89,7 +89,8 @@ class ControllerFil extends Controller
             'messages' => $messages,
             'page_courante' => $page,
             'nombre_pages' => $nombrePages,
-            'messageErreur' => $messageErreur,
+            'indiqueSuccess' => $indiqueSuccess,
+            'messageInfos' => $message,
             'raisonsSignalement' => $raisonsSignalement
         ]);
         exit();
@@ -124,7 +125,7 @@ class ControllerFil extends Controller
         $contenuErreur = "Un message doit contenir";
         $messageEstValide = Utilitaires::comprisEntre($message, 1024, 10, $contenuErreur, $messageErreur);
         if (!$messageEstValide) {
-            $this->afficherFilParId($idFil, $messageErreur);
+            $this->afficherFilParId($idFil, false, $messageErreur);
             exit();
         }
 
@@ -132,20 +133,20 @@ class ControllerFil extends Controller
         $messageEstProfane = Utilitaires::verificationDeNom($message, "Le message ", $messageErreur);
         if ($messageEstProfane) {
             $this->signalerMessage($message);
-            $this->afficherFilParId($idFil, $messageErreur);
+            $this->afficherFilParId($idFil, false, $messageErreur);
             exit();
         }
 
         // Vérifier et convertir l'ID du fil
         if ($idFil === 0) {
-            $this->afficherFilParId($idFil, "ID de fil invalide");
+            $this->afficherFilParId($idFil, false, "ID de fil invalide");
             exit();
         }
 
         // Récupérer l'ID du message parent (si présent)
         $idMessageParent = isset($_POST['id_message_parent']) ? intval($_POST['id_message_parent']) : null;
         if (isset($_POST['id_message_parent']) && $idMessageParent === 0) {
-            $this->afficherFilParId($idFil, "ID de message parent invalide");
+            $this->afficherFilParId($idFil, false, "ID de message parent invalide");
             exit();
         }
 
@@ -361,7 +362,7 @@ class ControllerFil extends Controller
         $indiquePropriete = $managerMessage->checkProprieteMessage($idMessageASuppr, $idUtilisateur);
 
         if (!$indiquePropriete) {
-            $this->afficherFilParId($idFil, "Vous ne pouvez pas supprimer ce message, il ne vous appartient pas");
+            $this->afficherFilParId($idFil, true, "Vous ne pouvez pas supprimer ce message, il ne vous appartient pas");
             exit();
         }
 
@@ -410,7 +411,7 @@ class ControllerFil extends Controller
 
             // Vérifier la raison
             if (!RaisonSignalement::isValidReason($raison)) {
-                $this->afficherFilParId($idFil, "Raison de signalement invalide");
+                $this->afficherFilParId($idFil, false, "Raison de signalement invalide");
                 exit();
             }
         } else {
@@ -520,7 +521,7 @@ class ControllerFil extends Controller
             if ($idFil === null) {
                 $this->listerThreads("Méthode HTTP invalide");
             } else {
-                $this->afficherFilParId($idFil, "Méthode HTTP invalide");
+                $this->afficherFilParId($idFil, false, "Méthode HTTP invalide");
             }
             exit();
         }
@@ -543,7 +544,7 @@ class ControllerFil extends Controller
             // Renvoyer la bonne vue en cas d'erreur
             switch ($source) {
                 case "thread":
-                    $this->afficherFilParId($idFil, "Vous devez être connecté pour signaler un message");
+                    $this->afficherFilParId($idFil, false, "Vous devez être connecté pour effectuer cette action !");
                     break;
                 case "forum":
                     $this->listerThreads("Vous devez être connecté pour signaler un message");
