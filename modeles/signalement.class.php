@@ -11,7 +11,7 @@
  */
 
 
- enum RaisonSignalement: string {
+enum RaisonSignalement: string {
     case ContenuInapproprie = 'Contenu inapproprié';
     case Spam = 'Spam';
     case ContenuTrompant = 'Contenu trompant';
@@ -80,18 +80,36 @@ class Signalement{
     private ?int $idMessage;
 
     /**
+     * @var bool|null $estAutomatique Indique si le signalement a été généré automatiquement
+     */
+    private ?bool $estAutomatique;
+
+    /**
+     * @var string|null $contenu Contenu du signalement (message profane dans le cas ou le signalement est automatique)
+     */
+    private ?string $contenu;
+
+    /**
      * Constructeur de message 
      * 
      * @param int|null $id Identifiant du signalement
      * @param RaisonSignalement|null $raison Raison du signalement
      * @param string|null $idUtilisateur Identifiant de l'utilisateur qui signale
      * @param int|null $idMessage Identifiant du message signalé
+     * @param bool|null $estAutomatique Indique si le signalement a été généré automatiquement
+     * @param string|null $contenu Contenu du signalement
      */
-    public function __construct(?int $id = null, ?RaisonSignalement $Raison = null, ?int $idUtilisateur = null, ?int $idMessage = null){
+    public function __construct(?int $id = null, ?RaisonSignalement $Raison = null, ?int $idUtilisateur = null, ?int $idMessage = null, ?bool $estAutomatique = null, ?string $contenu = null){
         $this->idSignalement = $id;
         $this->raison = $Raison;
         $this->idUtilisateur = $idMessage;
         $this->idMessage = $idMessage;
+
+        // Ajouter le contenu si le signalement est automatique
+        if($estAutomatique){
+            $this->contenu = $contenu;
+        }
+        $this->estAutomatique = $estAutomatique;
     }
     
     // Encapsulation
@@ -130,6 +148,24 @@ class Signalement{
      */
     public function getIdMessage(): ?int{
         return $this->idMessage;
+    }
+
+    /**
+     * @brief Getter de l'indicateur de signalement automatique
+     * 
+     * @return bool|null
+     */
+    public function getEstAutomatique(): ?bool {
+        return $this->estAutomatique;
+    }
+
+    /**
+     * @brief Getter du contenu du signalement
+     * 
+     * @return string|null
+     */
+    public function getContenu(): ?string {
+        return $this->contenu;
     }
 
 
@@ -176,6 +212,24 @@ class Signalement{
      */
     public function setIdMessage(?int $idMessage) : void{
         $this->idMessage = $idMessage;
+    }
+
+    /**
+     * @brief Setter de l'indicateur de signalement automatique
+     * 
+     * @param bool|null $estAutomatique Indicateur de signalement automatique
+     */
+    public function setEstAutomatique(?bool $estAutomatique) : void {
+        $this->estAutomatique = $estAutomatique;
+    }
+
+    /**
+     * @brief Setter du contenu du signalement
+     * 
+     * @param string|null $contenu Contenu du signalement
+     */
+    public function setContenu(?string $contenu) : void {
+        $this->contenu = $contenu;
     }
     
 }

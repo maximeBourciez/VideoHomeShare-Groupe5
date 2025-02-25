@@ -11,7 +11,7 @@
 			<div class="table-responsive text-white">
 				<table id="signalementTable" class="table table-dark table-hover mb-0 text-white">
 					<thead>
-						<tr >
+						<tr>
 							<th class="text-white text-center">Contenu du message</th>
 							<th class="text-white text-center">Raison</th>
 							<th class="text-white text-center">Nombre de signalements</th>
@@ -21,108 +21,103 @@
 					<tbody class="text-white">
 						{% for signalement in signalements %}
 							<tr>
-								<td> <a href="index.php?controller=fil&methode=afficherFilParId&id_fil={{signalement.idFil}}#{{signalement.idMessage}}" class="my-auto ">{{signalement.valeur}}</a></td>
-                                <td><p class="">{{signalement.raisons}}</p></td>
-                                <td><p class="my-auto ">{{signalement.nbSignalement}}</p></td>
-                                <td><form action="index.php?controller=dashboard&methode=supprimerMessageSignale" method="post" class="row">
-                                    <input type="hidden" name="idMessage" value="{{signalement.idMessage}}">
-                                    <input type="submit" class=" btn btn-tercary col m-1 " value="Supprimer"> <a class="btn btn-primary col m-1" data-bs-toggle="modal" data-bs-target="#gereMessage{{signalement.idMessage}}">Gérer</a></form> </td>
-                            </tr>
+								<td>
+									<a href="index.php?controller=fil&methode=afficherFilParId&id_fil={{signalement.idFil}}#{{signalement.idMessage}}" class="my-auto ">{{signalement.valeur}}</a>
+								</td>
+								<td>
+									<p class="">{{signalement.raisons}}</p>
+								</td>
+								<td>
+									<p class="my-auto ">{{signalement.nbSignalement}}</p>
+								</td>
+								<td>
+									<form action="index.php?controller=dashboard&methode=supprimerMessageSignale" method="post" class="row">
+										<input type="hidden" name="idMessage" value="{{signalement.idMessage}}">
+										<input type="submit" class=" btn btn-tercary col m-1 " value="Supprimer">
+										<a class="btn btn-primary col m-1" data-bs-toggle="modal" data-bs-target="#gereMessage{{signalement.idMessage}}">Gérer</a>
+									</form>
+								</td>
+							</tr>
 
-								{% endfor %}
+						{% endfor %}
 
-						</tbody>
-                        </table>
+					</tbody>
+				</table>
+			</div>
+			<script>
+				$(document).ready(function () {
+$('#signalementTable').DataTable({
+responsive: true,
+language: {
+url: 'https://cdn.datatables.net/plug-ins/1.11.5/i18n/fr-FR.json'
+},
+pageLength: 15,
+dom: '<"row mx-2 text-white"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' + '<"row"<"col-12"tr>>' + '<"row mx-2 text-white"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+columns: [
+{
+width: "40%"
+}, {
+width: "10%"
+}, {
+width: "10%"
+}, {
+width: "40%"
+}
+],
+
+initComplete: function () {
+$('#episodesTable_wrapper').addClass('text-white');
+$('.dataTables_length').addClass('text-white');
+$('.dataTables_filter').addClass('text-white');
+$('.dataTables_info').addClass('text-white');
+$('.dataTables_paginate').addClass('text-white');
+}
+})
+});
+			</script>
+			{% for signalement in signalements %}
+				<div class="modal fade" id="gereMessage{{signalement.idMessage}}" tabindex="-1" aria-labelledby="modal1Label" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered modal-lg">
+						<div class="modal-content bg-mydark" style="border: 1px solid #F2AC0F;">
+							<div class="modal-header border-bottom-0">
+								<h5 class="modal-title text-white">Gérer le signalement</h5>
+                                <button type="button" class="btn-close btn-close-white"  data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body pt-0">
+								<label>Elément concerné</label>
+								<p>{{signalement.valeur}}</p>
+								<label>Raison du signalement</label>
+								<p>{{signalement.raisons}}</p>
+								<label>Que souhaitez-vous faire ?</label>
+								<div class="d-flex flex-lg-row  flex-column justify-content-center">
+									<form action="index.php?controller=dashboard&methode=supprimerMessageSignale" method="post" class="  m-1">
+										<input type="hidden" name="idMessage" value="{{signalement.idMessage}}">
+										<input type="submit" class="btn btn-tercary text-center col w-100" value="Supprimer le message">
+									</form>
+									{% if signalement.nbSignalement == 1 %}
+										<form action="index.php?controller=dashboard&methode=supprimerSignalement" method="post" class="  m-1">
+											<input type="hidden" name="idMessage" value="{{signalement.idMessage}}">
+											<input type="submit" class="btn btn-primary text-center w-100" value="Supprimer le signalement">
+										</form>
+									{% else %}
+										<form action="index.php?controller=dashboard&methode=supprimerSignalement" method="post" class=" m-1">
+											<input type="hidden" name="idMessage" value="{{signalement.idMessage}}">
+											<input type="submit" class="btn btn-primary text-center col w-100" value="Supprimer les signalements">
+										</form>
+									{% endif %}
+									<form action="index.php?controller=dashboard&methode=afficherBanisement" method="post" class=" m-1">
+											<input type="hidden" name="idmessage" value="{{signalement.idMessage}}">
+											<input type="submit" class="btn btn-tercary text-center col w-100" value="Bannir l’utilisateur">
+										</form>
+									
+								</div>
+							</div>
 						</div>
-                        <script>
-                        $(document).ready(function () {
-                        $('#signalementTable').DataTable({
-                        responsive: true,
-                        language: {
-                        url: 'https://cdn.datatables.net/plug-ins/1.11.5/i18n/fr-FR.json'
-                        },
-                        pageLength: 15,
-                        dom: '<"row mx-2 text-white"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
-                        '<"row"<"col-12"tr>>' +
-                        '<"row mx-2 text-white"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
-                        columns: [
-                        {
-                        width: "40%",
-                        },
-                        {
-                        width: "10%"
-                        },
-                        {
-                        width: "10%"
-                        },
-                        {
-                        width: "40%"
-                        }],
-
-                        initComplete: function () {
-                            $('#episodesTable_wrapper').addClass('text-white');
-                            $('.dataTables_length').addClass('text-white');
-                            $('.dataTables_filter').addClass('text-white');
-                            $('.dataTables_info').addClass('text-white');
-                            $('.dataTables_paginate').addClass('text-white');
-                        }
-                        })});
-                        </script>
-					{% for signalement in signalements %}
-                    <div class="modal fade " id="gereMessage{{signalement.idMessage}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog  modal-dialog-centered modal-lg">
-                            <div class="modal-content bg-mydark" style="border: 1px solid #F2AC0F;">
-
-                                <div class="modal-header border-bottom-0">
-                                    <h5 class="modal-title text-white">Gérer le signalement</h5>
-                                    <button type="button" class="btn-close btn-close-white " data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body pt-0 ">
-                                    <label> Elément concerné </label>
-                                    <p>{{signalement.valeur}}</p>   
-                                    <label> Raison du signalement </label>
-                                    
-                                    <p>{{signalement.raisons}}</p>
-
-                                    <label> Que souhaitez-vous faire ? </label>
-                                    <div class="row row-cols-lg-3 row-cols-1 align-items-start    ">
-                                        <form action="index.php?controller=dashboard&methode=supprimerMessageSignale" method="post" class="col m-1">
-                                        <input type="hidden" name="idMessage" value="{{signalement.idMessage}}">
-                                        <input type="submit" class="btn btn-tercary text-center col w-100" value="Supprimer le message">
-                                        </form>
-                                        {% if signalement.nbSignalement == 1 %}
-                                        <form action="index.php?controller=dashboard&methode=supprimerSignalement" method="post" class="col m-1">
-                                        <input type="hidden" name="idMessage" value="{{signalement.idMessage}}">
-                                        <input type="submit" class="btn btn-secondary text-center w-100" value="Supprimer le signalement">
-                                        </form>
-                                        
-                                        {% else %}
-                                        <form action="index.php?controller=dashboard&methode=supprimerSignalement" method="post" class="col m-1">
-                                        <input type="hidden" name="idMessage" value="{{signalement.idMessage}}">
-                                        <input type="submit" class="btn btn-secondary text-center col w-100" value="Supprimer les signalements">
-                                        </form>
-                                        
-                                        {% endif %}
-                                        <div class="col m-1">
-                                        <a class="btn btn-tercary w-100" data-bs-toggle="modal" data-bs-target="#Banirutilisateur{{signalement.idMessage}}">Bannir l’utilisateur</a>
-                                        </div>
-                                        
-                                        {# <form action="index.php?controller=dashboard&methode=supprimerSignalement" method="post" class="col m-1">
-                                        <input type="hidden" name="idMessage" value="{{signalement.idMessage}}">
-                                        <input type="submit" class="col btn btn-tercary text-center w-100" value="Bannir l’utilisateur">
-                                        </form> #}
-                                    
-                                    </div>
-
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {% endfor %}
+					</div>
 				</div>
+			{% endfor %}
+		</div>
 
-			</main>
+	</main>
 
-		{% endblock %}
+{% endblock %}

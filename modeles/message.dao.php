@@ -179,7 +179,7 @@ class MessageDAO
      */
     public function chercherMessageParId(int $id): ?Message
     {
-        $sql = "SELECT * FROM " . DB_PREFIX . "message  WHERE idMessage = :id";
+        $sql = "SELECT * FROM " . DB_PREFIX . "message M join " . DB_PREFIX . "utilisateur U ON  M.idUtilisateur=U.idUtilisateur    WHERE idMessage = :id";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();

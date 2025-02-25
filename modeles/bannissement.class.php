@@ -37,17 +37,23 @@ class Bannissement {
      */
     private ?DateTime $dateB;
     /**
+     * @brief date de début du bannissement
+     * @var DateTime $dateF
+     */
+    private ?DateTime $dateF;
+    /**
      * @brief identifiant de l'utilisateur banni
      * @var  string $idUtilisateur
      */
     private ?string $idUtilisateur;
 
 
-    public function __construct(?int $id = null, ?string $raison = null, ?DateTime $dateB = null, ?string $idUtilisateur = null)
+    public function __construct(?int $id = null, ?string $raison = null, ?DateTime $dateB = null,?DateTime $dateF = null, ?string $idUtilisateur = null)
     {
         $this->id = $id;
         $this->raison = $raison;
         $this->dateB = $dateB;
+        $this->dateF = $dateF;
         $this->idUtilisateur = $idUtilisateur;
     }
 
@@ -85,6 +91,15 @@ class Bannissement {
         return $this->idUtilisateur;
     }
 
+    /**
+     * @brief getter de la date de fin
+     * @return DateTime|null
+     */
+    public function getDateF(): ?DateTime
+    {
+        return $this->dateF;
+    }
+
     //seter
     /**
      * @brief setter de l'identifiant
@@ -117,6 +132,14 @@ class Bannissement {
     public function setIdUtilisateur(?string $idUtilisateur): void
     {
         $this->idUtilisateur = $idUtilisateur;
+    }
+    /**
+     * @brief setter de la date de fin
+     * @param DateTime|null $dateF
+     */
+    public function setDateF(?DateTime $dateF): void
+    {
+        $this->dateF = $dateF;
     }
 
 

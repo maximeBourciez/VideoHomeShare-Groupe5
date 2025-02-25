@@ -1,0 +1,57 @@
+{% extends "templateAdmin.html.twig" %}
+
+{% block signalement %}
+	border-bottom border-2 border-dark
+{% endblock %}
+
+{% block pageContent %}
+    <main class="  flex-grow-1">
+        <div class=" container  my-4  bg-mydark text-white rounded p-3">
+            <div class="">
+                <p> idantifant de l'utilisateur : {{utilisateur.id}}</p>
+                <p> pseudo de l'utilisateur : {{utilisateur.pseudo}}</p>
+                <p> mail de l'utilisateur : {{utilisateur.getMail()}}</p>
+                <div class=" d-flex justify-content-start">
+                    <p class=" h-100 my-auto" style="white-space: nowrap;"> photo de profil de l'utilisateur </p>
+                    <img class="ms-3 img-fluid" src="{{utilisateur.urlImageProfil}}" alt="profil de l'utilisateur" style=" max-width: 20vh;  min-width: 3vh;  ">
+                </div>
+                <p> banniere de l'utilisateur </p>
+                <img src="{{utilisateur.urlImageBanniere}}" alt="banniere de l'utilisateur" style=" width :100%;  max-height: 13em;  min-height: 3m;">
+                <p class="mt-3"> historique des bannissements de l'utilisateur ({{banisements|length}})</p>
+              
+                {% if banisements|length == 0 %}
+                    <p class="ms-5"> l'utilisateur n'a jamais banni</p>
+                {% else %}
+                    
+                    {% for banisement in banisements %}
+                    <p class="ms-5"> raison du bannissement : {{banisement.raison}}</p>
+                    <p class="ms-5"> date du bannissement : {{banisement.dateB.format('d/m/Y')}}</p>
+                    <br>
+                    {% endfor %}
+                {% endif %}
+
+                <form action="index.php?controller=dashboard&methode=bannirUtilisateur" method="post" >
+                    <input type="hidden" name="idUtilisateur" value="{{utilisateur.id}}">
+                     <div class="form-group mb-3">
+                        <label for="raison">Raison du bannissement</label>
+                        <input type="text" name="raison" id="raison" class="form-control" required>
+                    </div>
+                     <div class="form-group mb-3">
+                        <label for="dateF">Date de fin de de bannisement </label>
+                        <input type="date" name="dateF" id="dateF" class="form-control" required>
+                    </div>
+                     <div class="form-group mb-3">
+                        
+                        <div class="d-flex justify-content-center mb-2">
+                            <input type="submit" class=" btn btn-tercary w-25 mx-5 my-2 " value="Bannir"> 
+                            <a href="index.php?controller=dashboard&methode=afficheSignalements" class="btn btn-primary w-25 my-2   mx-5">annuler</a>  
+                        </div>
+                     </div>
+                </form>               
+            </div>
+
+        </div>
+    </main>
+
+
+{% endblock %}

@@ -30,6 +30,7 @@ define('WEBSITE_LOGO', $config['website']['logo']);
 define('WEBSITE_LOGO_FLAG', $config['website']['logo_flag']);
 define('WEBSITE_LINK', $config['website']['website_link']);
 define('SECRET_KEY', $config['security']['secret_key']);
+define('WEBSITE_MAIL', $config['website']['website_mail']);
 
 
 // Constantes de l'API TMDB

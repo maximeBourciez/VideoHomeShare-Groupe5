@@ -1,18 +1,39 @@
 # constantes.yaml
-
 # Connexion à la base de données
 database:
-  host:
-  name:
-  user:
-  password:
-  prefix:
+  host: ""
+  name: "" 
+  user: ""
+  password: ""
+  prefix: ""
 
 # Constantes de la vue
 website:
-  title:
-  title_long:
-  language:
-  logo:
-  logo_flag:
-  website_link:
+  title: ""
+  title_long: ""
+  language: ""
+  logo: ""
+  logo_flag: ""
+  website_link: ""
+  website_mail: ""
+
+# Constantes de l'API TMDB
+tmdb:
+  api_key: ""
+  base_url: ""
+  image_base_url: ""
+
+# Constantes pour la sécurité
+security:
+  secret_key: ""
+
+# Constantes utiles
+threads:
+  valeurMessageSupprime: "" 
+  valeurUtilisateurMessageSupprime: null
+  nombreMessagesParPage: 
+
+# Constantes pour la sauvegarde de la base de données
+backup:
+  nombreSauvegardesMax: 
+  chemin: ""
