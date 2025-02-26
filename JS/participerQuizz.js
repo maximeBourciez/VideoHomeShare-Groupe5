@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let nbCheckboxesCochees = document.querySelectorAll('.checkbox:checked').length;
         
         //Empêche la dernière checkbox cochée de rester cochée
-        if (nbCheckboxesCochees > 3) {
+        if (nbCheckboxesCochees > 2) {
           this.checked = false;
         }
 

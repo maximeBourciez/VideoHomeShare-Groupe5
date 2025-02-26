@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const MAX_CARACTERES_DESC = 100;
     const MAX_CARACTERES_QUESTION_REPONSES = 125;
 
+    //Gestion du formulaire de quizz
+    gererCreerQuizz();
+
     //Gestion des décomptes
     gererDecomptes(MAX_CARACTERES_TITRE, MAX_CARACTERES_DESC, MAX_CARACTERES_QUESTION_REPONSES);
 
@@ -15,8 +18,34 @@ document.addEventListener('DOMContentLoaded', function () {
     gererImage();
 
     // Gérer l'intitulé de la question
-    gererIntitule();
+    gererIntituleQuestion();
 });
+
+/**
+ * @brief Méthode de gestion du formulaire du quizz
+ * 
+ * @returns {void}
+ */
+function gererCreerQuizz(){
+    //Variables
+    let titreQuizz = document.getElementById('titre');
+    let descQuizz = document.getElementById('description');
+    let btnValider = document.getElementById('validerSaisie');
+
+    if (titreQuizz != null && descQuizz != null && btnValider != null){
+        //Etat par défaut
+        btnValider.disabled = true;
+
+        function verifierChamps(){
+            let titreOk = (titreQuizz.value.length > 4);
+            let descOk = (descQuizz.value.length > 4);
+            btnValider.disabled = !(titreOk && descOk);
+        }
+
+        titreQuizz.addEventListener('input', verifierChamps);
+        descQuizz.addEventListener('input', verifierChamps);
+    }
+}
 
 /**
  * @brief Méthode de gestion des décomptes
@@ -69,30 +98,34 @@ function gererDecomptes(MAX_CARACTERES_TITRE, MAX_CARACTERES_DESC, MAX_CARACTERE
     }
 
     //Décompte valeur question
-    titreQuestion.addEventListener('input', function(){
-        let tailleQuestion = titreQuestion.value.length;
-        let nbCaracteresRestantsVal = MAX_CARACTERES_QUESTION_REPONSES - tailleQuestion;
-        
-        containerVal.textContent = `${nbCaracteresRestantsVal} caractères restants`;
+    if (titreQuestion != null){
+        titreQuestion.addEventListener('input', function(){
+            let tailleQuestion = titreQuestion.value.length;
+            let nbCaracteresRestantsVal = MAX_CARACTERES_QUESTION_REPONSES - tailleQuestion;
+            
+            containerVal.textContent = `${nbCaracteresRestantsVal} caractères restants`;
 
-        if (nbCaracteresRestantsVal < 1){
-            titreQuestion.value = titreQuestion.value.substring(0, MAX_CARACTERES_QUESTION_REPONSES);
-        };
-    });
-
-    //Décompte réponses
-    reponses.forEach((reponse, index) => {
-        reponse.addEventListener('input', function(){
-            let tailleRep = reponse.value.length;
-            let nbCaracteresRestantsRep = MAX_CARACTERES_QUESTION_REPONSES - tailleRep;
-
-            containersRep[index].textContent = `${nbCaracteresRestantsRep} caractères restants`;
-
-            if (nbCaracteresRestantsRep < 1){
-                reponse.value = reponse.value.substring(0, MAX_CARACTERES_QUESTION_REPONSES);
+            if (nbCaracteresRestantsVal < 1){
+                titreQuestion.value = titreQuestion.value.substring(0, MAX_CARACTERES_QUESTION_REPONSES);
             };
         });
-    });
+    }
+
+    //Décompte réponses
+    if (reponses != null){
+        reponses.forEach((reponse, index) => {
+            reponse.addEventListener('input', function(){
+                let tailleRep = reponse.value.length;
+                let nbCaracteresRestantsRep = MAX_CARACTERES_QUESTION_REPONSES - tailleRep;
+
+                containersRep[index].textContent = `${nbCaracteresRestantsRep} caractères restants`;
+
+                if (nbCaracteresRestantsRep < 1){
+                    reponse.value = reponse.value.substring(0, MAX_CARACTERES_QUESTION_REPONSES);
+                };
+            });
+        });
+    }
 };
 
 /**
@@ -109,20 +142,26 @@ function gererReponses(MAX_BONNES_REPONSES) {
     let btnValider = document.getElementById('validerReponses');
 
     // Disable le bouton par défaut
-    btnValider.disabled = true;
+    if (btnValider != null){
+        btnValider.disabled = true;
+    }
 
-    reponses.forEach(reponse => {
-        reponse.addEventListener('input', function () {
-            verifierReponses(reponses, checkboxes);
+    if (reponses != null){
+        reponses.forEach(reponse => {
+            reponse.addEventListener('input', function () {
+                verifierReponses(reponses, checkboxes);
+            });
         });
-    });
+    }
 
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
-            // On vérifie les entrées
-            verifierReponses(reponses, checkboxes);
+    if (checkboxes != null){
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function () {
+                // On vérifie les entrées
+                verifierReponses(reponses, checkboxes);
+            });
         });
-    });
+    }
 
 
     /**
@@ -174,44 +213,46 @@ function gererReponses(MAX_BONNES_REPONSES) {
  * 
  * @returns {void}
  */
-function gererIntitule() {
+function gererIntituleQuestion() {
     let intitule = document.getElementById('titreQuestion');
     let spanDanger = document.getElementById('erreurTitre');
     let btnValider = document.getElementById('validerReponses');
 
     // Ajouter l'écouteur d'évènements
-    intitule.addEventListener('input', function () {
-        // On vérifie les entrées
-        let longueurEntrée = intitule.value.trim().length;
+    if (intitule != null){
+        intitule.addEventListener('input', function () {
+            // On vérifie les entrées
+            let longueurEntrée = intitule.value.trim().length;
 
-        // Vérification de la longueur de l'intitulé
-        if (longueurEntrée < 5) {
-            // Afficher le message d'erreur
-            spanDanger.classList.remove('d-none');
-            spanDanger.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i> L\'intitulé doit contenir au moins 5 caractères';
+            // Vérification de la longueur de l'intitulé
+            if (longueurEntrée < 5) {
+                // Afficher le message d'erreur
+                spanDanger.classList.remove('d-none');
+                spanDanger.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i> L\'intitulé doit contenir au moins 5 caractères';
 
-            // Désactiver le bouton
-            btnValider.disabled = true;
-        }
-        // Si on a trop de caractères
-        else if(longueurEntrée > 50) {
-            // Afficher le message d'erreur
-            spanDanger.classList.remove('d-none');
-            spanDanger.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i> L\'intitulé doit contenir au plus 50 caractères';
+                // Désactiver le bouton
+                btnValider.disabled = true;
+            }
+            // Si on a trop de caractères
+            else if(longueurEntrée > 50) {
+                // Afficher le message d'erreur
+                spanDanger.classList.remove('d-none');
+                spanDanger.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i> L\'intitulé doit contenir au plus 50 caractères';
 
-            // Désactiver le bouton
-            btnValider.disabled = true;
-        }
-        // Si tout est bon, réactiver le bouton
-        else {
-            // Cacher le message d'erreur
-            spanDanger.classList.add('d-none');
-            spanDanger.textContent = '';
+                // Désactiver le bouton
+                btnValider.disabled = true;
+            }
+            // Si tout est bon, réactiver le bouton
+            else {
+                // Cacher le message d'erreur
+                spanDanger.classList.add('d-none');
+                spanDanger.textContent = '';
 
-            // Réactiver le bouton
-            btnValider.disabled = false;
-        }
-    });
+                // Réactiver le bouton
+                btnValider.disabled = false;
+            }
+        });
+    }
 }
 
 
@@ -226,22 +267,24 @@ function gererImage() {
     const errorSpan = document.getElementById('erreurImage');
     const btnValider = document.getElementById('validerReponses');
 
-    imageInput.addEventListener('change', function() {
-        // Vérification si un fichier a été sélectionné
-        if (imageInput.files.length === 0) {
-            // Afficher le message d'erreur si aucun fichier n'est sélectionné
-            errorSpan.classList.remove('d-none');
-            errorSpan.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i> Veuillez sélectionner une image.';
-            // Désactiver le bouton
-            btnValider.disabled = true;
-        } else {
-            // Si un fichier est sélectionné, cacher l'erreur
-            errorSpan.classList.add('d-none');
-            errorSpan.textContent = '';
-            // Réactiver le bouton
-            btnValider.disabled = false;
-        }
-    });
+    if (imageInput != null){
+        imageInput.addEventListener('change', function() {
+            // Vérification si un fichier a été sélectionné
+            if (imageInput.files.length === 0) {
+                // Afficher le message d'erreur si aucun fichier n'est sélectionné
+                errorSpan.classList.remove('d-none');
+                errorSpan.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i> Veuillez sélectionner une image.';
+                // Désactiver le bouton
+                btnValider.disabled = true;
+            } else {
+                // Si un fichier est sélectionné, cacher l'erreur
+                errorSpan.classList.add('d-none');
+                errorSpan.textContent = '';
+                // Réactiver le bouton
+                btnValider.disabled = false;
+            }
+        });
+    }
 }
 
 

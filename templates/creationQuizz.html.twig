@@ -8,30 +8,41 @@
 {% block content %}
 <main class="container flex-fill">
 	<h1 class="mt-4 mb-4">Création d'un quizz</h1>
-	<form action="index.php?controller=quizz&methode=afficherPageQuestions" method="post" class="card bg-mydark mx-auto my-auto p-4 text-white rounded">
-		<!-- Champ Titre -->
-		<div class="row mb-4">
-			<label for="titre">Titre</label>
-    		<input type="text" name="titre" id="titre" class="rounded" required/>
-			<small id="containerNbDecomptesTitre">50 caractères restants</small>
-		</div>
-		<!-- Champ Description -->
-		<div class="row mb-4">
-			<label for="description">Description</label>
-    		<textarea name="description" id="description" class="rounded" required></textarea>
-			<small id="containerNbDecomptesDesc">100 caractères restants</small>
-		</div>
-		<!-- Champ Difficulté -->
-		<div class="form-group row mb-4">
-			<label for="difficulte" class="col-sm-2 col-form-label d-flex justify-content-start">Difficulté <i class="ms-2 bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="1 : Facile; 2 : Moyen; 3 : Difficile; 4 : Expert"></i></label>
-			<input type="number" name="difficulte" id="difficulte" min="1" max="4" value="1" step="1" style="width: 9%;" class="rounded" required></input>
-		<!-- Champ Nombre de questions -->
-			<label for="nbQuestions" class="col-sm-7 col-form-label text-right d-flex justify-content-end">Nombre de questions <i class="ms-2 bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="Le quizz doit avoir 4 à 8 questions"></i></label>
-    		<input type="number" name="nbQuestions" id="nbQuestions" min="4" max="8" value="4" step="1" style="width: 9%" class="rounded" required></input>
-		</div>
-		<!-- Bouton pour passer à la création des questions -->
-		<button type="submit" class="row btn btn-primary fw-bold">Suivant</button>
-	</form>
+	<div class="card bg-mydark mx-auto my-auto p-4 text-white rounded">
+		<form action="index.php?controller=quizz&methode=afficherPageQuestions" method="post">
+			<!-- Champ Titre -->
+			<div class="row mb-4">
+				<label for="titre">Titre (*)</label>
+				<input type="text" name="titre" id="titre" class="rounded" placeholder="ex : Quizz Game of Thrones - Les sept royaumes" required/>
+				<small id="containerNbDecomptesTitre">50 caractères restants</small>
+			</div>
+			<!-- Champ Description -->
+			<div class="row mb-4">
+				<label for="description">Description (*)</label>
+				<textarea name="description" id="description" class="rounded" placeholder="ex : Quizz sur les sept royaumes du continent de Westeros" required></textarea>
+				<small id="containerNbDecomptesDesc">100 caractères restants</small>
+			</div>
+			<!-- Champ Difficulté -->
+			<div class="form-group row mb-4">
+				<label for="difficulte" class="col-sm-2 col-form-label d-flex justify-content-start">Difficulté <i class="ms-2 bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="1 : Facile; 2 : Moyen; 3 : Difficile; 4 : Expert"></i></label>
+				<input type="number" name="difficulte" id="difficulte" min="1" max="4" value="1" step="1" style="width: 9%;" class="rounded" required></input>
+			<!-- Champ Nombre de questions -->
+				<label for="nbQuestions" class="col-sm-7 col-form-label text-right d-flex justify-content-end">Nombre de questions <i class="ms-2 bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="Le quizz doit avoir 4 à 8 questions"></i></label>
+				<input type="number" name="nbQuestions" id="nbQuestions" min="4" max="8" value="4" step="1" style="width: 9%" class="rounded" required></input>
+			</div>
+			<!-- Boutons de manipulation de la page -->
+			<div class="d-flex justify-content-center mt-4 gap-4">
+				<button type="submit" class="btn btn-primary fw-bold me-4 h-auto" id="validerSaisie" style="width: 300px;">Suivant</button>
+			</form>
+				<form action="index.php?controller=quizz&methode=listeQuizz" method="post">
+					<input type="hidden" name="idQuizz" value="{{ quizz.id }}">
+					<button type="submit" class="btn btn-primary fw-bold ms-2 h-auto" onclick="return confirm('Voulez-vous vraiment annuler la création du quizz ?');" style="width: 300px;">
+						Annuler
+					</button>
+				</form>
+			</div>
+	</div>
+	<p>* : Champs obligatoires</p>	
 </main>
 <script src="js/quizz.js"></script>
 {% endblock %}

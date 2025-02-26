@@ -300,7 +300,6 @@ class ControllerQuizz extends Controller
                 'quizz' => $quizz,
                 'messagederreur' => "Vous devez être connecté pour pouvoir créer un quizz."
             ]);
-
         }
     }
 
@@ -341,7 +340,6 @@ class ControllerQuizz extends Controller
                 'messageErreur' => "Une erreur est survenue lors de la suppression du quizz."
             ]);
         }
-
     }
 
     /**
