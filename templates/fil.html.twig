@@ -116,120 +116,113 @@
 				{% endfor %}
 			</div>
 		</div>
-
-		<!-- Message d'erreur -->
-		{% if messageErreur is not null %}
-			<div class="alert alert-danger alert-dismissible fade show text-center" role="alert" style="background-color: #dc3545; color: white;">
-				{{ messageErreur }}
-				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
-			</div>
-		{% endif %}
-
+	
+		<!-- Conteneur de message -->
 		<div class="container mt-3" id="messageContainer">
 			{% for message in messages %}
-    {% if message.idMessageParent is null %}
-        <div id="{{message.getIdMessage()}}" class="card my-4 shadow-sm border-0 rounded-3">
-            <div class="card-body p-4 bg-mydark text-white rounded">
-                <div class="d-flex align-items-center">
-                    <img src="{{ message.getUtilisateur() ? message.getUtilisateur().getUrlImageProfil() : 'default_avatar.jpg' }}" alt="Avatar" class="rounded-circle me-3" width="50" height="50">
-                    <div class="d-flex align-items-center">
-                        <h5 class="mb-0 mx-2 username-link">
-                            <a href="index.php?controller=utilisateur&methode=show&id_utilisateur={{message.getUtilisateur().getId() }}" style="color:white;" class="text-decoration-none">
-                                {{ message.getUtilisateur().getPseudo() ?: 'Utilisateur inconnu' }}
-                            </a>
-                        </h5>
-                        <span class="mx-2" style="font-size: 1.2em;">•</span>
-                        <small>{{ message.dateC | date('d M Y') }}</small>
-                    </div>
-                </div>
-                <div class="message" data-id-message="{{ message.getIdMessage() }}">
-                    <p class="message-text">
-                        {% if message.valeur == messageSuppr and message.getUtilisateur().getPseudo() is null %}
-                            <i>{{ message.valeur }}</i>
-                        {% else %}
-                            {{ message.valeur }}
-                        {% endif %}
-                    </p>
-                </div>
-                <div class="d-flex flex-wrap gap-2 align-items-center justify-content-between w-100">
-                    {% if utilisateurConnecte is null %}
-                        <!-- Bouton "se connecter" -->
-                        <div class="d-flex flex-wrap gap-2">
-                            <a href="index.php?controller=utilisateur&methode=connexion" class="btn action-btn">
-                                <i class="bi bi-box-arrow-in-right"></i>
-                                <span class="btn-text">Se connecter</span>
-                            </a>
-                        </div>
-                    {% else %}
-                        <!-- Boutons like, dislike, répondre -->
-                        <div class="d-flex flex-wrap gap-2 likesContainer" data-message-id="{{ message.getIdMessage() }}">
-                            <form method="POST" action="index.php?controller=fil&methode=like">
-                                <input type="hidden" name="id_message" value="{{ message.getIdMessage() }}">
-                                <input type="hidden" name="id_fil" value="{{ fil.0.getId() }}">
-                                <button class="btn action-btn" type="submit" {% if message.valeur == messageSuppr or utilisateurConnecte is null %} disabled {% endif %}>
-                                    <i class="bi bi-hand-thumbs-up"></i>
-                                    {% if message.nbLikes > 0 %}
-                                        <span class="count">{{ message.nbLikes }}</span>
-                                    {% endif %}
-                                </button>
-                            </form>
+				{% if message.idMessageParent is null %}
+					<div id="{{message.getIdMessage()}}" class="card my-4 shadow-sm border-0 rounded-3">
+						<div class="card-body p-4 bg-mydark text-white rounded">
+							<div class="d-flex align-items-center">
+								<img src="{{ message.getUtilisateur() ? message.getUtilisateur().getUrlImageProfil() : 'default_avatar.jpg' }}" alt="Avatar" class="rounded-circle me-3" width="50" height="50">
+								<div class="d-flex align-items-center">
+									<h5 class="mb-0 mx-2 username-link">
+										<a href="index.php?controller=utilisateur&methode=show&id_utilisateur={{message.getUtilisateur().getId() }}" style="color:white;" class="text-decoration-none">
+											{{ message.getUtilisateur().getPseudo() ?: 'Utilisateur inconnu' }}
+										</a>
+									</h5>
+									<span class="mx-2" style="font-size: 1.2em;">•</span>
+									<small>{{ message.dateC | date('d M Y') }}</small>
+								</div>
+							</div>
+							<div class="message" data-id-message="{{ message.getIdMessage() }}">
+								<p class="message-text">
+									{% if message.valeur == messageSuppr and message.getUtilisateur().getPseudo() is null %}
+										<i>{{ message.valeur }}</i>
+									{% else %}
+										{{ message.valeur }}
+									{% endif %}
+								</p>
+							</div>
+							<div class="d-flex flex-wrap gap-2 align-items-center justify-content-between w-100">
+								{% if utilisateurConnecte is null %}
+									<!-- Bouton "se connecter" -->
+									<div class="d-flex flex-wrap gap-2">
+										<a href="index.php?controller=utilisateur&methode=connexion" class="btn action-btn">
+											<i class="bi bi-box-arrow-in-right"></i>
+											<span class="btn-text">Se connecter</span>
+										</a>
+									</div>
+								{% else %}
+									<!-- Boutons like, dislike, répondre -->
+									<div class="d-flex flex-wrap gap-2 likesContainer" data-message-id="{{ message.getIdMessage() }}">
+										<form method="POST" action="index.php?controller=fil&methode=like">
+											<input type="hidden" name="id_message" value="{{ message.getIdMessage() }}">
+											<input type="hidden" name="id_fil" value="{{ fil.0.getId() }}">
+											<button class="btn action-btn" type="submit" {% if message.valeur == messageSuppr or utilisateurConnecte is null %} disabled {% endif %}>
+												<i class="bi bi-hand-thumbs-up"></i>
+												{% if message.nbLikes > 0 %}
+													<span class="count">{{ message.nbLikes }}</span>
+												{% endif %}
+											</button>
+										</form>
 
-                            <form method="POST" action="index.php?controller=fil&methode=dislike">
-                                <input type="hidden" name="id_message" value="{{ message.getIdMessage() }}">
-                                <input type="hidden" name="id_fil" value="{{ fil.0.getId() }}">
-                                <button class="btn action-btn" type="submit" {% if message.valeur == messageSuppr or utilisateurConnecte is null %} disabled {% endif %}>
-                                    <i class="bi bi-hand-thumbs-down"></i>
-                                    {% if message.nbDislikes > 0 %}
-                                        <span class="count">{{ message.nbDislikes }}</span>
-                                    {% endif %}
-                                </button>
-                            </form>
+										<form method="POST" action="index.php?controller=fil&methode=dislike">
+											<input type="hidden" name="id_message" value="{{ message.getIdMessage() }}">
+											<input type="hidden" name="id_fil" value="{{ fil.0.getId() }}">
+											<button class="btn action-btn" type="submit" {% if message.valeur == messageSuppr or utilisateurConnecte is null %} disabled {% endif %}>
+												<i class="bi bi-hand-thumbs-down"></i>
+												{% if message.nbDislikes > 0 %}
+													<span class="count">{{ message.nbDislikes }}</span>
+												{% endif %}
+											</button>
+										</form>
 
-                            <button class="btn action-btn" data-bs-toggle="modal" data-bs-target="#repondreModal" data-id-message-parent="{{ message.getIdMessage() }}" {% if message.valeur == messageSuppr or utilisateurConnecte is null %} disabled {% endif %}>
-                                <i class="bi bi-reply"></i>
-                                <span class="btn-text">Répondre</span>
-                            </button>
-                        </div>
+										<button class="btn action-btn" data-bs-toggle="modal" data-bs-target="#repondreModal" data-id-message-parent="{{ message.getIdMessage() }}" {% if message.valeur == messageSuppr or utilisateurConnecte is null %} disabled {% endif %}>
+											<i class="bi bi-reply"></i>
+											<span class="btn-text">Répondre</span>
+										</button>
+									</div>
 
-                        <!-- Afficheur de réponses -->
-                        <div class="tooglerReponses mt-3" data-message-id="{{ message.getIdMessage() }}">
-                            {% if message.reponses is not empty %}
-                                <span class="toggle-responses text-light my-2" data-message-id="{{ message.getIdMessage() }}">
-                                    <i class="bi bi-chevron-down"></i>
-                                    <span class="show-text">Voir les réponses</span>
-                                    <span class="hide-text" style="display: none;">Masquer les réponses</span>
-                                </span>
-                            {% endif %}
-                        </div>
+									<!-- Afficheur de réponses -->
+									<div class="tooglerReponses mt-3" data-message-id="{{ message.getIdMessage() }}">
+										{% if message.reponses is not empty %}
+											<span class="toggle-responses text-light my-2" data-message-id="{{ message.getIdMessage() }}">
+												<i class="bi bi-chevron-down"></i>
+												<span class="show-text">Voir les réponses</span>
+												<span class="hide-text" style="display: none;">Masquer les réponses</span>
+											</span>
+										{% endif %}
+									</div>
 
-                        <!-- Boutons supprimer/signaler -->
-                        <div class="d-flex gap-2">
-                            {% if (message.getUtilisateur().getId() == utilisateurConnecte.getId()) or (utilisateurConnecte.getRoleAsString() == "Moderateur") %}
-                                <form method="POST" action="index.php?controller=fil&methode=supprimerMessage" onsubmit="return confirmerSuppression('{{ message.getIdMessage() }}');">
-                                    <input type="hidden" name="idMessage" value="{{ message.getIdMessage() }}">
-                                    <input type="hidden" name="id_fil" value="{{ fil.0.getId() }}">
-                                    <button class="btn action-btn warning-btn" {% if message.valeur == messageSuppr or utilisateurConnecte is null %} disabled {% endif %}>
-                                        <i class="bi bi-trash"></i>
-                                        <span class="btn-text">Supprimer</span>
-                                    </button>
-                                </form>
-                            {% else %}
-                                <button class="btn action-btn warning-btn" data-bs-toggle="modal" data-bs-target="#signalement" data-id-message="{{ message.getIdMessage() }}" {% if message.valeur == messageSuppr or utilisateurConnecte is null %} disabled {% endif %}>
-                                    <i class="bi bi-flag"></i>
-                                    <span class="btn-text">Signaler</span>
-                                </button>
-                            {% endif %}
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
+									<!-- Boutons supprimer/signaler -->
+									<div class="d-flex gap-2">
+										{% if (message.getUtilisateur().getId() == utilisateurConnecte.getId()) or (utilisateurConnecte.getRoleAsString() == "Moderateur") %}
+											<form method="POST" action="index.php?controller=fil&methode=supprimerMessage" onsubmit="return confirmerSuppression('{{ message.getIdMessage() }}');">
+												<input type="hidden" name="idMessage" value="{{ message.getIdMessage() }}">
+												<input type="hidden" name="id_fil" value="{{ fil.0.getId() }}">
+												<button class="btn action-btn warning-btn" {% if message.valeur == messageSuppr or utilisateurConnecte is null %} disabled {% endif %}>
+													<i class="bi bi-trash"></i>
+													<span class="btn-text">Supprimer</span>
+												</button>
+											</form>
+										{% else %}
+											<button class="btn action-btn warning-btn" data-bs-toggle="modal" data-bs-target="#signalement" data-id-message="{{ message.getIdMessage() }}" {% if message.valeur == messageSuppr or utilisateurConnecte is null %} disabled {% endif %}>
+												<i class="bi bi-flag"></i>
+												<span class="btn-text">Signaler</span>
+											</button>
+										{% endif %}
+									</div>
+								{% endif %}
+							</div>
+						</div>
+					</div>
 
-        <div class="responses-container" style="display: none;" data-message-id="{{ message.getIdMessage() }}">
-            {{ macros.afficherReponses(message.reponses, message.getUtilisateur().getId(), message.getUtilisateur().getPseudo(), fil.0.getId(), messageSuppr) }}
-        </div>
-    {% endif %}
-{% endfor %}
+					<div class="responses-container" style="display: none;" data-message-id="{{ message.getIdMessage() }}">
+						{{ macros.afficherReponses(message.reponses, message.getUtilisateur().getId(), message.getUtilisateur().getPseudo(), fil.0.getId(), messageSuppr) }}
+					</div>
+				{% endif %}
+			{% endfor %}
 		</div>
 
 		<!-- Bouton flottant -->
@@ -368,22 +361,44 @@
 			</ul>
 		</nav>
 
-		<script src="JS/thread.js"></script>
-		<script>
-			function confirmerSuppression(idMessage) {
-const confirmationMessage = `Êtes-vous sûr de vouloir supprimer ce message ?`;
-return confirm(confirmationMessage); // Affiche une boîte de confirmation native
-}
-		</script>
-
-		<script src="JS/realtime-messages.js"></script>
-		<script>
-			document.addEventListener('DOMContentLoaded', () => {
-				const realtimeMessages = new RealtimeMessages({{ fil.0.getId() }});
-			});
-		</script>
-
+		
+		<!-- Message d'erreur -->
+		{% if indiqueSuccess is not null and messageInfos is not null %}
+			<div class="toast-container position-fixed bottom-0 end-0 p-3">
+				<div class="toast align-items-center 
+						{% if indiqueSuccess == false %}
+							text-bg-danger
+						{% else %}
+							text-bg-success
+						{% endif %}
+							border-0" role="alert" aria-live="assertive" aria-atomic="true">
+					<div class="d-flex">
+						<div class="toast-body">
+							{{ messageInfos }}
+						</div>
+						<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+					</div>
+				</div>
+			</div>
+		{% endif %}
 	</main>
+
+	<script src="JS/thread.js"></script>
+	<script src="JS/realtime-messages.js"></script>
+	<script src="JS/toasts.js"></script>
+	<script>
+		// Pop-up de confirmation de suppression de message
+		function confirmerSuppression(idMessage) {
+			const confirmationMessage = `Êtes-vous sûr de vouloir supprimer ce message ?`;
+			return confirm(confirmationMessage); // Affiche une boîte de confirmation native
+		}
+
+		// Créer l'objet de gestion de la synchronisation des messages en temps réel
+		document.addEventListener('DOMContentLoaded', () => {
+			const realtimeMessages = new RealtimeMessages({{ fil.0.getId() }});
+		});
+	</script>
+
 
 	<style>
 		@media(max-width: 768px) {
@@ -461,3 +476,4 @@ return confirm(confirmationMessage); // Affiche une boîte de confirmation nativ
 	</style>
 
 {% endblock %}
+
