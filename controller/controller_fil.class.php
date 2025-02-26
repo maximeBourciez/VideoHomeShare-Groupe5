@@ -374,7 +374,7 @@ class ControllerFil extends Controller
         $managerMessage = new MessageDAO($this->getPdo());
         $indiquePropriete = $managerMessage->checkProprieteMessage($idMessageASuppr, $idUtilisateur);
 
-        if (!$indiquePropriete) {
+        if (!$indiquePropriete && $_SESSION['utilisateur']->getRole() !== Role::Moderateur) {
             // Ajouter les messages flash
             $_SESSION['flash']['success'] = false;
             $_SESSION['flash']['message'] = "Vous n'êtes pas autorisé à supprimer ce message, il ne vous appartient pas";
