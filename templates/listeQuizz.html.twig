@@ -61,7 +61,7 @@
 								<div class="row">
 									<form action="index.php?controller=quizz&methode=supprimerQuizz" method="post">
 										<input type="hidden" name="idQuizz" value="{{ quiz.getId() }}">
-										<button type="submit" class="col btn btn-tercary">🗑️ Supprimer</button>
+										<button type="submit" class="col btn btn-tercary"  onclick="return confirm('Voulez-vous vraiment supprimer le quizz ?');">Supprimer</button>
 									</form>
 								</div>
 							{% endif %}
