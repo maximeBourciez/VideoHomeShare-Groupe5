@@ -216,11 +216,11 @@ class ControllerDashboard extends Controller
         // Vérifier que l'utilisateur est bien le modérateur
         if ($this->utilisateurEstModerateur()) {
             // Récupérer l'identifiant de l'utilisateur 
-            $idUtilisateurADebannir = $_POST["idUtilisateur"];
+            $idBannissement = htmlspecialchars($_POST['idUtilisateur']);
 
             // Débannir l'utilisateur 
             $managerBannissement = new BannissementDAO($this->getPdo());
-            $success = $managerBannissement->revokeBan($idUtilisateurADebannir);
+            $success = $managerBannissement->revokeBan($idBannissement);
 
             // Réafficher la page avec un message
             if($success){

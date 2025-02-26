@@ -97,8 +97,8 @@
 										<p class="my-auto  text-center">{{utilisateurBanni.dateF.format('d/m/Y')}}</p>
 									</td>
 									<td>
-										<form action="index.php?controller=dashboard&methode=" method="post" class="row">
-											<input type="hidden" name="idUtilisateur" value="{{utilisateurBanni.id}}">
+										<form action="index.php?controller=dashboard&methode=debannirUtilisateur" method="post" class="row">
+											<input type="hidden" name="idUtilisateur" value="{{ utilisateurBanni.id }}">
 											<input type="submit" class=" btn btn-tercary col m-1 " value="Débannir">
 											<a class="btn btn-primary col m-1" data-bs-toggle="modal" data-bs-target="#dureeeBan{{utilisateurBanni.id}}">changer la duree de banisement</a>
 										</form>
