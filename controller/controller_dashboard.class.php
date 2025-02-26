@@ -135,8 +135,32 @@ class ControllerDashboard extends Controller
 
 
     // Fonctions à compléter
-    function afficherUtilisateurs(?string $eventuelsFiltres)
+    function afficherUtilisateurs(?string $message  = null , ?bool $success = null  )
     {
+        if (isset($_SESSION['utilisateur'])) {
+            $utilisateur = unserialize($_SESSION['utilisateur']);
+            if ($utilisateur->getRole()->toString() != "Moderateur") {
+                // Redirection vers la page d'accueil
+                $managerAccueil = new ControllerIndex($this->getTwig(), $this->getLoader());
+                $managerAccueil->index();
+                exit();
+            }
+        }else{
+            // Redirection vers la page de connexion
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
+            exit();
+        } 
+
+       
+        
+        $managerUtilisateur = new UtilisateurDAO($this->getPdo());
+        $managerBannissement = new BannissementDAO($this->getPdo());
+        $utilisateursNonBannis = $managerUtilisateur->findUtilisateursNonBannis();
+        $utilisateursBannis = $managerBannissement->toutlesbannis();
+        $template = $this->getTwig()->load('pageUtilisateursAdmin.html.twig');
+            echo $template->render(array('utilisateursNonBannis' => $utilisateursNonBannis, 'utilisateursBannis' => $utilisateursBannis, 'message' => $message, 'success' => $success));
+        
     }
 
     /**
@@ -164,8 +188,19 @@ class ControllerDashboard extends Controller
         }
 
         $idUtilisateur = htmlspecialchars($_POST['idUtilisateur']);
+        if ($idUtilisateur == $utilisateur->getId()) {
+            $this->afficherUtilisateurs("Vous ne pouvez pas vous bannir vous même", false);
+            exit();
+        }
         $raison = htmlspecialchars($_POST['raison']);
         $dateF = new DateTime(htmlspecialchars($_POST['dateF']));
+        $messageErreur = "";
+        $verificationtaille = Utilitaires::comprisEntre($raison, 100, 3, " la raison", $messageErreur);
+        $verificationdate = Utilitaires::dateCorrecte($dateF,$messageErreur);
+        if (!$verificationtaille || !$verificationdate) {
+            $this->afficherBanisement($messageErreur, false);
+            exit();
+        }
         $managerBannissement = new BannissementDAO($this->getPdo());
 
 
@@ -176,7 +211,7 @@ class ControllerDashboard extends Controller
 
     }
 
-    function debannirUtilisateur(?string $idUtilisateur)
+    function debannirUtilisateur(?string $idUtilisateur = null)
     {
     }
 
@@ -453,7 +488,7 @@ class ControllerDashboard extends Controller
      * @brif affiche la page de banissement
      * @return void
      */
-    public function afficherBanisement()
+    public function afficherBanisement(?string $message = null, ?bool $success = null)
     {
         // Vérification de la session
         if (isset($_SESSION['utilisateur'])) {
@@ -468,20 +503,107 @@ class ControllerDashboard extends Controller
             $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
             $managerUtilisateur->connexion();
         }
-        $idMessage = htmlspecialchars($_POST['idmessage']);
+        $managerUtilisateur = new UtilisateurDAO($this->getPdo());
+        $idMessage = isset($_POST['idmessage']) ? htmlspecialchars($_POST['idmessage']) : null;
+        $idUtilisateur = isset($_POST['idUtilisateur']) ? htmlspecialchars($_POST['idUtilisateur']) : null;
+        $utilisateur;
+        if ($idUtilisateur == null) {
+            $managerMessage = new MessageDAO($this->getPdo());
+            $message = $managerMessage->chercherMessageParId($idMessage);
+            $utilisateur = $managerUtilisateur->find($message->getUtilisateur()->getId());
 
-        $managerMessage = new MessageDAO($this->getPdo());
+        }else{
+            $utilisateur = $managerUtilisateur->find($idUtilisateur);
+        }
+        
         $managerBannissement = new BannissementDAO($this->getPdo());
-        $message = $managerMessage->chercherMessageParId($idMessage);
+        
 
         // Récupération des utilisateurs
-        $managerUtilisateur = new UtilisateurDAO($this->getPdo());
-        $utilisateur = $managerUtilisateur->find($message->getUtilisateur()->getId());
-        ;
+        
+        
+
         $banisements = $managerBannissement->toutlesBanUsuer($utilisateur->getId());
 
         // Affichage de la page des signalements
         $template = $this->getTwig()->load('bannirUtilisateur.html.twig');
-        echo $template->render(array("utilisateur" => $utilisateur, "banisements" => $banisements));
+        echo $template->render(array("utilisateur" => $utilisateur, "banisements" => $banisements, "message" => $message, "success" => $success));
+    }
+
+    /**
+     * @brif envoyer un mail a un utilisateur
+     * @return void
+     */
+    public function envoiMailUtilisateur(){
+        // Vérification de la session
+        if (isset($_SESSION['utilisateur'])) {
+            $utilisateur = unserialize($_SESSION['utilisateur']);
+            if ($utilisateur->getRole()->toString() != "Moderateur") {
+                // Redirection vers la page d'accueil
+                $managerAccueil = new ControllerIndex($this->getTwig(), $this->getLoader());
+                $managerAccueil->index();
+            }
+        } else {
+            // Redirection vers la page de connexion
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
+        }
+        $mail = isset($_POST['mailUtilisateur']) ? htmlspecialchars($_POST['mailUtilisateur']) : null;
+        
+        $objet =isset($_POST['Objet']) ? htmlspecialchars($_POST['Objet']) : null; 
+        $message = isset($_POST['message']) ? htmlspecialchars($_POST['message']) : null;
+
+        if($mail != null && $objet != null && $message != null){
+            $messageErreur = "";
+            //verification de la longeur du mail
+            $verificationlongeurMessage = Utilitaires::comprisEntre($message, null,20, "contenu du mail",$messageErreur);
+            $verificationlongeurObjet = Utilitaires::comprisEntre($objet, 50,3, "objet du mail",$messageErreur);
+            
+            if($verificationlongeurMessage && $verificationlongeurObjet){
+                //envoie du mail
+                $mailenvoyer =mail($mail, $objet, $message, "From: ".WEBSITE_MAIL);
+                if($mailenvoyer){
+                    $this->afficherUtilisateurs("le mail a été envoyé", true);
+                }else{
+                    $this->afficherUtilisateurs("le mail n'a pas été envoyé", false);
+                }
+            }else{
+                $this->afficherUtilisateurs($messageErreur, false);
+            }
+        }else{
+            $this->afficherUtilisateurs("le mail n'est pas complet", false);
+        }
+    }
+
+    /**
+     * @brif changer la date fin d'un bannissement
+     * @return void
+     */
+    public function changerdatefin(){
+        // Vérification de la session
+        if (isset($_SESSION['utilisateur'])) {
+            $utilisateur = unserialize($_SESSION['utilisateur']);
+            if ($utilisateur->getRole()->toString() != "Moderateur") {
+                // Redirection vers la page d'accueil
+                $managerAccueil = new ControllerIndex($this->getTwig(), $this->getLoader());
+                $managerAccueil->index();
+            }
+        } else {
+            // Redirection vers la page de connexion
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
+        }
+        $idBannissement = isset($_POST['idBan']) ? htmlspecialchars($_POST['idBan']) : null;
+        $dateF = isset($_POST['dateF']) ? new DateTime(htmlspecialchars($_POST['dateF'])) : null;
+        $messageErreur = "";
+        $verificationdate = Utilitaires::dateCorrecte($dateF,$messageErreur);
+        if(!$verificationdate){
+            $this->afficherUtilisateurs($messageErreur, false);
+        }
+        $managerBannissement = new BannissementDAO($this->getPdo());
+        $bannissement = $managerBannissement->findbyid($idBannissement);
+        $bannissement->setDateF(new DateTime($dateF));
+        $managerBannissement->update($bannissement);
+        $this->afficherUtilisateurs("la date de fin du bannissement a été modifié de l'utilsateur ".$bannissement->getIdUtilisateur(), true);
     }
 }

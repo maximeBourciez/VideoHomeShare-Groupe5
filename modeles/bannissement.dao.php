@@ -102,6 +102,27 @@ class BannissementDAO
         $stmt->bindParam(":dateF", $formattedDateF);
         return $stmt->execute();
     }
+    /**
+     * @brief  update un bannissement
+     * 
+     */
+    public function update(Bannissement $bannissement){
+        $stmt = $this->pdo->prepare("UPDATE ".DB_PREFIX."bannissement SET raison = :raison, dateB = :dateB, dateF = :dateF, idUtilisateur = :idUtilisateur WHERE id = :id");
+        $raison = $bannissement->getRaison();
+        $dateB = $bannissement->getDateB()->format('Y-m-d');
+        $dateF = $bannissement->getDateF()->format('Y-m-d');
+        $idUtilisateur = $bannissement->getIdUtilisateur();
+        $id = $bannissement->getId();
+       
+       
+        $stmt->bindParam(":raison", $raison);
+        $stmt->bindParam(":dateB", $dateB);
+        $stmt->bindParam(":dateF", $dateF);
+        $stmt->bindParam(":idUtilisateur", $idUtilisateur);
+        $stmt->bindParam(":id", $id);
+        
+        return $stmt->execute();
+    }
 
     /**
      * @brief trouver un utilisateur banni
@@ -114,11 +135,11 @@ class BannissementDAO
         $stmt->execute();
         $fetch = $stmt->fetch();
         if($fetch == false){
-        $valeurRetoure = $stmt->fetch();
+        $valeurRetour = $stmt->fetch();
         }else{
-            $valeurRetoure = $this->hydrate($fetch);
+            $valeurRetour = $this->hydrate($fetch);
         }
-        return $valeurRetoure;
+        return $valeurRetour;
     }
 
     /**
@@ -130,6 +151,24 @@ class BannissementDAO
         $stmt->execute();
         return $this->hydrateAll($stmt->fetchAll());
     }
+    /**
+     * @brief trouver les bannisement d'un utilisateur
+     */
+    public function toutlesbannis(){
+        $stmt = $this->pdo->prepare("SELECT * FROM ".DB_PREFIX."bannissement  WHERE  dateF > NOW()");
+        $stmt->execute();
+        return $this->hydrateAll($stmt->fetchAll());
+    }
+    /**
+     * @brief trouver un bannissement
+     */
+    public function findbyid(int $id){
+        $stmt = $this->pdo->prepare("SELECT * FROM ".DB_PREFIX."bannissement WHERE id = :id and dateF > date(NOW())");
+        $stmt->bindParam(":id", $id);
+        $stmt->execute();
+        return $this->hydrate($stmt->fetch());
+    }
+
 
  }
 

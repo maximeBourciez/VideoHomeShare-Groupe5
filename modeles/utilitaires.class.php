@@ -523,5 +523,19 @@ class Utilitaires
         }
         return $valretour;
     }
+    /**
+     * @brief permet de verifier si la date de banissement est correcte
+     */
+    public static function dateCorrecte(DateTime $date, string &$messageErreur): bool
+    {
+        $valretour = true;
+        // si la date est plus petite que la date actuelle
+        if ($date <= new DateTime()) {
+
+            $messageErreur = "La date de fin de bannissement est incorrecte";
+            $valretour = false;
+        }
+        return $valretour;
+    }
 
 }

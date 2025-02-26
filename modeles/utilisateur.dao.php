@@ -128,12 +128,12 @@ class UtilisateurDAO
         if ($roleEnum !== null) {
             $role = $roleEnum;
         }
-
+        $dateI = $row['dateI'];
         $urlImageProfil = $row['urlImageProfil'];
         $urlImageBanniere = $row['urlImageBanniere'];
         $estValider = $row['estValider'];
         // Retourner l'utilisateur
-        return new Utilisateur($id, $pseudo, $nom, $mail, $mdp, $role, $urlImageProfil, $urlImageBanniere, $estValider);
+        return new Utilisateur($id, $pseudo, $nom, $mail, $mdp, $role, $urlImageProfil, $urlImageBanniere, $estValider,new DateTime($dateI));
 
     }
     
@@ -245,4 +245,19 @@ class UtilisateurDAO
         $row = $pdo->fetch();
         return $row["estValider"];
     }
+
+    /**
+     * @brief recupère les utilisateurs non  banis 
+     * @return Utilisateur[] Tableau d'utilisateurs trouvés
+     */
+    public function findUtilisateursNonBannis(): array
+    {
+        $sql = "SELECT * FROM " . DB_PREFIX . "utilisateur u  WHERE  u.idUtilisateur not in (select idUtilisateur from " . DB_PREFIX . "bannissement WHERE dateF > date(now()))";
+        $stmt = $this->pdo->query($sql);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);  
+      
+        return $this->hydrateAll($stmt->fetchAll());
+    }
+
+   
 }
