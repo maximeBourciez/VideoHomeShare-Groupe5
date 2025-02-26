@@ -105,7 +105,6 @@ class ControllerUtilisateur extends Controller
         $date = isset($_POST['date']) ?  htmlspecialchars($_POST['date']) : null;
         $mdp = isset($_POST['mdp']) ?  htmlspecialchars($_POST['mdp']) : null;
         $vmdp = isset($_POST['vmdp']) ?  htmlspecialchars($_POST['vmdp']) : null;
-        $nom = isset($_POST['nom']) ?  htmlspecialchars($_POST['nom']) : null;
         $CGU = isset($_POST['conditions']) ?  htmlspecialchars($_POST['conditions']) : null;
 
         //supprimer les espaces
@@ -122,7 +121,6 @@ class ControllerUtilisateur extends Controller
 
         $verficationTaillePseudo = Utilitaires::comprisEntre($pseudo, 50, 3, "le pseudo doit contenir", $message);
 
-        $verficationTailleNom = Utilitaires::comprisEntre($nom, 50, 3, "le nom doit contenir", $message);
         $verficationTailleMdp = Utilitaires::comprisEntre($mdp, null, 8, "le mot de passe doit contenir", $message);
         $verficationTailleVmdp = Utilitaires::comprisEntre($vmdp, null, 8, "le mot de passe de confirmation doit contenir", $message);
 
@@ -134,14 +132,13 @@ class ControllerUtilisateur extends Controller
         $verficationIdExistePas = Utilitaires::idExistePas($id, $message, $managerutilisateur);
         $verficationProfaniteId = !Utilitaires::verificationDeNom($id, "l'Identifiant ", $message);
         $verficationProfanitePseudo = !Utilitaires::verificationDeNom($pseudo, "le pseudo", $message);
-        $verficationProfaniteNom = !Utilitaires::verificationDeNom($nom, "le nom", $message);
 
         $verficationCGURcocher = Utilitaires::verifiecasecocher($CGU, $message, " les conditions générales d'utilisation");
 
         if (
-            $verficationTailleMail && $verficationTailleId && $verficationTaillePseudo && $verficationTailleNom && $verficationTailleMdp && $verficationTailleVmdp &&
+            $verficationTailleMail && $verficationTailleId && $verficationTaillePseudo  && $verficationTailleMdp && $verficationTailleVmdp &&
             $verficationRobuste && $verficationAge && $verficationMailExistePas && $verficationEgale && $verficationIdExistePas && $verficationProfaniteId && $verficationProfanitePseudo
-            && $verficationProfaniteNom && $verficationCGURcocher
+             && $verficationCGURcocher
         ) {
 
             //cripter le mot de passe
@@ -150,7 +147,7 @@ class ControllerUtilisateur extends Controller
             $role = Role::Utilisateur;
             $token = Utilitaires::generateToken($id, 24);
             mail($mail, "Confirmation de votre compte", "Bonjour, \n\n Vous avez créé un compte sur notre plateforme. Pour confirmer votre compte, veuillez cliquer sur le lien suivant : " . WEBSITE_LINK . "index.php?controller=utilisateur&methode=confirmationCompte&token=" . $token . " \n\n Cordialement, \n\n L'équipe de la plateforme de vhs");
-            $newUtilisateur = new Utilisateur($id, $pseudo, $nom, $mail, $mdp, $role, "images/Profil_de_base.svg", "images/Banniere_de_base.png");
+            $newUtilisateur = new Utilisateur($id, $pseudo,  $mail, $mdp, $role, "images/Profil_de_base.svg", "images/Banniere_de_base.png");
             $managerutilisateur->create($newUtilisateur);
             //Génération de la vue
             $template = $this->getTwig()->load('connection.html.twig');
@@ -367,7 +364,7 @@ class ControllerUtilisateur extends Controller
         // récupération des données du formulaire
 
         $pseudo = isset($_POST['pseudo']) ?  htmlspecialchars($_POST['pseudo']) : null;
-        $nom = isset($_POST['nom']) ?  htmlspecialchars($_POST['nom']) : null;
+        
 
         // récupérer l'utilisateur connecté
         $utilisateur = unserialize($_SESSION['utilisateur']);
@@ -382,20 +379,18 @@ class ControllerUtilisateur extends Controller
         // vérification des informations saisies lors de la modification
         $verficationUtilisateurExiste = Utilitaires::utilisateurExiste($utilisateur, $messageErreur);
         $verficationTaillePseudo = Utilitaires::comprisEntre($pseudo, 50, 3, "le pseudo doit contenir", $messageErreur);
-        $verficationTailleNom = Utilitaires::comprisEntre($nom, 50, 3, "le nom doit contenir", $messageErreur);
         $verficationfichierProfilTropLourd = Utilitaires::fichierTropLourd($_FILES['urlImageProfil'], "profil", $messageErreur);
         $verficationfichierBaniereTropLourd = Utilitaires::fichierTropLourd($_FILES['urlImageBanniere'], "banniere", $messageErreur);
         $verficationProfanitePseudo = !Utilitaires::verificationDeNom($pseudo, "le pseudo", $messageErreur);
-        $verficationProfaniteNom = !Utilitaires::verificationDeNom($nom, "le nom", $messageErreur);
 
         if (
-            $verficationUtilisateurExiste  && $verficationTaillePseudo && $verficationTailleNom && $verficationfichierProfilTropLourd &&
-            $verficationfichierBaniereTropLourd  && $verficationProfanitePseudo && $verficationProfaniteNom
+            $verficationUtilisateurExiste  && $verficationTaillePseudo && $verficationfichierProfilTropLourd &&
+            $verficationfichierBaniereTropLourd  && $verficationProfanitePseudo 
         ) {
 
             // mettre à jour les informations de l'utilisateur
             $utilisateur->setPseudo($pseudo);
-            $utilisateur->setNom($nom);
+            
             // récupérer les fichiers images  de profil
             if (isset(($_FILES['urlImageProfil']))) {
 
