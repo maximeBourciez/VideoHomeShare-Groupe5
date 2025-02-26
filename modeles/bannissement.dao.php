@@ -173,6 +173,27 @@ class BannissementDAO
     }
 
 
+
+    /**
+     * @brief Révoquer le bannissement d'un utilisateur
+     * 
+     * @param int|null $idBan Identifiant du bannisement à révoquer
+     * 
+     * @return bool
+     */
+    public function revokeBan(?int $idBan): bool {
+        // Vérifier que l'ID n'est pas null
+        if ($idBan === null) {
+            return false;
+        }
+    
+        // Préparer la requête 
+        $stmt = $this->pdo->prepare("UPDATE " . DB_PREFIX . "bannissement SET dateF = NOW() WHERE id = :idBanToRevoke");
+        $stmt->bindValue(':idBanToRevoke', $idBan, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+    
+
  }
 
 

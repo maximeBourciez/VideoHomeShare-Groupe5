@@ -211,8 +211,27 @@ class ControllerDashboard extends Controller
 
     }
 
-    function debannirUtilisateur(?string $idUtilisateur = null)
+    public function debannirUtilisateur()
     {
+        // Vérifier que l'utilisateur est bien le modérateur
+        if ($this->utilisateurEstModerateur()) {
+            // Récupérer l'identifiant de l'utilisateur 
+            $idUtilisateurADebannir = $_POST["idUtilisateur"];
+
+            // Débannir l'utilisateur 
+            $managerBannissement = new BannissementDAO($this->getPdo());
+            $success = $managerBannissement->revokeBan($idUtilisateurADebannir);
+
+            // Réafficher la page avec un message
+            if($success){
+                $message = "Bannissement révoqué avec succès.";
+            }else {
+                $message = "Erreur lors de la révocation du bannissement.";
+            }
+
+            $this->afficherUtilisateurs( $message, $success);
+            exit();
+        }
     }
 
     /**
@@ -520,9 +539,6 @@ class ControllerDashboard extends Controller
         
 
         // Récupération des utilisateurs
-        
-        
-
         $banisements = $managerBannissement->toutlesBanUsuer($utilisateur->getId());
 
         // Affichage de la page des signalements
