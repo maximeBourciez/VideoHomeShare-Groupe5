@@ -60,41 +60,48 @@ class ControllerFil extends Controller
      * @return void
      */
     public function afficherFilParId(?int $idFil = null, ?bool $indiqueSuccess = null, ?string $message = null)
-    {
-        if($idFil === null) {
-            $idFil = $_GET['id_fil'];
-        }
-        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-        $messagesParPage = NOMBRE_MESSAGES_PAR_PAGE;
-
-        // Récupérer le fil
-        $filDAO = new FilDAO($this->getPdo());
-        $fil = $filDAO->findById($idFil);
-
-        // Récupérer les messages paginés
-        $messageDAO = new MessageDAO($this->getPdo());
-        $messages = $messageDAO->getMessagesPagines($idFil, $page, $messagesParPage);
-
-        // Calculer le nombre total de pages
-        $totalMessages = $messageDAO->getNombreMessagesParent($idFil);
-        $nombrePages = ceil($totalMessages / $messagesParPage);
-
-        // Récupérer les raisons de signalement
-        $signalementDAO = new SignalementDAO($this->getPdo());
-        $raisonsSignalement = RaisonSignalement::getAllReasons();
-
-        // Passer les données à la vue
-        echo $this->getTwig()->render('fil.html.twig', [
-            'fil' => $fil,
-            'messages' => $messages,
-            'page_courante' => $page,
-            'nombre_pages' => $nombrePages,
-            'indiqueSuccess' => $indiqueSuccess,
-            'messageInfos' => $message,
-            'raisonsSignalement' => $raisonsSignalement
-        ]);
-        exit();
+{
+    if ($idFil === null) {
+        $idFil = $_GET['id_fil'];
     }
+    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+    $messagesParPage = NOMBRE_MESSAGES_PAR_PAGE;
+
+    // Récupérer le fil
+    $filDAO = new FilDAO($this->getPdo());
+    $fil = $filDAO->findById($idFil);
+
+    // Récupérer les messages paginés
+    $messageDAO = new MessageDAO($this->getPdo());
+    $messages = $messageDAO->getMessagesPagines($idFil, $page, $messagesParPage);
+
+    // Calculer le nombre total de pages
+    $totalMessages = $messageDAO->getNombreMessagesParent($idFil);
+    $nombrePages = ceil($totalMessages / $messagesParPage);
+
+    // Récupérer les raisons de signalement
+    $raisonsSignalement = RaisonSignalement::getAllReasons();
+
+    // Préparer les données à passer à la vue, en excluant les variables nulles
+    $data = [
+        'fil' => $fil,
+        'messages' => $messages,
+        'page_courante' => $page,
+        'nombre_pages' => $nombrePages,
+        'raisonsSignalement' => $raisonsSignalement
+    ];
+
+    // Ajouter conditionnellement les variables si elles ne sont pas nulles
+    if ($indiqueSuccess !== null) {
+        $data['indiqueSuccess'] = $indiqueSuccess;
+        $data['messageInfos'] = $message;
+    }
+
+    // Passer les données à la vue
+    echo $this->getTwig()->render('fil.html.twig', $data);
+    exit();
+}
+
 
     /**
      * @brief Méthode d'ajout d'un message (avec ou sans message parent) dans un fil de discussion
