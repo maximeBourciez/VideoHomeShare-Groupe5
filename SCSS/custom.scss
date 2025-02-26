@@ -689,3 +689,28 @@ $bp-xl: 1200px;
     transform: scale(1.05);
   }
 }
+
+
+// Correctifs des boutons
+.btn-secondary {
+  background-color: $secondary !important; /* Gris standard Bootstrap */
+  color: white !important;
+
+  &:hover {
+    background-color: darken($secondary, 10%) !important;
+  }
+}
+
+.btn-danger {
+  background-color: $danger !important; /* Rouge Bootstrap */
+  color: white !important;
+
+  &:hover {
+    background-color: darken($danger, 10%) !important;
+  }
+}
+
+.btn:hover {
+  transform: scale(1.05);
+  transition: all 0.3s ease;
+}
