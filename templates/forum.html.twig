@@ -58,7 +58,7 @@
 
 
 		<!-- Bouton flottant -->
-		<button class="btn btn-myprimary position-fixed bottom-0 end-0 me-4 mb-5 px-6 d-flex align-items-center justify-content-center" style="border-radius: 50px; white-space: nowrap; min-width: 200px;" id="btnCreaFil" data-bs-toggle="modal" data-bs-target="#nouveauFil">
+		<button class="btn btn-myprimary position-fixed bottom-0 end-0 me-4 mb-5 px-6 d-flex align-items-center justify-content-center" style="border-radius: 50px; white-space: nowrap; min-width: 200px;" id="btnCreaFil" data-bs-toggle="modal" data-bs-target="#nouveauFil" {% if utilisateurConnecte is null %}disabled{% endif 	%}>
 			<i class="bi bi-pencil" style="font-size: 1.3rem; margin-right: 0.2rem;"></i>
 			<span>Nouveau fil</span>
 		</button>
@@ -131,7 +131,7 @@
 		</div>
 
 
-		<script src="js/forum.js"></script>
+		<script src="JS/forum.js"></script>
 
 	</main>
 {% endblock %}

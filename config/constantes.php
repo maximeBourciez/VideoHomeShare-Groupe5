@@ -5,11 +5,9 @@ use Symfony\Component\Yaml\Yaml;
 require 'vendor/autoload.php';
 
 // Chargement du fichier YAML
-try{
+try {
     $config = Yaml::parseFile('config/constantes.yaml');
-}
-catch(Exception $e)
-{
+} catch (Exception $e) {
     echo "Pas de fichier Yaml.";
 }
 // Utilisation des constantes
