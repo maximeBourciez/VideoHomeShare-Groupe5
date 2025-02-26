@@ -43,7 +43,6 @@
 
                 <!-- Champ des réponses -->
                 <div id="reponsesContainer" class="row row-3 mt-5 d-flex justify-content-around">
-                    <p> Vous pouvez sélectionner jusqu'à 2 réponses correctes.
                     {% for i in 0..3 %}
                         <div class="col-md-5 mb-3 d-flex flex-column">
                             <label for="reponse_{{ numQuestion }}_{{ i }}">Réponse {{ i + 1 }} (*)</label>
@@ -57,6 +56,7 @@
                             </div>
                         </div>
                     {% endfor %}
+                    <p class="fst-italic"> Vous pouvez sélectionner jusqu'à 2 réponses correctes.</p>
                 </div>
                 <span id="erreurReponses" class="alert alert-danger bg-tercary mx-5 text-white d-none mt-2 d-block fs-5"></span>
 
