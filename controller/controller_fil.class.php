@@ -55,53 +55,49 @@ class ControllerFil extends Controller
      * @details Méthode permettant d'afficher un fil de discussion par son identifiant, et ainsi de permettre l'afficahge de la discussion sous-jacente
      * 
      * @param int $idFil Identifiant du fil de discussion
-     * @param string $messageErreur Message d'erreur à afficher
+     * @param bool $indiqueSuccess Indique si l'opération a réussi
+     * @param string $message Message à afficher
      *
      * @return void
      */
-    public function afficherFilParId(?int $idFil = null, ?bool $indiqueSuccess = null, ?string $message = null)
-{
-    if ($idFil === null) {
+    public function afficherFilParId()
+    {
+
         $idFil = $_GET['id_fil'];
+        $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+        $messagesParPage = NOMBRE_MESSAGES_PAR_PAGE;
+
+        // Récupérer le fil
+        $filDAO = new FilDAO($this->getPdo());
+        $fil = $filDAO->findById($idFil);
+
+        // Récupérer les messages paginés
+        $messageDAO = new MessageDAO($this->getPdo());
+        $messages = $messageDAO->getMessagesPagines($idFil, $page, $messagesParPage);
+
+        // Calculer le nombre total de pages
+        $totalMessages = $messageDAO->getNombreMessagesParent($idFil);
+        $nombrePages = ceil($totalMessages / $messagesParPage);
+
+        // Récupérer les raisons de signalement
+        $raisonsSignalement = RaisonSignalement::getAllReasons();
+
+        // Préparer les données à passer à la vue, en excluant les variables nulles
+        $retour = $this->recupereMessagesFlash();
+        $data = [
+            'fil' => $fil,
+            'messages' => $messages,
+            'page_courante' => $page,
+            'nombre_pages' => $nombrePages,
+            'raisonsSignalement' => $raisonsSignalement,
+            'messageInfos' => $retour['message'],
+            'indiqueSuccess' => $retour['success']
+        ];
+
+        // Passer les données à la vue
+        echo $this->getTwig()->render('fil.html.twig', $data);
+        exit();
     }
-    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-    $messagesParPage = NOMBRE_MESSAGES_PAR_PAGE;
-
-    // Récupérer le fil
-    $filDAO = new FilDAO($this->getPdo());
-    $fil = $filDAO->findById($idFil);
-
-    // Récupérer les messages paginés
-    $messageDAO = new MessageDAO($this->getPdo());
-    $messages = $messageDAO->getMessagesPagines($idFil, $page, $messagesParPage);
-
-    // Calculer le nombre total de pages
-    $totalMessages = $messageDAO->getNombreMessagesParent($idFil);
-    $nombrePages = ceil($totalMessages / $messagesParPage);
-
-    // Récupérer les raisons de signalement
-    $raisonsSignalement = RaisonSignalement::getAllReasons();
-
-    // Préparer les données à passer à la vue, en excluant les variables nulles
-    $data = [
-        'fil' => $fil,
-        'messages' => $messages,
-        'page_courante' => $page,
-        'nombre_pages' => $nombrePages,
-        'raisonsSignalement' => $raisonsSignalement
-    ];
-
-    // Ajouter conditionnellement les variables si elles ne sont pas nulles
-    if ($indiqueSuccess !== null) {
-        $data['indiqueSuccess'] = $indiqueSuccess;
-        $data['messageInfos'] = $message;
-    }
-
-    // Passer les données à la vue
-    echo $this->getTwig()->render('fil.html.twig', $data);
-    exit();
-}
-
 
     /**
      * @brief Méthode d'ajout d'un message (avec ou sans message parent) dans un fil de discussion
@@ -116,14 +112,12 @@ class ControllerFil extends Controller
         $idFil = intval($_POST['id_fil']);
 
         // Vérifier la méthode HTTP
-        $this->verifierHttp($idFil);
+        $this->verifierMethodeHTTP($idFil, "thread");
 
         // Vérifier que l'utilisateur est connecté
-        $idUtilisateur = $this->verifierConnexion("thread", $idFil);
-
-        // Arrêter le traitement s'il n'y a pas d'utilisateur connecté
+        $idUtilisateur = $this->verifierConnexion($idFil);
         if ($idUtilisateur === null) {
-            exit();
+            return;
         }
 
         // Vérifier et nettoyer le message
@@ -132,44 +126,60 @@ class ControllerFil extends Controller
         $contenuErreur = "Un message doit contenir";
         $messageEstValide = Utilitaires::comprisEntre($message, 1024, 10, $contenuErreur, $messageErreur);
         if (!$messageEstValide) {
-            $this->afficherFilParId($idFil, false, $messageErreur);
-            exit();
+            // Ajouter les messages flash
+            $_SESSION['flash']['success'] = false;
+            $_SESSION['flash']['message'] = $messageErreur;
+
+            header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
+            return;
         }
 
         // Vérifier la profanité du message
         $messageEstProfane = Utilitaires::verificationDeNom($message, "Le message ", $messageErreur);
         if ($messageEstProfane) {
+            // Ajouter les messages flash
+            $_SESSION['flash']['success'] = false;
+            $_SESSION['flash']['message'] = $messageErreur;
+
             $this->signalerMessage($message);
-            $this->afficherFilParId($idFil, false, $messageErreur);
-            exit();
+            header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
+            return;
         }
 
         // Vérifier et convertir l'ID du fil
         if ($idFil === 0) {
-            $this->afficherFilParId($idFil, false, "ID de fil invalide");
-            exit();
+            // Ajouter les messages flash
+            $_SESSION['flash']['success'] = false;
+            $_SESSION['flash']['message'] = "ID de fil invalide";
+
+            header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
+            return;
         }
 
         // Récupérer l'ID du message parent (si présent)
         $idMessageParent = isset($_POST['id_message_parent']) ? intval($_POST['id_message_parent']) : null;
         if (isset($_POST['id_message_parent']) && $idMessageParent === 0) {
-            $this->afficherFilParId($idFil, false, "ID de message parent invalide");
-            exit();
+            // Ajouter les messages flash
+            $_SESSION['flash']['success'] = false;
+            $_SESSION['flash']['message'] = "ID de message parent invalide";
+
+            header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
+            return;
         }
 
         // Créer le message
         $managerMessage = new MessageDAO($this->getPdo());
         $managerMessage->ajouterMessage($idFil, $idMessageParent, $message, $idUtilisateur);
 
-        // Récupérer l'id du message
-        $idMessage = $this->getPdo()->lastInsertId();
-
         // Notifier l'utilisateur si le message est une réponse
         if ($idMessageParent !== null) {
             $this->notifierUtilisateur("reponse", $idMessageParent, $idFil);
         }
 
-        // Rediriger vers le fil
+        // Rediriger vers la page d'affichage du fil avec un paramètre de succès
+        $_SESSION['flash']['success'] = true;
+        $_SESSION['flash']['message'] = "Message ajouté avec succès";
+
         header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
         exit();
     }
@@ -185,14 +195,12 @@ class ControllerFil extends Controller
         $idFil = intval($_POST['id_fil']);
 
         // Vérifier la méthode HTTP
-        $this->verifierHttp($idFil);
+        $this->verifierMethodeHTTP($idFil, "thread");
 
         // Vérifier que l'utilisateur est connecté
-        $idUtilisateur = $this->verifierConnexion("thread", $idFil);
-
-        // Arrêter le traitement s'il n'y a pas d'utilisateur connecté
+        $idUtilisateur = $this->verifierConnexion($idFil);
         if ($idUtilisateur === null) {
-            exit();
+            return;
         }
 
         // Récupérer les infos du message
@@ -205,11 +213,13 @@ class ControllerFil extends Controller
         // Notifier l'utilisateur
         $this->notifierUtilisateur("reaction", $idMessage, $idFil);
 
-        // Rediriger vers le fil
+        // Pattern PRG: Rediriger vers la page d'affichage du fil avec un paramètre de succès
+        $_SESSION['flash']['success'] = true;
+        $_SESSION['flash']['message'] = "Réaction enregistrée";
+
         header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
         exit();
     }
-
 
     /**
      * @brief Méthode d'ajout d'un like à un message
@@ -222,27 +232,28 @@ class ControllerFil extends Controller
         $idFil = intval($_POST['id_fil']);
 
         // Vérifier la méthode HTTP
-        $this->verifierHttp($idFil);
+        $this->verifierMethodeHTTP($idFil, "thread");
 
         // Vérifier que l'utilisateur est connecté
-        $idUtilisateur = $this->verifierConnexion("thread", $idFil);
-
-        // Arrêter le traitement s'il n'y a pas d'utilisateur connecté
+        $idUtilisateur = $this->verifierConnexion($idFil);
         if ($idUtilisateur === null) {
-            exit();
+            return;
         }
 
         // Récupérer les infos du message
         $idMessage = intval($_POST['id_message']);
 
-        // Ajouter le dislike
+        // Ajouter le like
         $managerReaction = new MessageDAO($this->getPdo());
         $managerReaction->ajouterReaction($idMessage, $idUtilisateur, true);
 
         // Notifier l'utilisateur
         $this->notifierUtilisateur("reaction", $idMessage, $idFil);
 
-        // Rediriger vers le fil
+        // Pattern PRG: Rediriger vers la page d'affichage du fil avec un paramètre de succès
+        $_SESSION['flash']['success'] = true;
+        $_SESSION['flash']['message'] = "Réaction enregistrée";
+
         header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
         exit();
     }
@@ -256,14 +267,12 @@ class ControllerFil extends Controller
     public function creerFil()
     {
         // Vérifier la méthode HTTP
-        $this->verifierHttp(null);
+        $this->verifierMethodeHTTP(null, "forum");
 
         // Vérifier que l'utilisateur est connecté
-        $idUtilisateur = $this->verifierConnexion("forum", null);
-
-        // Arrêter le traitement s'il n'y a pas d'utilisateur connecté
+        $idUtilisateur = $this->verifierConnexion(null, "forum");
         if ($idUtilisateur === null) {
-            exit();
+            return;
         }
 
         // Vérifier le titre
@@ -273,8 +282,9 @@ class ControllerFil extends Controller
         $contenuErreur = "Un message doit contenir";
         $messageOk = Utilitaires::comprisEntre($titre, 50, 10, $contenuErreur, $messageErreur);
         if (!$messageOk) {
+
             $this->listerThreads($messageErreur);
-            exit();
+            return;
         }
 
         // vérifier la profanité du titre
@@ -282,7 +292,7 @@ class ControllerFil extends Controller
         if ($titreEstProfane) {
             $this->signalerMessage("Tentative de création d'un thread : " . $titre);
             $this->listerThreads($messageErreur);
-            exit();
+            return;
         }
 
         // Un fil pouvant avoir 0..* thèmes, on n'a pas besoin de les vérifier. On les récupère simplement
@@ -296,7 +306,7 @@ class ControllerFil extends Controller
         $messageOk = Utilitaires::comprisEntre($premierMessage, 1024, 10, $contenuErreur, $messageErreur);
         if (!$messageOk) {
             $this->listerThreads($messageErreur);
-            exit();
+            return;
         }
 
         // Vérifier la profanité du premier message
@@ -304,7 +314,7 @@ class ControllerFil extends Controller
         if ($premierMessageEstProfane) {
             $this->signalerMessage($premierMessage);
             $this->listerThreads($messageErreur);
-            exit();
+            return;
         }
 
         // Vérifier la description
@@ -319,7 +329,7 @@ class ControllerFil extends Controller
         if ($descriptionEstProfane) {
             $this->signalerMessage("Tentaticve de création d'un thread (description): " . $description);
             $this->listerThreads($messageErreur);
-            exit();
+            return;
         }
 
         // Créer le fil
@@ -333,11 +343,10 @@ class ControllerFil extends Controller
         // Ajouter les thèmes
         $managerFil->addThemes($idFil, $themes);
 
-        // Rediriger vers le fil
-        header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
+        // Pattern PRG: Rediriger vers la page d'affichage du fil avec un paramètre de succès
+        header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil . "&success=true&message=" . urlencode("Fil de discussion créé avec succès"));
         exit();
     }
-
 
     /**
      * Méthode de suppression d'un message
@@ -350,26 +359,27 @@ class ControllerFil extends Controller
         $idFil = intval($_POST['id_fil']);
 
         // Vérifier la méthode HTTP
-        $this->verifierHttp($idFil);
+        $this->verifierMethodeHTTP($idFil, "thread");
 
         // Vérifier que l'utilisateur est connecté
-        $idUtilisateur = $this->verifierConnexion("thread", $idFil);
-
-        // Arrêter le traitement s'il n'y a pas d'utilisateur connecté
+        $idUtilisateur = $this->verifierConnexion($idFil);
         if ($idUtilisateur === null) {
-            exit();
+            return;
         }
 
         // Récupérer les infos depuis le formulaire
         $idMessageASuppr = intval($_POST["idMessage"]);
-        $idFil = intval($_POST["id_fil"]);
 
         // Vérifier que le message provient bien de l'utilisateur
         $managerMessage = new MessageDAO($this->getPdo());
         $indiquePropriete = $managerMessage->checkProprieteMessage($idMessageASuppr, $idUtilisateur);
 
         if (!$indiquePropriete) {
-            $this->afficherFilParId($idFil, true, "Vous ne pouvez pas supprimer ce message, il ne vous appartient pas");
+            // Ajouter les messages flash
+            $_SESSION['flash']['success'] = false;
+            $_SESSION['flash']['message'] = "Vous n'êtes pas autorisé à supprimer ce message, il ne vous appartient pas";
+
+            header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
             exit();
         }
 
@@ -381,7 +391,10 @@ class ControllerFil extends Controller
         $managerSignalement = new SignalementDAO($this->getPdo());
         $managerSignalement->supprimerSignalementMessage($idMessageASuppr);
 
-        // Réafficher le fil
+        // Redirioger vers la page d'affichage du fil avec un paramètre de succès
+        $_SESSION['flash']['success'] = true;
+        $_SESSION['flash']['message'] = "Message supprimé avec succès";
+
         header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
         exit();
     }
@@ -396,19 +409,16 @@ class ControllerFil extends Controller
         // Récupérer l'id du fil
         $idFil = isset($_POST['id_fil']) ? intval($_POST['id_fil']) : null;
 
-        // Vérifier la méthode HTTP
-        $this->verifierHttp($idFil);
-
-        // Vérifier que l'utilisateur est connecté
-        if ($idFil !== null) {
-            $idUtilisateur = $this->verifierConnexion("", $idFil);
-        } else {
-            $idUtilisateur = $this->verifierConnexion("thread", $idFil);
+        // Vérifier la méthode HTTP si ce n'est pas un appel interne
+        if (!isset($contenuSignale)) {
+            $this->verifierMethodeHTTP($idFil, "thread");
         }
 
-        // Arrêter le traitement s'il n'y a pas d'utilisateur connecté
+        // Vérifier que l'utilisateur est connecté
+        $source = ($idFil !== null) ? "" : "forum";
+        $idUtilisateur = $this->verifierConnexion($idFil, $source);
         if ($idUtilisateur === null) {
-            exit();
+            return;
         }
 
         // Récupérer les données du formulaire si le signalement est manuel
@@ -418,7 +428,11 @@ class ControllerFil extends Controller
 
             // Vérifier la raison
             if (!RaisonSignalement::isValidReason($raison)) {
-                $this->afficherFilParId($idFil, false, "Raison de signalement invalide");
+                // Ajouter les messages flash
+                $_SESSION['flash']['success'] = false;
+                $_SESSION['flash']['message'] = "Raison de signalement invalide";
+
+                header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
                 exit();
             }
         } else {
@@ -445,7 +459,50 @@ class ControllerFil extends Controller
         $managerSignalement = new SignalementDAO($this->getPdo());
         $managerSignalement->ajouterSignalement($signalement);
 
-        header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
+        // Si c'est un appel interne, ne pas rediriger
+        if (!isset($contenuSignale) && $idFil !== null) {
+            // Ajouter les messages flash
+            $_SESSION['flash']['success'] = true;
+            $_SESSION['flash']['message'] = "Signalement enregistré";
+
+            header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
+            exit();
+        }
+
+        // Pour les appels internes, juste retourner
+        return;
+    }
+
+    /**
+     * 
+     * Méthode permettant de récupérer les messages d'un fil postés après celui d'id passé via GET
+     * 
+     * @details Méthode utilisée en AJAX par JS/realtime-message.js afin d'actualiser les messages du forum en temps réel pour tous les utilisateurs.
+     * 
+     * @return never
+     */
+    public function getNouveauxMessages()
+    {
+        if (!isset($_GET['id_fil']) || !isset($_GET['dernierMessageId'])) {
+            http_response_code(400);
+            exit(json_encode(['error' => 'Paramètres manquants']));
+        }
+
+        $idFil = intval($_GET['id_fil']);
+        $dernierMessageId = intval($_GET['dernierMessageId']);
+
+        $messageDAO = new MessageDAO($this->getPdo());
+        $nouveauxMessages = json_encode($messageDAO->getNouveauxMessages($idFil, $dernierMessageId));
+
+        // S'assurer qu'aucun output n'a été envoyé avant
+        if (ob_get_length())
+            ob_clean();
+
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true,
+            'messages' => $nouveauxMessages
+        ]);
         exit();
     }
 
@@ -479,90 +536,88 @@ class ControllerFil extends Controller
             default => null
         };
 
-        $managerNotification = new NotificationDAO($this->getPdo());;
+        $managerNotification = new NotificationDAO($this->getPdo());
+        ;
         $managerNotification->creation($contenu, $idReceveur);
     }
 
     /**
+     * @brief Vérifie que l'utilisateur est connecté et retourne son id le cas échéant
      * 
-     * Méthode permettant de récupérer les messages d'un fil postés après celui d'id passé via GET
+     * @details Retourne une vue en cas de non-connexion de l'utilisateur ou redirige
      * 
-     * 0details Méthode utilsée en AJAX par JS/realtime-message.js afin d'actualiser les messages du forum en temps réel pour tous les utilisateurs.
+     * @param int|null $idFil Identifiant du fil de discussion
+     * @param string|null $source Source de l'appel de la méthode (forum ou autre)
      * 
-     * @return never
+     * @return string|null Identifiant de l'utilisateur connecté
      */
-    public function getNouveauxMessages()
+    private function verifierConnexion(?int $idFil = null, ?string $source = null): ?string
     {
-        if (!isset($_GET['id_fil']) || !isset($_GET['dernierMessageId'])) {
-            http_response_code(400);
-            exit(json_encode(['error' => 'Paramètres manquants']));
+        // Vérifier que l'utilisateur est connecté
+        if (!isset($_SESSION['utilisateur'])) {
+            if ($idFil !== null) {
+                // Ajouter les messages flash
+                $_SESSION['flash']['success'] = false;
+                $_SESSION['flash']['message'] = "Vous devez être connecté pour effectuer cette action";
+
+                header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
+            } else if ($source === "forum") {
+                $this->listerThreads("Vous devez être connecté pour effectuer cette action !");
+            } else {
+                header("Location: index.php?controller=utilisateur&methode=connexion");
+            }
+            return null;
+        } else {
+            return unserialize($_SESSION['utilisateur'])->getId();
         }
-
-        $idFil = intval($_GET['id_fil']);
-        $dernierMessageId = intval($_GET['dernierMessageId']);
-
-        $messageDAO = new MessageDAO($this->getPdo());
-        $nouveauxMessages = json_encode($messageDAO->getNouveauxMessages($idFil, $dernierMessageId));
-
-        // S'assurer qu'aucun output n'a été envoyé avant
-        if (ob_get_length()) ob_clean();
-
-        header('Content-Type: application/json');
-        echo json_encode([
-            'success' => true,
-            'messages' => $nouveauxMessages
-        ]);
-        exit();
     }
 
-
     /**
-     * @brief vérification de la méthode d'appel du controller
+     * @brief Vérification de la méthode HTTP
      * 
-     * @return void Affiche une vue 
+     * @return void
      */
-    private function verifierHttp(?int $idFil)
+    private function verifierMethodeHTTP(?int $idFil = null, ?string $source = null)
     {
-        // Vérifier que la méthode HTTP est POST
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            if ($idFil === null) {
+            if ($idFil !== null) {
+                // Ajouter les messages flash
+                $_SESSION['flash']['success'] = false;
+                $_SESSION['flash']['message'] = "Méthode HTTP invalide";
+
+                header("Location: index.php?controller=fil&methode=afficherFilParId&id_fil=" . $idFil);
+            } else if ($source === "forum") {
                 $this->listerThreads("Méthode HTTP invalide");
             } else {
-                $this->afficherFilParId($idFil, false, "Méthode HTTP invalide");
+                header("Location: index.php?controller=utilisateur&methode=connexion");
             }
             exit();
         }
     }
 
     /**
-     * @brief Vérifie que l'utilisateur est connecté et retourne son id le cas échéant
+     * @brief Méthode de récupération des messages flash
      * 
-     * @details Retourne une vue en cas de non-connexion de l'utilisateur
-     * 
-     * @param string|null $source Source de l'appel de la méthode (Forum ou thread) -> pour renvoyer la bonne vue en cas d'erreur
-     * @param int|null $idFil Identifiant du fil de discussion
-     * 
-     * @return string|null Identifiant de l'utilisateur connecté
+     * @return array Tableau contenant l'indicatif de succès et le message
      */
-    private function verifierConnexion(?string $source, ?int $idFil): ?string
+    private function recupereMessagesFlash(): array
     {
-        // Vérifier que l'utilisateur est connecté
-        if (!isset($_SESSION['utilisateur'])) {
-            // Renvoyer la bonne vue en cas d'erreur
-            switch ($source) {
-                case "thread":
-                    $this->afficherFilParId($idFil, false, "Vous devez être connecté pour effectuer cette action !");
-                    break;
-                case "forum":
-                    $this->listerThreads("Vous devez être connecté pour signaler un message");
-                    break;
-                default:
-                    header("Location: index.php?controller=utilisateur&methode=connexion");
-                    break;
-            }
-            return null;
-        } else {
-            return unserialize($_SESSION['utilisateur'])->getId();
+        // Initialiser le tableau de retour avec des valeurs par défaut
+        $messages = [
+            'success' => false,
+            'message' => null,
+        ];
+
+        // Vérifier si des messages flash existent dans la session
+        if (isset($_SESSION['flash'])) {
+            // Récupérer les messages flash
+            $messages['success'] = $_SESSION['flash']['success'] ?? false;
+            $messages['message'] = $_SESSION['flash']['message'] ?? null;
+
+            // Supprimer les messages flash après les avoir récupérés
+            unset($_SESSION['flash']);
         }
+
+        return $messages;
     }
 }

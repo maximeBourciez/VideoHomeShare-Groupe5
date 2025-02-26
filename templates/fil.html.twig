@@ -363,7 +363,7 @@
 
 		
 		<!-- Message d'erreur -->
-		{% if indiqueSuccess is not null %}
+		{% if indiqueSuccess is not null and messageInfos is not null %}
 			<div class="toast-container position-fixed bottom-0 end-0 p-3">
 				<div class="toast align-items-center 
 						{% if indiqueSuccess == false %}
