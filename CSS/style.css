@@ -12394,4 +12394,25 @@ body {
   transform: scale(1.05);
 }
 
+.btn-secondary {
+  background-color: #e6640b !important; /* Gris standard Bootstrap */
+  color: white !important;
+}
+.btn-secondary:hover {
+  background-color: rgb(181.3278008299, 78.8381742739, 8.6721991701) !important;
+}
+
+.btn-danger {
+  background-color: #dc3545 !important; /* Rouge Bootstrap */
+  color: white !important;
+}
+.btn-danger:hover {
+  background-color: rgb(189.2151898734, 32.7848101266, 47.7721518987) !important;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+  transition: all 0.3s ease;
+}
+
 /*# sourceMappingURL=style.css.map */
