@@ -37,12 +37,11 @@ class UtilisateurDAO
         // Préparation de la requête
         $pdo = $this->pdo->prepare("INSERT INTO " . DB_PREFIX . "utilisateur 
         (idUtilisateur, pseudo, vraiNom, mail, mdp, role, urlImageProfil, urlImageBanniere , dateI  ,estValider) 
-        VALUES (:idUtilisateur, :pseudo, :nom , :mail, :mdp, :role, :urlImageProfil, :urlImageBanniere , NOW() , 0)");
+        VALUES (:idUtilisateur, :pseudo , :mail, :mdp, :role, :urlImageProfil, :urlImageBanniere , NOW() , 0)");
       
         // Récupération des valeurs
         $id = $utilisateur->getId();
         $pseudo = $utilisateur->getPseudo();
-        $nom = $utilisateur->getNom();
         $mail = $utilisateur->getMail();
         $mdp = $utilisateur->getMdp();
         $role = $utilisateur->getRole()->toString();
@@ -52,7 +51,6 @@ class UtilisateurDAO
         // passage des paramètres
         $pdo->bindValue(":idUtilisateur", $id);
         $pdo->bindValue(":pseudo", $pseudo);
-        $pdo->bindValue(":nom", $nom);
         $pdo->bindValue(":mail", $mail);
         $pdo->bindValue(":mdp", $mdp);
         
@@ -72,11 +70,10 @@ class UtilisateurDAO
     function update(Utilisateur $utilisateur): bool
     {
 
-        $pdo = $this->pdo->prepare("UPDATE " . DB_PREFIX . "utilisateur SET  pseudo = :pseudo, vraiNom = :nom, mail = :mail, mdp = :mdp,  urlImageProfil = :urlImageProfil, urlImageBanniere = :urlImageBaniere, estValider = :estValider WHERE idUtilisateur = :id");
+        $pdo = $this->pdo->prepare("UPDATE " . DB_PREFIX . "utilisateur SET  pseudo = :pseudo, mail = :mail, mdp = :mdp,  urlImageProfil = :urlImageProfil, urlImageBanniere = :urlImageBaniere, estValider = :estValider WHERE idUtilisateur = :id");
 
         $id = $utilisateur->getId();
         $pseudo = $utilisateur->getPseudo();
-        $nom = $utilisateur->getNom();
         $mail = $utilisateur->getMail();
         $mdp = $utilisateur->getMdp();
         $urlImageProfil = $utilisateur->getUrlImageProfil();
@@ -84,7 +81,6 @@ class UtilisateurDAO
         $estValider = $utilisateur->getEstValider();
         $pdo->bindParam(":id", $id);
         $pdo->bindParam(":pseudo", $pseudo);
-        $pdo->bindParam(":nom", $nom);
         $pdo->bindParam(":mail", $mail);
         $pdo->bindParam(":mdp", $mdp);
         $pdo->bindParam(":urlImageProfil", $urlImageProfil);
@@ -116,7 +112,6 @@ class UtilisateurDAO
         // Récupération des valeurs
         $id = $row['idUtilisateur'];
         $pseudo = $row['pseudo'];
-        $nom = $row['vraiNom'];
         $mail = $row['mail'];
         $mdp = $row['mdp'];
         $role = $row['role'];
@@ -133,7 +128,7 @@ class UtilisateurDAO
         $urlImageBanniere = $row['urlImageBanniere'];
         $estValider = $row['estValider'];
         // Retourner l'utilisateur
-        return new Utilisateur($id, $pseudo, $nom, $mail, $mdp, $role, $urlImageProfil, $urlImageBanniere, $estValider);
+        return new Utilisateur($id, $pseudo,  $mail, $mdp, $role, $urlImageProfil, $urlImageBanniere, $estValider);
 
     }
     
