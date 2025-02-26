@@ -273,77 +273,133 @@ class CollectionDAO
     }
 
     /**
-     * Méthode de recherche d'une collection par son nom, en filtrant les collections contenant des films adultes
+     * Vérifie si une collection contient des films pour adultes.
+     * Cette méthode interroge l'API TMDB pour obtenir les détails d'une collection
+     * et vérifie si l'un des films qu'elle contient est marqué comme contenu adulte.
+     *
+     * @param int $collectionId L'identifiant TMDB de la collection à vérifier
      * 
-     * @param string $query Recherche de la collection par son nom
+     * @return bool Retourne true si la collection contient au moins un film pour adultes,
+     *              false sinon ou en cas d'erreur de l'API
      * 
-     * @return array<Collection>|null La liste des collections filtrées ou null si aucune trouvée
-     */
-    public function searchByName(?string $query): ?array
-    {
-        $url = "{$this->baseUrl}/search/collection?api_key={$this->apiKey}&query=" . urlencode($query) . "&language=fr-FR&include_adult=false";
-        $response = file_get_contents($url);
-
-        if ($response === false) {
-            return null; // En cas d'erreur, retourner null
-        }
-
-        $collectionData = json_decode($response, true);
-
-        if (!$collectionData || empty($collectionData['results'])) {
-            return null;
-        }
-
-        $collections = [];
-
-        foreach ($collectionData['results'] as $result) {
-            $collectionId = $result['id'];
-
-            // Vérifier si la collection contient des films adultes
-            if ($this->hasAdultMovies($collectionId)) {
-                continue; // Passer cette collection
-            }
-
-            // Ajouter la collection si elle ne contient pas de films adultes
-            $collections[] = new Collection(
-                $collectionId,
-                $result['name'], // Correspond au titre de la collection
-                null, // Date non disponible dans l'API
-                $result['overview'] ?? null,
-                $result['poster_path'] ? "https://image.tmdb.org/t/p/w500" . $result['poster_path'] : null,
-                null // Nombre de films non fourni par l'API
-            );
-        }
-
-        return !empty($collections) ? $collections : null;
-    }
-
-    /**
-     * Vérifie si une collection contient des films adultes
-     * 
-     * @param int $collectionId ID de la collection à vérifier
-     * 
-     * @return bool True si un des films est adulte, sinon False
+     * @throws Exception En cas d'erreur grave lors de la requête à l'API
      */
     private function hasAdultMovies(int $collectionId): bool
     {
-        $url = "{$this->baseUrl}/collection/{$collectionId}?api_key={$this->apiKey}&language=fr-FR";
-        $response = file_get_contents($url);
+        try {
+            $url = "{$this->baseUrl}/collection/{$collectionId}?api_key={$this->apiKey}&language=fr-FR";
 
-        if ($response === false) {
-            return false; // En cas d'erreur, on suppose que la collection est valide
-        }
+            $context = stream_context_create([
+                'http' => [
+                    'ignore_errors' => true,
+                    'timeout' => 5
+                ]
+            ]);
 
-        $collectionDetails = json_decode($response, true);
+            $response = @file_get_contents($url, false, $context);
 
-        if (isset($collectionDetails['parts'])) {
-            foreach ($collectionDetails['parts'] as $movie) {
-                if (!empty($movie['adult']) && $movie['adult'] === true) {
-                    return true; // La collection contient un film adulte
+            if ($response === false) {
+                return false; // En cas d'erreur, on considère que ce n'est pas une collection adulte
+            }
+
+            $data = json_decode($response, true);
+            if (!$data || !isset($data['parts'])) {
+                return false;
+            }
+
+            // Vérifier chaque film de la collection
+            foreach ($data['parts'] as $movie) {
+                if (isset($movie['adult']) && $movie['adult']) {
+                    return true;
                 }
             }
+
+            return false;
+        } catch (Exception $e) {
+            error_log("Erreur lors de la vérification des films adultes: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Recherche des collections par leur nom dans l'API TMDB.
+     * Cette méthode filtre automatiquement les collections contenant du contenu pour adultes
+     * et gère les cas d'erreur de l'API.
+     *
+     * @param string|null $query Le terme de recherche pour trouver les collections.
+     *                          Si null ou vide, la méthode retournera null.
+     * 
+     * @return array<Collection>|null Retourne un tableau d'objets Collection correspondant aux critères
+     *                               de recherche, ou null si aucun résultat n'est trouvé ou en cas d'erreur
+     * 
+     * @throws Exception En cas d'erreur grave lors de la requête à l'API
+     * 
+     * @example
+     * // Rechercher toutes les collections contenant "Star Wars"
+     * $collections = $collectionDAO->searchByName("Star Wars");
+     * 
+     * // Gérer le cas où aucun résultat n'est trouvé
+     * if ($collections === null) {
+     *     echo "Aucune collection trouvée";
+     * }
+     */
+    public function searchByName(?string $query): ?array
+    {
+        if (empty($query)) {
+            return null;
         }
 
-        return false;
+        try {
+            $url = "{$this->baseUrl}/search/collection?api_key={$this->apiKey}&query=" . urlencode($query) . "&language=fr-FR&include_adult=false";
+
+            $context = stream_context_create([
+                'http' => [
+                    'ignore_errors' => true,
+                    'timeout' => 5
+                ]
+            ]);
+
+            $response = @file_get_contents($url, false, $context);
+
+            if ($response === false) {
+                return null;
+            }
+
+            $collectionData = json_decode($response, true);
+            if (!$collectionData || empty($collectionData['results'])) {
+                return null;
+            }
+
+            $collections = [];
+            foreach ($collectionData['results'] as $result) {
+                if (!isset($result['id'])) {
+                    continue;
+                }
+
+                // On n'appelle hasAdultMovies que si nécessaire
+                // et on ignore simplement les collections qui causent une erreur 404
+                try {
+                    if ($this->hasAdultMovies($result['id'])) {
+                        continue;
+                    }
+                } catch (Exception $e) {
+                    continue;
+                }
+
+                $collections[] = new Collection(
+                    $result['id'],
+                    $result['name'] ?? 'Sans titre',
+                    null,
+                    $result['overview'] ?? null,
+                    isset($result['poster_path']) ? "https://image.tmdb.org/t/p/w500" . $result['poster_path'] : null,
+                    null
+                );
+            }
+
+            return !empty($collections) ? $collections : null;
+        } catch (Exception $e) {
+            error_log("Exception lors de la recherche de collection: " . $e->getMessage());
+            return null;
+        }
     }
 }

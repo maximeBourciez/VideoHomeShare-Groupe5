@@ -46,7 +46,9 @@
 
 		{% endfor %}
 		<script src="JS/utilisateur.js"></script>
-		<script> cachermessage(3) </script> 
+		{% if messages|length > 3 %}
+			<script> cachermessage(3) </script> 
+		{% endif %}
 		<div id="quiz" >
 		{% if utilisateurConnecte.getId() == utilisateur.getId()  %}
 

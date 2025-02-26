@@ -114,13 +114,13 @@ class ControllerSalle extends Controller
         $salle->setEstPublique($Publique);
         $salle->setGenre($genre);
         if(!$Publique){
-        $salle->setCode(random_int(0,9999));  
-        while( !$managersalle->create($salle)){
-            $salle->setCode(random_int(0,9999));
-        }
-        }else{
-            $managersalle->create($salle);
-        }
+            $salle->setCode(random_int(0,9999));  
+            while( $managersalle->findByCode($salle->getCode()) != null){
+                $salle->setCode(random_int(0,9999));
+            }
+         }
+        $managersalle->create($salle);
+       
         // recuperer l'id de la salle
         $lastInsertId = $this->getPdo()->lastInsertId();
         $salle = $managersalle->find($lastInsertId);

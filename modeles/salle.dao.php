@@ -52,8 +52,10 @@ class SalleDAO{
      * 
      * @return array $row tableau contenant les informations de la salle
      */
-    function hydrate(array $row): Salle
-    {
+    function hydrate(array|bool $row): ?Salle
+    {   
+        
+        if($row != false ){
         $idSalle = $row['idSalle'];
         $nom = $row['nom'];
         $nbpersonne = $row['nbpersonne'];
@@ -63,6 +65,9 @@ class SalleDAO{
         $estPublique = $row['estPublique'];
         $placedisponible = $row['placedisponible'];
         $salle = new Salle($idSalle, $nom, $nbpersonne, $rangCourant, $code, $genre, $estPublique, $placedisponible);
+        } else {
+            $salle = null;
+        }
         return $salle;
     }
 
@@ -140,7 +145,7 @@ class SalleDAO{
         $stmt->execute();
     }
 
-    function findByCode(string $code): Salle
+    function findByCode(int $code): ?Salle
     {
         $stmt = $this->pdo->prepare("SELECT * FROM ".DB_PREFIX. "salle WHERE code = :code");
         $stmt->bindValue(':code', $code);

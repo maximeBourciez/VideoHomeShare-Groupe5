@@ -8,28 +8,27 @@
 	{% endif %}
 	<main class="movie-page container d-flex flex-column justify-content-center align-items-center flex-grow-1">
 		<div
-			class="movie-content d-flex">
+			class="movie-content row d-flex mt-3">
 			<!-- Section Affiche -->
-			<div class="movie-poster me-5">
+			<div class="movie-poster col-lg-5 col-md-6 mb-4 mb-md-0 text-center">
 				{% if serie.lienAffiche is not empty %}
-					<img src="{{ serie.lienAffiche }}" alt="{{ serie.titre }}" class="movie-poster__image shadow img-fluid m-5 rounded" style="width: 525px; height: 750px; object-fit: cover;" loading="lazy" crossorigin="anonymous" referrerpolicy="no-referrer" onerror="this.src='images/no-image.svg'">
+					<img src="{{ serie.lienAffiche }}" alt="{{ serie.titre }}" class="movie-poster__image shadow img-fluid rounded" style="width: 100%; max-width: 525px; height: auto; object-fit: cover;" loading="lazy" crossorigin="anonymous" referrerpolicy="no-referrer" onerror="this.src='images/no-image.svg'">
 				{% else %}
-					<img src="images/no-image.svg" alt="{{ serie.titre }}" class="movie-poster__image img-fluid m-5 rounded" style="width: 525px; height: 750px; object-fit: cover;">
+					<img src="images/no-image.svg" alt="{{ serie.titre }}" class="movie-poster__image img-fluid rounded" style="width: 100%; max-width: 525px; height: auto; object-fit: cover;">
 				{% endif %}
 			</div>
 
 			<!-- Section Informations -->
 			<div
-				class="movie-info col-6 d-flex flex-column justify-content-between">
+				class="movie-info col-lg-7 col-md-6 d-flex flex-column justify-content-between">
 				<!-- Titre -->
-				<h1 class="movie-info__title mt-5 fw-bolder text-center">{{ serie.titre }}</h1>
+				<h1 class="movie-info__title mt-3 fw-bolder text-center text-md-start">{{ serie.titre }}</h1>
 
-				<!-- Nombre de saison et épisode -->
+				<!-- Nombre de saisons et épisodes -->
 				<div class="movie-info__metadata d-flex justify-content-between fs-5 fw-bolder">
-					<p class="movie-info__films">Nombre de saison :
+					<p>Nombre de saisons :
 						{{ serie.nombreSaisons }}</p>
-
-					<p class="movie-info__date">Nombre d'épisodes :
+					<p>Nombre d'épisodes :
 						{{ serie.nombreEpisodes }}</p>
 				</div>
 
@@ -37,27 +36,16 @@
 				<div class="movie-info__description shadow fst-italic fs-5 bg-dark text-white p-3 rounded">
 					{% set description = serie.description %}
 					{% set descriptionmax_length = 500 %}
-					{% if description is not empty %}
-						{% if description|length > descriptionmax_length %}
-							<p class="fs-6">
-								{{ description }}</p>
-						{% else %}
-							<p>
-								{{ description }}</p>
-						{% endif %}
-					{% else %}
-						<p class="fs-6">Aucune description disponible pour cette serie.</p>
-					{% endif %}
+					<p class="fs-6">{{ description is not empty ? (description|length > descriptionmax_length ? description : description) : 'Aucune description disponible pour cette série.' }}</p>
 				</div>
 
 				<!-- Genres -->
-				<div class="movie-info__genres d-flex justify-content-left align-items-center mt-2">
+				<div class="movie-info__genres d-flex flex-wrap mt-2">
 					{% for theme in themes %}
-						<span class="movie-info__genre-tag bg-mydark text-white p-2 px-3 rounded me-3 {% if theme|length > 10 %}fs-6{% endif %}">
-							{{ theme }}
-						</span>
+						<span class="movie-info__genre-tag bg-mydark text-white p-2 px-3 rounded me-2 mb-2 {% if theme|length > 10 %}fs-6{% endif %}">{{ theme }}</span>
 					{% endfor %}
 				</div>
+
 				<!-- Note et Avis -->
 				<div class="movie-info__rating">
 					<div class="movie-info__rating-stars d-flex text-center align-items-center">
@@ -82,20 +70,14 @@ generateStarRating(note);
 });
 				</script>
 
+
 				<!-- Boutons d'action -->
-				<div class="movie-actions mr-5">
-					<div class="movie-actions__buttons d-flex justify-content-right mb-5">
-						{% if utilisateurConnecte is not null %}
-							<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
-						{% else %}
-							<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Laisser un avis</button>
-						{% endif %}
-						<button class="movie-actions__watchlist-btn btn btn-myprimary fw-normal me-4 bi bi-plus">WatchList</button>
-						<a href="index.php?controller=serie&methode=afficherListeEpisodes&tmdb_id={{ serie.id }}">
-							<button class="movie-actions__watch-btn btn btn-myprimary fw-normal bi bi-list">
-								Épisodes
-							</button>
-						</a>
+				<div class="movie-actions mt-3">
+					<div class="d-flex flex-wrap gap-2">
+						<button class="btn btn-myprimary" data-bs-toggle="modal" data-bs-target="#{{ utilisateurConnecte is not null ? 'commenterContenu' : 'veuillezVousConnecter' }}">Laisser un avis</button>
+						<button class="btn btn-myprimary bi bi-plus">WatchList</button>
+						<a href="index.php?controller=serie&methode=afficherListeEpisodes&tmdb_id={{ serie.id }}" class="btn btn-myprimary bi bi-list">
+							Épisodes</a>
 					</div>
 				</div>
 			</div>
@@ -197,7 +179,7 @@ generateStarRating(note);
 		</div>
 	</main>
 
-	<!-- Modal Avis -->
+	<!-- Modal Commenter serie -->
 	<div class="modal fade" id="commenterContenu" tabindex="-1" aria-labelledby="modalAvisLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content bg-mydark text-white">
@@ -207,11 +189,12 @@ generateStarRating(note);
 					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<form action="index.php?controller=commentaire&methode=createCommentaire" method="POST">
+					<form id="avisForm" action="index.php?controller=commentaire&methode=createCommentaire" method="POST" novalidate>
 						<input type="hidden" name="idSerie" value="{{ serie.id }}">
 						<div class="mb-3">
 							<label for="titre" class="form-label">Titre de votre avis</label>
-							<input type="text" class="form-control" id="titre" name="titre" required placeholder="Ex : J'ai adoré cette serie !" maxlength="100">
+							<input type="text" class="form-control" id="titre" name="titre" required placeholder="Ex : J'ai adoré cette serie !" maxlength="100" minlength="3">
+							<div class="invalid-feedback">Le titre doit contenir au moins 3 caractères.</div>
 						</div>
 						<div class="mb-3">
 							<label for="note" class="form-label">Note :
@@ -219,17 +202,10 @@ generateStarRating(note);
 							</label>
 							<input type="range" class="form-range" id="note" name="note" min="1" max="5" step="1" value="3" required>
 						</div>
-
-						<script>
-							const slider = document.getElementById('note');
-const sliderValue = document.getElementById('sliderValue');
-slider.addEventListener('input', () => {
-sliderValue.textContent = slider.value;
-});
-						</script>
 						<div class="mb-3">
 							<label for="commentaire" class="form-label">Votre commentaire</label>
-							<textarea class="form-control" id="commentaire" name="commentaire" rows="4" required placeholder="Ex : Cette serie est vraiment géniale car..." maxlength="1000"></textarea>
+							<textarea class="form-control" id="commentaire" name="commentaire" rows="4" required placeholder="Ex : Cette serie est vraiment géniale car..." maxlength="1000" minlength="10"></textarea>
+							<div class="invalid-feedback">Le commentaire doit contenir au moins 10 caractères.</div>
 						</div>
 						<div class="modal-footer border-0">
 							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
@@ -241,25 +217,11 @@ sliderValue.textContent = slider.value;
 		</div>
 	</div>
 
-	<!-- Modal Veuillez vous connecter -->
-	<div class="modal fade" id="veuillezVousConnecter" tabindex="-1" aria-labelledby="modalAvisLabel" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content bg-mydark text-white">
-				<div class="modal-body text-center">
-					<p class="fs-3">Si vous voulez laisser un avis et participer à la communauté, vous devez d'abord vous connecter 😏</p>
-				</div>
-				<div class="modal-footer border-0 justify-content-center">
-					<a href="index.php?controller=utilisateur&methode=connexion">
-						<button type="button" class="btn btn-myprimary">Connexion</button>
-					</a>
-				</div>
-			</div>
-		</div>
-	</div>
-
+	{% include 'modals.html.twig' %}
 {% endblock %}
 
 {% block script %}
 	{{ parent() }}
 	<script type="text/javascript" src="JS/notation.js"></script>
+	<script type="text/javascript" src="JS/validationForm.js"></script>
 {% endblock %}

@@ -5,11 +5,9 @@ use Symfony\Component\Yaml\Yaml;
 require 'vendor/autoload.php';
 
 // Chargement du fichier YAML
-try{
+try {
     $config = Yaml::parseFile('config/constantes.yaml');
-}
-catch(Exception $e)
-{
+} catch (Exception $e) {
     echo "Pas de fichier Yaml.";
 }
 // Utilisation des constantes
@@ -30,6 +28,7 @@ define('WEBSITE_LOGO', $config['website']['logo']);
 define('WEBSITE_LOGO_FLAG', $config['website']['logo_flag']);
 define('WEBSITE_LINK', $config['website']['website_link']);
 define('SECRET_KEY', $config['security']['secret_key']);
+define('WEBSITE_MAIL', $config['website']['website_mail']);
 
 
 // Constantes de l'API TMDB

@@ -8,7 +8,7 @@
     var  player = new YT.Player('video', {
         height: 180,
         width: 320,
-        videoId: 'dQw4w9WgXcQ',
+        
         playerVars: {
             autoplay: 1  // L'autoplay est activé avec la valeur 1
         }, 
