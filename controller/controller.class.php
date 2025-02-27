@@ -57,18 +57,34 @@ class Controller
      * 
      * @details Appelle une méthode du controller courant
      * @param string $methode Nom de la méthode à appeler
-     * @return mixed Résultat de la méthode appelée
+     * @return mixed Résultat de la méthode appelée ou null si la méthode n'existe pas
      */
     public function call(string $methode): mixed
     {
-        if (!method_exists($this, $methode)) {
-            throw new Exception("methodeInexistante");
+        try {
+            if (!method_exists($this, $methode)) {
+                throw new Exception("methodeInexistante");
+            }
+            return $this->$methode();
+        } catch (Exception $e) {
+            switch ($e->getMessage()) {
+                case "methodeInexistante":
+                    // AJouter l'erreur aux logs
+                    $this->ajouterLog(date('Y-m-d H:i:s') . " - Erreur: Impossible de trouver " . get_class($this) . "::" . $methode . "\n");
+
+                    // Retourner une vue d'erreur
+                    $this->retournerErreur("La méthode n'existe pas");
+                    return null;
+                default:
+                    // AJouter l'erreur aux logs
+                    $this->ajouterLog(date('Y-m-d H:i:s') . " - Erreur: " . $e->getMessage() . "\n");
+
+                    // Retourner une vue d'erreur
+                    $this->retournerErreur($e->getMessage());
+                    return null;
+            }
         }
-        return $this->$methode();
     }
-
-
-
 
     /**
      * Get the value of pdo
@@ -164,7 +180,32 @@ class Controller
     public function setPost(?array $post): void
     {
         $this->post = $post;
+    }
 
 
+    // Méthodes privées
+    /**
+     * @brief Retourne une vue d'erreur
+     * 
+     * @param string $message Message d'erreur
+     * 
+     * @return void La vue d'erreur
+     */
+    private function retournerErreur(string $message): void
+    {
+        echo $this->twig->render('erreur.html.twig', ['message' => $message]);
+    }
+
+
+    /**
+     * @brief Ajoute une erreur dans le fichier de logs
+     * 
+     * @param string $message Message d'erreur
+     * 
+     * @return void
+     */
+    private function ajouterLog(string $message): void
+    {
+        file_put_contents('logs\ControllerLogs.txt', $message, FILE_APPEND);
     }
 }
