@@ -61,11 +61,21 @@ class Controller
      */
     public function call(string $methode): mixed
     {
-        if (!method_exists($this, $methode)) {
-            throw new Exception("methodeInexistante");
+        try {
+            if (!method_exists($this, $methode)) {
+                throw new Exception("methodeInexistante");
+            }
+            return $this->$methode();
+        } catch (Exception $e) {
+            switch ($e->getMessage()) {
+                case "methodeInexistante":
+                    return $this->retournerErreur("La méthode n'existe pas");
+                default:
+                    return $this->retournerErreur($e->getMessage());
+            }
         }
-        return $this->$methode();
     }
+
 
 
 
@@ -164,7 +174,19 @@ class Controller
     public function setPost(?array $post): void
     {
         $this->post = $post;
+    }
 
 
+    // Méthodes privées
+    /**
+     * @brief Retourne une vue d'erreur
+     * 
+     * @param string $message Message d'erreur
+     * 
+     * @return void La vue d'erreur
+     */
+    private function retournerErreur(string $message): void
+    {
+        echo $this->twig->render('erreur.html.twig', ['message' => $message]);
     }
 }

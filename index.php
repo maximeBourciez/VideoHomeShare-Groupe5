@@ -36,17 +36,17 @@ try  {
         $methode='index';
     }
 
+    // Erreur de controleur 
     if ($controllerName == '' ){
         throw new Exception('Le controleur n\'est pas défini');
     }
 
+    // Erreur de méthode
     if ($methode == '' ){
         throw new Exception('La méthode n\'est pas définie');
     }
-
-
-
     
+    // Création de l'environnement Twig
     if ( isset($_SESSION['utilisateur'])) {
         $twig->addGlobal('utilisateurConnecte', unserialize($_SESSION['utilisateur']));
     }else {
@@ -57,5 +57,5 @@ try  {
     $controller->call($methode);
 
 }catch (Exception $e) {
-   die('Erreur : ' . $e->getMessage());
+    die('Erreur : ' . $e->getMessage());
 }
