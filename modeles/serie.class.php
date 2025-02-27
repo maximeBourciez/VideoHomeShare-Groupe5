@@ -1,5 +1,7 @@
 <?php
 
+require_once 'modeles/stockable.class.php';
+
 /**
  * @brief Classe représentant une série TV
  * 
@@ -8,7 +10,7 @@
  * @author François Barlic <<francois.barlic57@gmail.com>>
  * @version 1.0
  */
-class Serie
+class Serie extends Stockable
 {
     private int $id;
     private string $titre;
