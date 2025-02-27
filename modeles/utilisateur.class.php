@@ -76,9 +76,15 @@ class Utilisateur{
      * @var bool|null $estValider indique si l'utilisateur est validé
      */
     private ?bool $estValider;
+    /**
+     * @brief date d'inscription de l'utilisateur
+     * @var DateTime $dateI la date d'inscription de l'utilisateur
+     */
+    private ?DateTime $dateI;
     
     // Constructeur
-    function __construct(?string $id = null, ?string $pseudo = null,  ?string $mail = null, ?string $mdp = null, ?Role $role = null, ?string $urlImageProfil = null, ?string $urlImageBanniere = null, ?bool $estValider = null) {
+
+    function __construct(?string $id = null, ?string $pseudo = null,  ?string $mail = null, ?string $mdp = null, ?Role $role = null, ?string $urlImageProfil = null, ?string $urlImageBanniere = null, ?bool $estValider = null, ?DateTime $dateI =null) {
         $this->id = $id;
         $this->pseudo = $pseudo;
         $this->mail = $mail;
@@ -86,6 +92,7 @@ class Utilisateur{
         $this->role = $role;
         $this->urlImageProfil = $urlImageProfil;
         $this->urlImageBanniere = $urlImageBanniere;
+        $this->dateI = $dateI;
         $this->estValider = $estValider;
 
     }
@@ -167,6 +174,14 @@ class Utilisateur{
     public function getUrlImageBanniere(): ?string
     {
         return $this->urlImageBanniere;
+    }
+    /**
+     * Get the value of dateI
+     * @return DateTime
+     */
+    public function getDateI(): ?DateTime
+    {
+        return $this->dateI;
     }
 
     /**
@@ -251,6 +266,14 @@ class Utilisateur{
     public function setEstValider(?bool $estValider = null): void
     {
         $this->estValider = $estValider;
+    }
+    /**
+     * Set the value of dateI
+     * @return void
+     */
+    public function setDateI(?DateTime $dateI = null): void
+    {
+        $this->dateI = $dateI;
     }
 
     // Méthodes 

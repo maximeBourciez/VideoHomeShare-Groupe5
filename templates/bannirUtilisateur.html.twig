@@ -6,6 +6,25 @@
 
 {% block pageContent %}
     <main class="  flex-grow-1">
+        {% if success is not null %}
+            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                <div class="toast align-items-center 
+                        {% if success == false %}
+                            text-bg-danger
+                        {% else %}
+                            text-bg-success
+                        {% endif %}
+                            border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            {{ message }}
+                        </div>
+                        <button type="button" class="btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+		
         <div class=" container  my-4  bg-mydark text-white rounded p-3">
             <div class="">
                 <p> idantifant de l'utilisateur : {{utilisateur.id}}</p>
@@ -34,11 +53,11 @@
                     <input type="hidden" name="idUtilisateur" value="{{utilisateur.id}}">
                      <div class="form-group mb-3">
                         <label for="raison">Raison du bannissement</label>
-                        <input type="text" name="raison" id="raison" class="form-control" required>
+                        <input type="text" name="raison" id="raison" class="form-control" minlength=3 maxlength=100 required>
                     </div>
                      <div class="form-group mb-3">
                         <label for="dateF">Date de fin de de bannisement </label>
-                        <input type="date" name="dateF" id="dateF" class="form-control" required>
+                        <input type="date" name="dateF"  id="dateF" class="form-control" required>
                     </div>
                      <div class="form-group mb-3">
                         
@@ -51,7 +70,10 @@
             </div>
 
         </div>
+        
     </main>
+    <script src="JS\dashbord.js"></script>
 
 
 {% endblock %}
+

@@ -1,10 +1,184 @@
 {% extends 'templateAdmin.html.twig' %}
 
 {% block users %}
-    border-bottom border-2 border-dark
+	border-bottom border-2 border-dark
 {% endblock %}
 
 
 {% block pageContent %}
 
+	<main class="flex-grow-1">
+		
+		{% if success is not null %}
+            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                <div class="toast align-items-center 
+                        {% if success == false %}
+                            text-bg-danger
+                        {% else %}
+                            text-bg-success
+                        {% endif %}
+                            border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            {{ message }}
+                        </div>
+                        <button type="button" class="btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+		
+		<div class="container my-4 ">
+			<h1 class=" my-4">Utilisateurs non bannis</h1>
+			<div class=" container  my-4  bg-mydark text-white rounded">
+				<div class="table-responsive text-white">
+					<table id="episodesTable" class="table table-dark table-hover mb-0 text-white">
+						<thead>
+							<tr>
+								<th class="text-white text-center">Identifant
+								</th>
+								<th class="text-white text-center">Pseudo</th>
+								<th class="text-white text-center">Date inscription</th>
+								<th class="text-white text-center">Actions</th>
+							</tr>
+						</thead>
+						<tbody class="text-white">
+							{% for utilisateurNonBanni in utilisateursNonBannis %}
+								<tr>
+									<td>
+										<p class="text-center">{{utilisateurNonBanni.id}}</p>
+									</td>
+									<td>
+										<p class="my-auto text-center">{{utilisateurNonBanni.pseudo}}</p>
+									</td>
+									<td>
+										<p class="my-auto text-center">{{utilisateurNonBanni.dateI.format('d/m/Y')}}</p>
+									</td>
+									<td>
+										<form action="index.php?controller=dashboard&methode=afficherBanisement" method="post" class="row">
+											<input type="hidden" name="idUtilisateur" value="{{utilisateurNonBanni.id}}">
+											<input type="submit" class=" btn btn-tercary col m-1 " value="bannir">
+											<a class="btn btn-primary col m-1" data-bs-toggle="modal" data-bs-target="#envoyerMail{{utilisateurNonBanni.id}}">envoier un mail</a>
+										</form>
+									</td>
+								</tr>
+							{% endfor %}
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+			
+			<h1 class=" my-4">Utilisateurs bannis</h1>
+			<div class=" container  my-4  bg-mydark text-white rounded">
+				<div class="table-responsive text-white">
+					<table id="banniTable" class="table table-dark table-hover mb-0 text-white">
+						<thead>
+							<tr>
+								<th class="text-white text-center">Identifant</th>
+								<th class="text-white text-center">date debut de bannisement
+								</th>
+								<th class="text-white text-center">date fin de bannisement
+								</th>
+								<th class="text-white text-center">Actions</th>
+							</tr>
+						</thead>
+						<tbody class="text-white">
+							{% for utilisateurBanni in utilisateursBannis %}
+								<tr>
+
+									<td>
+										<p class=" text-center">{{utilisateurBanni.idUtilisateur}}</p>
+									</td>
+									<td>
+										<p class="my-auto  text-center">{{utilisateurBanni.dateB.format('d/m/Y')}}</p>
+									</td>
+									<td>
+										<p class="my-auto  text-center">{{utilisateurBanni.dateF.format('d/m/Y')}}</p>
+									</td>
+									<td>
+										<form action="index.php?controller=dashboard&methode=debannirUtilisateur" method="post" class="row">
+											<input type="hidden" name="idUtilisateur" value="{{ utilisateurBanni.id }}">
+											<input type="submit" class=" btn btn-tercary col m-1 " value="Débannir">
+											<a class="btn btn-primary col m-1" data-bs-toggle="modal" data-bs-target="#dureeeBan{{utilisateurBanni.id}}">changer la duree de banisement</a>
+										</form>
+									</td>
+								</tr>
+
+							{% endfor %}
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		
+		{% for utilisateurNonBanni in utilisateursNonBannis %}
+			<div class="modal fade" id="envoyerMail{{utilisateurNonBanni.id }}" tabindex="-1" aria-labelledby="modal1Label" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered modal-lg">
+					<div class="modal-content bg-mydark" style="border: 1px solid #F2AC0F;">
+						<div class="modal-header border-bottom-0">
+							<h5 class="modal-title text-white">Envoyer un mail à
+								{{ utilisateurNonBanni.pseudo }}</h5>
+							<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body pt-0">
+							<form action="index.php?controller=dashboard&methode=envoiMailUtilisateur" method="post" class="m-1">
+
+
+								<input type="hidden" name="mailUtilisateur" value="{{ utilisateurNonBanni.mail }}">
+								<div class="form-group mb-3">
+
+									<label class="text-white" for="Objet">Objet</label>
+									<input type="text" name="Objet" id="Objet" class="form-control" placeholder="objet" minlength=3 maxlength=50 required></input>
+								</div>
+
+								<div class="form-group">
+
+									<label class="text-white">Contenu</label>
+									<textarea name="message" class="form-control" placeholder="message" minlength=20 required></textarea>
+								</div>
+								<div class="d-flex justify-content-center">
+									<input type="submit" class="btn btn-primary text-center my-3 mx-auto w-50" value="Envoyer le mail">
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+
+		{% for utilisateurnBanni in utilisateursBannis %}
+			<div class="modal fade" id="dureeeBan{{ utilisateurnBanni.id }}" tabindex="-1" aria-labelledby="modal1Label" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered modal-lg">
+					<div class="modal-content bg-mydark" style="border: 1px solid #F2AC0F;">
+						<div class="modal-header border-bottom-0">
+							<h5 class="modal-title text-white">Changer la date de fin de bannissement{{ utilisateurBanni.idUtilisateur }}</h5>
+							<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body pt-0">
+							<form action="index.php?controller=dashboard&methode=changerdatefin" method="post" class="m-1">
+
+								<input type="hidden" name="idBan" value="{{ utilisateurnBanni.id }}">
+								<p class=" text-white">Utilisateur : {{utilisateurnBanni.idUtilisateur}}</p>
+								<p class=" text-white">raison du bannissement : {{utilisateurnBanni.raison}}</p>
+								<p class="  text-white">Date de debut du bannissement : {{utilisateurnBanni.dateB.format('d/m/Y')}}</p>
+								<p class="  text-white">Date de fin du bannissement actuel : {{utilisateurnBanni.dateF.format('d/m/Y')}}</p>
+								<div class="form-group">
+
+									<label class="text-white" for="dateF">Nouvelle date de fin</label>
+									<input type="date"  name="dateF" id="dateF" class="form-control" ></input>
+								</div>
+								<div class="d-flex justify-content-center">
+									<input type="submit" class="btn btn-primary text-center my-3 mx-auto w-50" value="changer date">
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+
+	<script src="JS\dashbord.js"></script>
+	</main>
 {% endblock %}
