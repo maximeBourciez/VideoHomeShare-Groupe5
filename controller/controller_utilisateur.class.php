@@ -73,7 +73,16 @@ class ControllerUtilisateur extends Controller
                     $this->getTwig()->addGlobal('utilisateurConnecte', unserialize($_SESSION['utilisateur']));
 
                     //Génération de la vue
-                    $this->show();
+                    if (isset($_SESSION['redirect_after_login']) && !empty($_SESSION['redirect_after_login'])) {
+                        $redirect_url = $_SESSION['redirect_after_login'];
+                        unset($_SESSION['redirect_after_login']); // Nettoyer la variable de session
+                        header("Location: " . $redirect_url);
+                        exit();
+                    } else {
+                        // Si aucune URL de redirection, afficher le profil par défaut
+                        header("Location: index.php?controller=utilisateur&methode=show");
+                        exit();
+                    }
                 } else {
                     // affichage de la page de connection avec un message d'erreur
                     $template = $this->getTwig()->load('connection.html.twig');
