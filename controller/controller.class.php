@@ -57,7 +57,7 @@ class Controller
      * 
      * @details Appelle une méthode du controller courant
      * @param string $methode Nom de la méthode à appeler
-     * @return mixed Résultat de la méthode appelée
+     * @return mixed Résultat de la méthode appelée ou null si la méthode n'existe pas
      */
     public function call(string $methode): mixed
     {
@@ -69,16 +69,22 @@ class Controller
         } catch (Exception $e) {
             switch ($e->getMessage()) {
                 case "methodeInexistante":
-                    return $this->retournerErreur("La méthode n'existe pas");
+                    // AJouter l'erreur aux logs
+                    $this->ajouterLog(date('Y-m-d H:i:s') . " - Erreur: Impossible de trouver " . get_class($this) . "::" . $methode . "\n");
+
+                    // Retourner une vue d'erreur
+                    $this->retournerErreur("La méthode n'existe pas");
+                    return null;
                 default:
-                    return $this->retournerErreur($e->getMessage());
+                    // AJouter l'erreur aux logs
+                    $this->ajouterLog(date('Y-m-d H:i:s') . " - Erreur: " . $e->getMessage() . "\n");
+
+                    // Retourner une vue d'erreur
+                    $this->retournerErreur($e->getMessage());
+                    return null;
             }
         }
     }
-
-
-
-
 
     /**
      * Get the value of pdo
@@ -188,5 +194,18 @@ class Controller
     private function retournerErreur(string $message): void
     {
         echo $this->twig->render('erreur.html.twig', ['message' => $message]);
+    }
+
+
+    /**
+     * @brief Ajoute une erreur dans le fichier de logs
+     * 
+     * @param string $message Message d'erreur
+     * 
+     * @return void
+     */
+    private function ajouterLog(string $message): void
+    {
+        file_put_contents('logs\ControllerLogs.txt', $message, FILE_APPEND);
     }
 }
