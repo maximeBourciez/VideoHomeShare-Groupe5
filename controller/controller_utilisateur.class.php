@@ -471,7 +471,6 @@ class ControllerUtilisateur extends Controller
      */
     public function notification(): void
     {
-
         $template = $this->getTwig()->load('enConstruction.htlm.twig');
         echo $template->render(array('fontionliter' => "notification"));
     }
