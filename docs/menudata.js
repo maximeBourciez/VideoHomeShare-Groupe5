@@ -24,6 +24,7 @@
 */
 var menudata={children:[
 {text:"Page principale",url:"index.html"},
+{text:"Pages associées",url:"pages.html"},
 {text:"Espaces de nommage",url:"namespaces.html",children:[
 {text:"Liste des espaces de nommage",url:"namespaces.html"}]},
 {text:"Structures de données",url:"annotated.html",children:[
@@ -35,6 +36,7 @@ var menudata={children:[
 {text:"$",url:"functions.html#index__24"},
 {text:"_",url:"functions__.html#index__5F"},
 {text:"a",url:"functions_a.html#index_a"},
+{text:"b",url:"functions_b.html#index_b"},
 {text:"c",url:"functions_c.html#index_c"},
 {text:"d",url:"functions_d.html#index_d"},
 {text:"e",url:"functions_e.html#index_e"},
@@ -47,6 +49,7 @@ var menudata={children:[
 {text:"m",url:"functions_m.html#index_m"},
 {text:"n",url:"functions_n.html#index_n"},
 {text:"p",url:"functions_p.html#index_p"},
+{text:"q",url:"functions_q.html#index_q"},
 {text:"r",url:"functions_r.html#index_r"},
 {text:"s",url:"functions_s.html#index_s"},
 {text:"t",url:"functions_t.html#index_t"},
@@ -55,6 +58,7 @@ var menudata={children:[
 {text:"Fonctions",url:"functions_func.html",children:[
 {text:"_",url:"functions_func.html#index__5F"},
 {text:"a",url:"functions_func_a.html#index_a"},
+{text:"b",url:"functions_func_b.html#index_b"},
 {text:"c",url:"functions_func_c.html#index_c"},
 {text:"d",url:"functions_func_d.html#index_d"},
 {text:"e",url:"functions_func_e.html#index_e"},
@@ -67,6 +71,7 @@ var menudata={children:[
 {text:"m",url:"functions_func_m.html#index_m"},
 {text:"n",url:"functions_func_n.html#index_n"},
 {text:"p",url:"functions_func_p.html#index_p"},
+{text:"q",url:"functions_func_q.html#index_q"},
 {text:"r",url:"functions_func_r.html#index_r"},
 {text:"s",url:"functions_func_s.html#index_s"},
 {text:"t",url:"functions_func_t.html#index_t"},
@@ -79,5 +84,7 @@ var menudata={children:[
 {text:"Liste des fichiers",url:"files.html"},
 {text:"Variables globale",url:"globals.html",children:[
 {text:"Tout",url:"globals.html"},
+{text:"Variables",url:"globals_vars.html"},
 {text:"Énumérations",url:"globals_enum.html"},
-{text:"Valeurs énumérées",url:"globals_eval.html"}]}]}]}
+{text:"Valeurs énumérées",url:"globals_eval.html"}]}]},
+{text:"Exemples",url:"examples.html"}]}

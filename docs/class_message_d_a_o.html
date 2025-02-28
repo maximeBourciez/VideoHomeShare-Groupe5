@@ -150,6 +150,8 @@ Fonctions membres publiques</h2></td></tr>
 <tr class="separator:aff7cd74a66b490d62c2fb3019c4b0b0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6751eb08c2f9a6fb3fafc11f70303024" id="r_a6751eb08c2f9a6fb3fafc11f70303024"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6751eb08c2f9a6fb3fafc11f70303024">findAuthor</a> (?int $idMessage)</td></tr>
 <tr class="separator:a6751eb08c2f9a6fb3fafc11f70303024"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2fd8567ff3b8e74072466f579f034aa" id="r_af2fd8567ff3b8e74072466f579f034aa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af2fd8567ff3b8e74072466f579f034aa">getNouveauxMessages</a> ($idFil, $dernierMessageId)</td></tr>
+<tr class="separator:af2fd8567ff3b8e74072466f579f034aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Fonctions membres privées</h2></td></tr>
@@ -447,6 +449,36 @@ Attributs privés</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Renvoie</dt><dd>mixed Nombre de messages </dd></dl>
+
+</div>
+</div>
+<a id="af2fd8567ff3b8e74072466f579f034aa" name="af2fd8567ff3b8e74072466f579f034aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2fd8567ff3b8e74072466f579f034aa">&#9670;&#160;</a></span>getNouveauxMessages()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">getNouveauxMessages </td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>$idFil</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>$dernierMessageId</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Méthode permettant de récupérer les nouveaux messages d'un fil</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$idFil</td><td>Identifiant du fil </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$dernierMessageId</td><td>Identifiant du dernier message du fil</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>array&lt;Message&gt; Tableau d'objets <a class="el" href="class_message.html" title="Représente un message dans le forum, qui peut être un message principal ou une réponse à un autre mes...">Message</a> </dd></dl>
 
 </div>
 </div>

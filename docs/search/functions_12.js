@@ -1,9 +1,8 @@
 var searchData=
 [
-  ['verificationdenom_0',['verificationDeNom',['../class_utilitaires.html#ad42c63b2b688fe2aaa101a48e3f052d8',1,'Utilitaires']]],
-  ['verificationutilisateurvalide_1',['verificationUtilisateurValide',['../class_utilisateur_d_a_o.html#a782bfa83bb21f537ccfdf6c2b04c44b4',1,'UtilisateurDAO']]],
-  ['verifiecasecocher_2',['verifiecasecocher',['../class_utilitaires.html#a36dcaf449c7d26c0008ce4aaa080d7a2',1,'Utilitaires']]],
-  ['verifscoreuser_3',['verifScoreUser',['../class_jouer_d_a_o.html#a4f6bfc9a79b057170212bda2b48ca1ac',1,'JouerDAO']]],
-  ['verifutiliateurverifier_4',['verifUtiliateurverifier',['../class_utilitaires.html#ae7308e2deabaa603de4f55790a1fc0a9',1,'Utilitaires']]],
-  ['verifytoken_5',['verifyToken',['../class_utilitaires.html#a53327246e4c3a9a009ec6158231506af',1,'Utilitaires']]]
+  ['tentativeechoue_0',['tentativeEchoue',['../class_utilitaires.html#a12de9bd2985ef49928a2f96ea677742d',1,'Utilitaires']]],
+  ['themeexistedeja_1',['themeExisteDeja',['../class_fil_d_a_o.html#a40d107f9edaf2427daa8fc35436ccc34',1,'FilDAO']]],
+  ['toutlesbannis_2',['toutlesbannis',['../class_bannissement_d_a_o.html#a52bd782e9b5d78d90b8f56b0fcc36867',1,'BannissementDAO']]],
+  ['toutlesbanusuer_3',['toutlesBanUsuer',['../class_bannissement_d_a_o.html#a44e04916a6ab8b73140eb3f542fe93aa',1,'BannissementDAO']]],
+  ['traiterresultatsquestion_4',['traiterResultatsQuestion',['../class_controller_quizz.html#af2bafd5032b3afaee3d688274a3436c0',1,'ControllerQuizz']]]
 ];

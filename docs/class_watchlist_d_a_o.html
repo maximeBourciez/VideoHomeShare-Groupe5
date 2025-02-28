@@ -138,6 +138,9 @@ Fonctions membres publiques</h2></td></tr>
 <tr class="memitem:aff5345901332681ac0f68dca41986092" id="r_aff5345901332681ac0f68dca41986092"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aff5345901332681ac0f68dca41986092">hydrateAll</a> (array $dataArray)</td></tr>
 <tr class="memdesc:aff5345901332681ac0f68dca41986092"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode pour hydrater un tableau de données en objets <a class="el" href="class_watchlist.html" title="Classe représentant une watchlist.">Watchlist</a>.  <br /></td></tr>
 <tr class="separator:aff5345901332681ac0f68dca41986092"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa6900117946538b65351b9d53bda71f" id="r_aaa6900117946538b65351b9d53bda71f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaa6900117946538b65351b9d53bda71f">isContenuInWatchlist</a> (int $watchlistId, int $contenuId)</td></tr>
+<tr class="memdesc:aaa6900117946538b65351b9d53bda71f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode pour vérifier si un contenu est dans une watchlist.  <br /></td></tr>
+<tr class="separator:aaa6900117946538b65351b9d53bda71f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Fonctions membres privées</h2></td></tr>
@@ -399,6 +402,37 @@ Attributs privés</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Renvoie</dt><dd>array Tableau d'objets <a class="el" href="class_watchlist.html" title="Classe représentant une watchlist.">Watchlist</a> </dd></dl>
+
+</div>
+</div>
+<a id="aaa6900117946538b65351b9d53bda71f" name="aaa6900117946538b65351b9d53bda71f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa6900117946538b65351b9d53bda71f">&#9670;&#160;</a></span>isContenuInWatchlist()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">isContenuInWatchlist </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$watchlistId</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$contenuId</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Méthode pour vérifier si un contenu est dans une watchlist. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$watchlistId</td><td>Identifiant de la watchlist </td></tr>
+    <tr><td class="paramtype">int</td><td class="paramname">$contenuId</td><td>Identifiant du contenu</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>bool Vrai si le contenu est dans la watchlist, faux sinon </dd></dl>
 
 </div>
 </div>
