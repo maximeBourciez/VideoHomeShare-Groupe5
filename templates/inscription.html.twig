@@ -115,6 +115,7 @@ form.addEventListener('submit', function (event) {
 if (! form.checkValidity()) {
 event.preventDefault();
 event.stopPropagation();
+$('.loader-container').hide();
 }
 form.classList.add('was-validated');
 }, false);
@@ -123,6 +124,7 @@ form.classList.add('was-validated');
 confirmPasswordInput.addEventListener('input', function () {
 if (passwordInput.value !== confirmPasswordInput.value) {
 confirmPasswordInput.setCustomValidity('Les mots de passe ne correspondent pas');
+$('.loader-container').hide();
 } else {
 confirmPasswordInput.setCustomValidity('');
 }
