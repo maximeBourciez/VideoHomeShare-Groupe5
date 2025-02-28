@@ -11,6 +11,8 @@
         "symfony/yaml": "^6.0"
     },
     "require-dev": {
-        "smeghead/php-class-diagram": "^1.5"
+        "smeghead/php-class-diagram": "^1.5",
+        "symfony/yaml": "^6.0",
+        "google/apiclient": "^2.0"
     }
 }
