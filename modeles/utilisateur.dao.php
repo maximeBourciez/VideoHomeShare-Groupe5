@@ -92,12 +92,12 @@ class UtilisateurDAO
 
     /**
      * @brief Supprime un utilisateur de la base de données
-     * @param int $id L'identifiant de l'utilisateur à supprimer
+     * @param string $id L'identifiant de l'utilisateur à supprimer
      * @return bool true si l'utilisateur a été supprimé, false sinon
      */
-    function delete(int $id): bool
+    function delete(string $id): bool
     {
-        $req = $this->pdo->prepare("DELETE FROM " . DB_PREFIX . "utilisateur WHERE id = :id");
+        $req = $this->pdo->prepare("DELETE FROM " . DB_PREFIX . "utilisateur WHERE idUtilisateur = :id");
         $req->bindParam(":id", $id);
         return $req->execute();
     }

@@ -569,8 +569,12 @@ class ControllerUtilisateur extends Controller
         
         // Envoi du mail
         if (mail($destinataire, $sujet, $contenuMail, $headers)) {
+
+            // Supprimer l'utilisateur
+            $managerUtilisateur->delete($idUtilisateur);
+
             // Déconnecter l'utilisateur 
-            $this->deconnexion();
+            $this->deconnexion();            
 
             // Afficher l'accueil 
             header('Location: index.php?');
