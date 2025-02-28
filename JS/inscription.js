@@ -24,12 +24,13 @@ document.addEventListener('DOMContentLoaded', function () {
     passwordInput.addEventListener('input', function() {
         const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
         
-        if (!regex.test(passwordInput.value)) {
+        if (regex.test(passwordInput.value)) {
+            passwordInput.setCustomValidity('');
+            form.classList.remove('was-validated');
+        } else {
             passwordInput.setCustomValidity('Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.');
             // Force immediate feedback
             form.classList.add('was-validated');
-        } else {
-            passwordInput.setCustomValidity('');
         }
         
         // Check password match again when the password changes
