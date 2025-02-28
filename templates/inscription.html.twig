@@ -11,30 +11,22 @@
 		</div>
 		<form id="registrationForm" action="index.php?controller=utilisateur&methode=checkInfoInscription" method="POST" class="col-12 col-md-8 col-lg-6 mx-auto bg-dark text-white p-4 rounded" novalidate>
 			<div class="text-center mb-4">
-
 				<h2>Créer un Compte</h2>
 			</div>
-
-			{% if messagederreur is defined %}
-				<div class="alert alert-danger bg-tercary mx-5" role="alert">
-					Erreur :
-					{{ messagederreur }}
-				</div>
-			{% endif %}
 
 			<div class="row">
 				<div class="col-md-6 mb-3">
 					<label for="idantifiant" class="form-label">Identifiant</label>
 					<input type="text" class="form-control" id="idantifiant" name="idantifiant" minlength="3" maxlength="20" required>
 					<div class="invalid-feedback">
-						Identifiant doit faire entre 3 et 20 caractères
+						L'identifiant doit faire entre 3 et 20 caractères
 					</div>
 				</div>
 				<div class="col-md-6 mb-3">
 					<label for="pseudo" class="form-label">Pseudo</label>
 					<input type="text" class="form-control" id="pseudo" name="pseudo" minlength="3" maxlength="50" required>
 					<div class="invalid-feedback">
-						Pseudo doit faire entre 3 et 50 caractères
+						Le pseudo doit faire entre 3 et 50 caractères
 					</div>
 				</div>
 			</div>
@@ -60,10 +52,11 @@
 				<div class="input-group">
 					<input type="password" class="form-control" id="mdp" name="mdp" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" required>
 					<button class="btn btn-outline-secondary" type="button" id="togglePassword">👁️</button>
+					<div class="invalid-feedback text-danger">
+						Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.
+					</div>
 				</div>
-				<div class="invalid-feedback text-white">
-					Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.
-				</div>
+				
 			</div>
 
 			<div class="mb-3">
@@ -94,39 +87,19 @@
 		</form>
 	</div>
 
+	{% if messagederreur is defined %}
+		<div class="toast show position-fixed top-0 end-0 m-3" role="alert" aria-live="assertive" aria-atomic="true">
+			<div class="toast-header bg-danger text-white">
+				<strong class="me-auto">Erreur</strong>
+				<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+			<div class="toast-body">
+				{{ messagederreur }}
+			</div>
+		</div>
+	{% endif %}
+
 	{% include 'modals.html.twig' with { 'last_update_date': '08/01/2025' } %}
 
-	<script>
-		document.addEventListener('DOMContentLoaded', function () {
-const form = document.getElementById('registrationForm');
-const passwordInput = document.getElementById('mdp');
-const confirmPasswordInput = document.getElementById('vmdp');
-const togglePasswordBtn = document.getElementById('togglePassword');
-
-// Password toggle visibility
-togglePasswordBtn.addEventListener('click', function () {
-const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-passwordInput.setAttribute('type', type);
-confirmPasswordInput.setAttribute('type', type);
-});
-
-// Form validation
-form.addEventListener('submit', function (event) {
-if (! form.checkValidity()) {
-event.preventDefault();
-event.stopPropagation();
-}
-form.classList.add('was-validated');
-}, false);
-
-// Password match validation
-confirmPasswordInput.addEventListener('input', function () {
-if (passwordInput.value !== confirmPasswordInput.value) {
-confirmPasswordInput.setCustomValidity('Les mots de passe ne correspondent pas');
-} else {
-confirmPasswordInput.setCustomValidity('');
-}
-});
-});
-	</script>
+	<script src="JS/inscription.js"></script>
 {% endblock %}
