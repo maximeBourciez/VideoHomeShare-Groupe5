@@ -1,5 +1,7 @@
 var dir_94350f523feee7bac2b3c4d6268d38b5 =
 [
+    [ "bannissement.class.php", "bannissement_8class_8php.html", "bannissement_8class_8php" ],
+    [ "bannissement.dao.php", "bannissement_8dao_8php.html", "bannissement_8dao_8php" ],
     [ "bd.class.php", "bd_8class_8php.html", "bd_8class_8php" ],
     [ "collection.class.php", "collection_8class_8php.html", "collection_8class_8php" ],
     [ "collection.dao.php", "collection_8dao_8php.html", "collection_8dao_8php" ],
@@ -25,6 +27,8 @@ var dir_94350f523feee7bac2b3c4d6268d38b5 =
     [ "reponse.class.php", "reponse_8class_8php.html", "reponse_8class_8php" ],
     [ "reponse.dao.php", "reponse_8dao_8php.html", "reponse_8dao_8php" ],
     [ "saison.class.php", "saison_8class_8php.html", "saison_8class_8php" ],
+    [ "salle.class.php", "salle_8class_8php.html", "salle_8class_8php" ],
+    [ "salle.dao.php", "salle_8dao_8php.html", "salle_8dao_8php" ],
     [ "serie.class.php", "serie_8class_8php.html", "serie_8class_8php" ],
     [ "serie.dao.php", "serie_8dao_8php.html", "serie_8dao_8php" ],
     [ "signalement.class.php", "signalement_8class_8php.html", "signalement_8class_8php" ],

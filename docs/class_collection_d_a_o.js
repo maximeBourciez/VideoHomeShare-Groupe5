@@ -7,6 +7,7 @@ var class_collection_d_a_o =
     [ "getCollectionFromTMDB", "class_collection_d_a_o.html#affae14183b4cda7fd844a71d75bf9116", null ],
     [ "getMoviesFromCollection", "class_collection_d_a_o.html#a340f276937bfdc71e70b96570aa5a356", null ],
     [ "getPersonnalitesCollection", "class_collection_d_a_o.html#a3c9b0bdee8616b9bacc8ff159ff16e13", null ],
+    [ "hasAdultMovies", "class_collection_d_a_o.html#aa1674890c59a562c7090f2f452cdae26", null ],
     [ "makeRequest", "class_collection_d_a_o.html#a0bfd8b4fb056eeb197ce8766a22a963a", null ],
     [ "removeDuplicatePersonnalites", "class_collection_d_a_o.html#affa3e8ed4decdbb77760b46c9898ee80", null ],
     [ "searchByName", "class_collection_d_a_o.html#a1c73e71a95a0a7166f25bb7f66108f54", null ],

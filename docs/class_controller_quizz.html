@@ -119,34 +119,42 @@ Fonctions membres publiques</h2></td></tr>
 <tr class="memitem:aac1b432a1dde9fc9cd6a6c7a699e4d39" id="r_aac1b432a1dde9fc9cd6a6c7a699e4d39"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aac1b432a1dde9fc9cd6a6c7a699e4d39">__construct</a> (\Twig\Environment $twig, \Twig\Loader\FilesystemLoader $loader)</td></tr>
 <tr class="memdesc:aac1b432a1dde9fc9cd6a6c7a699e4d39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructeur de la classe <a class="el" href="class_controller_fil.html" title="Classe ControllerFil.">ControllerFil</a>.  <br /></td></tr>
 <tr class="separator:aac1b432a1dde9fc9cd6a6c7a699e4d39"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae5ae778c2151a05b3c9438a21de5a208" id="r_ae5ae778c2151a05b3c9438a21de5a208"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae5ae778c2151a05b3c9438a21de5a208">listeQuizz</a> ()</td></tr>
-<tr class="separator:ae5ae778c2151a05b3c9438a21de5a208"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed909fba347ab6084c019eb652d3042d" id="r_aed909fba347ab6084c019eb652d3042d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aed909fba347ab6084c019eb652d3042d">afficherQuizzParId</a> ()</td></tr>
-<tr class="memdesc:aed909fba347ab6084c019eb652d3042d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode d'affichage d'un quizz par son identifiant.  <br /></td></tr>
-<tr class="separator:aed909fba347ab6084c019eb652d3042d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc627c647124cadadebc646b80ec564c" id="r_afc627c647124cadadebc646b80ec564c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afc627c647124cadadebc646b80ec564c">listeQuizz</a> (?string $message=null, ?bool $etatMessage=null)</td></tr>
+<tr class="separator:afc627c647124cadadebc646b80ec564c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a07c5acb5eb77b0f29dcf480b51e994e3" id="r_a07c5acb5eb77b0f29dcf480b51e994e3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a07c5acb5eb77b0f29dcf480b51e994e3">afficherOngletGerer</a> ()</td></tr>
 <tr class="memdesc:a07c5acb5eb77b0f29dcf480b51e994e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode qui affiche les quizz de l'utilisateur connecté  <br /></td></tr>
 <tr class="separator:a07c5acb5eb77b0f29dcf480b51e994e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19e224af776301aa51d09f887ab8ecf4" id="r_a19e224af776301aa51d09f887ab8ecf4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a19e224af776301aa51d09f887ab8ecf4">recupererReponses</a> (int $idQuestion)</td></tr>
+<tr class="memdesc:a19e224af776301aa51d09f887ab8ecf4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode qui permet de récupérer la question et ses réponses envoyés vers la page.  <br /></td></tr>
+<tr class="separator:a19e224af776301aa51d09f887ab8ecf4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac08b37a8937806b814cbe128305a4c66" id="r_ac08b37a8937806b814cbe128305a4c66"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac08b37a8937806b814cbe128305a4c66">verifierReponses</a> (int $nbBonnesReponses, array $reponses)</td></tr>
+<tr class="separator:ac08b37a8937806b814cbe128305a4c66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2bafd5032b3afaee3d688274a3436c0" id="r_af2bafd5032b3afaee3d688274a3436c0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af2bafd5032b3afaee3d688274a3436c0">traiterResultatsQuestion</a> ()</td></tr>
+<tr class="memdesc:af2bafd5032b3afaee3d688274a3436c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode qui permet de vérifier si la bonne réponse a été cochée qui renvoie vers la question suivante.  <br /></td></tr>
+<tr class="separator:af2bafd5032b3afaee3d688274a3436c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada5f6f3eba8b5e8bd27948cbb3b381e1" id="r_ada5f6f3eba8b5e8bd27948cbb3b381e1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ada5f6f3eba8b5e8bd27948cbb3b381e1">jouerQuizz</a> ()</td></tr>
 <tr class="memdesc:ada5f6f3eba8b5e8bd27948cbb3b381e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode qui permet de jouer au quizz.  <br /></td></tr>
 <tr class="separator:ada5f6f3eba8b5e8bd27948cbb3b381e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0979a8c037faab406f30127616e2559" id="r_aa0979a8c037faab406f30127616e2559"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa0979a8c037faab406f30127616e2559">reponsesDuneQuestion</a> (<a class="el" href="class_question.html">Question</a> $questions)</td></tr>
-<tr class="memdesc:aa0979a8c037faab406f30127616e2559"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode qui retourne toutes les réponses d'une question.  <br /></td></tr>
-<tr class="separator:aa0979a8c037faab406f30127616e2559"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e3ed6895a9727ae34bfea06aa4e8e2d" id="r_a8e3ed6895a9727ae34bfea06aa4e8e2d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8e3ed6895a9727ae34bfea06aa4e8e2d">afficherPageCreerQuizz</a> ()</td></tr>
 <tr class="separator:a8e3ed6895a9727ae34bfea06aa4e8e2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7134f1debf222d05104b4afff04c506b" id="r_a7134f1debf222d05104b4afff04c506b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7134f1debf222d05104b4afff04c506b">supprimerQuizz</a> ()</td></tr>
+<tr class="memdesc:a7134f1debf222d05104b4afff04c506b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode permettant de supprimer un quizz.  <br /></td></tr>
+<tr class="separator:a7134f1debf222d05104b4afff04c506b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac958ccae6c3852382844b08269c4237d" id="r_ac958ccae6c3852382844b08269c4237d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac958ccae6c3852382844b08269c4237d">creerQuizz</a> (string $titre, string $description, int $difficulte, string $dateC, string $idUtilisateur)</td></tr>
 <tr class="memdesc:ac958ccae6c3852382844b08269c4237d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode permettant de créer un quizz.  <br /></td></tr>
 <tr class="separator:ac958ccae6c3852382844b08269c4237d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5b437f168693484956af4856d1711909" id="r_a5b437f168693484956af4856d1711909"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5b437f168693484956af4856d1711909">afficherPageQuestions</a> ()</td></tr>
-<tr class="memdesc:a5b437f168693484956af4856d1711909"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode permettant d'afficher la page des questions après avoir créé le quizz.  <br /></td></tr>
-<tr class="separator:a5b437f168693484956af4856d1711909"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af81ab2f6d92e299d2b53a31850b40d2a" id="r_af81ab2f6d92e299d2b53a31850b40d2a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af81ab2f6d92e299d2b53a31850b40d2a">creerQuestion</a> ()</td></tr>
-<tr class="memdesc:af81ab2f6d92e299d2b53a31850b40d2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode permettant de créer les questions.  <br /></td></tr>
-<tr class="separator:af81ab2f6d92e299d2b53a31850b40d2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8a93f83aaa42fbd27afc3db73a98e93" id="r_ac8a93f83aaa42fbd27afc3db73a98e93"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac8a93f83aaa42fbd27afc3db73a98e93">afficherResultats</a> ()</td></tr>
-<tr class="memdesc:ac8a93f83aaa42fbd27afc3db73a98e93"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode permettant d'afficher la page des résultats.  <br /></td></tr>
-<tr class="separator:ac8a93f83aaa42fbd27afc3db73a98e93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02f9360a2f4f4a2b96215b5fd75dcc02" id="r_a02f9360a2f4f4a2b96215b5fd75dcc02"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a02f9360a2f4f4a2b96215b5fd75dcc02">afficherPageQuestions</a> (?string $messageErreur=null)</td></tr>
+<tr class="memdesc:a02f9360a2f4f4a2b96215b5fd75dcc02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode permettant d'afficher la page des questions après avoir créé le quizz.  <br /></td></tr>
+<tr class="separator:a02f9360a2f4f4a2b96215b5fd75dcc02"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa056f6388029caae62df90d61af1b9f8" id="r_aa056f6388029caae62df90d61af1b9f8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa056f6388029caae62df90d61af1b9f8">ajouterQuestion</a> ()</td></tr>
+<tr class="memdesc:aa056f6388029caae62df90d61af1b9f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode permettant de créer les questions.  <br /></td></tr>
+<tr class="separator:aa056f6388029caae62df90d61af1b9f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94c9f1ce515e4bb39b3cb52b0585fb00" id="r_a94c9f1ce515e4bb39b3cb52b0585fb00"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a94c9f1ce515e4bb39b3cb52b0585fb00">afficherResultats</a> (string $idUtilisateur, int $scoreUser, int $idQuizz)</td></tr>
+<tr class="memdesc:a94c9f1ce515e4bb39b3cb52b0585fb00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode permettant d'afficher la page des résultats.  <br /></td></tr>
+<tr class="separator:a94c9f1ce515e4bb39b3cb52b0585fb00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3314bdc4c3645f1d6c5053359bea9924" id="r_a3314bdc4c3645f1d6c5053359bea9924"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3314bdc4c3645f1d6c5053359bea9924">memesScores</a> (string $idUtilisateur, int $idQuizz, int $scoreUser)</td></tr>
+<tr class="memdesc:a3314bdc4c3645f1d6c5053359bea9924"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode qui vérifie 2 scores d'un utilisateur sur un quizz.  <br /></td></tr>
+<tr class="separator:a3314bdc4c3645f1d6c5053359bea9924"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_controller"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_controller')"><img src="closed.png" alt="-"/>&#160;Fonctions membres publiques hérités de <a class="el" href="class_controller.html">Controller</a></td></tr>
 <tr class="memitem:a759930e0a9f23708b6092a51ff0dfc12 inherit pub_methods_class_controller" id="r_a759930e0a9f23708b6092a51ff0dfc12"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_controller.html#a759930e0a9f23708b6092a51ff0dfc12">call</a> (string $methode)</td></tr>
 <tr class="separator:a759930e0a9f23708b6092a51ff0dfc12 inherit pub_methods_class_controller"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -228,7 +236,7 @@ Fonctions membres publiques</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Méthode qui affiche les quizz de l'utilisateur connecté </p>
-<p>Méthode permettant d'afficher les quizz de l'utilisateur connecté avec la possibilité de les gérer (modifier ou supprimer)</p>
+<p>Méthode permettant d'afficher les quizz de l'utilisateur connecté avec la possibilité de les supprimer</p>
 <dl class="section return"><dt>Renvoie</dt><dd>void </dd></dl>
 
 </div>
@@ -250,8 +258,8 @@ Fonctions membres publiques</h2></td></tr>
 
 </div>
 </div>
-<a id="a5b437f168693484956af4856d1711909" name="a5b437f168693484956af4856d1711909"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5b437f168693484956af4856d1711909">&#9670;&#160;</a></span>afficherPageQuestions()</h2>
+<a id="a02f9360a2f4f4a2b96215b5fd75dcc02" name="a02f9360a2f4f4a2b96215b5fd75dcc02"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a02f9360a2f4f4a2b96215b5fd75dcc02">&#9670;&#160;</a></span>afficherPageQuestions()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -259,41 +267,20 @@ Fonctions membres publiques</h2></td></tr>
         <tr>
           <td class="memname">afficherPageQuestions </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype">?string</td>          <td class="paramname"><span class="paramname"><em>$messageErreur</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Méthode permettant d'afficher la page des questions après avoir créé le quizz. </p>
-<p>Méthode qui redirige l'utilisateur vers la page des questions pour créer ou modifier sa question</p>
+<p>Méthode qui redirige l'utilisateur vers la page des questions pour créer sa question</p>
 <dl class="section return"><dt>Renvoie</dt><dd>void </dd></dl>
 
 </div>
 </div>
-<a id="aed909fba347ab6084c019eb652d3042d" name="aed909fba347ab6084c019eb652d3042d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aed909fba347ab6084c019eb652d3042d">&#9670;&#160;</a></span>afficherQuizzParId()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">afficherQuizzParId </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Méthode d'affichage d'un quizz par son identifiant. </p>
-<p>Méthode permettant d'afficher un quizz par son identifiant, et ainsi de permettre l'afficahge de la discussion sous-jacente</p>
-<dl class="section return"><dt>Renvoie</dt><dd>void </dd></dl>
-
-</div>
-</div>
-<a id="ac8a93f83aaa42fbd27afc3db73a98e93" name="ac8a93f83aaa42fbd27afc3db73a98e93"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac8a93f83aaa42fbd27afc3db73a98e93">&#9670;&#160;</a></span>afficherResultats()</h2>
+<a id="a94c9f1ce515e4bb39b3cb52b0585fb00" name="a94c9f1ce515e4bb39b3cb52b0585fb00"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a94c9f1ce515e4bb39b3cb52b0585fb00">&#9670;&#160;</a></span>afficherResultats()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -301,8 +288,17 @@ Fonctions membres publiques</h2></td></tr>
         <tr>
           <td class="memname">afficherResultats </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$idUtilisateur</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$scoreUser</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$idQuizz</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -313,14 +309,14 @@ Fonctions membres publiques</h2></td></tr>
 
 </div>
 </div>
-<a id="af81ab2f6d92e299d2b53a31850b40d2a" name="af81ab2f6d92e299d2b53a31850b40d2a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af81ab2f6d92e299d2b53a31850b40d2a">&#9670;&#160;</a></span>creerQuestion()</h2>
+<a id="aa056f6388029caae62df90d61af1b9f8" name="aa056f6388029caae62df90d61af1b9f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa056f6388029caae62df90d61af1b9f8">&#9670;&#160;</a></span>ajouterQuestion()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">creerQuestion </td>
+          <td class="memname">ajouterQuestion </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -329,7 +325,9 @@ Fonctions membres publiques</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Méthode permettant de créer les questions. </p>
-<p>Méthode qui créer les questions d'un quizz créé par l'utilisateur </p><dl class="section return"><dt>Renvoie</dt><dd>void </dd></dl>
+<p>Méthode qui crée une question d'un quizz créé par l'utilisateur</p>
+<dl class="section return"><dt>Renvoie</dt><dd>void</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">A faire</a></b></dt><dd>Gerer le succès de fin de quizz </dd></dl>
 
 </div>
 </div>
@@ -389,13 +387,13 @@ Fonctions membres publiques</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Méthode qui permet de jouer au quizz. </p>
-<p>Méthode permettant d'afficher les questions et réponses du associés au quizz</p>
+<p>Méthode permettant d'afficher les questions et réponses associés au quizz</p>
 <dl class="section return"><dt>Renvoie</dt><dd>void </dd></dl>
 
 </div>
 </div>
-<a id="ae5ae778c2151a05b3c9438a21de5a208" name="ae5ae778c2151a05b3c9438a21de5a208"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae5ae778c2151a05b3c9438a21de5a208">&#9670;&#160;</a></span>listeQuizz()</h2>
+<a id="afc627c647124cadadebc646b80ec564c" name="afc627c647124cadadebc646b80ec564c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc627c647124cadadebc646b80ec564c">&#9670;&#160;</a></span>listeQuizz()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -403,34 +401,142 @@ Fonctions membres publiques</h2></td></tr>
         <tr>
           <td class="memname">listeQuizz </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype">?string</td>          <td class="paramname"><span class="paramname"><em>$message</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">?bool</td>          <td class="paramname"><span class="paramname"><em>$etatMessage</em></span><span class="paramdefsep"> = </span><span class="paramdefval">null</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>@bref permet d'afficher la page d'accueil des quizz</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string&#160;|&#160;null</td><td class="paramname">$message</td><td><a class="el" href="class_message.html" title="Représente un message dans le forum, qui peut être un message principal ou une réponse à un autre mes...">Message</a> à afficher </td></tr>
+    <tr><td class="paramtype">bool&#160;|&#160;null</td><td class="paramname">$etatMessage</td><td>Etat du message (true = succès, false = erreur)</td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section return"><dt>Renvoie</dt><dd>void </dd></dl>
 
 </div>
 </div>
-<a id="aa0979a8c037faab406f30127616e2559" name="aa0979a8c037faab406f30127616e2559"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa0979a8c037faab406f30127616e2559">&#9670;&#160;</a></span>reponsesDuneQuestion()</h2>
+<a id="a3314bdc4c3645f1d6c5053359bea9924" name="a3314bdc4c3645f1d6c5053359bea9924"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3314bdc4c3645f1d6c5053359bea9924">&#9670;&#160;</a></span>memesScores()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">reponsesDuneQuestion </td>
+          <td class="memname">memesScores </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_question.html">Question</a></td>          <td class="paramname"><span class="paramname"><em>$questions</em></span></td><td>)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$idUtilisateur</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$idQuizz</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$scoreUser</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Méthode qui vérifie 2 scores d'un utilisateur sur un quizz. </p>
+<p>Méthode qui prend en paramètre un quizz, un score et un utilisateur, puis compare les deux scores </p><dl class="section return"><dt>Renvoie</dt><dd>bool </dd></dl>
+
+</div>
+</div>
+<a id="a19e224af776301aa51d09f887ab8ecf4" name="a19e224af776301aa51d09f887ab8ecf4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19e224af776301aa51d09f887ab8ecf4">&#9670;&#160;</a></span>recupererReponses()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">recupererReponses </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$idQuestion</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Méthode qui retourne toutes les réponses d'une question. </p>
-<p>Méthode permettant de retourner toutes les réponses d'une question sous forme de tableau</p>
+<p>Méthode qui permet de récupérer la question et ses réponses envoyés vers la page. </p>
+<p>Méthode permettant d'afficher la question et réponses associés au quizz </p><dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">$idQuestion</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section return"><dt>Renvoie</dt><dd>array </dd></dl>
+
+</div>
+</div>
+<a id="a7134f1debf222d05104b4afff04c506b" name="a7134f1debf222d05104b4afff04c506b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7134f1debf222d05104b4afff04c506b">&#9670;&#160;</a></span>supprimerQuizz()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">supprimerQuizz </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Méthode permettant de supprimer un quizz. </p>
+<p>Méthode qui supprime un quizz de la liste et de la base de données</p>
+<dl class="section return"><dt>Renvoie</dt><dd>void <a class="el" href="class_message.html" title="Représente un message dans le forum, qui peut être un message principal ou une réponse à un autre mes...">Message</a> de confirmation ou d'erreur dans le template </dd></dl>
+
+</div>
+</div>
+<a id="af2bafd5032b3afaee3d688274a3436c0" name="af2bafd5032b3afaee3d688274a3436c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2bafd5032b3afaee3d688274a3436c0">&#9670;&#160;</a></span>traiterResultatsQuestion()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">traiterResultatsQuestion </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Méthode qui permet de vérifier si la bonne réponse a été cochée qui renvoie vers la question suivante. </p>
+<p>Méthode qui récupère la question et les réponses, accorde ou non le point puis renvoie vers la page avec la question suivante</p>
+<dl class="section return"><dt>Renvoie</dt><dd>void </dd></dl>
+
+</div>
+</div>
+<a id="ac08b37a8937806b814cbe128305a4c66" name="ac08b37a8937806b814cbe128305a4c66"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac08b37a8937806b814cbe128305a4c66">&#9670;&#160;</a></span>verifierReponses()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">verifierReponses </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$nbBonnesReponses</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">array</td>          <td class="paramname"><span class="paramname"><em>$reponses</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>

@@ -112,6 +112,11 @@ Fonctions membres publiques</h2></td></tr>
 <tr class="separator:ab77517a7005e51318adb48c4986189aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a19dd44fe063cfd1cbafe97452e57666c" id="r_a19dd44fe063cfd1cbafe97452e57666c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a19dd44fe063cfd1cbafe97452e57666c">__wakeup</a> ()</td></tr>
 <tr class="separator:a19dd44fe063cfd1cbafe97452e57666c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab113b99b946e7844f2e99d23d13f69ce" id="r_ab113b99b946e7844f2e99d23d13f69ce"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab113b99b946e7844f2e99d23d13f69ce">sauvegarder</a> ()</td></tr>
+<tr class="separator:ab113b99b946e7844f2e99d23d13f69ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1565e2b9072c110d932b281090b08970" id="r_a1565e2b9072c110d932b281090b08970"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1565e2b9072c110d932b281090b08970">restore</a> (string $fileToRestore)</td></tr>
+<tr class="memdesc:a1565e2b9072c110d932b281090b08970"><td class="mdescLeft">&#160;</td><td class="mdescRight">méthode de restauration de la base de données  <br /></td></tr>
+<tr class="separator:a1565e2b9072c110d932b281090b08970"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Fonctions membres publiques statiques</h2></td></tr>
@@ -124,11 +129,18 @@ Fonctions membres privées</h2></td></tr>
 <tr class="separator:a095c5d389db211932136b53f25f39685"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad0cb87b388bc74d63dc884accdca8713" id="r_ad0cb87b388bc74d63dc884accdca8713"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad0cb87b388bc74d63dc884accdca8713">__clone</a> ()</td></tr>
 <tr class="separator:ad0cb87b388bc74d63dc884accdca8713"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b7fa2186e324edc1ada463cc4617313" id="r_a2b7fa2186e324edc1ada463cc4617313"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2b7fa2186e324edc1ada463cc4617313">verifierSauvegarde</a> ()</td></tr>
+<tr class="separator:a2b7fa2186e324edc1ada463cc4617313"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61b9097ace78236a1a7f9cfd9e9ab01c" id="r_a61b9097ace78236a1a7f9cfd9e9ab01c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a61b9097ace78236a1a7f9cfd9e9ab01c">getTables</a> ()</td></tr>
+<tr class="memdesc:a61b9097ace78236a1a7f9cfd9e9ab01c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Méthode pour récupérer la liste des tables de la base de données.  <br /></td></tr>
+<tr class="separator:a61b9097ace78236a1a7f9cfd9e9ab01c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Attributs privés</h2></td></tr>
 <tr class="memitem:a9db61e1721b616500bce6ed60491752a" id="r_a9db61e1721b616500bce6ed60491752a"><td class="memItemLeft" align="right" valign="top">PDO&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9db61e1721b616500bce6ed60491752a">$pdo</a></td></tr>
 <tr class="separator:a9db61e1721b616500bce6ed60491752a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b90cf0d2622affdd75eafb06ac0f490" id="r_a2b90cf0d2622affdd75eafb06ac0f490"><td class="memItemLeft" align="right" valign="top">DateTime&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2b90cf0d2622affdd75eafb06ac0f490">$lastBackup</a> = null</td></tr>
+<tr class="separator:a2b90cf0d2622affdd75eafb06ac0f490"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-attribs" name="pri-static-attribs"></a>
 Attributs privés statiques</h2></td></tr>
@@ -269,6 +281,113 @@ Attributs privés statiques</h2></td></tr>
 
 </div>
 </div>
+<a id="a61b9097ace78236a1a7f9cfd9e9ab01c" name="a61b9097ace78236a1a7f9cfd9e9ab01c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61b9097ace78236a1a7f9cfd9e9ab01c">&#9670;&#160;</a></span>getTables()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">getTables </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Méthode pour récupérer la liste des tables de la base de données. </p>
+<dl class="section return"><dt>Renvoie</dt><dd>array </dd></dl>
+
+</div>
+</div>
+<a id="a1565e2b9072c110d932b281090b08970" name="a1565e2b9072c110d932b281090b08970"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1565e2b9072c110d932b281090b08970">&#9670;&#160;</a></span>restore()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">restore </td>
+          <td>(</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$fileToRestore</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>méthode de restauration de la base de données </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$fileToRestore</td><td>Nom du fichier à restaurer</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">Exception</td><td>e En cas d'echec de la restoration</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>void </dd></dl>
+
+</div>
+</div>
+<a id="ab113b99b946e7844f2e99d23d13f69ce" name="ab113b99b946e7844f2e99d23d13f69ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab113b99b946e7844f2e99d23d13f69ce">&#9670;&#160;</a></span>sauvegarder()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">sauvegarder </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Sauvegarde la base de données dans un fichier SQL.</p>
+<p>Cette méthode crée un fichier de sauvegarde de la base de données dans le dossier <code>backupsBD</code>. Le fichier contient la structure des tables et les données de chaque table. </p><dl class="section return"><dt>Renvoie</dt><dd>void </dd></dl>
+
+</div>
+</div>
+<a id="a2b7fa2186e324edc1ada463cc4617313" name="a2b7fa2186e324edc1ada463cc4617313"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b7fa2186e324edc1ada463cc4617313">&#9670;&#160;</a></span>verifierSauvegarde()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">verifierSauvegarde </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Méthode pour récupérer la date de la dernière sauvegarde de la base de données depuis les fichiers de sauvegarde.</p>
+<p>Cette méthode parcourt les fichiers de sauvegarde dans le dossier <code>backupsBD</code> pour trouver le fichier le plus récent, puis vérifie si la base doit être sauvegardée. Lance la sauvegarde si nécessaire.</p>
+<dl class="section return"><dt>Renvoie</dt><dd>void </dd></dl>
+
+</div>
+</div>
 <h2 class="groupheader">Documentation des champs</h2>
 <a id="a0f9d38d56237de0f408eacc54842fc53" name="a0f9d38d56237de0f408eacc54842fc53"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0f9d38d56237de0f408eacc54842fc53">&#9670;&#160;</a></span>$instance</h2>
@@ -286,6 +405,28 @@ Attributs privés statiques</h2></td></tr>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2b90cf0d2622affdd75eafb06ac0f490" name="a2b90cf0d2622affdd75eafb06ac0f490"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b90cf0d2622affdd75eafb06ac0f490">&#9670;&#160;</a></span>$lastBackup</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">DateTime $lastBackup = null</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

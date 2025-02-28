@@ -8,7 +8,7 @@ var class_contenu_d_a_o =
     [ "getGenres", "class_contenu_d_a_o.html#a9a7271cf58bc911057b53cff873f9a71", null ],
     [ "getMovieData", "class_contenu_d_a_o.html#a6a29c6b538abdac760a332b5fc4b14b8", null ],
     [ "getPersonnalites", "class_contenu_d_a_o.html#a56359b4a211f881c0ca026e8d04aeb27", null ],
-    [ "getPopularMoviesByGenre", "class_contenu_d_a_o.html#a3a23e255819caad823565bc90135df1e", null ],
+    [ "getPopularMoviesByGenre", "class_contenu_d_a_o.html#a14270d2718ef890a7014a0c2f5272f6e", null ],
     [ "getTrendingMovies", "class_contenu_d_a_o.html#a1f5afa34ce0b954e9b727410209f354f", null ],
     [ "makeRequest", "class_contenu_d_a_o.html#a0bfd8b4fb056eeb197ce8766a22a963a", null ],
     [ "searchMoviesByName", "class_contenu_d_a_o.html#abb38cc50e99c1cb02f3d9bc82338b4f2", null ],

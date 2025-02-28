@@ -25,6 +25,7 @@
 var NAVTREE =
 [
   [ "VideoHomeShare", "index.html", [
+    [ "Liste des choses à faire", "todo.html", null ],
     [ "Espaces de nommage", "namespaces.html", [
       [ "Liste des espaces de nommage", "namespaces.html", "namespaces_dup" ]
     ] ],
@@ -42,19 +43,21 @@ var NAVTREE =
       [ "Liste des fichiers", "files.html", "files_dup" ],
       [ "Variables globale", "globals.html", [
         [ "Tout", "globals.html", null ],
+        [ "Variables", "globals_vars.html", null ],
         [ "Énumérations", "globals_enum.html", null ],
         [ "Valeurs énumérées", "globals_eval.html", null ]
       ] ]
-    ] ]
+    ] ],
+    [ "Exemples", "examples.html", "examples" ]
   ] ]
 ];
 
 var NAVTREEINDEX =
 [
-"annotated.html",
-"class_episode.html#a11c380e71778af9871c5bd84b2f50eae",
-"class_reponse.html#adf8170771f472e0e56c7e12c5b9ada79",
-"fil_8class_8php.html"
+"_j_1_2_w_w_w_2_v_h_s_2modeles_2collection_8dao_8php-example.html",
+"class_controller_fil.html#aa220521316f4e3595b652715380b697f",
+"class_personnalite_d_a_o.html#aff5345901332681ac0f68dca41986092",
+"class_theme_d_a_o.html#a6e7560ad95a7986be67f7528c80e7f1a"
 ];
 
 var SYNCONMSG = 'cliquez pour désactiver la synchronisation du panel';

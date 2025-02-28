@@ -9,6 +9,7 @@ var class_message_d_a_o =
     [ "getMessagesEnfants", "class_message_d_a_o.html#a7ba0ce6e905d5f3cb0a8fb5c055c9022", null ],
     [ "getMessagesPagines", "class_message_d_a_o.html#a571434c44af8ae2fca981532a6318e23", null ],
     [ "getNombreMessagesParent", "class_message_d_a_o.html#a58bfd4203731ff04296300a83cce9ee2", null ],
+    [ "getNouveauxMessages", "class_message_d_a_o.html#af2fd8567ff3b8e74072466f579f034aa", null ],
     [ "getPdo", "class_message_d_a_o.html#a6e7560ad95a7986be67f7528c80e7f1a", null ],
     [ "hydrate", "class_message_d_a_o.html#ab8a0b2c1ccabce7913458360159761c3", null ],
     [ "hydrateAll", "class_message_d_a_o.html#aad271e67611d0657c0613bf338ad2a44", null ],

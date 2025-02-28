@@ -1,5 +1,7 @@
 var hierarchy =
 [
+    [ "Bannissement", "class_bannissement.html", null ],
+    [ "BannissementDAO", "class_bannissement_d_a_o.html", null ],
     [ "Bd", "class_bd.html", null ],
     [ "Collection", "class_collection.html", null ],
     [ "CollectionDAO", "class_collection_d_a_o.html", null ],
@@ -11,14 +13,14 @@ var hierarchy =
       [ "ControllerCollection", "class_controller_collection.html", null ],
       [ "ControllerCommentaire", "class_controller_commentaire.html", null ],
       [ "ControllerContenu", "class_controller_contenu.html", null ],
+      [ "ControllerDashboard", "class_controller_dashboard.html", null ],
       [ "ControllerFil", "class_controller_fil.html", null ],
       [ "ControllerIndex", "class_controller_index.html", null ],
       [ "ControllerNotification", "class_controller_notification.html", null ],
       [ "ControllerQuizz", "class_controller_quizz.html", null ],
+      [ "ControllerSalle", "class_controller_salle.html", null ],
       [ "ControllerSerie", "class_controller_serie.html", null ],
-      [ "ControllerSignalement", "class_controller_signalement.html", null ],
       [ "ControllerUtilisateur", "class_controller_utilisateur.html", null ],
-      [ "ControllerWatch2Gether", "class_controller_watch2_gether.html", null ],
       [ "ControllerWatchlist", "class_controller_watchlist.html", null ]
     ] ],
     [ "ControllerFactory", "class_controller_factory.html", null ],
@@ -40,6 +42,8 @@ var hierarchy =
     [ "Reponse", "class_reponse.html", null ],
     [ "ReponseDAO", "class_reponse_d_a_o.html", null ],
     [ "Saison", "class_saison.html", null ],
+    [ "Salle", "class_salle.html", null ],
+    [ "SalleDAO", "class_salle_d_a_o.html", null ],
     [ "Serie", "class_serie.html", null ],
     [ "SerieDAO", "class_serie_d_a_o.html", null ],
     [ "Signalement", "class_signalement.html", null ],

@@ -141,6 +141,8 @@ Fonctions membres privées</h2></td></tr>
 <tr class="memitem:affa3e8ed4decdbb77760b46c9898ee80" id="r_affa3e8ed4decdbb77760b46c9898ee80"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#affa3e8ed4decdbb77760b46c9898ee80">removeDuplicatePersonnalites</a> (array $personnalites)</td></tr>
 <tr class="memdesc:affa3e8ed4decdbb77760b46c9898ee80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Élimine les doublons de personnalités.  <br /></td></tr>
 <tr class="separator:affa3e8ed4decdbb77760b46c9898ee80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1674890c59a562c7090f2f452cdae26" id="r_aa1674890c59a562c7090f2f452cdae26"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa1674890c59a562c7090f2f452cdae26">hasAdultMovies</a> (int $collectionId)</td></tr>
+<tr class="separator:aa1674890c59a562c7090f2f452cdae26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Attributs privés</h2></td></tr>
@@ -158,6 +160,8 @@ Attributs privés</h2></td></tr>
 <p>Cette classe gère toutes les opérations de lecture et d'écriture des collections, que ce soit depuis la base de données ou l'API TMDB</p>
 <dl class="section author"><dt>Auteur</dt><dd>François Barlic &lt;<a href="#" onclick="location.href='mai'+'lto:'+'fra'+'nc'+'ois'+'.b'+'arl'+'ic'+'57@'+'gm'+'ail'+'.c'+'om'; return false;">franc<span class="obfuscator">.nosp@m.</span>ois.<span class="obfuscator">.nosp@m.</span>barli<span class="obfuscator">.nosp@m.</span>c57@<span class="obfuscator">.nosp@m.</span>gmail<span class="obfuscator">.nosp@m.</span>.com</a>&gt; </dd></dl>
 <dl class="section version"><dt>Version</dt><dd>1.0 </dd></dl>
+<dl class="section examples"><dt>Exemples</dt><dd><a class="el" href="_j_1_2_w_w_w_2_v_h_s_2modeles_2collection_8dao_8php-example.html#_a0">J:/WWW/VHS/modeles/collection.dao.php</a>.</dd>
+</dl>
 </div><h2 class="groupheader">Documentation des constructeurs et destructeur</h2>
 <a id="a2e7ff27ab8591b818c2581d94f5ae7bf" name="a2e7ff27ab8591b818c2581d94f5ae7bf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2e7ff27ab8591b818c2581d94f5ae7bf">&#9670;&#160;</a></span>__construct()</h2>
@@ -185,6 +189,8 @@ Attributs privés</h2></td></tr>
     <tr><td class="paramtype">string</td><td class="paramname">$apiKey</td><td>Clé API TMDB </td></tr>
   </table>
   </dd>
+</dl>
+<dl class="section examples"><dt>Exemples</dt><dd><a class="el" href="_j_1_2_w_w_w_2_v_h_s_2modeles_2collection_8dao_8php-example.html#a5">J:/WWW/VHS/modeles/collection.dao.php</a>.</dd>
 </dl>
 
 </div>
@@ -214,6 +220,8 @@ Attributs privés</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Convertit les données TMDB en objet <a class="el" href="class_collection.html" title="Classe représentant une collection de films.">Collection</a>. </p>
+<dl class="section examples"><dt>Exemples</dt><dd><a class="el" href="_j_1_2_w_w_w_2_v_h_s_2modeles_2collection_8dao_8php-example.html#a8">J:/WWW/VHS/modeles/collection.dao.php</a>.</dd>
+</dl>
 
 </div>
 </div>
@@ -241,6 +249,8 @@ Attributs privés</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Formate la description d'une collection. </p>
+<dl class="section examples"><dt>Exemples</dt><dd><a class="el" href="_j_1_2_w_w_w_2_v_h_s_2modeles_2collection_8dao_8php-example.html#a16">J:/WWW/VHS/modeles/collection.dao.php</a>.</dd>
+</dl>
 
 </div>
 </div>
@@ -268,6 +278,8 @@ Attributs privés</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Renvoie</dt><dd>Collection|null La collection trouvée ou null si non trouvée </dd></dl>
+<dl class="section examples"><dt>Exemples</dt><dd><a class="el" href="_j_1_2_w_w_w_2_v_h_s_2modeles_2collection_8dao_8php-example.html#a15">J:/WWW/VHS/modeles/collection.dao.php</a>.</dd>
+</dl>
 
 </div>
 </div>
@@ -294,6 +306,8 @@ Attributs privés</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Renvoie</dt><dd>Collection|null La collection trouvée ou null si non trouvée </dd></dl>
+<dl class="section examples"><dt>Exemples</dt><dd><a class="el" href="_j_1_2_w_w_w_2_v_h_s_2modeles_2collection_8dao_8php-example.html#a6">J:/WWW/VHS/modeles/collection.dao.php</a>.</dd>
+</dl>
 
 </div>
 </div>
@@ -320,6 +334,8 @@ Attributs privés</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Renvoie</dt><dd>array Liste des contenus de la collection </dd></dl>
+<dl class="section examples"><dt>Exemples</dt><dd><a class="el" href="_j_1_2_w_w_w_2_v_h_s_2modeles_2collection_8dao_8php-example.html#a13">J:/WWW/VHS/modeles/collection.dao.php</a>.</dd>
+</dl>
 
 </div>
 </div>
@@ -346,6 +362,49 @@ Attributs privés</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Renvoie</dt><dd>array Liste des personnalités </dd></dl>
+<dl class="section examples"><dt>Exemples</dt><dd><a class="el" href="_j_1_2_w_w_w_2_v_h_s_2modeles_2collection_8dao_8php-example.html#a9">J:/WWW/VHS/modeles/collection.dao.php</a>.</dd>
+</dl>
+
+</div>
+</div>
+<a id="aa1674890c59a562c7090f2f452cdae26" name="aa1674890c59a562c7090f2f452cdae26"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1674890c59a562c7090f2f452cdae26">&#9670;&#160;</a></span>hasAdultMovies()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">hasAdultMovies </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$collectionId</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Vérifie si une collection contient des films pour adultes. Cette méthode interroge l'API TMDB pour obtenir les détails d'une collection et vérifie si l'un des films qu'elle contient est marqué comme contenu adulte.</p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int</td><td class="paramname">$collectionId</td><td>L'identifiant TMDB de la collection à vérifier</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>bool Retourne true si la collection contient au moins un film pour adultes, false sinon ou en cas d'erreur de l'API</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">Exception</td><td>En cas d'erreur grave lors de la requête à l'API </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section examples"><dt>Exemples</dt><dd><a class="el" href="_j_1_2_w_w_w_2_v_h_s_2modeles_2collection_8dao_8php-example.html#a17">J:/WWW/VHS/modeles/collection.dao.php</a>.</dd>
+</dl>
 
 </div>
 </div>
@@ -373,6 +432,8 @@ Attributs privés</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Effectue une requête HTTP vers l'API TMDB. </p>
+<dl class="section examples"><dt>Exemples</dt><dd><a class="el" href="_j_1_2_w_w_w_2_v_h_s_2modeles_2collection_8dao_8php-example.html#a10">J:/WWW/VHS/modeles/collection.dao.php</a>.</dd>
+</dl>
 
 </div>
 </div>
@@ -400,6 +461,8 @@ Attributs privés</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Élimine les doublons de personnalités. </p>
+<dl class="section examples"><dt>Exemples</dt><dd><a class="el" href="_j_1_2_w_w_w_2_v_h_s_2modeles_2collection_8dao_8php-example.html#a12">J:/WWW/VHS/modeles/collection.dao.php</a>.</dd>
+</dl>
 
 </div>
 </div>
@@ -417,14 +480,8 @@ Attributs privés</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Methode de recherche d'une collection par son nom</p>
-<dl class="params"><dt>Paramètres</dt><dd>
-  <table class="params">
-    <tr><td class="paramtype">string</td><td class="paramname">$nom</td><td>Recherhche de la collection par son nom</td></tr>
-  </table>
-  </dd>
+<dl class="section examples"><dt>Exemples</dt><dd><a class="el" href="_j_1_2_w_w_w_2_v_h_s_2modeles_2collection_8dao_8php-example.html#a18">J:/WWW/VHS/modeles/collection.dao.php</a>.</dd>
 </dl>
-<dl class="section return"><dt>Renvoie</dt><dd>array&lt;Collection&gt;|null La collection trouvée ou null si non trouvée </dd></dl>
 
 </div>
 </div>
@@ -448,6 +505,8 @@ Attributs privés</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<dl class="section examples"><dt>Exemples</dt><dd><a class="el" href="_j_1_2_w_w_w_2_v_h_s_2modeles_2collection_8dao_8php-example.html#a2">J:/WWW/VHS/modeles/collection.dao.php</a>.</dd>
+</dl>
 
 </div>
 </div>
@@ -470,6 +529,8 @@ Attributs privés</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<dl class="section examples"><dt>Exemples</dt><dd><a class="el" href="_j_1_2_w_w_w_2_v_h_s_2modeles_2collection_8dao_8php-example.html#a3">J:/WWW/VHS/modeles/collection.dao.php</a>.</dd>
+</dl>
 
 </div>
 </div>
@@ -492,6 +553,8 @@ Attributs privés</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<dl class="section examples"><dt>Exemples</dt><dd><a class="el" href="_j_1_2_w_w_w_2_v_h_s_2modeles_2collection_8dao_8php-example.html#a4">J:/WWW/VHS/modeles/collection.dao.php</a>.</dd>
+</dl>
 
 </div>
 </div>
@@ -514,6 +577,8 @@ Attributs privés</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<dl class="section examples"><dt>Exemples</dt><dd><a class="el" href="_j_1_2_w_w_w_2_v_h_s_2modeles_2collection_8dao_8php-example.html#a1">J:/WWW/VHS/modeles/collection.dao.php</a>.</dd>
+</dl>
 
 </div>
 </div>
