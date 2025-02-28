@@ -36,7 +36,7 @@ class UtilisateurDAO
     {
         // Préparation de la requête
         $pdo = $this->pdo->prepare("INSERT INTO " . DB_PREFIX . "utilisateur 
-        (idUtilisateur, pseudo, vraiNom, mail, mdp, role, urlImageProfil, urlImageBanniere , dateI  ,estValider) 
+        (idUtilisateur, pseudo, mail, mdp, role, urlImageProfil, urlImageBanniere , dateI  ,estValider) 
         VALUES (:idUtilisateur, :pseudo , :mail, :mdp, :role, :urlImageProfil, :urlImageBanniere , NOW() , 0)");
       
         // Récupération des valeurs
