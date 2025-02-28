@@ -58,7 +58,7 @@
 
 
 		<!-- Bouton flottant -->
-		<button class="btn btn-myprimary position-fixed bottom-0 end-0 me-4 mb-5 px-6 d-flex align-items-center justify-content-center" style="border-radius: 50px; white-space: nowrap; min-width: 200px;" id="btnCreaFil" data-bs-toggle="modal" data-bs-target="#nouveauFil" {% if utilisateurConnecte is null %}disabled{% endif 	%}>
+		<button class="btn btn-myprimary position-fixed bottom-0 end-0 me-4 mb-3 px-6 d-flex align-items-center justify-content-center" style="border-radius: 50px; white-space: nowrap; min-width: 200px;" id="btnCreaFil" data-bs-toggle="modal" data-bs-target="#nouveauFil" {% if utilisateurConnecte is null %} disabled {% endif %}>
 			<i class="bi bi-pencil" style="font-size: 1.3rem; margin-right: 0.2rem;"></i>
 			<span>Nouveau fil</span>
 		</button>
@@ -72,18 +72,22 @@
 						<h5 class="modal-title w-100" id="nouveauMessageLabel">Nouvelle discussion</h5>
 						<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
 					</div>
-					<form action="index.php?controller=fil&methode=creerFil" method="POST" class="modal-body text-white" id="formCreationThread">
+					<form
+						action="index.php?controller=fil&methode=creerFil" method="POST" class="modal-body text-white" id="formCreationThread">
 						<!-- Titre du fil  & Thèmes -->
 						<div class="row my-4">
 							<div class="col-12">
-								<label for="titre" class="form-label">Titre du fil de discussion * </label>
+								<label for="titre" class="form-label">Titre du fil de discussion *
+								</label>
 								<div class="d-flex justify-content-between">
 									<div class="me-2 col-8">
 										<input type="text" name="titre" class="form-control bg-mylight" placeholder="Titre de votre discussion..." maxlength="50" id="titreThread" required>
 									</div>
 									<div class="custom-select-wrapper">
 										<div class="custom-select" id="themeSelect">
-											<span class="custom-select-placeholder text-white ms-1">Choisissez des thèmes <i class="bi bi-chevron-down"></i></span>
+											<span class="custom-select-placeholder text-white ms-1">Choisissez des thèmes
+												<i class="bi bi-chevron-down"></i>
+											</span>
 											<div class="custom-select-dropdown">
 												{% for theme in themes %}
 													<label class="custom-select-option text-black">
@@ -103,7 +107,8 @@
 
 						<!-- Description du fil -->
 						<div class="d-flex flex-row justify-content-between">
-							<label for="descriptionThread" class="form-label">Description du fil de discussion * </label>
+							<label for="descriptionThread" class="form-label">Description du fil de discussion *
+							</label>
 							<span id="countDescriptionThread">0/100</span>
 						</div>
 						<textarea name="description" class="form-control mt-1 bg-mylight text-black p-3 mb-1" rows="4" placeholder="Description du fil de discussion" maxlength="100" id="descriptionThread" required></textarea>
@@ -111,7 +116,8 @@
 
 						<!-- Premier message du fil -->
 						<div class="d-flex flex-row justify-content-between mt-2">
-							<label for="premierMessage" class="form-label">Premier message du fil * </label>
+							<label for="premierMessage" class="form-label">Premier message du fil *
+							</label>
 							<span id="countPremierMsg">0/1000</span>
 						</div>
 						<textarea name="premierMessage" class="form-control my-1 bg-mylight text-black p-3" rows="4" placeholder="Écrivez le premier message du fil" maxlength="1000" id="premierMessage" required></textarea>

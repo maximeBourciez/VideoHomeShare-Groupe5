@@ -47,12 +47,15 @@ f.parentNode.insertBefore(j, f);
 
 	<body
 		class="d-flex flex-column min-vh-100 bg-mylight">
+		<!-- Loader -->
+		<div class="loader-container">
+			<div class="loader"></div>
+		</div>
 		<!-- Google Tag Manager (noscript) -->
 		<noscript>
 			<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NRC87HJ4" height="0" width="0" style="display:none;visibility:hidden"></iframe>
 		</noscript>
 		<!-- End Google Tag Manager (noscript) -->
-
 		<header>
 			<nav
 				class="navbar navbar-expand-lg navbar-mydark justify-content-center">
@@ -237,6 +240,43 @@ ga('create', 'UA-XXXXXXX-X', 'auto');
 ga('send', 'pageview');
 }
 };
+			</script>
+			<script>
+				// Gestion du loader
+$(document).ready(function () { // Cacher le loader initialement
+$('.loader-container').hide();
+
+// Afficher le loader lors des clics sur les liens et soumissions de formulaires
+$('a:not([data-bs-toggle="modal"]), button[type="submit"]:not([data-bs-toggle="modal"])').click(function (e) { // Ne pas afficher le loader pour les modals et les liens internes
+if (!$(this).closest('.modal').length && !$(this).attr('href') ?. startsWith('#')) {
+$('.loader-container').css('display', 'flex');
+}
+});
+
+// Afficher le loader lors des soumissions de formulaires valides
+$('form:not([data-modal-form])').submit(function (e) {
+if (this.checkValidity()) {
+$('.loader-container').css('display', 'flex');
+} else {
+$('.loader-container').hide();
+}
+});
+
+// Cacher le loader une fois la page chargée
+$(window).on('load', function () {
+$('.loader-container').hide();
+});
+
+// S'assurer que le loader est caché après la fermeture d'un modal
+$('.modal').on('hidden.bs.modal', function () {
+$('.loader-container').hide();
+});
+
+// Ajouter un gestionnaire d'erreurs global pour cacher le loader
+$(document).ajaxError(function () {
+$('.loader-container').hide();
+});
+});
 			</script>
 		{% endblock %}
 	</body>
