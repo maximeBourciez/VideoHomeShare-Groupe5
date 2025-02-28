@@ -125,7 +125,6 @@ class ControllerUtilisateur extends Controller
         $verficationTailleVmdp = Utilitaires::comprisEntre($vmdp, null, 8, "le mot de passe de confirmation doit contenir", $message);
 
         $verficationRobuste = Utilitaires::estRobuste($mdp, $message);
-        var_dump($message);
         $verficationAge = Utilitaires::ageCorrect($date, 13, $message);
         $verficationMailExistePas = Utilitaires::mailCorrectExistePas($mail, $message, $managerutilisateur);
         $verficationEgale = Utilitaires::egale($mdp, $vmdp, "Les mots de passe", $message);
@@ -147,7 +146,7 @@ class ControllerUtilisateur extends Controller
             $role = Role::Utilisateur;
             $token = Utilitaires::generateToken($id, 24);
             mail($mail, "Confirmation de votre compte", "Bonjour, \n\n Vous avez créé un compte sur notre plateforme. Pour confirmer votre compte, veuillez cliquer sur le lien suivant : " . WEBSITE_LINK . "index.php?controller=utilisateur&methode=confirmationCompte&token=" . $token . " \n\n Cordialement, \n\n L'équipe de la plateforme de vhs");
-            $newUtilisateur = new Utilisateur($id, $pseudo,  $mail, $mdp, $role, "images/Profil_de_base.svg", "images/Banniere_de_base.png");
+            $newUtilisateur = new Utilisateur($id, $pseudo,  $mail, $mdp, $role, "images/imageProfil_de_base.svg", "images/imageBanniere_de_base.svg");
             $managerutilisateur->create($newUtilisateur);
             //Génération de la vue
             $template = $this->getTwig()->load('connection.html.twig');
@@ -446,7 +445,6 @@ class ControllerUtilisateur extends Controller
             // mettre à jour le mail de l'utilisateur
             $utilisateur->setMail($mail);
             $utilisateur->setMdp($managerutilisateur->find($utilisateur->getId())->getMdp());
-            var_dump($utilisateur);
             $managerutilisateur->update($utilisateur);
             $utilisateur->setMdp(null);
             $_SESSION['utilisateur'] = serialize($utilisateur);

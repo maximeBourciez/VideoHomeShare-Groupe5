@@ -316,15 +316,19 @@ class Utilitaires
     {
         if ($fichier['name'] != '') {
             //supprimer l'ancienne image
-            if (file_exists($utilisateur->getUrlImageBanniere()) && $utilisateur->getUrlImageProfil() != "images/" . $type . "_de_base.png") {
-                switch ($type) {
-                    case "Profil":
+
+            switch ($type) {
+                case "Profil":
+                    if (file_exists($utilisateur->getUrlImageProfil()) && $utilisateur->getUrlImageProfil() != "images/image" . $type . "_de_base.svg") {
                         unlink($utilisateur->getUrlImageProfil());
-                        break;
-                    case "Banniere":
+                    }
+                    break;
+                case "Banniere":
+                    if (file_exists($utilisateur->getUrlImageBanniere()) && $utilisateur->getUrlImageBanniere() != "images/image" . $type . "_de_base.svg") {
                         unlink($utilisateur->getUrlImageBanniere());
-                        break;
-                }
+                    }
+                    break;
+
             }
 
             // donne le bon nom à l'image
@@ -342,7 +346,6 @@ class Utilitaires
                 }
 
             } else {
-
 
                 $messageErreur = "Nous n'avons pas pu télécharger l'image de $type";
             }
@@ -514,11 +517,11 @@ class Utilitaires
     {
         $valretour = true;
         // si la case n'est pas cochée
-        
+
         $banni = $bannissementDAO->find($utilisateur->getId());
         if ($banni != null) {
 
-            $messageErreur = "vous avez été banni pour la raison suivante : " . $banni->getRaison(). " jusqu'au " . $banni->getDateF()->format('d/m/Y');
+            $messageErreur = "vous avez été banni pour la raison suivante : " . $banni->getRaison() . " jusqu'au " . $banni->getDateF()->format('d/m/Y');
             $valretour = false;
         }
         return $valretour;
