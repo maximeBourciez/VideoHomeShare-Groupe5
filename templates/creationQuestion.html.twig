@@ -46,9 +46,10 @@
                     {% for i in 0..3 %}
                         <div class="col-md-5 mb-3 d-flex flex-column">
                             <label for="reponse_{{ numQuestion }}_{{ i }}">Réponse {{ i + 1 }} (*)</label>
-                            <input type="text" name="reponse_{{ numQuestion }}_{{ i }}" id="reponse_{{ numQuestion }}_{{ i }}" 
-                                class="rounded inputReponse w-100" 
+                            <textarea type="text" name="reponse_{{ numQuestion }}_{{ i }}" id="reponse_{{ numQuestion }}_{{ i }}"
+                                class="rounded w-100" 
                                 placeholder="Saisir la réponse..." required/>
+                            </textarea>
                             <small class="containerNbDecomptesRep">125 caractères restants</small>    
                             <div class="d-flex align-items-center mt-2">
                                 <input type="checkbox" name="correcte_{{ numQuestion }}_{{ i }}" id="correcte_{{ numQuestion }}_{{ i }}" class="rounded checkCorrect"/>
@@ -61,12 +62,14 @@
                 <span id="erreurReponses" class="alert alert-danger bg-tercary mx-5 text-white d-none mt-2 d-block fs-5"></span>
 
 			<!-- Boutons de manipulation de la page -->
-			<div class="d-flex justify-content-center mt-4 gap-4">
-				<button type="submit" class="btn btn-primary fw-bold col-md-5 me-4" id="validerReponses" style="width: 300px;">Suivant</button>
+			<div class="d-flex flex-column flex-sm-row justify-content-around mb-3 mt-3 gap-4">
+				<button type="submit" class="btn btn-primary fw-bold col-12 col-sm-auto mb-3" id="validerReponses" style="width: 300px;">
+                    Suivant
+                </button>
 			</form>
 				<form action="index.php?controller=quizz&methode=supprimerQuizz" method="post">
 					<input type="hidden" name="idQuizz" value="{{ idQuizz }}">
-					<button type="submit" class="btn btn-primary fw-bold col-md-5 ms-2 h-auto" onclick="return confirm('Voulez-vous vraiment annuler la création du quizz ?');" style="width: 300px;">
+					<button type="submit" class="btn btn-primary fw-bold col-12 col-sm-auto mb-3" onclick="return confirm('Voulez-vous vraiment annuler la création du quizz ?');" style="width: 300px;">
 						Annuler
 					</button>
 				</form>
@@ -74,12 +77,6 @@
     </div>
     <p>* : Champs obligatoires</p>	
 </main>
-
-<style>
-    .inputReponse {
-        height: 50px;
-    }
-</style>
 
 <script src="js/quizz.js"></script>
 

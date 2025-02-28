@@ -32,6 +32,8 @@ function gererCreerQuizz(){
     let descQuizz = document.getElementById('description');
     let btnValider = document.getElementById('validerSaisie');
 
+    viderTextareas();
+
     if (titreQuizz != null && descQuizz != null && btnValider != null){
         //Etat par défaut
         btnValider.disabled = true;
@@ -45,6 +47,21 @@ function gererCreerQuizz(){
         titreQuizz.addEventListener('input', verifierChamps);
         descQuizz.addEventListener('input', verifierChamps);
     }
+}
+
+/**
+ * @brief Méthode de vidage des textareas
+ * 
+ * @returns {void}
+ */
+function viderTextareas() {
+    // Sélectionner tous les éléments <textarea> à l'intérieur de #reponsesContainer
+    const textareas = document.querySelectorAll('#reponsesContainer textarea');
+    
+    // Parcourir chaque <textarea> et vider son contenu
+    textareas.forEach(function(textarea) {
+        textarea.value = ''; // Vider le contenu
+    });
 }
 
 /**
