@@ -37,3 +37,7 @@ threads:
 backup:
   nombreSauvegardesMax: 
   chemin: ""
+
+# constante watchtogther
+watchtogether:
+  api_key:

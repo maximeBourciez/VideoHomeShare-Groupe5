@@ -376,6 +376,48 @@ class ControllerSalle extends Controller
         $managersalle->ajouterVideo($salle->getIdSalle(),$url);
 
     }
+
+    /**
+     * 
+     */
+    public function signalevideo($id , $raison){
+
+
+        //composer require google/apiclient:^2.0
+        $client = new Google_Client();
+        $client->setDeveloperKey(YOUTUBE_API_KEY); // Remplacez par votre propre clé API
+
+        // Créer un service YouTube
+        $youtube = new Google_Service_YouTube($client);
+
+
+        try {
+            // Création d'une requête de signalement
+            $videoAbuseReport = new Google_Service_YouTube_VideoAbuseReport();
+            $videoAbuseReport->setVideoId($id);
+            $videoAbuseReport->setReasonId($raison); // Raison principale
+            
+
+            // Effectuer l'appel API pour signaler la vidéo
+            $youtube->videos->reportAbuse($videoAbuseReport);
+            
+        } catch (Google_Service_Exception $e) {
+            echo 'Erreur lors de l\'appel API : ' . $e->getMessage();
+        } catch (Exception $e) {
+            echo 'Erreur générique : ' . $e->getMessage();
+        }
+
+
+// Violence graphique
+// Harcèlement
+// Discours haineux
+// Contenu pour adulte
+// Contenu trompeur ou spam
+// Violations de propriété intellectuelle
+// Danger pour les enfants
+// Autre raison
+
+    }
     
 
 }

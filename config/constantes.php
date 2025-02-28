@@ -44,3 +44,6 @@ define('NOMBRE_MESSAGES_PAR_PAGE', $config['threads']['nombreMessagesParPage']);
 // Constante pour la sauvegarde
 define('SAUVEGARDE_MAX_NUMBER', $config['backup']['nombreSauvegardesMax']);
 define('SAUVEGARDE_CHEMIN', $config['backup']['chemin']);
+
+// Constante api youtube
+define('YOUTUBE_API_KEY', $config['watchtogether']['api_key']);
