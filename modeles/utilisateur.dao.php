@@ -36,13 +36,12 @@ class UtilisateurDAO
     {
         // Préparation de la requête
         $pdo = $this->pdo->prepare("INSERT INTO " . DB_PREFIX . "utilisateur 
-        (idUtilisateur, pseudo, vraiNom, mail, mdp, role, urlImageProfil, urlImageBanniere , dateI  ,estValider) 
-        VALUES (:idUtilisateur, :pseudo, :nom , :mail, :mdp, :role, :urlImageProfil, :urlImageBanniere , NOW() , 0)");
+        (idUtilisateur, pseudo, mail, mdp, role, urlImageProfil, urlImageBanniere , dateI  ,estValider) 
+        VALUES (:idUtilisateur, :pseudo , :mail, :mdp, :role, :urlImageProfil, :urlImageBanniere , NOW() , 0)");
       
         // Récupération des valeurs
         $id = $utilisateur->getId();
         $pseudo = $utilisateur->getPseudo();
-        $nom = $utilisateur->getNom();
         $mail = $utilisateur->getMail();
         $mdp = $utilisateur->getMdp();
         $role = $utilisateur->getRole()->toString();
@@ -52,7 +51,6 @@ class UtilisateurDAO
         // passage des paramètres
         $pdo->bindValue(":idUtilisateur", $id);
         $pdo->bindValue(":pseudo", $pseudo);
-        $pdo->bindValue(":nom", $nom);
         $pdo->bindValue(":mail", $mail);
         $pdo->bindValue(":mdp", $mdp);
         
@@ -72,11 +70,10 @@ class UtilisateurDAO
     function update(Utilisateur $utilisateur): bool
     {
 
-        $pdo = $this->pdo->prepare("UPDATE " . DB_PREFIX . "utilisateur SET  pseudo = :pseudo, vraiNom = :nom, mail = :mail, mdp = :mdp,  urlImageProfil = :urlImageProfil, urlImageBanniere = :urlImageBaniere, estValider = :estValider WHERE idUtilisateur = :id");
+        $pdo = $this->pdo->prepare("UPDATE " . DB_PREFIX . "utilisateur SET  pseudo = :pseudo, mail = :mail, mdp = :mdp,  urlImageProfil = :urlImageProfil, urlImageBanniere = :urlImageBaniere, estValider = :estValider WHERE idUtilisateur = :id");
 
         $id = $utilisateur->getId();
         $pseudo = $utilisateur->getPseudo();
-        $nom = $utilisateur->getNom();
         $mail = $utilisateur->getMail();
         $mdp = $utilisateur->getMdp();
         $urlImageProfil = $utilisateur->getUrlImageProfil();
@@ -84,7 +81,6 @@ class UtilisateurDAO
         $estValider = $utilisateur->getEstValider();
         $pdo->bindParam(":id", $id);
         $pdo->bindParam(":pseudo", $pseudo);
-        $pdo->bindParam(":nom", $nom);
         $pdo->bindParam(":mail", $mail);
         $pdo->bindParam(":mdp", $mdp);
         $pdo->bindParam(":urlImageProfil", $urlImageProfil);
@@ -96,12 +92,12 @@ class UtilisateurDAO
 
     /**
      * @brief Supprime un utilisateur de la base de données
-     * @param int $id L'identifiant de l'utilisateur à supprimer
+     * @param string $id L'identifiant de l'utilisateur à supprimer
      * @return bool true si l'utilisateur a été supprimé, false sinon
      */
-    function delete(int $id): bool
+    function delete(string $id): bool
     {
-        $req = $this->pdo->prepare("DELETE FROM " . DB_PREFIX . "utilisateur WHERE id = :id");
+        $req = $this->pdo->prepare("DELETE FROM " . DB_PREFIX . "utilisateur WHERE idUtilisateur = :id");
         $req->bindParam(":id", $id);
         return $req->execute();
     }
@@ -116,24 +112,21 @@ class UtilisateurDAO
         // Récupération des valeurs
         $id = $row['idUtilisateur'];
         $pseudo = $row['pseudo'];
-        $nom = $row['vraiNom'];
         $mail = $row['mail'];
         $mdp = $row['mdp'];
         $role = $row['role'];
-       
-
 
         // Transformer le role
         $roleEnum = Role::fromString($role);
         if ($roleEnum !== null) {
             $role = $roleEnum;
         }
-
+        $dateI = $row['dateI'];
         $urlImageProfil = $row['urlImageProfil'];
         $urlImageBanniere = $row['urlImageBanniere'];
         $estValider = $row['estValider'];
         // Retourner l'utilisateur
-        return new Utilisateur($id, $pseudo, $nom, $mail, $mdp, $role, $urlImageProfil, $urlImageBanniere, $estValider);
+        return new Utilisateur($id, $pseudo,  $mail, $mdp, $role, $urlImageProfil, $urlImageBanniere, $estValider, new DateTime($dateI));
 
     }
     
@@ -245,4 +238,19 @@ class UtilisateurDAO
         $row = $pdo->fetch();
         return $row["estValider"];
     }
+
+    /**
+     * @brief recupère les utilisateurs non  banis 
+     * @return Utilisateur[] Tableau d'utilisateurs trouvés
+     */
+    public function findUtilisateursNonBannis(): array
+    {
+        $sql = "SELECT * FROM " . DB_PREFIX . "utilisateur u  WHERE  u.idUtilisateur not in (select idUtilisateur from " . DB_PREFIX . "bannissement WHERE dateF > date(now()))";
+        $stmt = $this->pdo->query($sql);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);  
+      
+        return $this->hydrateAll($stmt->fetchAll());
+    }
+
+   
 }
