@@ -212,6 +212,13 @@ Attributs privés</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Convertit les données TMDB en objet <a class="el" href="class_serie.html" title="Classe représentant une série TV.">Serie</a>. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">array</td><td class="paramname">$serieData</td><td>Les données brutes de la série depuis TMDB </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd><a class="el" href="class_serie.html" title="Classe représentant une série TV.">Serie</a> L'objet <a class="el" href="class_serie.html" title="Classe représentant une série TV.">Serie</a> créé à partir des données </dd></dl>
 
 </div>
 </div>
@@ -237,7 +244,7 @@ Attributs privés</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Renvoie</dt><dd>array Liste des épisodes groupés par saison </dd></dl>
+<dl class="section return"><dt>Renvoie</dt><dd>array Liste des épisodes groupés par saison avec les informations de chaque saison </dd></dl>
 
 </div>
 </div>
@@ -263,7 +270,7 @@ Attributs privés</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Renvoie</dt><dd>array Liste des personnalités avec leurs rôles </dd></dl>
+<dl class="section return"><dt>Renvoie</dt><dd>array Liste des personnalités avec leurs rôles, séparée en 'acteurs' et 'equipe' </dd></dl>
 
 </div>
 </div>
@@ -341,7 +348,7 @@ Attributs privés</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Renvoie</dt><dd>array Liste des thèmes (max 5) </dd></dl>
+<dl class="section return"><dt>Renvoie</dt><dd>array Liste des thèmes (maximum 5 éléments) </dd></dl>
 
 </div>
 </div>
@@ -369,6 +376,13 @@ Attributs privés</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Effectue une requête HTTP vers l'API TMDB. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">string</td><td class="paramname">$url</td><td>L'URL de la requête à effectuer </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>array|null Les données JSON décodées ou null en cas d'erreur </dd></dl>
 
 </div>
 </div>

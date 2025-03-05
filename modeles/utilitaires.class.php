@@ -14,7 +14,7 @@
  */
 
 class Utilitaires
-{    
+{
     /**
      * @brief pemet de verifier si la valeur est compris entre deux valeurs
      * @param string $val la valeur que l'on veut vérifier
@@ -25,25 +25,23 @@ class Utilitaires
      * @return bool true si la valeur est compris entre les deux valeurs false sinon
      * 
      */
-    public static function comprisEntre(string $val, ?int $valmax, int $valmin, string $contenu , string & $messageErreur): bool
+    public static function comprisEntre(string $val, ?int $valmax, int $valmin, string $contenu, string &$messageErreur): bool
     {
         $valretour = true;
         // si la valeur est plus petite que la valeur minimal
         if (strlen($val) < $valmin) {
 
-            
-            $messageErreur = $contenu . " au moins " . $valmin . " caractères" ;
+
+            $messageErreur = $contenu . " au moins " . $valmin . " caractères";
             $valretour = false;
         }
         // si la valeur est plus grande que la valeur maximal
-        if (strlen($val) > $valmax && $valmax != null ) {
+        if (strlen($val) > $valmax && $valmax != null) {
 
-            
             $messageErreur = $contenu . " au maximum " . $valmax . " caractères";
             $valretour = false;
-            var_dump($messageErreur);
         }
-        
+
         return $valretour;
     }
 
@@ -56,12 +54,12 @@ class Utilitaires
      * @return bool true si les deux valeurs sont identiques false sinon
      * 
      */
-    public static function egale(string $val1, string $val2, string $contenu , string &$messageErreur): bool
+    public static function egale(string $val1, string $val2, string $contenu, string &$messageErreur): bool
     {
         $valretour = true;
         // si les deux valeurs ne sont pas identiques
         if ($val1 != $val2) {
-            
+
             $messageErreur = $contenu . " ne sont pas identiques";
             $valretour = false;
         }
@@ -76,13 +74,13 @@ class Utilitaires
      * @return bool true si le mail est correct false sinon
      * 
      */
-    public static function mailCorrectExistePas(string $mail, string &$messageErreur ,UtilisateurDAO $managerutilisateur): bool
+    public static function mailCorrectExistePas(string $mail, string &$messageErreur, UtilisateurDAO $managerutilisateur): bool
     {
-        
+
         $valretour = true;
         // si le mail n'est pas valide ou si le mail existe déjà
         if (!filter_var($mail, FILTER_VALIDATE_EMAIL) || $managerutilisateur->findByMail($mail) != null) {
-            
+
             $messageErreur = "Le mail n'est pas valide";
             $valretour = false;
         }
@@ -97,12 +95,12 @@ class Utilitaires
      * @return bool true si l'utilisateur est assez vieux false sinon
      * 
      */
-    public static function ageCorrect(string $date, int $age, string &$messageErreur ): bool
+    public static function ageCorrect(string $date, int $age, string &$messageErreur): bool
     {
         $valretour = true;
         // si l'utilisateur est trop jeune
         if (strtotime($date) >= strtotime(date("Y-m-d") . " -" . ($age * 12) . " month")) {
-           
+
             $messageErreur = "Vous êtes moins de $age. Vous êtes trop jeune pour vous inscrire.";
             $valretour = false;
         }
@@ -114,7 +112,7 @@ class Utilitaires
      * @param int $temp la durée de vie du token en heure du token
      * @return string  la chaine de caractère qui est le token
      */
-    public static function  generateToken(?string $IdUtilisateur, ?int $temp = 1)
+    public static function generateToken(?string $IdUtilisateur, ?int $temp = 1)
     {
         // clé secrète
         $secretKey = SECRET_KEY;
@@ -150,7 +148,7 @@ class Utilitaires
         }
         // séparation du token
         list($header, $payload, $signature) = explode('.', $token);
-        
+
         // vérification de la signature
         $validSignature = rtrim(strtr(base64_encode(hash_hmac('sha256', $header . "." . $payload, $secretKey, true)), '+/', '-_'), '=');
         if ($validSignature !== $signature) {
@@ -177,7 +175,7 @@ class Utilitaires
         // si l'utilisateur n'existe pas
         if ($utilisateur == null) {
             $valretour = false;
-            
+
             $messageErreur = " Ce compte n'existe pas veuillez vous inscrire";
         }
         return $valretour;
@@ -189,7 +187,7 @@ class Utilitaires
      * @param Utilisateur $utilisateur l'utilisateur sur lequel on veut renvoyer un message d'erreur
      * @return bool true si le mot de passe est correct false sinon
      */
-    public static function motDePasseCorrect(string $mdp, string $mdpBDD, Utilisateur $utilisateur , string &$messageErreur): bool
+    public static function motDePasseCorrect(string $mdp, string $mdpBDD, Utilisateur $utilisateur, string &$messageErreur): bool
     {
         $valretour = true;
         // si le mot de passe est incorrect
@@ -205,8 +203,8 @@ class Utilitaires
                     $message = "il vous reste " . (5 - $_SESSION['login_attempts'][$utilisateur->getId()]['count']) . " tentatives avant d'être bloqué 10 minutes";
                 }
             }
-            
-           $messageErreur = "Le mot de passe est incorrect $message";
+
+            $messageErreur = "Le mot de passe est incorrect $message";
         }
         return $valretour;
     }
@@ -230,13 +228,13 @@ class Utilitaires
         if (!preg_match('/[A-Z]/', $mdp)) {
             $valretour = false;
 
-            $messageErreur = ($messageErreur == "Le mot de passe doit contenir") ? $messageErreur. " au moins une majuscule" : $messageErreur. ", au moins une majuscule";
+            $messageErreur = ($messageErreur == "Le mot de passe doit contenir") ? $messageErreur . " au moins une majuscule" : $messageErreur . ", au moins une majuscule";
         }
         // si le mot de passe ne contient pas un chiffre
         if (!preg_match('/[\d]/', $mdp)) {
             $valretour = false;
 
-            $messageErreur = ($messageErreur == "Le mot de passe doit contenir") ? $messageErreur . " au moins un chiffre" : $messageErreur. ", au moins un chiffre";
+            $messageErreur = ($messageErreur == "Le mot de passe doit contenir") ? $messageErreur . " au moins un chiffre" : $messageErreur . ", au moins un chiffre";
         }
         // si le mot de passe ne contient pas un caractère spécial
         if (!preg_match('/[@$!%*?&]/', $mdp)) {
@@ -245,8 +243,8 @@ class Utilitaires
             $messageErreur = ($messageErreur == "Le mot de passe doit contenir") ? $messageErreur . " au moins un caractère spécial" : $messageErreur . " et au moins un caractère spécial";
         }
         if ($valretour == false) {
-            
-            $messageErreurRandu= $messageErreur;
+
+            $messageErreurRandu = $messageErreur;
         }
         return $valretour;
     }
@@ -261,8 +259,8 @@ class Utilitaires
         $valretour = true;
         // si la valeur est null
         if ($val == null) {
-            
-           $messageErreur = "Ce lien n'est pas valide ";
+
+            $messageErreur = "Ce lien n'est pas valide ";
             $valretour = false;
         }
         return $valretour;
@@ -277,11 +275,11 @@ class Utilitaires
      */
     public static function idExistePas(string $id, string &$messageErreur, UtilisateurDAO $managerutilisateur): bool
     {
-        
+
         $valretour = true;
         // si l'identifiant existe déjà
         if ($managerutilisateur->find($id) != null) {
-            
+
             $messageErreur = "L'identifiant est déjà utilisé";
             $valretour = false;
         }
@@ -289,19 +287,19 @@ class Utilitaires
     }
 
 
-      /**
+    /**
      * @brief permet de verifier si le fichier est trop lourd et renvoie un message d'erreur si il l'est
      * @param array $fichier le fichier que l'on veut vérifier
      * @param string $nom le nom du fichier que l'on veut vérifier 
      * @param string $messageErreur le message d'erreur que l'on veut renvoyer
      */
-    public static function fichierTropLourd(array $fichier, string $nom,  ?string &$messageErreur): bool
+    public static function fichierTropLourd(array $fichier, string $nom, ?string &$messageErreur): bool
     {
         $valretour = true;
         // si le fichier est trop lourd (2Mo)
         if ($fichier['size'] > 2000000) {
             $valretour = false;
-            
+
             $messageErreur = "Le fichier de $nom est trop lourd";
         }
         return $valretour;
@@ -314,19 +312,23 @@ class Utilitaires
      * @param string $messageErreur le message d'erreur que l'on veut renvoyer
      * @param Utilisateur $utilisateur l'utilisateur sur lequel on veut mettre à jour l'image
      */
-    public static function ajourfichier( $fichier, $type, string &$messageErreur , Utilisateur  $utilisateur)
+    public static function ajourfichier($fichier, $type, string &$messageErreur, Utilisateur $utilisateur)
     {
         if ($fichier['name'] != '') {
             //supprimer l'ancienne image
-            if (file_exists($utilisateur->getUrlImageBanniere()) && $utilisateur->getUrlImageProfil() != "images/" . $type . "_de_base.png") {
-                switch ($type) {
-                    case "Profil":
+
+            switch ($type) {
+                case "Profil":
+                    if (file_exists($utilisateur->getUrlImageProfil()) && $utilisateur->getUrlImageProfil() != "images/image" . $type . "_de_base.svg") {
                         unlink($utilisateur->getUrlImageProfil());
-                        break;
-                    case "Banniere":
+                    }
+                    break;
+                case "Banniere":
+                    if (file_exists($utilisateur->getUrlImageBanniere()) && $utilisateur->getUrlImageBanniere() != "images/image" . $type . "_de_base.svg") {
                         unlink($utilisateur->getUrlImageBanniere());
-                        break;
-                }
+                    }
+                    break;
+
             }
 
             // donne le bon nom à l'image
@@ -342,10 +344,9 @@ class Utilitaires
                         $utilisateur->setUrlImageBanniere($fichier['name']);
                         break;
                 }
-               
+
             } else {
 
-                
                 $messageErreur = "Nous n'avons pas pu télécharger l'image de $type";
             }
         }
@@ -370,15 +371,15 @@ class Utilitaires
         if (!isset($_SESSION['login_attempts'][$id_utilisateur])) {
             $_SESSION['login_attempts'][$id_utilisateur] = ['count' => 0, 'last_attempt' => time()];
         }
-        
+
         $attempts = $_SESSION['login_attempts'][$id_utilisateur];
         // s'il a fait plus de 5 tentatives en moins de 10 minutes on bloque l'id_utilisateur 
         if ($attempts['count'] >= $maxAttempts && (time() - $attempts['last_attempt']) < $lockoutTime) {
-            
+
             $tempsenminute = round(($lockoutTime - (time() - $attempts['last_attempt'])) / 60);
             $tempsenseconde = round(($lockoutTime - (time() - $attempts['last_attempt'])) % 60);
             $message = "Vous avez été bloqué pour  $tempsenminute  minutes $tempsenseconde secondes";
-            
+
 
             return true;
         }
@@ -390,7 +391,7 @@ class Utilitaires
      * @param string $id_utilisateur le nom de l'utilisateur
      * @return void
      */
-    public static function tentativeEchoue($id_utilisateur) : void
+    public static function tentativeEchoue($id_utilisateur): void
     {
         // initialisation de la variable de session si elle n'existe pas
         if (!isset($_SESSION['login_attempts'][$id_utilisateur])) {
@@ -414,7 +415,7 @@ class Utilitaires
         }
     }
 
-    
+
 
     /**
      * @brief permet de verifier si le texte contient de la profanité
@@ -423,24 +424,28 @@ class Utilitaires
      * @param string $messageErreur le message d'erreur que l'on veut renvoyer
      * @return bool retourne vrai si le texte contient de la profanité
      */
-    public static function verificationDeNom($text , string $nom , string  &$messageErreur) : bool {
+    public static function verificationDeNom($text, string $nom, string &$messageErreur): bool
+    {
 
         $profanity_list = json_decode(file_get_contents("config/nomincorect.json"), true); // Vous pouvez ajouter d'autres mots
-        
+
 
         // transformer le texte en texte contenant que des minuscules et sans accents et sans caractères spéciaux
         $textbien = strtolower(html_entity_decode($text)); // Mettre le texte en minuscule
-       
+
         $textbien = preg_replace('/\s+/', '', $textbien); // Supprimer les espaces
         $textbien = preg_replace('/!/', 'i', $textbien); // Remplacer "!" par "i"
         $textbien = preg_replace('/@/', 'a', $textbien); // Remplacer "@" par "a"
         $textbien = preg_replace('/#/', 'h', $textbien); // Remplacer "#" par "h"
         $textbien = preg_replace('/\$/', 's', $textbien); // Remplacer "$" par "s"
         $textbien = preg_replace('/%/', 'p', $textbien); // Remplacer "%" par "p"
-        
-        $textbien = str_replace( array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ'), 
-        array('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y' ), $textbien); // Remplacer les accents
-       
+
+        $textbien = str_replace(
+            array('À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ð', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ'),
+            array('A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y'),
+            $textbien
+        ); // Remplacer les accents
+
         $textbien = preg_replace('/0/', 'o', $textbien); // Remplacer "0" par "o"
         $textbien = preg_replace('/1/', 'i', $textbien); // Remplacer "1" par "i"
         $textbien = preg_replace('/2/', 'z', $textbien); // Remplacer "2" par "z"
@@ -451,16 +456,16 @@ class Utilitaires
         $textbien = preg_replace('/7/', 't', $textbien); // Remplacer "7" par "t"
         $textbien = preg_replace('/8/', 'b', $textbien); // Remplacer "8" par "b"
         $textbien = preg_replace('/9/', 'g', $textbien); // Remplacer "9" par "g"
-        
-        
-        
+
+
+
         // On parcourt chaque mot de profanité
         foreach ($profanity_list['nom'] as $word) {
             // Expression régulière pour détecter le mot de profanité avec des chiffres ou autres caractères spéciaux
-            $pattern = '/' . preg_quote($word, '/') . '[0-9]*/i';  
+            $pattern = '/' . preg_quote($word, '/') . '[0-9]*/i';
 
             if (preg_match($pattern, $textbien)) {
-                 
+
                 $messageErreur = "$nom contient de la profanité";
                 return true; // Le texte contient de la profanité
             }
@@ -474,33 +479,66 @@ class Utilitaires
      * @param UtilisateurDAO $managerutilisateur le manager de l'utilisateur
      * @return bool true si l'utilisateur est vérifié false sinon
      */
-   public static function verifUtiliateurverifier(string $id, string &$messageErreur , UtilisateurDAO $managerutilisateur) : bool {
+    public static function verifUtiliateurverifier(string $id, string &$messageErreur, UtilisateurDAO $managerutilisateur): bool
+    {
         $valretour = true;
         // si verifie l'utilisateur n'est pas vérifié
         if (!$managerutilisateur->verificationUtilisateurValide($id)) {
-            
+
             $messageErreur = "ce compte n'est pas vérifié veuillez vérifier votre mail pour activer votre compte";
             $valretour = false;
         }
         return $valretour;
-    
-   }
-   /**
-    * @brief permet de verifier si la case est cochée
-    * @param mixed $case la case que l'on veut vérifier
-    * @param string $messageErreur le message d'erreur que l'on veut renvoyer
-    * @param string $type le type d'élément que l'on veut vérifier
-    * @return bool true si la case est cochée false sinon
-    */
-   public static function verifiecasecocher( $case, string &$messageErreur , string $type) : bool {
+
+    }
+    /**
+     * @brief permet de verifier si la case est cochée
+     * @param mixed $case la case que l'on veut vérifier
+     * @param string $messageErreur le message d'erreur que l'on veut renvoyer
+     * @param string $type le type d'élément que l'on veut vérifier
+     * @return bool true si la case est cochée false sinon
+     */
+    public static function verifiecasecocher($case, string &$messageErreur, string $type): bool
+    {
         $valretour = true;
         // si la case n'est pas cochée
         if ($case == null) {
-            
+
             $messageErreur = "Vous devez cocher  $type";
             $valretour = false;
         }
         return $valretour;
-   }
+    }
+
+    /**
+     * 
+     */
+    public static function estbanni(Utilisateur $utilisateur, string &$messageErreur, BannissementDAO $bannissementDAO): bool
+    {
+        $valretour = true;
+        // si la case n'est pas cochée
+
+        $banni = $bannissementDAO->find($utilisateur->getId());
+        if ($banni != null) {
+
+            $messageErreur = "vous avez été banni pour la raison suivante : " . $banni->getRaison() . " jusqu'au " . $banni->getDateF()->format('d/m/Y');
+            $valretour = false;
+        }
+        return $valretour;
+    }
+    /**
+     * @brief permet de verifier si la date de banissement est correcte
+     */
+    public static function dateCorrecte(DateTime $date, string &$messageErreur): bool
+    {
+        $valretour = true;
+        // si la date est plus petite que la date actuelle
+        if ($date <= new DateTime()) {
+
+            $messageErreur = "La date de fin de bannissement est incorrecte";
+            $valretour = false;
+        }
+        return $valretour;
+    }
 
 }

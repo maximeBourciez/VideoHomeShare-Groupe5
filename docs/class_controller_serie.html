@@ -123,10 +123,12 @@ Fonctions membres publiques</h2></td></tr>
 <tr class="memitem:a57a1e90829655e146bb63ad5b7a7060d" id="r_a57a1e90829655e146bb63ad5b7a7060d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a57a1e90829655e146bb63ad5b7a7060d">afficherSerie</a> ()</td></tr>
 <tr class="memdesc:a57a1e90829655e146bb63ad5b7a7060d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Affiche les détails d'une série.  <br /></td></tr>
 <tr class="separator:a57a1e90829655e146bb63ad5b7a7060d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a12b11b703eb5ddf94570f186cfe27e7e" id="r_a12b11b703eb5ddf94570f186cfe27e7e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a12b11b703eb5ddf94570f186cfe27e7e">afficherListeSerie</a> ()</td></tr>
-<tr class="separator:a12b11b703eb5ddf94570f186cfe27e7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a65e7070ff10c327455babfb94775fbb9" id="r_a65e7070ff10c327455babfb94775fbb9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a65e7070ff10c327455babfb94775fbb9">afficherListeEpisodes</a> ()</td></tr>
+<tr class="memdesc:a65e7070ff10c327455babfb94775fbb9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Affiche la liste des épisodes d'une série.  <br /></td></tr>
 <tr class="separator:a65e7070ff10c327455babfb94775fbb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12b11b703eb5ddf94570f186cfe27e7e" id="r_a12b11b703eb5ddf94570f186cfe27e7e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a12b11b703eb5ddf94570f186cfe27e7e">afficherListeSerie</a> ()</td></tr>
+<tr class="memdesc:a12b11b703eb5ddf94570f186cfe27e7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Affiche la liste des séries.  <br /></td></tr>
+<tr class="separator:a12b11b703eb5ddf94570f186cfe27e7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_controller"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_controller')"><img src="closed.png" alt="-"/>&#160;Fonctions membres publiques hérités de <a class="el" href="class_controller.html">Controller</a></td></tr>
 <tr class="memitem:a759930e0a9f23708b6092a51ff0dfc12 inherit pub_methods_class_controller" id="r_a759930e0a9f23708b6092a51ff0dfc12"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_controller.html#a759930e0a9f23708b6092a51ff0dfc12">call</a> (string $methode)</td></tr>
 <tr class="separator:a759930e0a9f23708b6092a51ff0dfc12 inherit pub_methods_class_controller"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -210,6 +212,15 @@ Attributs privés</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Affiche la liste des épisodes d'une série. </p>
+<p>Cette méthode :</p><ul>
+<li>Récupère l'ID TMDB de la série depuis l'URL</li>
+<li>Utilise le DAO pour obtenir les informations de la série et ses épisodes</li>
+<li>Affiche la liste complète des épisodes dans un template Twig</li>
+</ul>
+<p>Si la série n'est pas trouvée ou si l'ID n'est pas fourni, redirige vers la page d'accueil</p>
+<dl class="section return"><dt>Renvoie</dt><dd>void </dd></dl>
+
 </div>
 </div>
 <a id="a12b11b703eb5ddf94570f186cfe27e7e" name="a12b11b703eb5ddf94570f186cfe27e7e"></a>
@@ -226,6 +237,16 @@ Attributs privés</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Affiche la liste des séries. </p>
+<dl class="params"><dt>Paramètres</dt><dd>
+  <table class="params">
+    <tr><td class="paramtype">int&#160;|&#160;null</td><td class="paramname">$tmdbId</td><td>Identifiant TMDB de la série </td></tr>
+    <tr><td class="paramtype">int&#160;|&#160;null</td><td class="paramname">$season</td><td>Numéro de la saison à afficher </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Renvoie</dt><dd>void </dd></dl>
 
 </div>
 </div>

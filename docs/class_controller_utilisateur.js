@@ -15,5 +15,6 @@ var class_controller_utilisateur =
     [ "inscription", "class_controller_utilisateur.html#a4557a98375bdb947deb544e20403b81a", null ],
     [ "modificationprofil", "class_controller_utilisateur.html#a66c9b24a8e4d5283d3d6aec26134cb6a", null ],
     [ "notification", "class_controller_utilisateur.html#a30e85fd698eab48b5978e18e895b27eb", null ],
-    [ "show", "class_controller_utilisateur.html#a2b8e3779f5bd8c38f70307574859bd36", null ]
+    [ "show", "class_controller_utilisateur.html#a2b8e3779f5bd8c38f70307574859bd36", null ],
+    [ "supprimerCompte", "class_controller_utilisateur.html#a419d0ad2c40f28ca8ac7614ec3c188c8", null ]
 ];

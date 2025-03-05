@@ -114,9 +114,9 @@ Fonctions membres publiques</h2></td></tr>
 <tr class="memitem:a2a80ff25c7664adda8b1ccf1679cae8c" id="r_a2a80ff25c7664adda8b1ccf1679cae8c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2a80ff25c7664adda8b1ccf1679cae8c">update</a> (<a class="el" href="class_utilisateur.html">Utilisateur</a> $utilisateur)</td></tr>
 <tr class="memdesc:a2a80ff25c7664adda8b1ccf1679cae8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Met à jour un utilisateur dans la base de données.  <br /></td></tr>
 <tr class="separator:a2a80ff25c7664adda8b1ccf1679cae8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab788f559c9ebb763f9abd0d969face2" id="r_aab788f559c9ebb763f9abd0d969face2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aab788f559c9ebb763f9abd0d969face2">delete</a> (int $id)</td></tr>
-<tr class="memdesc:aab788f559c9ebb763f9abd0d969face2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Supprime un utilisateur de la base de données.  <br /></td></tr>
-<tr class="separator:aab788f559c9ebb763f9abd0d969face2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7a56b497cd070f1a54584e4f166ecef" id="r_ab7a56b497cd070f1a54584e4f166ecef"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab7a56b497cd070f1a54584e4f166ecef">delete</a> (string $id)</td></tr>
+<tr class="memdesc:ab7a56b497cd070f1a54584e4f166ecef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Supprime un utilisateur de la base de données.  <br /></td></tr>
+<tr class="separator:ab7a56b497cd070f1a54584e4f166ecef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab8a0b2c1ccabce7913458360159761c3" id="r_ab8a0b2c1ccabce7913458360159761c3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab8a0b2c1ccabce7913458360159761c3">hydrate</a> (array $row)</td></tr>
 <tr class="memdesc:ab8a0b2c1ccabce7913458360159761c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hydrate un utilisateur à partir d'un tableau associatif.  <br /></td></tr>
 <tr class="separator:ab8a0b2c1ccabce7913458360159761c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -141,6 +141,9 @@ Fonctions membres publiques</h2></td></tr>
 <tr class="memitem:a782bfa83bb21f537ccfdf6c2b04c44b4" id="r_a782bfa83bb21f537ccfdf6c2b04c44b4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a782bfa83bb21f537ccfdf6c2b04c44b4">verificationUtilisateurValide</a> (String $id)</td></tr>
 <tr class="memdesc:a782bfa83bb21f537ccfdf6c2b04c44b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vérifie si un utilisateur est validé  <br /></td></tr>
 <tr class="separator:a782bfa83bb21f537ccfdf6c2b04c44b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af257186a72830470c25386ac82ed18a4" id="r_af257186a72830470c25386ac82ed18a4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af257186a72830470c25386ac82ed18a4">findUtilisateursNonBannis</a> ()</td></tr>
+<tr class="memdesc:af257186a72830470c25386ac82ed18a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">recupère les utilisateurs non banis  <br /></td></tr>
+<tr class="separator:af257186a72830470c25386ac82ed18a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Attributs privés</h2></td></tr>
@@ -200,8 +203,8 @@ Attributs privés</h2></td></tr>
 
 </div>
 </div>
-<a id="aab788f559c9ebb763f9abd0d969face2" name="aab788f559c9ebb763f9abd0d969face2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aab788f559c9ebb763f9abd0d969face2">&#9670;&#160;</a></span>delete()</h2>
+<a id="ab7a56b497cd070f1a54584e4f166ecef" name="ab7a56b497cd070f1a54584e4f166ecef"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab7a56b497cd070f1a54584e4f166ecef">&#9670;&#160;</a></span>delete()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -209,7 +212,7 @@ Attributs privés</h2></td></tr>
         <tr>
           <td class="memname">delete </td>
           <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>$id</em></span></td><td>)</td>
+          <td class="paramtype">string</td>          <td class="paramname"><span class="paramname"><em>$id</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -218,7 +221,7 @@ Attributs privés</h2></td></tr>
 <p>Supprime un utilisateur de la base de données. </p>
 <dl class="params"><dt>Paramètres</dt><dd>
   <table class="params">
-    <tr><td class="paramtype">int</td><td class="paramname">$id</td><td>L'identifiant de l'utilisateur à supprimer </td></tr>
+    <tr><td class="paramtype">string</td><td class="paramname">$id</td><td>L'identifiant de l'utilisateur à supprimer </td></tr>
   </table>
   </dd>
 </dl>
@@ -352,6 +355,26 @@ Attributs privés</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Renvoie</dt><dd>int Le nombre d'utilisateurs trouvés </dd></dl>
+
+</div>
+</div>
+<a id="af257186a72830470c25386ac82ed18a4" name="af257186a72830470c25386ac82ed18a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af257186a72830470c25386ac82ed18a4">&#9670;&#160;</a></span>findUtilisateursNonBannis()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">findUtilisateursNonBannis </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>recupère les utilisateurs non banis </p>
+<dl class="section return"><dt>Renvoie</dt><dd><a class="el" href="class_utilisateur.html">Utilisateur</a>[] Tableau d'utilisateurs trouvés </dd></dl>
 
 </div>
 </div>

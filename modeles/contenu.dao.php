@@ -360,7 +360,7 @@ class ContenuDAO
         $url = "https://api.themoviedb.org/3/search/movie?api_key={$this->apiKey}&language=fr-FR&query=" . urlencode($query) . "&include_adult=false";
 
         // Récupérer les résultats
-        $response = file_get_contents($url);
+        $response = @file_get_contents($url);
         if ($response === false) {
             return null; // En cas d'erreur, retourner null
         }

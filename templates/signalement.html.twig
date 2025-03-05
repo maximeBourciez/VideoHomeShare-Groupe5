@@ -1,43 +1,151 @@
-{% extends "base_template.html.twig" %}
+{% extends "templateAdmin.html.twig" %}
 
-{% block content %}
+{% block signalement %}
+	border-bottom border-2 border-dark
+{% endblock %}
 
-<main class="  flex-grow-1">
+{% block pageContent %}
+	<main class="flex-grow-1">
+		<div class="container my-4 bg-mydark text-white rounded">
+			<div class="table-responsive text-white">
+				<table id="episodesTable" class="table table-dark table-hover mb-0 text-white">
+					<thead>
+						<tr>
+							<th class="text-white text-center">Contenu du message</th>
+							<th class="text-white text-center">Raison</th>
+							<th class="text-white text-center">Nombre</th>
+							<th class="text-white text-center">Actions</th>
+						</tr>
+					</thead>
+					<tbody class="text-white">
+						{% for signalement in signalements %}
+							<tr>
+								<td>
+									<a href="index.php?controller=fil&methode=afficherFilParId&id_fil={{signalement.idFil}}#{{signalement.idMessage}}" class="my-auto">{{signalement.valeur}}</a>
+								</td>
+								<td>
+									<p class="">{{signalement.raisons}}</p>
+								</td>
+								<td>
+									<p class="my-auto">{{signalement.nbSignalement}}</p>
+								</td>
+								<td>
+									<form action="index.php?controller=dashboard&methode=supprimerMessageSignale" method="post" class="row">
+										<input type="hidden" name="idMessage" value="{{signalement.idMessage}}">
+										<input type="submit" class="btn btn-tercary col m-1" value="Supprimer">
+										<a class="btn btn-primary col m-1" data-bs-toggle="modal" data-bs-target="#gereMessage{{signalement.idMessage}}">Gérer</a>
+									</form>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+			{% for signalement in signalements %}
+				<div class="modal fade" id="gereMessage{{signalement.idMessage}}" tabindex="-1" aria-labelledby="modal1Label" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered modal-lg">
+						<div class="modal-content bg-mydark" style="border: 1px solid #F2AC0F;">
+							<div class="modal-header border-bottom-0">
+								<h5 class="modal-title text-white">Gérer le signalement</h5>
+								<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+							</div>
+							<div class="modal-body pt-0">
+								<label>Elément concerné</label>
+								<p>{{signalement.valeur}}</p>
+								<label>Raison du signalement</label>
+								<p>{{signalement.raisons}}</p>
+								<label>Que souhaitez-vous faire ?</label>
+								<div class="d-flex flex-lg-row flex-column justify-content-center">
+									<form action="index.php?controller=dashboard&methode=supprimerMessageSignale" method="post" class="m-1">
+										<input type="hidden" name="idMessage" value="{{signalement.idMessage}}">
+										<input type="submit" class="btn btn-tercary text-center col w-100" value="Supprimer le message">
+									</form>
+									{% if signalement.nbSignalement == 1 %}
+										<form action="index.php?controller=dashboard&methode=supprimerSignalement" method="post" class="m-1">
+											<input type="hidden" name="idMessage" value="{{signalement.idMessage}}">
+											<input type="submit" class="btn btn-primary text-center w-100" value="Supprimer le signalement">
+										</form>
+									{% else %}
+										<form action="index.php?controller=dashboard&methode=supprimerSignalement" method="post" class="m-1">
+											<input type="hidden" name="idMessage" value="{{signalement.idMessage}}">
+											<input type="submit" class="btn btn-primary text-center col w-100" value="Supprimer les signalements">
+										</form>
+									{% endif %}
+									<form action="index.php?controller=dashboard&methode=afficherBanisement" method="post" class="m-1">
+										<input type="hidden" name="idmessage" value="{{signalement.idMessage}}">
+										<input type="submit" class="btn btn-tercary text-center col w-100" value="Bannir l'utilisateur">
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</main>
+{% endblock %}
 
-<div class=" container  my-4  bg-mydark text-white rounded">
+{% block script %}
+	{{ parent() }}
+	<script src="js/datatable.js"></script>
+	<style>
+		/* Styles pour assurer la compatibilité avec le JS datatable */
+		#episodesTable td {
+			vertical-align: middle;
+		}
 
-            {% if signalements  is null %}
-			<div class="py-2   d-flex align-items-center">
+		/* Responsivité pour mobile */
+		@media(max-width: 576px) {
+			#episodesTable td:nth-child(2),
+			#episodesTable th:nth-child(2) {
+				display: none;
+			}
 
-				<p class="col-7 col-md-9 mb-1 ">il y a aucun sigalemen</p>
-            </div>
-            {% else %}
-                
-                <div class="py-2 border-primary row border-bottom border-1  d-flex align-items-center">
-                    <p class="col-7 col-md-9 mb-1 ">il y a {{ nbSignalements }} signalements</p>
-                    
-                </div>
-                <div class="py-2 row border-primary border-bottom border-1  d-flex align-items-center">
-                    <p class="mb-0 col-4 col-md-6 border-primary border-end border-1"> contenu du message </p>
-                    <p class="mb-0 col-2  border-primary border-end border-1">raison(s)</p>
-                    <p class="mb-0 col-2 ">nombre de signalement </p>
-                    
-                </div>
+			.btn {
+				width: 100%;
+				margin: 2px 0;
+			}
 
-                {% for signalement in signalements %}
-                    <div class=" py-2 ">
-                        <form action="index.php?controller=signalement&methode=supprimerMessageSignale" method="post" class="row">
-                            <input type="hidden" name="idMessage" value="{{signalement.idMessage}}">
-                            <a href="index.php?controller=fil&methode=afficherFilParId&id_fil={{signalement.idFil}}#{{signalement.idMessage}}" class="my-auto col-4 col-md-6  border-primary border-end border-1">{{signalement.valeur}}</a>
-                            <p class="mb-0 col-2  border-primary border-end border-1">{{signalement.raisons}}</p>
-                            <p class="my-auto col-2 ">{{signalement.nbSignalement}}</p>
-                            <input type="submit" class="col-3 col-md-2 bg-dark border-0 p-0" value="🗑️">
-                        </form>
-                    </div>
-                {% endfor %}
-            {% endif %}
-</div>  
+			form.row {
+				flex-direction: column;
+			}
+		}
 
-</main>
+		/* Responsivité pour tablette */
+		@media(min-width: 577px) and(max-width: 992px) {
+			#episodesTable td,
+			#episodesTable th {
+				padding: 10px 5px;
+			}
 
+			.btn {
+				padding: 0.25rem 0.5rem;
+				font-size: 0.875rem;
+			}
+		}
+
+		/* Styles pour assurer que la table fonctionne avec DataTables */
+		.dataTables_wrapper {
+			color: white !important;
+		}
+
+		.dataTables_info,
+		.dataTables_paginate,
+		.dataTables_length,
+		.dataTables_filter {
+			margin: 10px 0;
+			color: white !important;
+		}
+
+		.page-link {
+			background-color: #343a40;
+			border-color: #495057;
+			color: white;
+		}
+
+		.page-item.active .page-link {
+			background-color: #F2AC0F;
+			border-color: #F2AC0F;
+		}
+	</style>
 {% endblock %}

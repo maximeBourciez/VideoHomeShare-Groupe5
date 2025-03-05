@@ -17,22 +17,19 @@
 					{{ messagederreur }}</div>
 
 			{% endif %}
-			<div class="form-group mb-3">
+			<div class="form-group mb-3 d-flex justify-content-between align-items-center">
 				<label class="d-block text-start mb-0">
-					Mon identifiant : {{ utilisateur.id}}
+					Mon identifiant : {{ utilisateur.id }}
 				</label>
+				<a href="index.php?controller=utilisateur&methode=supprimerCompte" class="btn btn-danger" id="suppressionCompte" onclick="return confirm('Etes-vous sûr de vouloir supprimer votre compte ?');">
+					Supprimer mon compte
+				</a>
 			</div>
 			<div class="form-group mb-3">
 				<label class="d-block text-start mb-0">
 					Changer le pseudo
 				</label>
 				<input type="text" name="pseudo" value="{{ utilisateur.pseudo}}" class="form-control" minlength="3" maxlength="50" required>
-			</div>
-			<div class="form-group mb-3">
-				<label class="d-block text-start mb-0">
-					Changer le nom réel
-				</label>
-				<input type="text" name="nom" value="{{ utilisateur.nom}}" class="form-control" minlength="3" maxlength="50" required>
 			</div>
 			<div class="form-group mb-3">
 				<label class="d-block text-start mb-0">

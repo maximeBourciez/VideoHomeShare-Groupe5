@@ -71,11 +71,11 @@
 			{% endif %}
 		{% endfor %}
 
-		<!-- S'affiche quand l'utilisateur connecté n'a créé aucun quizz -->
-        {% if idUtilisateur != null and quizz == null %}
-			<h5>Vous n'avez créé aucun quizz.</h5>
-		{% endif %}
-    </div>
-</main>
+			<!-- S'affiche quand l'utilisateur connecté n'a créé aucun quizz -->
+			{% if idUtilisateur != null and quizz == null %}
+				<h5>Vous n'avez créé aucun quizz.</h5>
+			{% endif %}
+		</div>
+	</main>
 
 {% endblock %}
