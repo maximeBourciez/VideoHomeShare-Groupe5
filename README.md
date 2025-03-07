@@ -151,5 +151,43 @@ npm run build  # Compile les fichiers frontend
 
 ## 5️⃣ Lancer l'application
 🔥 Démarrer le serveur
-
+```php
 php -S localhost:8000 -t public
+```
+
+# 📁 Arborescence
+
+À la racine du dépôt se trouvent :
+
+- index.php : Point d’entrée principal de l’application.
+- include.php : Centralise les inclusions et l’initialisation des dépendances.
+- README.md : Description générale du projet.
+- Doxyfile : Fichier de configuration pour générer la documentation avec Doxygen.
+- .gitignore : Exclut les fichiers sensibles du dépôt Git.
+- composer.json / composer.lock : Gestion des dépendances PHP via Composer.
+- package.json / package-lock.json : Gestion des dépendances JavaScript via npm.
+
+Le projet est organisé en plusieurs dossiers :
+
+- config/ → Contient les constantes et l’initialisation de Twig.
+- controllers/ → Contient les contrôleurs de l’application.
+- css/ → Contient les feuilles de style CSS.
+- docs/ → Contient la documentation générée avec Doxygen.
+- images/ → Contient les ressources graphiques.
+- js/ → Contient les scripts JavaScript.
+- modeles/ → Contient les modèles gérant la logique métier.
+- scss/ → Contient les fichiers SCSS pour la personnalisation de Bootstrap.
+- templates/ → Contient les vues de l’application sous forme de templates Twig.
+
+# 📖 Documentation
+
+Pour assurer une meilleure maintenabilité du projet, nous avons généré une documentation technique avec Doxygen, disponible à ce lien :
+
+https://maximebourciez.github.io/VideoHomeShare-Groupe5/
+
+Elle permet de comprendre l’architecture de notre projet, le rôle des classes et des méthodes, ainsi que les interactions entre les différents composants.
+### 📌 Contenu :
+
+    📂 Structure du projet : Explication du modèle MVC utilisé.
+    📝 Documentation des classes : Description détaillée des modèles, contrôleurs et DAO.
+    📊 Diagrammes UML : Visualisation des relations entre les entités du projet.
