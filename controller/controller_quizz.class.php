@@ -132,7 +132,7 @@ class ControllerQuizz extends Controller
     {
         $reponses = [];
         $managerReponse = new ReponseDAO($this->getPdo());
-        $reponses = $managerReponse->findByQuestionId($idQuestion);
+        $reponses = $managerReponse->findAllByQuestionId($idQuestion);
 
         return $reponses;
     }
@@ -158,45 +158,40 @@ class ControllerQuizz extends Controller
      */
     public function traiterResultatsQuestion() : void
     {
-        //Récupérer le nombre de bonnes réponses
-        $nbBonnesReponses = $_POST['nbBonnesReponses'];
+        //Récupérer les informations
+        $nbBonnesReponses = intval($_POST['nbBonnesReponses']);
+        $idQuizz = intval($_POST['idQuizz']);
+        $idQuestion = intval($_POST['idQuestion']);
+        $idUtilisateur = $_POST['idUtilisateur'];
+        $derniereQuestion = $_POST['derniereQuestion'];
 
         //Récupérer le quizz et ses questions
-        $idQuizz = intval($_POST['idQuizz']);
         $managerQuizz = new QuizzDAO($this->getPdo());
         $quizz = $managerQuizz->find($idQuizz);
         $managerQuestion = new QuestionDAO($this->getPdo());
-        $questions = $managerQuestion->findByQuizzId($idQuizz);
+        $questions = $managerQuestion->findByQuizzId($idQuizz);        
 
-        //Récupérer l'identifiant de la question et son rang
-        $idQuestion = intval($_POST['idQuestion']);
-
-        $derniereQuestion = false; //false par défaut
-
-        //Récupérer la question et son rang
-        $question = $managerQuestion->find($idQuestion);
-        $rangQuestion = $question->getRang();
-
-        if ($rangQuestion == sizeof($questions)) {
-            $derniereQuestion = true;
-        }
-
-        //Récupérer l'id utilisateur pour le renvoyer
-        $idUtilisateur = $_POST['idUtilisateur'];
-        
         //Récupérer les réponses et compter le nombre de bonnes réponses
-        $managerReponse = new ReponseDAO($this->getPdo());
-        $reponses = $managerReponse->findByQuestionId($idQuestion);
+        $reponses = $this->recupererReponses($idQuestion);
         $nbBonnesReponses = $this->verifierReponses($nbBonnesReponses, $reponses);
 
         //Afficher les résultats
-        if ($derniereQuestion) {
+        if ($derniereQuestion) { //Si c'était déjà à true, on affiche les résultats
             $this->afficherResultats($idUtilisateur, $nbBonnesReponses, $idQuizz);
             exit();
         }
 
         //Incrémenter l'id de la question pour passer à la question suivante
         $idQuestion++;
+        //Récupérer la question et son rang
+        $question = $managerQuestion->find($idQuestion);
+        $rangQuestion = $question->getRang();
+
+        //Si le rang de la question est égale au nombre de questions => la question actuelle est la dernière
+        if ($rangQuestion == sizeof($questions)) {
+            $derniereQuestion = true;
+        }
+        
         //Récupérer les réponses de la prochaine question
         $reponses = $this->recupererReponses($idQuestion);
 
@@ -223,8 +218,9 @@ class ControllerQuizz extends Controller
         if (isset($_SESSION['utilisateur'])) {
             $utilisateur = unserialize($_SESSION['utilisateur']);
             $idUtilisateur = $utilisateur->getId();
+            $pseudoUtilisateur = $utilisateur->getPseudo(); //Utile quand le quizz n'a pas de question
 
-            //Récupération du quizz par son ID
+            //Récupération des infos du quizz
             $managerQuizz = new QuizzDAO($this->getPdo());
             $idQuizz = intval($_POST['idQuizz']);
             $quizz = $managerQuizz->find($idQuizz);
@@ -235,13 +231,28 @@ class ControllerQuizz extends Controller
             //Récupération de la 1re question
             $managerQuestion = new QuestionDAO($this->getPdo());
             $questions = $managerQuestion->findByQuizzId($idQuizz);
-            $question = $questions[0];
+
+            //Si le quizz sélectionné avait été créé par erreur par son auteur, on renvoie un message d'erreur
+            if ($questions == null){
+                $quizz = $managerQuizz->findAll();
+                echo $this->getTwig()->render('listeQuizz.html.twig', [
+                    'quizz' => $quizz,
+                    'boutonGererAppuye' => false,
+                    'boutonVoirAppuye' => true,
+                    'pseudoUtilisateur' => $pseudoUtilisateur,
+                    'messagederreur' => "Quizz indisponible, veuillez en sélectionner un autre."
+                ]);
+
+                exit();
+            }
+
+            $question = $questions[0]; //Sinon on se place sur la 1re question
 
             //Tableau des réponses de quizz
             $reponses = [];
 
             $idQuestion = $question->getIdQuestion();
-            $reponses[$idQuestion] = $this->recupererReponses($idQuestion);
+            $reponses = $this->recupererReponses($idQuestion);
 
             //Vérifier que la question soit la dernière
             if ($question->getRang() == sizeof($questions)){
@@ -289,7 +300,6 @@ class ControllerQuizz extends Controller
                 'quizz' => $quizz,
                 'messagederreur' => "Vous devez être connecté pour pouvoir créer un quizz."
             ]);
-
         }
     }
 
@@ -330,7 +340,6 @@ class ControllerQuizz extends Controller
                 'messageErreur' => "Une erreur est survenue lors de la suppression du quizz."
             ]);
         }
-
     }
 
     /**
@@ -525,6 +534,8 @@ class ControllerQuizz extends Controller
         //Récupération des infos du quizz
         $managerQuizz = new QuizzDAO($this->getPdo());
         $quizz = $managerQuizz->find($idQuizz);
+        //Récupérer l'utilisateur pour récupérer sa photo de profil
+        //A réaliser
 
         echo $this->getTwig()->render('pageResultats.html.twig', [
             'scores' => $tabScores,

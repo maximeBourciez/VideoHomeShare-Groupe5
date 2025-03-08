@@ -5,83 +5,71 @@
 {% endblock %}
 
 {% block content %}
-	<main class="container flex-fill">
-		{# Bouton créer un quizz collé en bas à droite de la fenêtre #}
-		{# Redirige vers creationQuizz.html.twig avec l'identifiant de l'utilisateur #}
-			{% if idUtilisateur != null %}
-				<a href="index.php?controller=quizz&methode=afficherPageCreerQuizz&idUtilisateur&idQuizz={{ quiz.getId() }}" class="btn btn-primary position-fixed bottom-0 end-0 me-4 mb-4 px-6 d-flex align-items-center justify-content-center" style="border-radius: 50px; white-space: nowrap; min-width: 200px; z-index: 999;"> <i class="bi bi-pencil" style="font-size: 1.3rem; margin-right: 0.2 rem;"></i>
-				<b>Créer un quizz</b>
-			</a>
-		{% else %}
-			<a class="btn btn-primary position-fixed bottom-0 end-0 me-4 mb-4 px-6 d-flex align-items-center justify-content-center" style="border-radius: 50px; white-space: nowrap; min-width: 200px; z-index: 999;" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">
-				<i class="bi bi-pencil" style="font-size: 1.3rem; margin-right: 0.2 rem;"></i>
-				<b>Créer un quizz</b>
-			</a>
-		{% endif %}
-		{# Message de confirmation après suppression d'un quizz #}
-		{# Redirige vers la liste des quizz #}
-		<br>
-		{% if messageConfirmation is defined %}
-			<div class="alert alert-success bg-secondary mx-5 text-white" role="alert">
-				{{ messageConfirmation }}
-			</div>
-		{% endif %}
-		<div
-			class="row text-center mb-3">
-			<!-- Boutons de manipulation de la page -->
-			<div class="row col mb-2 me-4">
-				<a href="index.php?controller=quizz&methode=listeQuizz" class="btn btn-primary">
-					<b>Voir les quizz</b>
-				</a>
-			</div>
-			<div class="row col mb-2">
-				{% if utilisateurConnecte != null %}
-					<a href="index.php?controller=quizz&methode=afficherOngletGerer&idUtilisateur" class="btn btn-primary">
-						<b>Gérer mes quizz</b>
-					</a>
-				{% else %}
-					<a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">
-						<b>Gérer mes quizz</b>
-					</a>
-				{% endif %}
-			</div>
+<main class="container flex-fill">
+	{# Bouton créer un quizz collé en bas à droite de la fenêtre #}
+	{# Redirige vers creationQuizz.html.twig avec l'identifiant de l'utilisateur #}
+	<a href="index.php?controller=quizz&methode=afficherPageCreerQuizz&idUtilisateur&idQuizz={{ quiz.getId() }}" class="btn btn-primary position-fixed bottom-0 end-0 me-4 mb-4 px-6 d-flex align-items-center justify-content-center" style="border-radius: 50px; white-space: nowrap; min-width: 200px; z-index: 999;">
+		<i class="bi bi-pencil" style="font-size: 1.3rem; margin-right: 0.2 rem;"></i>
+		<b>Créer un quizz</b>
+    </a>
+    <br>
+	{% if messagederreur is defined %}
+		<div class="alert alert-danger bg-tercary mx-5 text-white" role="alert">
+			Erreur :
+			{{ messagederreur }}
 		</div>
-		<div class="col">
-			{% for quiz in quizz %}
-				{% if (boutonVoirAppuye is defined or messagederreur is defined and quiz.getIdUtilisateur() != pseudoUtilisateur) 
+	{% endif %}
+	{% if messageConfirmation is defined %}
+		<div class="alert alert-success bg-secondary mx-5 text-white" role="alert">
+			{{ messageConfirmation }}
+		</div>
+	{% endif %}
+	<!-- Boutons de manipulation de la page -->
+    <div class="row text-center mb-3">
+        <div class="row col mb-2 me-4">
+            <a href="index.php?controller=quizz&methode=listeQuizz" class="btn btn-primary">
+				<b>Voir les quizz</b>
+			</a>
+        </div>
+        <div class="row col mb-2">
+            <a href="index.php?controller=quizz&methode=afficherOngletGerer&idUtilisateur" class="btn btn-primary">
+				<b>Gérer mes quizz</b>
+			</a>
+        </div>
+    </div>
+    <div class="col">
+		{% for quiz in quizz %}
+			{% if (boutonVoirAppuye is defined or messagederreur is defined and quiz.getIdUtilisateur() != pseudoUtilisateur) 
 				or (boutonGererAppuye is defined and quiz.getIdUtilisateur() == pseudoUtilisateur) %}
-					<div class="row">
-						<div class="card mb-3 bg-mydark text-white rounded">
-							<div class="card-body">
-								<h5 class="card-title mb-3">{{ quiz.getTitre() }}</h5>
-								<p class="card-text">{{ quiz.getDescription() }}</p>
-								<small class="card-text">Difficulté :
-									{{ quiz.getDifficulte() }}</small><br>
-								<small class="card-text">Fait le
-									{{ quiz.getDate()|date("d/m/Y") }}</small><br>
-								{% if boutonVoirAppuye is defined or messagederreur is defined %}
-									<small class="card-text">Par
-										{{ quiz.getIdUtilisateur() }}</small><br>
-								{% endif %}
-								<br>
-								{% if boutonVoirAppuye is defined or messagederreur is defined %}
-									<form action="index.php?controller=quizz&methode=jouerQuizz" method="post">
+				<div class="row">
+					<div class="card mb-3 bg-mydark text-white rounded">
+						<div class="card-body">
+							<h5 class="card-title mb-3">{{ quiz.getTitre() }}</h5>
+							<p class="card-text">{{ quiz.getDescription() }}</p>
+							<small class="card-text">Difficulté : {{ quiz.getDifficulte() }}</small><br>
+							<small class="card-text">Fait le {{ quiz.getDate()|date("d/m/Y") }}</small><br>
+							{% if boutonVoirAppuye is defined or messagederreur is defined %}
+								<small class="card-text">Par {{ quiz.getIdUtilisateur() }}</small><br>
+							{% endif %}
+							<br>
+							{% if boutonVoirAppuye is defined or messagederreur is defined %}
+								<form action="index.php?controller=quizz&methode=jouerQuizz" method="post">
+									<input type="hidden" name="idQuizz" value="{{ quiz.getId() }}">
+									<button type="submit" class="btn btn-myprimary">Jouer</button>
+								</form>
+							{% elseif boutonGererAppuye is defined %}
+								<div class="row">
+									<form action="index.php?controller=quizz&methode=supprimerQuizz" method="post">
 										<input type="hidden" name="idQuizz" value="{{ quiz.getId() }}">
-										<button type="submit" class="btn btn-myprimary">Jouer</button>
+										<button type="submit" class="col btn btn-tercary"  onclick="return confirm('Voulez-vous vraiment supprimer le quizz ?');">Supprimer</button>
 									</form>
-								{% elseif boutonGererAppuye is defined %}
-									<div class="row">
-										<form action="index.php?controller=quizz&methode=supprimerQuizz" method="post">
-											<input type="hidden" name="idQuizz" value="{{ quiz.getId() }}">
-											<button type="submit" class="col btn btn-tercary">🗑️ Supprimer</button>
-										</form>
-									</div>
-								{% endif %}
-							</div>
+								</div>
+							{% endif %}
 						</div>
 					</div>
-				{% endif %}
-			{% endfor %}
+				</div>
+			{% endif %}
+		{% endfor %}
 
 			<!-- S'affiche quand l'utilisateur connecté n'a créé aucun quizz -->
 			{% if idUtilisateur != null and quizz == null %}

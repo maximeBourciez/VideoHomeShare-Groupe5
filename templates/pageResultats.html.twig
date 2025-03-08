@@ -8,15 +8,26 @@
     <main class="container flex-fill">
         <div class="row mt-4 mb-4">
             <h1>Classement du quizz :</h1>
-            <h4>{{ quizz.getTitre() }}</h4>
+            <h2 class="fw-light">{{ quizz.getTitre() }}</h2>
         </div>
         {% set rangQuizz = 1 %}
         {% for score in scores %}
             <div class="row">
                 <div class="card bg-mydark mx-auto text-white rounded mb-4">
                     <div class="card-body text-white">
-                        <h4 class="card-title text-white">{{ rangQuizz }} - Score : {{ score.score }}</h4>
-                        <h5 class="card-subtitle mb-2  text-white">{{ score.idUtilisateur }}</h5>
+                        {% if rangQuizz == 1 %}
+                            <h2 class="card-title text-white">🏆 {{ score.idUtilisateur }}</h4>
+                            <h3 class="card-subtitle mb-2 text-white fw-light">Score : {{ score.score }}</h5>
+                        {% elseif rangQuizz == 2 %}
+                            <h3 class="card-title text-white">🥈 {{ score.idUtilisateur }}</h4>
+                            <h4 class="card-subtitle mb-2 text-white fw-light">Score : {{ score.score }}</h5>
+                        {% elseif rangQuizz == 3 %}
+                            <h4 class="card-title text-white">🥉 {{ score.idUtilisateur }}</h4>
+                            <h5 class="card-subtitle mb-2 text-white fw-light">Score : {{ score.score }}</h5>                           
+                        {% else %}
+                            <h4 class="card-title text-white">{{ rangQuizz }} - {{ score.idUtilisateur }}</h4>
+                            <h5 class="card-subtitle mb-2 text-white fw-light">Score : {{ score.score }}</h5>  
+                        {% endif %}
                     </div>
                 </div>
             </div>

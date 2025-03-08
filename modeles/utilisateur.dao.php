@@ -115,8 +115,6 @@ class UtilisateurDAO
         $mail = $row['mail'];
         $mdp = $row['mdp'];
         $role = $row['role'];
-       
-
 
         // Transformer le role
         $roleEnum = Role::fromString($role);

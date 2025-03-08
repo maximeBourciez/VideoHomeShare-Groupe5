@@ -179,7 +179,10 @@ class QuestionDAO{
      * @return array
      */
     function findByQuizzId(int $idQuizz): ?array{
-        $sql = "SELECT * FROM " .DB_PREFIX. "question WHERE idQuizz = :idQuizz";
+        $sql = "SELECT *
+        FROM " .DB_PREFIX. "question
+        WHERE idQuizz = :idQuizz";
+        
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindValue(':idQuizz', $idQuizz, PDO::PARAM_INT);
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
