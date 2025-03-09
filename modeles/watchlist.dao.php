@@ -101,30 +101,30 @@ class WatchlistDAO
         }
 
         // 2.1 Récupérer les IDs de collections liées à la watchlist
-        $sql = "SELECT idCollection, rang FROM " . DB_PREFIX . "contenirCollection WHERE idWatchlist = :watchlistId";
+        $sql = "SELECT idCollectionTMDB, rang FROM " . DB_PREFIX . "contenirCollection WHERE idWatchlist = :watchlistId";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':watchlistId' => $watchlistId]);
-        $collectionBd = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        $collectionBd = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // 2.2. Utiliser la classe CollectionDAO pour récupérer les détails de chaque collection
-        $collectionDAO = new Collection($this->pdo); // Assurez-vous que cette classe gère l'accès à la base de données
+        $collectionDAO = new CollectionDAO($this->pdo); // Assurez-vous que cette classe gère l'accès à la base de données
         foreach ($collectionBd as $collection) {
-            $content = $collectionDAO->findById($serie); // Méthode pour récupérer les détails d'une collection
+            $content = $collectionDAO->getCollectionFromTMDB($collection['idCollectionTMDB']); // Méthode pour récupérer les détails d'une collection
             if ($collection) {
                 $contents[$collection['rang']] = $content;
             }
         }
 
         // 3.1 Récupérer les IDs de séries liées à la watchlist
-        $sql = "SELECT idSerie, rang FROM " . DB_PREFIX . "contenirSerie WHERE idWatchlist = :watchlistId";
+        $sql = "SELECT idSerieTMDB, rang FROM " . DB_PREFIX . "contenirSerie WHERE idWatchlist = :watchlistId";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':watchlistId' => $watchlistId]);
-        $serieBd = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        $serieBd = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // 3.2. Utiliser la classe SerieDAO pour récupérer les détails de chaque série
         $serieDAO = new SerieDAO($this->pdo); // Assurez-vous que cette classe gère l'accès à la base de données
         foreach ($serieBd as $serie) {
-            $content = $serieDAO->findById($id); // Méthode pour récupérer les détails d'une série
+            $content = $serieDAO->getSerieFromTMDB($serie['idSerieTMDB']); // Méthode pour récupérer les détails d'une série
             if ($serie) {
                 $contents[$serie['rang']] = $content;
             }
@@ -168,7 +168,7 @@ class WatchlistDAO
     public function addCollectionToWatchlist(int $watchlistId, int $collectionId): bool {
         $rang = $this->trouverRang($watchlistId);
         
-        $sql = "INSERT INTO " . DB_PREFIX . "contenirCollection (idWatchlist, idCollection, rang) VALUES (:watchlistId, :collectionId, :rang)";
+        $sql = "INSERT INTO " . DB_PREFIX . "contenirCollection (idWatchlist, idCollectionTMDB, rang) VALUES (:watchlistId, :collectionId, :rang)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             ':watchlistId' => $watchlistId,
@@ -188,7 +188,7 @@ class WatchlistDAO
     public function addSerieToWatchlist(int $watchlistId, int $serieId): bool {
         $rang = $this->trouverRang($watchlistId);
         
-        $sql = "INSERT INTO " . DB_PREFIX . "contenirSerie (idWatchlist, idSerie, rang) VALUES (:watchlistId, :serieId, :rang)";
+        $sql = "INSERT INTO " . DB_PREFIX . "contenirSerie (idWatchlist, idSerieTMDB, rang) VALUES (:watchlistId, :serieId, :rang)";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             ':watchlistId' => $watchlistId,
@@ -251,7 +251,7 @@ class WatchlistDAO
      * @return bool Vrai si l'opération a réussi, faux sinon
      */
     public function removeCollectionFromWatchlist(int $watchlistId, int $collectionId): bool {
-        $sql = "DELETE FROM " . DB_PREFIX . "contenirCollection WHERE idWatchlist = :watchlistId AND idCollection = :collectionId";
+        $sql = "DELETE FROM " . DB_PREFIX . "contenirCollection WHERE idWatchlist = :watchlistId AND idCollectionTMDB = :collectionId";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             ':watchlistId' => $watchlistId,
@@ -268,7 +268,7 @@ class WatchlistDAO
      * @return bool Vrai si l'opération a réussi, faux sinon
      */
     public function removeSerieFromWatchlist(int $watchlistId, int $serieId): bool {
-        $sql = "DELETE FROM " . DB_PREFIX . "contenirSerie WHERE idWatchlist = :watchlistId AND idSerie = :serieId";
+        $sql = "DELETE FROM " . DB_PREFIX . "contenirSerie WHERE idWatchlist = :watchlistId AND idSerieTMDB = :serieId";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             ':watchlistId' => $watchlistId,
@@ -397,7 +397,7 @@ class WatchlistDAO
      */
     public function isCollectionInWatchlist(int $watchlistId, int $collectionId): bool
     {
-        $sql = "SELECT COUNT(*) FROM " . DB_PREFIX . "contenirCollection WHERE idWatchlist = :watchlistId AND idCollection = :collectionId";
+        $sql = "SELECT COUNT(*) FROM " . DB_PREFIX . "contenirCollection WHERE idWatchlist = :watchlistId AND idCollectionTMDB = :collectionId";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
             ':watchlistId' => $watchlistId,
@@ -416,7 +416,7 @@ class WatchlistDAO
      */
     public function isSerieInWatchlist(int $watchlistId, int $serieId): bool
     {
-        $sql = "SELECT COUNT(*) FROM " . DB_PREFIX . "contenirSerie WHERE idWatchlist = :watchlistId AND idSerie = :serieId";
+        $sql = "SELECT COUNT(*) FROM " . DB_PREFIX . "contenirSerie WHERE idWatchlist = :watchlistId AND idSerieTMDB = :serieId";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
             ':watchlistId' => $watchlistId,
