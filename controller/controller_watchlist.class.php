@@ -38,7 +38,7 @@ class ControllerWatchlist extends Controller {
     }
 
     /**
-     * @brief Affiche les détails d'une watchlist
+     * @brief Ajoute un contenu à une watchlist
      */
     public function ajouterAWatchlist(): void {
         if (!isset($_SESSION['utilisateur']) || !isset($_POST['watchlists']) || !isset($_POST['idContenu'])) {
@@ -62,6 +62,62 @@ class ControllerWatchlist extends Controller {
             }
         }
     
+        $this->afficherWatchlists();
+    }
+
+    /**
+     * @brief Ajoute une collection à une watchlist
+     */
+    public function ajouterCollectionAWatchlist(): void {
+        if (!isset($_SESSION['utilisateur']) || !isset($_POST['watchlists']) || !isset($_POST['idCollection'])) {
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
+            return;
+        }
+    
+        $watchlistDAO = new WatchlistDAO($this->getPdo());
+    
+        $collectionId = filter_var($_POST['idCollection'], FILTER_VALIDATE_INT);
+        if ($collectionId === false) {
+            throw new Exception("ID de collection invalide");
+        }
+    
+        $watchlists = array_map('intval', (array)$_POST['watchlists']); // Convertit les valeurs en entiers dans un tableau
+
+        foreach ($watchlists as $watchlistId) {
+            if (!$watchlistDAO->isCollectionInWatchlist($watchlistId, $collectionId)) { // Vérifie pour chaque watchlist individuellement
+                $watchlistDAO->addCollectionToWatchlist($watchlistId, $collectionId);
+            }
+        }
+        
+        $this->afficherWatchlists();
+    }
+
+    /**
+     * @brief Ajoute une série à une watchlist
+     */
+    public function ajouterSerieAWatchlist(): void {
+        if (!isset($_SESSION['utilisateur']) || !isset($_POST['watchlists']) || !isset($_POST['idSerie'])) {
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
+            return;
+        }
+    
+        $watchlistDAO = new WatchlistDAO($this->getPdo());
+    
+        $serieId = filter_var($_POST['idSerie'], FILTER_VALIDATE_INT);
+        if ($serieId === false) {
+            throw new Exception("ID de série invalide");
+        }
+    
+        $watchlists = array_map('intval', (array)$_POST['watchlists']); // Convertit les valeurs en entiers dans un tableau
+
+        foreach ($watchlists as $watchlistId) {
+            if (!$watchlistDAO->isSerieInWatchlist($watchlistId, $serieId)) { // Vérifie pour chaque watchlist individuellement
+                $watchlistDAO->addSerieToWatchlist($watchlistId, $serieId);
+            }
+        }
+        
         $this->afficherWatchlists();
     }
 
@@ -229,4 +285,95 @@ class ControllerWatchlist extends Controller {
 
         $this->afficherWatchlists();
     }
+
+    /**
+     * @brief Supprime une collection de la watchlist
+     */
+    public function supprimerCollectionDeWatchlist(): void {
+        if (!isset($_SESSION['utilisateur']) || !isset($_POST['idWatchlist']) || !isset($_POST['idCollection'])) {
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
+            return;
+        }
+
+        $idUtilisateur = htmlspecialchars(unserialize($_SESSION['utilisateur'])->getId());
+        $idWatchlist = filter_var($_POST['idWatchlist'], FILTER_VALIDATE_INT);
+        $idCollection = filter_var($_POST['idCollection'], FILTER_VALIDATE_INT);
+        
+        if ($idWatchlist === false || $idCollection === false) {
+            throw new Exception("ID de watchlist ou de collection invalide");
+        }
+
+        $watchlistDAO = new WatchlistDAO($this->getPdo());
+        
+        // Vérification des droits d'accès
+        $watchlists = $watchlistDAO->findByUser($idUtilisateur);
+        $watchlistAppartientUtilisateur = false;
+        
+        foreach ($watchlists as $watchlist) {
+            if ($watchlist->getId() === $idWatchlist) {
+                $watchlistAppartientUtilisateur = true;
+                break;
+            }
+        }
+
+        if (!$watchlistAppartientUtilisateur) {
+            throw new Exception("Vous n'avez pas les droits pour modifier cette watchlist");
+        }
+
+        $success = $watchlistDAO->removeCollectionFromWatchlist($idWatchlist, $idCollection);
+        
+        if (!$success) {
+            throw new Exception("Erreur lors de la suppression de la collection de la watchlist");
+        }
+
+        $this->afficherWatchlists();
+    }
+
+    /**
+     * @brief Supprime une serie de la watchlist
+     */
+    public function supprimerSerieDeWatchlist(): void {
+        if (!isset($_SESSION['utilisateur']) || !isset($_POST['idWatchlist']) || !isset($_POST['idSerie'])) {
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
+            return;
+        }
+
+        $idUtilisateur = htmlspecialchars(unserialize($_SESSION['utilisateur'])->getId());
+        $idWatchlist = filter_var($_POST['idWatchlist'], FILTER_VALIDATE_INT);
+        $idSerie = filter_var($_POST['idSerie'], FILTER_VALIDATE_INT);
+        
+        if ($idWatchlist === false || $idSerie === false) {
+            throw new Exception("ID de watchlist ou de série invalide");
+        }
+
+        $watchlistDAO = new WatchlistDAO($this->getPdo());
+        
+        // Vérification des droits d'accès
+        $watchlists = $watchlistDAO->findByUser($idUtilisateur);
+        $watchlistAppartientUtilisateur = false;
+        
+        foreach ($watchlists as $watchlist) {
+            if ($watchlist->getId() === $idWatchlist) {
+                $watchlistAppartientUtilisateur = true;
+                break;
+            }
+        }
+
+        if (!$watchlistAppartientUtilisateur) {
+            throw new Exception("Vous n'avez pas les droits pour modifier cette watchlist");
+        }
+
+        $success = $watchlistDAO->removeSerieFromWatchlist($idWatchlist, $idSerie);
+        
+        if (!$success) {
+            throw new Exception("Erreur lors de la suppression de la série de la watchlist");
+        }
+
+        $this->afficherWatchlists();
+    }
+
+
+
 }

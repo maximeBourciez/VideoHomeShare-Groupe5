@@ -89,7 +89,7 @@ class WatchlistDAO
         $sql = "SELECT idContenuTmdb, rang FROM " . DB_PREFIX . "contenirContenu WHERE idWatchlist = :watchlistId ORDER BY rang";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':watchlistId' => $watchlistId]);
-        $contenusBd = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        $contenusBd = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // 1.2. Utiliser l'API pour récupérer les détails de chaque contenu
         $contenuDAO = new ContenuDAO($this->pdo); // Assurez-vous que cette classe gère l'accès à l'API
@@ -130,7 +130,11 @@ class WatchlistDAO
             }
         }
 
-        return $contents;
+        // Trier les contenus par rang, maintenant clés
+        ksort($contents);
+
+        // Renvoyer seulement les valeurs une fois triées
+        return array_values($contents);
     }
 
     /**
@@ -300,6 +304,16 @@ class WatchlistDAO
             $sqlContenu = "DELETE FROM " . DB_PREFIX . "contenircontenu WHERE idWatchlist = :idWatchlist";
             $stmtContenu = $this->pdo->prepare($sqlContenu);
             $stmtContenu->execute([':idWatchlist' => $idWatchlist]);
+
+            // Suppression des collections associées dans la table de liaison
+            $sqlCollection = "DELETE FROM " . DB_PREFIX . "contenirCollection WHERE idWatchlist = :idWatchlist";
+            $stmtCollection = $this->pdo->prepare($sqlCollection);
+            $stmtCollection->execute([':idWatchlist' => $idWatchlist]);
+
+            // Suppression des séries associées dans la table de liaison
+            $sqlSerie = "DELETE FROM " . DB_PREFIX . "contenirSerie WHERE idWatchlist = :idWatchlist";
+            $stmtSerie = $this->pdo->prepare($sqlSerie);
+            $stmtSerie->execute([':idWatchlist' => $idWatchlist]);
             
             // Suppression de la watchlist
             $sqlWatchlist = "DELETE FROM " . DB_PREFIX . "watchlist WHERE idWatchlist = :idWatchlist";
