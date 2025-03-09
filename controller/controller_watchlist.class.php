@@ -34,9 +34,12 @@ class ControllerWatchlist extends Controller {
             $partages = $watchlistDAO->getWatchlistPartages($watchlist->getId());
             $watchlist->setPartages($partages);
         }
+
+        $watchlistsPartagees = $watchlistDAO->getWatchlistsSharedWithUser($userId);
     
         echo $this->getTwig()->render('watchlists.html.twig', [
-            'watchlistsPerso' => $watchlistsPerso
+            'watchlistsPerso' => $watchlistsPerso,
+            'watchlistsPartagees' => $watchlistsPartagees
         ]);
     }
 

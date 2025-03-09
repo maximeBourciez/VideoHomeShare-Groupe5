@@ -314,6 +314,11 @@ class WatchlistDAO
             $sqlSerie = "DELETE FROM " . DB_PREFIX . "contenirSerie WHERE idWatchlist = :idWatchlist";
             $stmtSerie = $this->pdo->prepare($sqlSerie);
             $stmtSerie->execute([':idWatchlist' => $idWatchlist]);
+
+            // Suppression des partages associés dans la table de liaison
+            $sqlPartage = "DELETE FROM " . DB_PREFIX . "partager WHERE idWatchlist = :idWatchlist";
+            $stmtPartage = $this->pdo->prepare($sqlPartage);
+            $stmtPartage->execute([':idWatchlist' => $idWatchlist]);
             
             // Suppression de la watchlist
             $sqlWatchlist = "DELETE FROM " . DB_PREFIX . "watchlist WHERE idWatchlist = :idWatchlist";
@@ -513,6 +518,49 @@ class WatchlistDAO
         return intval($stmt->fetchColumn()) > 0;
     }
 
+    /**
+     * @brief Méthode pour récupérer les watchlists partagées avec un utilisateur
+     * 
+     * @param string $idUtilisateur Identifiant de l'utilisateur
+     * 
+     * @return array Tableau d'objets Watchlist
+     */
+    public function getWatchlistsSharedWithUser(string $idUtilisateur): array
+    {
+        $sql = "SELECT * FROM " . DB_PREFIX . "partager WHERE idUtilisateurP = :idUtilisateur";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':idUtilisateur' => $idUtilisateur]);
+        $partages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $watchlists = [];
+        foreach ($partages as $partage) {
+            $watchlist = $this->findById($partage['idWatchlist']);
+            if ($watchlist) {
+                $watchlists[] = $watchlist;
+            }
+        }
+
+        return $watchlists;
+    }
+
+    /**
+     * @brief Méthode pour récupérer une watchlist par son ID
+     * 
+     * @param int $id Identifiant de la watchlist
+     * @return Watchlist|null Objet Watchlist ou null si non trouvé
+     */
+    public function findById(int $id): ?Watchlist
+    {
+        $sql = "SELECT * FROM " . DB_PREFIX . "watchlist WHERE idWatchlist = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $row = $stmt->fetch();
+        if ($row) {
+            return $this->hydrate($row);
+        }
+        return null;
+    }
 
 }
 
