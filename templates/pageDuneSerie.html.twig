@@ -84,13 +84,18 @@ generateStarRating(note);
 
 				<!-- Boutons d'action -->
 				<div class="movie-actions mr-5">
-					<div class="movie-actions__buttons d-flex justify-content-right mb-5">
 						{% if utilisateurConnecte is not null %}
 							<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
+							<form action="index.php?controller=watchlist&methode=ajouterSerieAWatchlist" method="POST" class="me-4">
+								<input type="hidden" name="idCollection" value="{{ serie.id|escape('html_attr') }}">
+								<button type="button" class="movie-actions__watchlist-btn btn btn-myprimary fw-normal bi bi-plus" data-bs-toggle="modal" data-bs-target="#choisirWatchlist">
+									Ajouter à sa Watchlist
+								</button>
+							</form>
 						{% else %}
+							<button class="movie-actions__watchlist-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Ajouter à la Watchlist</button>
 							<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Laisser un avis</button>
 						{% endif %}
-						<button class="movie-actions__watchlist-btn btn btn-myprimary fw-normal me-4 bi bi-plus">WatchList</button>
 						<a href="index.php?controller=serie&methode=afficherListeEpisodes&tmdb_id={{ serie.id }}">
 							<button class="movie-actions__watch-btn btn btn-myprimary fw-normal bi bi-list">
 								Épisodes
@@ -247,6 +252,39 @@ generateStarRating(note);
 						<button type="button" class="btn btn-myprimary">Connexion</button>
 					</a>
 				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal Choisir Watchlist -->
+	<div class="modal fade" id="choisirWatchlist" tabindex="-1" aria-labelledby="choisirWatchlistLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content bg-mydark text-white">
+				<div class="modal-header">
+					<h5 class="modal-title" id="choisirWatchlistLabel">Choisissez une Watchlist</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<form action="index.php?controller=watchlist&methode=ajouterSerieAWatchlist" method="POST">
+					<div class="modal-body">
+						<input type="hidden" name="idSerie" value="{{ serie.id|escape('html_attr') }}">
+						{% if watchlists is not empty %}
+							{% for watchlist in watchlists %}
+								<div class="form-check">
+									<input class="form-check-input" {% if watchlists|length == 1 %} checked="true" {% endif %} type="checkbox" name="watchlists[]" value="{{ watchlist.id }}" id="watchlist{{ watchlist.id }}">
+									<label class="form-check-label" for="watchlist{{ watchlist.id }}">
+										{{ watchlist.nom }}
+									</label>
+								</div>
+							{% endfor %}
+						{% else %}
+							<p>Aucune watchlist disponible. Créez une watchlist avant de continuer.</p>
+						{% endif %}
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+						<button type="submit" class="btn btn-myprimary">Ajouter</button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
