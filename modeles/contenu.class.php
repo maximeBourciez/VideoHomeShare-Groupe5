@@ -1,7 +1,5 @@
 <?php 
 
-require_once 'modeles/stockable.class.php';
-
 /**
  * @brief Classe représentant un contenu multimédia
  * 
@@ -12,7 +10,7 @@ require_once 'modeles/stockable.class.php';
  * @author François Barlic <<francois.barlic57@gmail.com>>
  * @version 1.0
  */
-class Contenu extends Stockable {   
+class Contenu {   
     /** @var int|null Identifiant unique du contenu */
     private ?int $id;
 

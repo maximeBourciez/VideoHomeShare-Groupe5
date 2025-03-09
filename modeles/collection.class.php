@@ -1,7 +1,5 @@
 <?php
 
-require_once 'modeles/stockable.class.php';
-
 /**
  * @brief Classe représentant une collection de films
  * 
@@ -11,7 +9,7 @@ require_once 'modeles/stockable.class.php';
  * @author François Barlic <<francois.barlic57@gmail.com>>
  * @version 1.0
  */
-class Collection extends Stockable
+class Collection
 {
     /** @var int|null Identifiant unique de la collection */
     private ?int $id;
