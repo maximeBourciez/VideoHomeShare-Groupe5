@@ -30,10 +30,13 @@ class ControllerWatchlist extends Controller {
         foreach ($watchlistsPerso as $watchlist) {
             $contenus = $watchlistDAO->getWatchlistContent($watchlist->getId());
             $watchlist->setContenus($contenus);
+
+            $partages = $watchlistDAO->getWatchlistPartages($watchlist->getId());
+            $watchlist->setPartages($partages);
         }
     
         echo $this->getTwig()->render('watchlists.html.twig', [
-            'watchlistsPerso' => $watchlistsPerso,
+            'watchlistsPerso' => $watchlistsPerso
         ]);
     }
 
@@ -374,6 +377,50 @@ class ControllerWatchlist extends Controller {
         $this->afficherWatchlists();
     }
 
+    /**
+     * @brief Partager une watchlist
+     */
+    public function partagerWatchlist(): void {
+        if (!isset($_SESSION['utilisateur']) || !isset($_POST['idWatchlist']) || !isset($_POST['idUtilisateurP'])) {
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
+            return;
+        }
+        $idWatchlist = htmlspecialchars($_POST['idWatchlist']);
+        $idUtilisateurC = htmlspecialchars(unserialize($_SESSION['utilisateur'])->getId());
+        $idUtilisateurP = htmlspecialchars($_POST['idUtilisateurP']);
+        if ($idUtilisateurC === $idUtilisateurP) {
+            $this->afficherWatchlists();
+            return;
+        }
+        $watchlistDAO = new WatchlistDAO($this->getPdo());
+        $utilisateurDAO = new UtilisateurDAO($this->getPdo());
 
+        if ($utilisateurDAO->exist($idUtilisateurP)) {
+            if (!$watchlistDAO->isWatchlistShared($idWatchlist, $idUtilisateurP)) {
+                $watchlistDAO->partagerWatchlist($idWatchlist, $idUtilisateurC, $idUtilisateurP);
+            }
+        }
+
+        $this->afficherWatchlists();
+        return;
+    }
+
+    /**
+     * @brief Arrêter de partager une watchlist
+     */
+    public function arreterDePartagerWatchlist(): void {
+        if (!isset($_SESSION['utilisateur']) || !isset($_POST['idWatchlist']) || !isset($_POST['idUtilisateurP'])) {
+            $managerUtilisateur = new ControllerUtilisateur($this->getTwig(), $this->getLoader());
+            $managerUtilisateur->connexion();
+            return;
+        }
+        $idWatchlist = htmlspecialchars($_POST['idWatchlist']);
+        $idUtilisateurP = htmlspecialchars($_POST['idUtilisateurP']);
+        $watchlistDAO = new WatchlistDAO($this->getPdo());
+        $watchlistDAO->retirerPartageWatchlist($idWatchlist, $idUtilisateurP);
+        $this->afficherWatchlists();
+        return;
+    }
 
 }

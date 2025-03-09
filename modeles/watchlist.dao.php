@@ -350,6 +350,9 @@ class WatchlistDAO
         // Récupérer et assigner les contenus
         $watchlist->setContenus($this->getWatchlistContent($data['idWatchlist']));
 
+        // Réaliser et assigner les partages
+
+
         return $watchlist;
     }
 
@@ -437,5 +440,79 @@ class WatchlistDAO
         $stmt->execute();
         return $this->hydrateAll($stmt->fetchAll(PDO::FETCH_ASSOC));
     }
+
+    /**
+     * @brief Méthode pour récupérer les partages d'une watchlist
+     * 
+     * @param int $idWatchlist Identifiant de la watchlist
+     * 
+     * @return array Tableau d'objets (int idWatchlist, string idUtilisateurC, string idUtilisateurP)
+     */
+    public function getWatchlistPartages(int $idWatchlist): array
+    {
+        $sql = "SELECT * FROM " . DB_PREFIX . "partager WHERE idWatchlist = :idWatchlist";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':idWatchlist' => $idWatchlist]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * @brief Méthode pour partager une watchlist
+     * 
+     * @param int $idWatchlist Identifiant de la watchlist
+     * @param string $idUtilisateurC Identifiant de l'utilisateur créateur
+     * @param string $idUtilisateurP Identifiant de l'utilisateur à partager avec
+     * 
+     * @return bool Vrai si l'opération a réussi, faux sinon
+     */
+    public function partagerWatchlist(int $idWatchlist, string $idUtilisateurC, string $idUtilisateurP): bool
+    {
+        $sql = "INSERT INTO " . DB_PREFIX . "partager (idWatchlist, idUtilisateurC, idUtilisateurP) VALUES (:idWatchlist, :idUtilisateurC, :idUtilisateurP)";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':idWatchlist' => $idWatchlist,
+            ':idUtilisateurC' => $idUtilisateurC,
+            ':idUtilisateurP' => $idUtilisateurP
+        ]);
+    }
+
+    /**
+     * @brief Méthode pour retirer un partage d'une watchlist
+     * 
+     * @param int $idWatchlist Identifiant de la watchlist
+     * @param string $idUtilisateurP Identifiant de l'utilisateur à retirer
+     * 
+     * @return bool Vrai si l'opération a réussi, faux sinon
+     */
+    public function retirerPartageWatchlist(int $idWatchlist, string $idUtilisateurP): bool
+    {
+        $sql = "DELETE FROM " . DB_PREFIX . "partager WHERE idWatchlist = :idWatchlist AND idUtilisateurP = :idUtilisateurP";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':idWatchlist' => $idWatchlist,
+            ':idUtilisateurP' => $idUtilisateurP
+        ]);
+    }
+
+    /**
+     * @brief Méthode pour vérifier si une watchlist est partagée avec un utilisateur
+     * 
+     * @param int $idWatchlist Identifiant de la watchlist
+     * @param string $idUtilisateurP Identifiant de l'utilisateur
+     * 
+     * @return bool Vrai si la watchlist est partagée avec l'utilisateur, faux sinon
+     */
+    public function isWatchlistShared(int $idWatchlist, string $idUtilisateurP): bool
+    {
+        $sql = "SELECT COUNT(*) FROM " . DB_PREFIX . "partager WHERE idWatchlist = :idWatchlist AND idUtilisateurP = :idUtilisateurP";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            ':idWatchlist' => $idWatchlist,
+            ':idUtilisateurP' => $idUtilisateurP
+        ]);
+        return intval($stmt->fetchColumn()) > 0;
+    }
+
+
 }
 

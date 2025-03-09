@@ -19,6 +19,9 @@
                             <button class="btn btn-myprimary me-2" data-bs-toggle="modal" data-bs-target="#editWatchlistModal{{ watchlist.id }}">
                                 <i class="bi bi-pencil"></i>
                             </button>
+                            <button class="btn btn-myprimary me-2" data-bs-toggle="modal" data-bs-target="#shareWatchlistModal{{ watchlist.id }}">
+                                <i class="bi bi-share"></i>
+                            </button>
                             <button class="btn btn-delete-watchlist btn-danger" data-bs-toggle="modal" data-bs-target="#deleteWatchlistModal{{ watchlist.id }}">
                                 <i class="bi bi-trash"></i>
                             </button>
@@ -204,6 +207,63 @@
                                     <input type="hidden" name="id" value="{{ watchlist.id }}">
                                     <button type="submit" class="btn btn-delete-watchlist2 btn-danger">Supprimer</button>
                                 </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="shareWatchlistModal{{ watchlist.id }}" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content bg-mydark text-white">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Gérer les partages de "{{ watchlist.nom }}"</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Formulaire d'ajout de partage -->
+                                <div class="mb-4">
+                                    <h6 class="mb-3">Partager avec un nouvel utilisateur</h6>
+                                    <form action="index.php?controller=watchlist&methode=partagerWatchlist" method="POST" class="d-flex">
+                                        <input type="hidden" name="idWatchlist" value="{{ watchlist.id }}">
+                                        <input type="text" class="form-control me-2" name="idUtilisateurP" placeholder="Identifiant de l'utilisateur" required>
+                                        <button type="submit" class="btn btn-myprimary">Partager</button>
+                                    </form>
+                                </div>
+                                
+                                <!-- Liste des utilisateurs avec qui la watchlist est partagée -->
+                                <h6 class="mb-3">Utilisateurs ayant accès</h6>
+                                {% if watchlist.partages is defined and watchlist.partages is not empty %}
+                                    <div class="table-responsive rounded">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Utilisateur</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for partage in watchlist.partages %}
+                                                    <tr>
+                                                        <td>{{ partage.idUtilisateurP }}</td>
+                                                        <td>
+                                                            <form action="index.php?controller=watchlist&methode=arreterDePartagerWatchlist" method="POST">
+                                                                <input type="hidden" name="idWatchlist" value="{{ watchlist.id }}">
+                                                                <input type="hidden" name="idUtilisateurP" value="{{ partage.idUtilisateurP }}">
+                                                                <button type="submit" class="btn btn-sm btn-secondary">
+                                                                    <i class="bi bi-x-lg"></i> Annuler le partage
+                                                                </button>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {% else %}
+                                    <p class="text-center">Cette watchlist n'est partagée avec aucun utilisateur pour le moment.</p>
+                                {% endif %}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                             </div>
                         </div>
                     </div>
