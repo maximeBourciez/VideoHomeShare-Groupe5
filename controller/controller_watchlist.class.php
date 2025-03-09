@@ -39,7 +39,8 @@ class ControllerWatchlist extends Controller {
     
         echo $this->getTwig()->render('watchlists.html.twig', [
             'watchlistsPerso' => $watchlistsPerso,
-            'watchlistsPartagees' => $watchlistsPartagees
+            'watchlistsPartagees' => $watchlistsPartagees,
+            'utilisateur' => unserialize($_SESSION['utilisateur'])
         ]);
     }
 
