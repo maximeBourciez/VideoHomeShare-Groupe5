@@ -58,7 +58,8 @@ class ControllerWatchlist extends Controller {
     
         $contenuId = filter_var($_POST['idContenu'], FILTER_VALIDATE_INT);
         if ($contenuId === false) {
-            throw new Exception("ID de contenu invalide");
+            // throw new Exception("ID de contenu invalide");
+            $this->afficherWatchlists();
         }
     
         $watchlists = array_map('intval', (array)$_POST['watchlists']); // Convertit les valeurs en entiers dans un tableau
@@ -86,7 +87,8 @@ class ControllerWatchlist extends Controller {
     
         $collectionId = filter_var($_POST['idCollection'], FILTER_VALIDATE_INT);
         if ($collectionId === false) {
-            throw new Exception("ID de collection invalide");
+            // throw new Exception("ID de collection invalide");
+            $this->afficherWatchlists();
         }
     
         $watchlists = array_map('intval', (array)$_POST['watchlists']); // Convertit les valeurs en entiers dans un tableau
@@ -114,7 +116,8 @@ class ControllerWatchlist extends Controller {
     
         $serieId = filter_var($_POST['idSerie'], FILTER_VALIDATE_INT);
         if ($serieId === false) {
-            throw new Exception("ID de série invalide");
+            // throw new Exception("ID de série invalide");
+            $this->afficherWatchlists();
         }
     
         $watchlists = array_map('intval', (array)$_POST['watchlists']); // Convertit les valeurs en entiers dans un tableau
@@ -144,14 +147,16 @@ class ControllerWatchlist extends Controller {
         $estPublique = isset($_POST['estPublique']) ? (bool)1 : (bool)0;
     
         if (empty($nom)) {
-            throw new Exception("Le nom de la watchlist est requis");
+            // throw new Exception("Le nom de la watchlist est requis");
+            $this->afficherWatchlists();
         }
     
         $watchlistDAO = new WatchlistDAO($this->getPdo());
         $idWatchlist = $watchlistDAO->create($nom, $description, $estPublique, $idUtilisateur);
     
         if (!$idWatchlist) {
-            throw new Exception("Erreur lors de la création de la watchlist");
+            // throw new Exception("Erreur lors de la création de la watchlist");
+            $this->afficherWatchlists();
         }
     
         $this->afficherWatchlists();
@@ -170,7 +175,8 @@ class ControllerWatchlist extends Controller {
         $idUtilisateur = htmlspecialchars(unserialize($_SESSION['utilisateur'])->getId());
         $idWatchlist = filter_var($_POST['id'], FILTER_VALIDATE_INT);
         if ($idWatchlist === false) {
-            throw new Exception("ID de watchlist invalide");
+            // throw new Exception("ID de watchlist invalide");
+            $this->afficherWatchlists();
         }
         
         $nom = htmlspecialchars(trim($_POST['nom']));
@@ -178,7 +184,8 @@ class ControllerWatchlist extends Controller {
         $estPublique = isset($_POST['estPublique']) ? (bool)1 : (bool)0;
     
         if (empty($nom)) {
-            throw new Exception("Le nom de la watchlist est requis");
+            // throw new Exception("Le nom de la watchlist est requis");
+            $this->afficherWatchlists();
         }
     
         $watchlistDAO = new WatchlistDAO($this->getPdo());
@@ -195,13 +202,15 @@ class ControllerWatchlist extends Controller {
         }
     
         if (!$watchlistAppartientUtilisateur) {
-            throw new Exception("Vous n'avez pas les droits pour modifier cette watchlist");
+            // throw new Exception("Vous n'avez pas les droits pour modifier cette watchlist");
+            $this->afficherWatchlists();
         }
     
         $success = $watchlistDAO->update($idWatchlist, $nom, $description, $estPublique);
         
         if (!$success) {
-            throw new Exception("Erreur lors de la modification de la watchlist");
+            // throw new Exception("Erreur lors de la modification de la watchlist");
+            $this->afficherWatchlists();
         }
     
         $this->afficherWatchlists();
@@ -220,7 +229,8 @@ class ControllerWatchlist extends Controller {
         $idUtilisateur = htmlspecialchars(unserialize($_SESSION['utilisateur'])->getId());
         $idWatchlist = filter_var($_POST['id'], FILTER_VALIDATE_INT);
         if ($idWatchlist === false) {
-            throw new Exception("ID de watchlist invalide");
+            // throw new Exception("ID de watchlist invalide");
+            $this->afficherWatchlists();
         }
 
         $watchlistDAO = new WatchlistDAO($this->getPdo());
@@ -237,13 +247,15 @@ class ControllerWatchlist extends Controller {
         }
 
         if (!$watchlistAppartientUtilisateur) {
-            throw new Exception("Vous n'avez pas les droits pour supprimer cette watchlist");
+            // throw new Exception("Vous n'avez pas les droits pour supprimer cette watchlist");
+            $this->afficherWatchlists();
         }
 
         $success = $watchlistDAO->delete($idWatchlist);
         
         if (!$success) {
-            throw new Exception("Erreur lors de la suppression de la watchlist");
+            // throw new Exception("Erreur lors de la suppression de la watchlist");
+            $this->afficherWatchlists();
         }
 
         $this->afficherWatchlists();
@@ -281,13 +293,15 @@ class ControllerWatchlist extends Controller {
         }
 
         if (!$watchlistAppartientUtilisateur) {
-            throw new Exception("Vous n'avez pas les droits pour modifier cette watchlist");
+            // throw new Exception("Vous n'avez pas les droits pour modifier cette watchlist");
+            $this->afficherWatchlists();
         }
 
         $success = $watchlistDAO->removeContenuFromWatchlist($idWatchlist, $idContenu);
         
         if (!$success) {
-            throw new Exception("Erreur lors de la suppression du contenu de la watchlist");
+            // throw new Exception("Erreur lors de la suppression du contenu de la watchlist");
+            $this->afficherWatchlists();
         }
 
         $this->afficherWatchlists();
@@ -308,7 +322,8 @@ class ControllerWatchlist extends Controller {
         $idCollection = filter_var($_POST['idCollection'], FILTER_VALIDATE_INT);
         
         if ($idWatchlist === false || $idCollection === false) {
-            throw new Exception("ID de watchlist ou de collection invalide");
+            // throw new Exception("ID de watchlist ou de collection invalide");
+            $this->afficherWatchlists();
         }
 
         $watchlistDAO = new WatchlistDAO($this->getPdo());
@@ -325,13 +340,15 @@ class ControllerWatchlist extends Controller {
         }
 
         if (!$watchlistAppartientUtilisateur) {
-            throw new Exception("Vous n'avez pas les droits pour modifier cette watchlist");
+            // throw new Exception("Vous n'avez pas les droits pour modifier cette watchlist");
+            $this->afficherWatchlists();
         }
 
         $success = $watchlistDAO->removeCollectionFromWatchlist($idWatchlist, $idCollection);
         
         if (!$success) {
-            throw new Exception("Erreur lors de la suppression de la collection de la watchlist");
+            // throw new Exception("Erreur lors de la suppression de la collection de la watchlist");
+            $this->afficherWatchlists();
         }
 
         $this->afficherWatchlists();
@@ -352,7 +369,8 @@ class ControllerWatchlist extends Controller {
         $idSerie = filter_var($_POST['idSerie'], FILTER_VALIDATE_INT);
         
         if ($idWatchlist === false || $idSerie === false) {
-            throw new Exception("ID de watchlist ou de série invalide");
+            // throw new Exception("ID de watchlist ou de série invalide");
+            $this->afficherWatchlists();
         }
 
         $watchlistDAO = new WatchlistDAO($this->getPdo());
@@ -369,13 +387,15 @@ class ControllerWatchlist extends Controller {
         }
 
         if (!$watchlistAppartientUtilisateur) {
-            throw new Exception("Vous n'avez pas les droits pour modifier cette watchlist");
+            // throw new Exception("Vous n'avez pas les droits pour modifier cette watchlist");
+            $this->afficherWatchlists();
         }
 
         $success = $watchlistDAO->removeSerieFromWatchlist($idWatchlist, $idSerie);
         
         if (!$success) {
-            throw new Exception("Erreur lors de la suppression de la série de la watchlist");
+            // throw new Exception("Erreur lors de la suppression de la série de la watchlist");
+            $this->afficherWatchlists();
         }
 
         $this->afficherWatchlists();
