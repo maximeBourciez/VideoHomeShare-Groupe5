@@ -176,7 +176,7 @@ class Utilitaires
         if ($utilisateur == null) {
             $valretour = false;
 
-            $messageErreur = " Ce compte n'existe pas veuillez vous inscrire";
+            $messageErreur = "Ce compte n'existe pas, veuillez vous inscrire";
         }
         return $valretour;
     }

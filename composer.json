@@ -9,5 +9,8 @@
         "twig/twig": "^3.14",
         "twig/intl-extra": "^3.13",
         "symfony/yaml": "^6.0"
+    },
+    "require-dev": {
+        "smeghead/php-class-diagram": "^1.5"
     }
 }
