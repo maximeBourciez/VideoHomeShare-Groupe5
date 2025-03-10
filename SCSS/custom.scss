@@ -715,6 +715,31 @@ $bp-xl: 1200px;
   transition: all 0.3s ease;
 }
 
+.btn-watchlist-publiques {
+  @include button-base;
+  background-color: $primary !important;
+  color: black !important;
+  border-color: $primary !important;
+  width: 240px;
+  height: 40px;
+  padding: 24px 0 !important;
+  gap: 10px;
+
+  @include media-breakpoint-down(md) {
+    width: 75px;
+    padding: 8px 0;
+    font-size: 0.6rem;
+  }
+
+  i {
+    font-size: 1.2rem;
+  }
+}
+
+.max-width-90 {
+  max-width: 90% !important;
+}
+
 //Loader
 
 			/* Styles pour le loader */
@@ -748,3 +773,4 @@ $bp-xl: 1200px;
 					transform: rotate(360deg);
 				}
 			}
+
