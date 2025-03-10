@@ -8,27 +8,28 @@
 	{% endif %}
 	<main class="movie-page container d-flex flex-column justify-content-center align-items-center flex-grow-1">
 		<div
-			class="movie-content row d-flex mt-3">
+			class="movie-content d-flex">
 			<!-- Section Affiche -->
-			<div class="movie-poster col-lg-5 col-md-6 mb-4 mb-md-0 text-center">
+			<div class="movie-poster me-5">
 				{% if serie.lienAffiche is not empty %}
-					<img src="{{ serie.lienAffiche }}" alt="{{ serie.titre }}" class="movie-poster__image shadow img-fluid rounded" style="width: 100%; max-width: 525px; height: auto; object-fit: cover;" loading="lazy" crossorigin="anonymous" referrerpolicy="no-referrer" onerror="this.src='images/no-image.svg'">
+					<img src="{{ serie.lienAffiche }}" alt="{{ serie.titre }}" class="movie-poster__image shadow img-fluid m-5 rounded" style="width: 525px; height: 750px; object-fit: cover;" loading="lazy" crossorigin="anonymous" referrerpolicy="no-referrer" onerror="this.src='images/no-image.svg'">
 				{% else %}
-					<img src="images/no-image.svg" alt="{{ serie.titre }}" class="movie-poster__image img-fluid rounded" style="width: 100%; max-width: 525px; height: auto; object-fit: cover;">
+					<img src="images/no-image.svg" alt="{{ serie.titre }}" class="movie-poster__image img-fluid m-5 rounded" style="width: 525px; height: 750px; object-fit: cover;">
 				{% endif %}
 			</div>
 
 			<!-- Section Informations -->
 			<div
-				class="movie-info col-lg-7 col-md-6 d-flex flex-column justify-content-between">
+				class="movie-info col-6 d-flex flex-column justify-content-between">
 				<!-- Titre -->
-				<h1 class="movie-info__title mt-3 fw-bolder text-center text-md-start">{{ serie.titre }}</h1>
+				<h1 class="movie-info__title mt-5 fw-bolder text-center">{{ serie.titre }}</h1>
 
-				<!-- Nombre de saisons et épisodes -->
+				<!-- Nombre de saison et épisode -->
 				<div class="movie-info__metadata d-flex justify-content-between fs-5 fw-bolder">
-					<p>Nombre de saisons :
+					<p class="movie-info__films">Nombre de saison :
 						{{ serie.nombreSaisons }}</p>
-					<p>Nombre d'épisodes :
+
+					<p class="movie-info__date">Nombre d'épisodes :
 						{{ serie.nombreEpisodes }}</p>
 				</div>
 
@@ -36,16 +37,27 @@
 				<div class="movie-info__description shadow fst-italic fs-5 bg-dark text-white p-3 rounded">
 					{% set description = serie.description %}
 					{% set descriptionmax_length = 500 %}
-					<p class="fs-6">{{ description is not empty ? (description|length > descriptionmax_length ? description : description) : 'Aucune description disponible pour cette série.' }}</p>
+					{% if description is not empty %}
+						{% if description|length > descriptionmax_length %}
+							<p class="fs-6">
+								{{ description }}</p>
+						{% else %}
+							<p>
+								{{ description }}</p>
+						{% endif %}
+					{% else %}
+						<p class="fs-6">Aucune description disponible pour cette serie.</p>
+					{% endif %}
 				</div>
 
 				<!-- Genres -->
-				<div class="movie-info__genres d-flex flex-wrap mt-2">
+				<div class="movie-info__genres d-flex justify-content-left align-items-center mt-2">
 					{% for theme in themes %}
-						<span class="movie-info__genre-tag bg-mydark text-white p-2 px-3 rounded me-2 mb-2 {% if theme|length > 10 %}fs-6{% endif %}">{{ theme }}</span>
+						<span class="movie-info__genre-tag bg-mydark text-white p-2 px-3 rounded me-3 mb-2 {% if theme|length > 10 %}fs-6{% endif %}">
+							{{ theme }}
+						</span>
 					{% endfor %}
 				</div>
-
 				<!-- Note et Avis -->
 				<div class="movie-info__rating">
 					<div class="movie-info__rating-stars d-flex text-center align-items-center">
@@ -70,14 +82,25 @@ generateStarRating(note);
 });
 				</script>
 
-
 				<!-- Boutons d'action -->
-				<div class="movie-actions mt-3">
-					<div class="d-flex flex-wrap gap-2">
-						<button class="btn btn-myprimary" data-bs-toggle="modal" data-bs-target="#{{ utilisateurConnecte is not null ? 'commenterContenu' : 'veuillezVousConnecter' }}">Laisser un avis</button>
-						<button class="btn btn-myprimary bi bi-plus">WatchList</button>
-						<a href="index.php?controller=serie&methode=afficherListeEpisodes&tmdb_id={{ serie.id }}" class="btn btn-myprimary bi bi-list">
-							Épisodes</a>
+				<div class="movie-actions mr-5">
+						{% if utilisateurConnecte is not null %}
+							<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
+							<form action="index.php?controller=watchlist&methode=ajouterSerieAWatchlist" method="POST" class="me-4">
+								<input type="hidden" name="idCollection" value="{{ serie.id|escape('html_attr') }}">
+								<button type="button" class="movie-actions__watchlist-btn btn btn-myprimary fw-normal bi bi-plus" data-bs-toggle="modal" data-bs-target="#choisirWatchlist">
+									Ajouter à sa Watchlist
+								</button>
+							</form>
+						{% else %}
+							<button class="movie-actions__watchlist-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Ajouter à la Watchlist</button>
+							<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Laisser un avis</button>
+						{% endif %}
+						<a href="index.php?controller=serie&methode=afficherListeEpisodes&tmdb_id={{ serie.id }}">
+							<button class="movie-actions__watch-btn btn btn-myprimary fw-normal bi bi-list">
+								Épisodes
+							</button>
+						</a>
 					</div>
 				</div>
 			</div>
@@ -217,7 +240,55 @@ generateStarRating(note);
 		</div>
 	</div>
 
-	{% include 'modals.html.twig' %}
+	<!-- Modal Veuillez vous connecter -->
+	<div class="modal fade" id="veuillezVousConnecter" tabindex="-1" aria-labelledby="modalAvisLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content bg-mydark text-white">
+				<div class="modal-body text-center">
+					<p class="fs-3">Si vous voulez laisser un avis et participer à la communauté, vous devez d'abord vous connecter 😏</p>
+				</div>
+				<div class="modal-footer border-0 justify-content-center">
+					<a href="index.php?controller=utilisateur&methode=connexion">
+						<button type="button" class="btn btn-myprimary">Connexion</button>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal Choisir Watchlist -->
+	<div class="modal fade" id="choisirWatchlist" tabindex="-1" aria-labelledby="choisirWatchlistLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content bg-mydark text-white">
+				<div class="modal-header">
+					<h5 class="modal-title" id="choisirWatchlistLabel">Choisissez une Watchlist</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<form action="index.php?controller=watchlist&methode=ajouterSerieAWatchlist" method="POST">
+					<div class="modal-body">
+						<input type="hidden" name="idSerie" value="{{ serie.id|escape('html_attr') }}">
+						{% if watchlists is not empty %}
+							{% for watchlist in watchlists %}
+								<div class="form-check">
+									<input class="form-check-input" {% if watchlists|length == 1 %} checked="true" {% endif %} type="checkbox" name="watchlists[]" value="{{ watchlist.id }}" id="watchlist{{ watchlist.id }}">
+									<label class="form-check-label" for="watchlist{{ watchlist.id }}">
+										{{ watchlist.nom }}
+									</label>
+								</div>
+							{% endfor %}
+						{% else %}
+							<p>Aucune watchlist disponible. Créez une watchlist avant de continuer.</p>
+						{% endif %}
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+						<button type="submit" class="btn btn-myprimary">Ajouter</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
 {% endblock %}
 
 {% block script %}
