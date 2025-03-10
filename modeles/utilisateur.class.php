@@ -45,11 +45,7 @@ class Utilisateur{
      * @var string|null $pseudo Le pseudo de l'utilisateur
      */
     private ?string $pseudo;
-    /**
-     * @brief Le nom de l'utilisateur
-     * @var string|null $nom Le nom de l'utilisateur
-     */
-    private ?string $nom;
+    
     /**
      * @brief L'adresse mail de l'utilisateur
      * @var string|null $mail L'adresse mail de l'utilisateur
@@ -80,17 +76,23 @@ class Utilisateur{
      * @var bool|null $estValider indique si l'utilisateur est validé
      */
     private ?bool $estValider;
+    /**
+     * @brief date d'inscription de l'utilisateur
+     * @var DateTime $dateI la date d'inscription de l'utilisateur
+     */
+    private ?DateTime $dateI;
     
     // Constructeur
-    function __construct(?string $id = null, ?string $pseudo = null, ?string $nom = null, ?string $mail = null, ?string $mdp = null, ?Role $role = null, ?string $urlImageProfil = null, ?string $urlImageBanniere = null, ?bool $estValider = null) {
+
+    function __construct(?string $id = null, ?string $pseudo = null,  ?string $mail = null, ?string $mdp = null, ?Role $role = null, ?string $urlImageProfil = null, ?string $urlImageBanniere = null, ?bool $estValider = null, ?DateTime $dateI =null) {
         $this->id = $id;
         $this->pseudo = $pseudo;
-        $this->nom = $nom;
         $this->mail = $mail;
         $this->mdp = $mdp;
         $this->role = $role;
         $this->urlImageProfil = $urlImageProfil;
         $this->urlImageBanniere = $urlImageBanniere;
+        $this->dateI = $dateI;
         $this->estValider = $estValider;
 
     }
@@ -118,13 +120,7 @@ class Utilisateur{
         return $this->pseudo;
     }
 
-    /**
-     * Get the value of nom
-     * @return string
-     */
-    public function getNom(): ?string {
-        return $this->nom;
-    }
+    
 
     /**
      * Get the value of mail
@@ -179,6 +175,14 @@ class Utilisateur{
     {
         return $this->urlImageBanniere;
     }
+    /**
+     * Get the value of dateI
+     * @return DateTime
+     */
+    public function getDateI(): ?DateTime
+    {
+        return $this->dateI;
+    }
 
     /**
      * Get the value of estValider
@@ -208,14 +212,7 @@ class Utilisateur{
     {
         $this->pseudo = $pseudo;
     }
-    /**
-     * Set the value of nom
-     * @return void
-     */
-    public function setNom(?string $nom = null): void
-    {
-        $this->nom = $nom;
-    }
+    
 
     /**
      * Set the value of mail
@@ -269,6 +266,14 @@ class Utilisateur{
     public function setEstValider(?bool $estValider = null): void
     {
         $this->estValider = $estValider;
+    }
+    /**
+     * Set the value of dateI
+     * @return void
+     */
+    public function setDateI(?DateTime $dateI = null): void
+    {
+        $this->dateI = $dateI;
     }
 
     // Méthodes 

@@ -55,6 +55,8 @@ require_once 'modeles/salle.class.php';
 require_once 'modeles/serie.class.php';
 require_once 'modeles/saison.class.php';
 require_once 'modeles/episode.class.php';
+require_once 'modeles/bannissement.class.php';
+require_once 'modeles/bannissement.dao.php';
 
 
 
