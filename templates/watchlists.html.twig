@@ -2,6 +2,12 @@
 
 {% block content %}
     <main class="flex-grow-1">
+        <!-- Bouton accès watchlists publiques -->
+        <div class="text-center">
+            <a href="index.php?controller=watchlist&methode=afficherWatchlistsPubliques" class="btn btn-watchlist-publiques">
+                <i class="bi bi-eye me-2"></i>Afficher les watchlists de la communauté
+            </a>
+        </div>
         <!-- Section "Vos Watchlists" -->
         <div class="d-flex justify-content-between align-items-center mb-3 ms-5 me-5 mt-3">
             <h2 class="watchlist-section__title mb-0">Mes Watchlists</h2>
@@ -425,6 +431,12 @@
         {% else %}
             <p class="text-center">Vous n'avez pas encore de watchlists partagées avec vous.</p>
         {% endif %}
+        <!-- Bouton accès watchlists publiques -->
+        <div class="text-center">
+            <a href="index.php?controller=watchlist&methode=afficherWatchlistsPubliques" class="btn btn-watchlist-publiques">
+                <i class="bi bi-eye me-2"></i>Afficher les watchlists de la communauté
+            </a>
+        </div>
     </main>
 
     <!-- Modale Création Watchlist -->

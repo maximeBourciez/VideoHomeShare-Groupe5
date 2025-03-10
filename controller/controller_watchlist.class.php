@@ -427,4 +427,15 @@ class ControllerWatchlist extends Controller {
         return;
     }
 
+    /**
+     * @brief afficher les watchlists publiques
+     */
+    public function afficherWatchlistsPubliques(): void {
+        $watchlistDAO = new WatchlistDAO($this->getPdo());
+        $watchlists = $watchlistDAO->getPublicWatchlists();
+        echo $this->getTwig()->render('watchlistsPubliques.html.twig', [
+            'watchlists' => $watchlists
+        ]);
+    }
+
 }

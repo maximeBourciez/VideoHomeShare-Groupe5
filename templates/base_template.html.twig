@@ -113,9 +113,15 @@ f.parentNode.insertBefore(j, f);
 						<a href="index.php?controller=salle&methode=accueilWatch2Gether">
 							<button class="btn btn-myprimary">Watch2Gether</button>
 						</a>
-						<a href="index.php?controller=watchlist&methode=afficherWatchlists">
-							<button class="btn btn-myprimary">WatchList</button>
-						</a>
+						{% if utilisateurConnecte is not null %}
+							<a href="index.php?controller=watchlist&methode=afficherWatchlists">
+								<button class="btn btn-myprimary">WatchList</button>
+							</a>
+						{% else %}
+							<a href="index.php?controller=watchlist&methode=afficherWatchlistsPubliques">
+								<button class="btn btn-myprimary">WatchList</button>
+							</a>
+						{% endif %}
 						<a href="index.php?controller=quizz&methode=listeQuizz">
 							<button class="btn btn-myprimary">Quizz</button>
 						</a>

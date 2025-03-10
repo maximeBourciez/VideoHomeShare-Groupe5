@@ -283,7 +283,7 @@ class WatchlistDAO
      */
     public function getPublicWatchlists(): array
     {
-        $sql = "SELECT * FROM " . DB_PREFIX . "watchlist WHERE estPublique = true ORDER BY date DESC";
+        $sql = "SELECT * FROM " . DB_PREFIX . "watchlist WHERE estPublique = true";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
         return $this->hydrateAll($stmt->fetchAll(PDO::FETCH_ASSOC));
