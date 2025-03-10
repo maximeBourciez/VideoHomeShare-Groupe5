@@ -115,7 +115,9 @@ f.parentNode.insertBefore(j, f);
 							<button class="btn btn-myprimary">Quizz</button>
 						</a>
 						{% if utilisateurConnecte is null %}
-							<button class="btn btn-myprimary" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">WatchList</button>
+							<a href="index.php?controller=watchlist&methode=afficherWatchlistsPubliques">
+								<button class="btn btn-myprimary">WatchList</button>
+							</a>
 							<button class="btn btn-myprimary" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Watch2Gether</button>
 							<button class="btn btn-myprimary" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Profil</button>
 						{% else %}
@@ -259,6 +261,15 @@ if (this.checkValidity()) {
 $('.loader-container').css('display', 'flex');
 } else {
 $('.loader-container').hide();
+}
+});
+
+// Afficher le loader lors des soumissions de formulaires valides
+$('form:not([data-modal-form])').submit(function (e) {
+if (this.checkValidity()) {
+$('.loader-link').css('display', 'flex');
+} else {
+$('.loader-link').hide();
 }
 });
 

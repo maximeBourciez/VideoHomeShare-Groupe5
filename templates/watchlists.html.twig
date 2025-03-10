@@ -2,6 +2,12 @@
 
 {% block content %}
     <main class="flex-grow-1">
+        <!-- Bouton accès watchlists publiques -->
+        <div class="d-flex justify-content-center my-3">
+            <a href="index.php?controller=watchlist&methode=afficherWatchlistsPubliques" class="btn btn-watchlist-publiques loader-link">
+                <i class="bi bi-eye me-2"></i>Afficher les watchlists de la communauté
+            </a>
+        </div>
         <!-- Section "Vos Watchlists" -->
         <div class="d-flex justify-content-between align-items-center mb-3 ms-5 me-5 mt-3">
             <h2 class="watchlist-section__title mb-0">Mes Watchlists</h2>
@@ -18,6 +24,9 @@
                         <div class="btn-group me-5 mt-4">
                             <button class="btn btn-myprimary me-2" data-bs-toggle="modal" data-bs-target="#editWatchlistModal{{ watchlist.id }}">
                                 <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-myprimary me-2" data-bs-toggle="modal" data-bs-target="#shareWatchlistModal{{ watchlist.id }}">
+                                <i class="bi bi-share"></i>
                             </button>
                             <button class="btn btn-delete-watchlist btn-danger" data-bs-toggle="modal" data-bs-target="#deleteWatchlistModal{{ watchlist.id }}">
                                 <i class="bi bi-trash"></i>
@@ -41,28 +50,78 @@
                                                 <div class="row g-3">
                                         {% endif %}
 
-                                        <div class="col-12 col-sm-4 col-md-3 col-lg d-flex justify-content-center">
-                                            <div class="card h-100 bg-white hover-card" style="max-width: 200px;">
-                                                <div class="card-img-wrapper position-relative pt-2 px-2">
-                                                    <img src="{{ contenu.getLienAfficheReduite() }}" class="card-img-top rounded shadow" alt="{{ contenu.nom }}">
-                                                </div>
-                                                <div class="card-body d-flex flex-column p-2">
-                                                    <h5 class="card-title fs-6 mb-3">{{ contenu.getTitre() }}</h5>
-                                                    <div class="">
-                                                        <button href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ contenu.getId() }}" class="btn btn-plus-infos btn-sm w-100 mb-2">
-                                                            <i class="bi bi-info-circle me-1"></i>Plus d'infos
-                                                        </button>
-                                                        <form action="index.php?controller=watchlist&methode=supprimerDeWatchlist" method="POST">
-                                                            <input type="hidden" name="idWatchlist" value="{{ watchlist.id }}">
-                                                            <input type="hidden" name="idContenu" value="{{ contenu.getId() }}">
-                                                            <button type="submit" class="btn btn-delete-watchlist2 btn-sm w-100 ">
-                                                                <i class="bi bi-trash me-1"></i>Retirer le contenu
-                                                            </button>
-                                                        </form>
+                                            {% if contenu.getClass == "Collection" %}
+                                                <div class="col-12 col sm-4 col-md-3 col-lg d-flex justify-content-center">
+                                                    <div class="card h-100 bg-white hover-card" style="max-width: 200px;">
+                                                        <div class="card-img-wrapper position-relative pt-2 px-2">
+                                                            <img src="{{ contenu.getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ contenu.nom }}">
+                                                        </div>
+                                                        <div class="card-body d-flex flex-column p-2">
+                                                            <h5 class="card-title fs-6 mb-3">{{ contenu.getTitre() }}</h5>
+                                                            <div class="">
+                                                                <a href="index.php?controller=collection&methode=afficherCollection&tmdb_id={{ contenu.getId() }}" class="btn btn-plus-infos btn-sm w-100 mb-2">
+                                                                    <i class="bi bi-info-circle me-1"></i>Plus d'informations
+                                                                </a>
+                                                                <form action="index.php?controller=watchlist&methode=supprimerCollectionDeWatchlist" method="POST">
+                                                                    <input type="hidden" name="idWatchlist" value="{{ watchlist.id }}">
+                                                                    <input type="hidden" name="idCollection" value="{{ contenu.getId() }}">
+                                                                    <button type="submit" class="btn btn-delete-watchlist2 btn-sm w-100 ">
+                                                                        <i class="bi bi-trash me-1"></i>Retirer la collection
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
+                                        
+                                            {% elseif contenu.getClass == "Serie" %}
+                                                <div class="col-12 col sm-4 col-md-3 col-lg d-flex justify-content-center">
+                                                    <div class="card h-100 bg-white hover-card" style="max-width: 200px;">
+                                                        <div class="card-img-wrapper position-relative pt-2 px-2">
+                                                            <img src="{{ contenu.getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ contenu.nom }}">
+                                                        </div>
+                                                        <div class="card-body d-flex flex-column p-2">
+                                                            <h5 class="card-title fs-6 mb-3">{{ contenu.getTitre() }}</h5>
+                                                            <div class="">
+                                                                <a href="index.php?controller=serie&methode=afficherSerie&tmdb_id={{ contenu.getId() }}" class="btn btn-plus-infos btn-sm w-100 mb-2">
+                                                                    <i class="bi bi-info-circle me-1"></i>Plus d'informations
+                                                                </a>
+                                                                <form action="index.php?controller=watchlist&methode=supprimerSerieDeWatchlist" method="POST">
+                                                                    <input type="hidden" name="idWatchlist" value="{{ watchlist.id }}">
+                                                                    <input type="hidden" name="idSerie" value="{{ contenu.getId() }}">
+                                                                    <button type="submit" class="btn btn-delete-watchlist2 btn-sm w-100 ">
+                                                                        <i class="bi bi-trash me-1"></i>Retirer la serie
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        
+                                            {% else %}
+                                                <div class="col-12 col-sm-4 col-md-3 col-lg d-flex justify-content-center">
+                                                    <div class="card h-100 bg-white hover-card" style="max-width: 200px;">
+                                                        <div class="card-img-wrapper position-relative pt-2 px-2">
+                                                            <img src="{{ contenu.getLienAfficheReduite() }}" class="card-img-top rounded shadow" alt="{{ contenu.nom }}">
+                                                        </div>
+                                                        <div class="card-body d-flex flex-column p-2">
+                                                            <h5 class="card-title fs-6 mb-3">{{ contenu.getTitre() }}</h5>
+                                                            <div class="">
+                                                                <a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ contenu.getId() }}" class="btn btn-plus-infos btn-sm w-100 mb-2">
+                                                                    <i class="bi bi-info-circle me-1"></i>Plus d'informations
+                                                                </a>
+                                                                <form action="index.php?controller=watchlist&methode=supprimerDeWatchlist" method="POST">
+                                                                    <input type="hidden" name="idWatchlist" value="{{ watchlist.id }}">
+                                                                    <input type="hidden" name="idContenu" value="{{ contenu.getId() }}">
+                                                                    <button type="submit" class="btn btn-delete-watchlist2 btn-sm w-100 ">
+                                                                        <i class="bi bi-trash me-1"></i>Retirer le contenu
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
 
                                         {% if loop.index0 % 6 == 5 or loop.last %}
                                                 </div>
@@ -158,10 +217,226 @@
                         </div>
                     </div>
                 </div>
+                <!-- Modal de gestion du partage -->
+                <div class="modal fade" id="shareWatchlistModal{{ watchlist.id }}" tabindex="-1">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content bg-mydark text-white">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Gérer les partages de "{{ watchlist.nom }}"</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Formulaire d'ajout de partage -->
+                                <div class="mb-4">
+                                    <h6 class="mb-3">Partager avec un nouvel utilisateur</h6>
+                                    <form action="index.php?controller=watchlist&methode=partagerWatchlist" method="POST" class="d-flex">
+                                        <input type="hidden" name="idWatchlist" value="{{ watchlist.id }}">
+                                        <input type="text" class="form-control me-2" name="idUtilisateurP" placeholder="Identifiant de l'utilisateur" required>
+                                        <button type="submit" class="btn btn-myprimary">Partager</button>
+                                    </form>
+                                </div>
+                                
+                                <!-- Liste des utilisateurs avec qui la watchlist est partagée -->
+                                <h6 class="mb-3">Utilisateurs ayant accès</h6>
+                                {% if watchlist.partages is defined and watchlist.partages is not empty %}
+                                    <div class="table-responsive rounded">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Utilisateur</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for partage in watchlist.partages %}
+                                                    <tr>
+                                                        <td>{{ partage.idUtilisateurP }}</td>
+                                                        <td>
+                                                            <form action="index.php?controller=watchlist&methode=arreterDePartagerWatchlist" method="POST">
+                                                                <input type="hidden" name="idWatchlist" value="{{ watchlist.id }}">
+                                                                <input type="hidden" name="idUtilisateurP" value="{{ partage.idUtilisateurP }}">
+                                                                <button type="submit" class="btn btn-sm btn-secondary">
+                                                                    <i class="bi bi-x-lg"></i> Annuler le partage
+                                                                </button>
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                {% else %}
+                                    <p class="text-center">Cette watchlist n'est partagée avec aucun utilisateur pour le moment.</p>
+                                {% endif %}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             {% endfor %}
         {% else %}
             <p class="text-center">Vous n'avez pas encore de watchlists.</p>
         {% endif %}
+
+        <div class="d-flex justify-content-between align-items-center mb-3 ms-5 me-5 mt-3">
+            <h2 class="watchlist-section__title mb-0">Les Watchlists partagées avec moi</h2>
+        </div>
+
+        {% if watchlistsPartagees is not empty %}
+            {% for watchlist in watchlistsPartagees %}
+                <div class="movie-category bg-dark text-white rounded shadow my-4">
+                    <div class="d-flex justify-content-between align-items-center ms-5">
+                        <h3 class="watchlist-name mt-4">{{ watchlist.nom }}</h3>
+                        <div class="btn-group me-5 mt-4">
+                            <button class="btn btn-delete-watchlist btn-danger" data-bs-toggle="modal" data-bs-target="#deleteWatchlistSharedModal{{ watchlist.id }}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="ms-5">
+                        <h5 class="ms-2">Partagée par {{ watchlist.idUtilisateur }}</h5>
+                    </div>
+                    {% if watchlist.description is not empty %}
+                        <p class="watchlist-description ms-5">{{ watchlist.description }}</p>
+                    {% endif %}
+                    {% if watchlist.contenus is empty %}
+                    <div class="d-flex justify-content-center">
+                        <p class=" text-center my-3">Cette watchlist est vide.</p>
+                    </div>
+                    {% else %}
+                        <div class="carousel-container mt-3">
+                            <div id="watchlistCarousel{{ watchlist.id }}" class="carousel slide" data-bs-ride="carousel" data-bs-touch="true">
+                                <div class="carousel-inner px-4">
+                                    {% for contenu in watchlist.contenus %}
+                                        {% if loop.index0 % 6 == 0 %}
+                                            <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                                <div class="row g-3">
+                                        {% endif %}
+
+                                            {% if contenu.getClass == "Collection" %}
+                                                <div class="col-12 col sm-4 col-md-3 col-lg d-flex justify-content-center">
+                                                    <div class="card h-100 bg-white hover-card" style="max-width: 200px;">
+                                                        <div class="card-img-wrapper position-relative pt-2 px-2">
+                                                            <img src="{{ contenu.getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ contenu.nom }}">
+                                                        </div>
+                                                        <div class="card-body d-flex flex-column p-2">
+                                                            <h5 class="card-title fs-6 mb-3">{{ contenu.getTitre() }}</h5>
+                                                            <div class="">
+                                                                <a href="index.php?controller=collection&methode=afficherCollection&tmdb_id={{ contenu.getId() }}" class="btn btn-plus-infos btn-sm w-100 mb-2">
+                                                                    <i class="bi bi-info-circle me-1"></i>Plus d'informations
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        
+                                            {% elseif contenu.getClass == "Serie" %}
+                                                <div class="col-12 col sm-4 col-md-3 col-lg d-flex justify-content-center">
+                                                    <div class="card h-100 bg-white hover-card" style="max-width: 200px;">
+                                                        <div class="card-img-wrapper position-relative pt-2 px-2">
+                                                            <img src="{{ contenu.getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ contenu.nom }}">
+                                                        </div>
+                                                        <div class="card-body d-flex flex-column p-2">
+                                                            <h5 class="card-title fs-6 mb-3">{{ contenu.getTitre() }}</h5>
+                                                            <div class="">
+                                                                <a href="index.php?controller=serie&methode=afficherSerie&tmdb_id={{ contenu.getId() }}" class="btn btn-plus-infos btn-sm w-100 mb-2">
+                                                                    <i class="bi bi-info-circle me-1"></i>Plus d'informations
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        
+                                            {% else %}
+                                                <div class="col-12 col-sm-4 col-md-3 col-lg d-flex justify-content-center">
+                                                    <div class="card h-100 bg-white hover-card" style="max-width: 200px;">
+                                                        <div class="card-img-wrapper position-relative pt-2 px-2">
+                                                            <img src="{{ contenu.getLienAfficheReduite() }}" class="card-img-top rounded shadow" alt="{{ contenu.nom }}">
+                                                        </div>
+                                                        <div class="card-body d-flex flex-column p-2">
+                                                            <h5 class="card-title fs-6 mb-3">{{ contenu.getTitre() }}</h5>
+                                                            <div class="">
+                                                                <a href="index.php?controller=contenu&methode=afficherContenu&tmdb_id={{ contenu.getId() }}" class="btn btn-plus-infos btn-sm w-100 mb-2">
+                                                                    <i class="bi bi-info-circle me-1"></i>Plus d'informations
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+
+                                        {% if loop.index0 % 6 == 5 or loop.last %}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+
+                                <!-- Contrôles du carousel -->
+                                {% if watchlist.contenus|length > 6 %}
+                                    <button class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#watchlistCarousel{{ watchlist.id }}" data-bs-slide="prev">
+                                        <i class="bi bi-chevron-left"></i>
+                                        <span class="visually-hidden">Précédent</span>
+                                    </button>
+                                    <button class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#watchlistCarousel{{ watchlist.id }}" data-bs-slide="next">
+                                        <i class="bi bi-chevron-right"></i>
+                                        <span class="visually-hidden">Suivant</span>
+                                    </button>
+                                {% endif %}
+
+                                <!-- Indicateurs -->
+                                <div class="carousel-indicators position-relative mt-3">
+                                    {% if watchlist.contenus|length > 6 %}
+                                        {% for i in range(0, ((watchlist.contenus|length - 1) // 6)) %}
+                                            <button type="button" data-bs-target="#watchlistCarousel{{ watchlist.id }}" data-bs-slide-to="{{ i }}" 
+                                                    class="{{ i == 0 ? 'active' : '' }}" 
+                                                    aria-current="{{ i == 0 ? 'true' : 'false' }}" 
+                                                    aria-label="Slide {{ i + 1 }}">
+                                            </button>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                <!-- Modal Suppression pour cette watchlist partagée spécifique -->
+                <div class="modal fade" id="deleteWatchlistSharedModal{{ watchlist.id }}" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content bg-mydark text-white">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Confirmer l'annulation du partage</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Êtes-vous sûr de vouloir annuler le partage de la watchlist "{{ watchlist.nom }}" avec vous ?</p>
+                                <b class="bi bi-exclamation-triangle text-danger"> Cette action est irréversible.</b>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-myprimary" data-bs-dismiss="modal">Annuler</button>
+                                <form action="index.php?controller=watchlist&methode=arreterDePartagerWatchlist" method="POST">
+                                    <input type="hidden" name="idWatchlist" value="{{ watchlist.id }}">
+                                    <input type="hidden" name="idUtilisateurP" value="{{ utilisateur.id }}">
+                                    <button type="submit" class="btn btn-delete-watchlist2 btn-danger">
+                                        <i class="bi bi-x-lg"></i> Annuler le partage
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-center">Vous n'avez pas encore de watchlists partagées avec vous.</p>
+        {% endif %}
+        <!-- Bouton accès watchlists publiques -->
+        <div class="d-flex justify-content-center my-3">
+            <a href="index.php?controller=watchlist&methode=afficherWatchlistsPubliques" class="btn btn-watchlist-publiques loader-link">
+                <i class="bi bi-eye me-2"></i>Afficher les watchlists de la communauté
+            </a>
+        </div>
     </main>
 
     <!-- Modale Création Watchlist -->
@@ -199,5 +474,4 @@
 
 {% block script %}
     {{ parent() }}
-    <script src="JS/watchlist-carousel.js"></script>
 {% endblock %}

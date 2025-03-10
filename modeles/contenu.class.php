@@ -238,4 +238,13 @@ class Contenu {
     public function setLienAfficheReduite(?string $lienAfficheReduite): void {
         $this->lienAfficheReduite = $lienAfficheReduite;
     }
+
+    /** 
+     * @brief Renvoie la classe de l'objet sous forme de chaîne de caractères
+     * @return string La classe de l'objet
+     */
+    public function getClass(): string
+    {
+        return "Contenu";
+    }
 }

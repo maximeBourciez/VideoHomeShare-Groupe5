@@ -13,6 +13,7 @@ class Watchlist {
     private DateTime $date;
     private string $idUtilisateur;
     private array $contenus = [];
+    private array $partages = [];
 
     /**
      * @brief Constructeur de la classe Watchlist
@@ -23,6 +24,7 @@ class Watchlist {
      * @param DateTime $date Date de création
      * @param string $idUtilisateur Identifiant de l'utilisateur propriétaire
      * @param array $contenus Liste des contenus de la watchlist
+     * @param array $partages Liste des utilisateurs avec qui la watchlist est partagée
      */
     public function __construct(
         int $id,
@@ -31,7 +33,8 @@ class Watchlist {
         bool $estPublique,
         DateTime $date,
         string $idUtilisateur,
-        array $contenus = []
+        array $contenus = [],
+        array $partages = []
     ) {
         $this->id = $id;
         $this->nom = htmlspecialchars($nom);
@@ -40,6 +43,7 @@ class Watchlist {
         $this->date = $date;
         $this->idUtilisateur = htmlspecialchars($idUtilisateur);
         $this->contenus = $contenus;
+        $this->partages = $partages;
     }
 
     /**
@@ -154,5 +158,21 @@ class Watchlist {
      */
     public function setContenus(array $contenus): void {
         $this->contenus = $contenus;
+    }
+
+    /**
+     * @brief Définit les partages de la watchlist
+     * @param array $partages La nouvelle liste de partages
+     */
+    public function setPartages(array $partages): void {
+        $this->partages = $partages;
+    }
+
+    /**
+     * @brief Récupère les partages de la watchlist
+     * @return array La liste des partages
+     */
+    public function getPartages(): array {
+        return $this->partages;
     }
 }

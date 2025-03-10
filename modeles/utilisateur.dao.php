@@ -252,5 +252,20 @@ class UtilisateurDAO
         return $this->hydrateAll($stmt->fetchAll());
     }
 
-   
+    /**
+     * @brief Vérifie si un utilisateur existe
+     * 
+     * @param string $id L'identifiant de l'utilisateur à vérifier
+     *
+     * @return bool true si l'utilisateur existe, false sinon
+     */
+    public function exist(String $id): bool
+    {
+        $sql = "SELECT count(idUtilisateur) FROM " . DB_PREFIX . "utilisateur WHERE idUtilisateur = :id";
+        $pdo = $this->pdo->prepare($sql);
+        $pdo->bindValue(':id', $id, PDO::PARAM_STR);
+        $pdo->execute();
+        return $pdo->fetch()["count(idUtilisateur)"] > 0;
+    }
+    
 }

@@ -147,4 +147,13 @@ class Collection
     {
         $this->nombreFilms = $nombreFilms;
     }
+
+    /** 
+     * @brief Renvoie la classe de l'objet sous forme de chaîne de caractères
+     * @return string La classe de l'objet
+     */
+    public function getClass(): string
+    {
+        return "Collection";
+    }
 }
