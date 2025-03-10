@@ -21,7 +21,11 @@
                                     {% if watchlist.contenus|length == 1 %}
                                         <div class="row">
                                             <div class="col my-2">
-                                                <img src="{{ watchlist.contenus[0].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[0].nom }}">
+                                                {% if watchlist.contenus[0].getClass() == "Contenu" %}
+                                                    <img src="{{ watchlist.contenus[0].getLienAfficheReduite() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[0].nom }}">
+                                                {% else %}
+                                                    <img src="{{ watchlist.contenus[0].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[0].nom }}">
+                                                {% endif %}
                                             </div>
                                             <div class="col my-2">
 
@@ -38,11 +42,17 @@
                                     {% elseif watchlist.contenus|length == 2 %}
                                         <div class="row">
                                             <div class="col my-2">
-                                                <img src="{{ watchlist.contenus[0].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[0].nom }}">
-                                            </div>
+                                                {% if watchlist.contenus[0].getClass() == "Contenu" %}
+                                                    <img src="{{ watchlist.contenus[0].getLienAfficheReduite() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[0].nom }}">
+                                                {% else %}
+                                                    <img src="{{ watchlist.contenus[0].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[0].nom }}">
+                                                {% endif %}                                            </div>
                                             <div class="col my-2">
-                                                <img src="{{ watchlist.contenus[1].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[1].nom }}">
-                                            </div>
+                                                {% if watchlist.contenus[1].getClass() == "Contenu" %}
+                                                    <img src="{{ watchlist.contenus[1].getLienAfficheReduite() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[1].nom }}">
+                                                {% else %}
+                                                    <img src="{{ watchlist.contenus[1].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[1].nom }}">
+                                                {% endif %}                                            </div>
                                         </div>
                                         <div class="row">
                                             <div class="col my-2">
@@ -55,16 +65,25 @@
                                     {% elseif watchlist.contenus|length == 3 %}
                                         <div class="row">
                                             <div class="col my-2">
-                                                <img src="{{ watchlist.contenus[0].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[0].nom }}">
-                                            </div>
+                                                {% if watchlist.contenus[0].getClass() == "Contenu" %}
+                                                    <img src="{{ watchlist.contenus[0].getLienAfficheReduite() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[0].nom }}">
+                                                {% else %}
+                                                    <img src="{{ watchlist.contenus[0].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[0].nom }}">
+                                                {% endif %}                                            </div>
                                             <div class="col my-2">
-                                                <img src="{{ watchlist.contenus[1].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[1].nom }}">
-                                            </div>
+                                                {% if watchlist.contenus[1].getClass() == "Contenu" %}
+                                                    <img src="{{ watchlist.contenus[1].getLienAfficheReduite() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[1].nom }}">
+                                                {% else %}
+                                                    <img src="{{ watchlist.contenus[1].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[1].nom }}">
+                                                {% endif %}                                           </div>
                                         </div>
                                         <div class="row">
                                             <div class="col my-2">
-                                                <img src="{{ watchlist.contenus[2].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[2].nom }}">
-                                            </div>
+                                                {% if watchlist.contenus[2].getClass() == "Contenu" %}
+                                                    <img src="{{ watchlist.contenus[2].getLienAfficheReduite() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[2].nom }}">
+                                                {% else %}
+                                                    <img src="{{ watchlist.contenus[2].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[2].nom }}">
+                                                {% endif %}                                           </div>
                                             <div class="col my-2">
                                                 
                                             </div>
@@ -72,19 +91,31 @@
                                     {% else %}
                                         <div class="row">
                                             <div class="col my-2">
-                                                <img src="{{ watchlist.contenus[0].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[0].nom }}">
-                                            </div>
+                                                {% if watchlist.contenus[0].getClass() == "Contenu" %}
+                                                    <img src="{{ watchlist.contenus[0].getLienAfficheReduite() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[0].nom }}">
+                                                {% else %}
+                                                    <img src="{{ watchlist.contenus[0].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[0].nom }}">
+                                                {% endif %}                                            </div>
                                             <div class="col my-2">
-                                                <img src="{{ watchlist.contenus[1].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[1].nom }}">
-                                            </div>
+                                                {% if watchlist.contenus[1].getClass() == "Contenu" %}
+                                                    <img src="{{ watchlist.contenus[1].getLienAfficheReduite() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[1].nom }}">
+                                                {% else %}
+                                                    <img src="{{ watchlist.contenus[1].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[1].nom }}">
+                                                {% endif %}                                           </div>
                                         </div>
                                         <div class="row">
                                             <div class="col my-2">
-                                                <img src="{{ watchlist.contenus[2].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[2].nom }}">
-                                            </div>
+                                                {% if watchlist.contenus[2].getClass() == "Contenu" %}
+                                                    <img src="{{ watchlist.contenus[2].getLienAfficheReduite() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[2].nom }}">
+                                                {% else %}
+                                                    <img src="{{ watchlist.contenus[2].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[2].nom }}">
+                                                {% endif %}                                           </div>
                                             <div class="col my-2">
-                                                <img src="{{ watchlist.contenus[3].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[3].nom }}">
-                                            </div>
+                                                {% if watchlist.contenus[3].getClass() == "Contenu" %}
+                                                    <img src="{{ watchlist.contenus[3].getLienAfficheReduite() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[3].nom }}">
+                                                {% else %}
+                                                    <img src="{{ watchlist.contenus[3].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[3].nom }}">
+                                                {% endif %}                                           </div>
                                         </div>                                    
                                     {% endif %}
                                 </div>
