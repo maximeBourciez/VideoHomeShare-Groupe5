@@ -264,6 +264,15 @@ $('.loader-container').hide();
 }
 });
 
+// Afficher le loader lors des soumissions de formulaires valides
+$('form:not([data-modal-form])').submit(function (e) {
+if (this.checkValidity()) {
+$('.loader-link').css('display', 'flex');
+} else {
+$('.loader-link').hide();
+}
+});
+
 // Cacher le loader une fois la page chargée
 $(window).on('load', function () {
 $('.loader-container').hide();
