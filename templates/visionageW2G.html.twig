@@ -4,20 +4,20 @@
 
 	<main class=" flex-grow-1">
 		<div class="row mt-3">
-			
+
 			<div class="col-8  d-inline-block">
 				<p class="w-75 bg-mydark text-white rounded p-1 ms-lg-auto me-lg-0 mx-auto" id="lienVideo">
 					lien video :
 				</p>
-				
+
 			</div>
 
 
-			
 			{% if salle.estPublique != 1 %}
 				<div class="col-3 mx-auto  ">
 					<p class=" mb-0 bg-mydark text-white rounded p-1 text-center">
-						code salle : {{salle.code }}
+						code salle :
+						{{salle.code }}
 					</p>
 				</div>
 			{% endif %}
@@ -31,92 +31,122 @@
 					<div id="video" class="  rounded"></div>
 				</div>
 				<script src="JS\Watch2Gether.js"></script>
-			<script>
-				var id = {{ salle.idSalle }}
-				{% if Hote == true %}
-					var hote = true;
-				{% else %}
-					var hote = false;
-				{% endif %}
-				onYouTubeIframeAPIReady()
-								
-			
-				function onPlayerStateChange(event) {
-            		console.log("L'état du lecteur a changé :", event.target.getPlayerState());
-					majdescription(event.target);
-					
-					{% if Hote == true %}
-						if(event.target.getVideoData().video_id != "dQw4w9WgXcQ"){
-							envoyerinfoVideo({{salle.idSalle}}, event.target);	
-						}
-						
-						
-					{% endif %}
+				<script>
+					var id = {{ salle.idSalle }}
+{% if Hote == true %}
+var hote = true;
+{% else %}
+var hote = false;{% endif %}
+onYouTubeIframeAPIReady()
 
 
-					
-				}		
+function onPlayerStateChange(event) {
+console.log("L'état du lecteur a changé :", event.target.getPlayerState());
+majdescription(event.target);{% if Hote == true %}
+if (event.target.getVideoData().video_id != "dQw4w9WgXcQ") {
+envoyerinfoVideo({{ salle.idSalle }}, event.target);
+}
 
-				window.onbeforeunload = function (event) {
-					
-					callController('salle','quiter',[['id',{{salle.idSalle}}]]);
-					
-				};
-				
-				
-				
-			</script>
+
+{% endif %}
+
+
+}
+
+window.onbeforeunload = function (event) {
+
+callController('salle', 'quiter', [['id', {{ salle.idSalle }}]]);
+
+};
+				</script>
 
 				<div id="description" class="bg-mydark text-white rounded col-lg-8 col-10 ms-lg-auto me-lg-0 mx-auto p-2 mb-4">
 					<p id="titreVideo" class="ms-2">
 						titre
 					</p>
 
-					
-					<p id="dureeVideo" class="ms-2" >
+
+					<p id="dureeVideo" class="ms-2">
 						duree
 					</p>
-					<div class="d-flex justify-content-end">
-					<a class="btn btn-tercary "> <i class="bi bi-flag"></i> </a>
+					<div class="d-flex justify-content-end mb-2">
+						<a class="btn btn-tercary " data-bs-toggle="modal" data-bs-target="#signalerVideo">
+							<i class="bi bi-flag"></i>
+						</a>
 					</div>
-					{% if Hote == true %}
-					
-						<div class=" row mx-2 mb-3	"> 
-						 <input type="text" class="  rounded col-8" id="lien" placeholder="lien de la video">
-						 <button class="btn btn-primary col-4 " id="ajouter" >ajouter</button>
+					<div class="modal fade" id="signalerVideo" tabindex="-1" aria-labelledby="modal1Label" aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered modal-lg">
+							<div class="modal-content bg-mydark" style="border: 1px solid #F2AC0F;">
+								<div class="modal-header border-bottom-0">
+									<h5 class="modal-title text-white">Signaler la video
+									</h5>
+									<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+								</div>
+								<div class="modal-body pt-0">
+								<form>
+								<input type="hidden" name="idvideo" id="idvideo" >
+								<label for="raison" class="form-label">Raison du signalement</label>
+								<select class="form-select mb-2" name="raison" id="raison" aria-label="Default select example">
+									<option value="Violence graphique">Violence graphique</option>
+									<option value="Harcèlement">Harcèlement</option>
+									<option value="Discours haineux">Discours haineux</option>
+									<option value="Contenu pour adulte">Contenu pour adulte</option>
+									<option value="Contenu trompeur ou spam">Contenu trompeur ou spam</option>
+									<option value="Violations de propriété intellectuelle">Violations de propriété intellectuelle</option>
+									<option value="Danger pour les enfants">Danger pour les enfants</option>
+									<option value="Autre raison">Autre raison</option>
+								</select>
+								<input type="button" id="envoyerSignalement" class="btn btn-primary mx-auto" value="Signaler">
+								</form>
+							
+							</div>
 						</div>
-
-						<button class="btn btn-primary ms-2 my-2" id="suivante"> passe a la prochaine video</button>
-						
-						<a class="btn btn-primary ms-2" href="index.php?controller=salle&methode=fermerSalle&id={{salle.idSalle}}"> fermer la salle </a>
-					
-					
-					{% endif %}
-
+					</div>
 				</div>
-			</div>
-			
+				{% if Hote == true %}
 
-			<div id="chat" class="bg-mydark  col-8 col-lg-3 mx-auto rounded d-flex col flex-column mb-3  " style=" height: 550px;">
-				<div data-bs-spy="scroll" class="overflow-auto my-3" id="messages">
-					
-				</div>
+					<div class=" row mx-2 mb-3	">
+						<input type="text" class="  rounded col-8" id="lien" placeholder="lien de la video">
+						<button class="btn btn-primary col-4 " id="ajouter">ajouter</button>
+					</div>
 
-				<div class="row bg-white  m-1 rounded mt-auto mb-2">
-					<input type="text" class="  border border-0 rounded col-9" placeholder="Message" id = "Message"></input>
+					<button class="btn btn-primary ms-2 my-2" id="suivante">
+						passe a la prochaine video</button>
 
-				<button class="col-2 rounded bg-primary m-1 p-1 ps-0 " onclick="envoyerMessage({{salle.idSalle}})">
-					<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-					<i class="bi bi-send  "></i>
+					<a class="btn btn-primary ms-2" href="index.php?controller=salle&methode=fermerSalle&id={{salle.idSalle}}">
+						fermer la salle
+					</a>
 
-				</button>
+
+				{% endif %}
 
 			</div>
-			<script> setInterval(function(){majchat({{salle.idSalle}})},1000); </script>
+		</div>
+
+
+		<div id="chat" class="bg-mydark  col-8 col-lg-3 mx-auto rounded d-flex col flex-column mb-3  " style=" height: 550px;">
+			<div data-bs-spy="scroll" class="overflow-auto my-3" id="messages"></div>
+
+			<div class="row bg-white  m-1 rounded mt-auto mb-2">
+				<input type="text" class="  border border-0 rounded col-9" placeholder="Message" id="Message"></input>
+
+			<button class="col-2 rounded bg-primary m-1 p-1 ps-0 " onclick="envoyerMessage({{salle.idSalle}})">
+				<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+				<i class="bi bi-send  "></i>
+
+			</button>
 
 		</div>
+		<script>
+			setInterval(function () {
+majchat({{ salle.idSalle }})
+}, 1000);
+document.getElementById("envoyerSignalement").addEventListener("click", function () {
+envoyerSignalement( document.getElementById("idvideo").value, document.getElementById("raison").value);
+});
+
+		</script>
 
 	</div>
 
-
-</div></main>{% endblock %}
+</div></div></main>{% endblock %}

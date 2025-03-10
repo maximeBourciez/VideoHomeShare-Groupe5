@@ -30,6 +30,7 @@
     function onPlayerReady(event, id) { // Vous pouvez maintenant utiliser les fonctions de l'API pour contrôler le lecteur
         event.target.playVideo(); // Joue la vidéo
         // execute la fonction majVideo toutes les secondes
+        
         setInterval(function(){majVideo(id, event.target)},1000);
         if (hote == true){
             // execute la fonction majVideo toutes les secondes
@@ -73,10 +74,11 @@
      * @param  player  le lecteur de la vidéo
      */
     function majdescription(player) {
-
+        console.log(player.getVideoData().video_id);
         document.getElementById("dureeVideo").innerHTML = "duree : "+ Math.floor(player.getDuration() / 60) + "min " + Math.round(player.getDuration() % 60);
         document.getElementById("titreVideo").innerHTML = "titre : "+player.videoTitle;
         document.getElementById("lienVideo").innerHTML = "lien video : "+player.getVideoUrl();
+        document.getElementById("idvideo").value = player.getVideoData().video_id;
 
     }
 
@@ -281,8 +283,21 @@
        let url = player.getVideoUrl();
     
        let cc = url.replace("&", "\\");
+       if(player.getVideoData().video_id  != "watch") {
        let test = callController('salle', 'envoyerinfoVideo', [["id", id],["temps", player.getCurrentTime()],["etat", player.getPlayerState()],["url", cc]]);
-       
+       }
+    }
+
+    function envoyerSignalement(id , raison){
+        console.log(id);
+        console.log(raison);
+        
+
+        let valeur = callController('salle', 'signalevideo', [["id", id],["raison", raison]]);
+
+        callController('salle', 'envoyerMessage', [["id", id],["message", "la vidéo a été signalé"]]);
+        console.log(valeur);
+
     }
 
 

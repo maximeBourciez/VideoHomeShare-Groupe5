@@ -380,12 +380,14 @@ class ControllerSalle extends Controller
     /**
      * 
      */
-    public function signalevideo($id , $raison){
+    public function signalevideo(){
+        
+        $id = isset($_GET['id']) ?  htmlspecialchars($_GET['id']) : null;
+        $raison = isset($_GET['raison']) ?  htmlspecialchars($_GET['raison']) : null;
 
-
-        //composer require google/apiclient:^2.0
+        
         $client = new Google_Client();
-        $client->setDeveloperKey(YOUTUBE_API_KEY); // Remplacez par votre propre clé API
+        $client->setDeveloperKey(YOUTUBE_API_KEY); 
 
         // Créer un service YouTube
         $youtube = new Google_Service_YouTube($client);
@@ -400,7 +402,7 @@ class ControllerSalle extends Controller
 
             // Effectuer l'appel API pour signaler la vidéo
             $youtube->videos->reportAbuse($videoAbuseReport);
-            
+            echo 'La vidéo a été signalée avec succès.'; 
         } catch (Google_Service_Exception $e) {
             echo 'Erreur lors de l\'appel API : ' . $e->getMessage();
         } catch (Exception $e) {
@@ -408,14 +410,6 @@ class ControllerSalle extends Controller
         }
 
 
-// Violence graphique
-// Harcèlement
-// Discours haineux
-// Contenu pour adulte
-// Contenu trompeur ou spam
-// Violations de propriété intellectuelle
-// Danger pour les enfants
-// Autre raison
 
     }
     
