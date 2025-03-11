@@ -83,7 +83,7 @@ generateStarRating(note);
 				</script>
 
 				<!-- Boutons d'action -->
-				<div class="movie-actions mr-5">
+				<div class="movie-actions mr-5 d-flex">
 						{% if utilisateurConnecte is not null %}
 							<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
 							<form action="index.php?controller=watchlist&methode=ajouterSerieAWatchlist" method="POST" class="me-4">
