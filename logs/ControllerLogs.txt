@@ -3,3 +3,11 @@
 2025-03-11 09:21:31 - Erreur: Constant "WEBSITE_DESCRIPTION" is undefined.
 2025-03-11 09:21:40 - Erreur: Constant "WEBSITE_DESCRIPTION" is undefined.
 2025-03-11 09:22:52 - Erreur: Constant "WEBSITE_DESCRIPTION" is undefined.
+2025-03-11 11:11:28 - Erreur: Unexpected "endif" tag (expecting closing tag for the "block" tag defined near line 4).
+2025-03-11 11:12:25 - Erreur: Unexpected "endif" tag (expecting closing tag for the "block" tag defined near line 4).
+2025-03-11 11:13:05 - Erreur: Unexpected "endif" tag (expecting closing tag for the "block" tag defined near line 4).
+2025-03-11 11:13:27 - Erreur: Unexpected "endif" tag (expecting closing tag for the "block" tag defined near line 4).
+2025-03-11 11:13:54 - Erreur: Unexpected "endif" tag (expecting closing tag for the "block" tag defined near line 4).
+2025-03-11 11:14:07 - Erreur: Unexpected "endif" tag (expecting closing tag for the "block" tag defined near line 4).
+2025-03-11 11:15:08 - Erreur: Unexpected "endif" tag (expecting closing tag for the "block" tag defined near line 4).
+2025-03-11 11:15:53 - Erreur: Unexpected "endif" tag (expecting closing tag for the "block" tag defined near line 4).

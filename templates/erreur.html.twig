@@ -1,11 +1,15 @@
 {% extends 'base_template.html.twig' %}
 
-{% block title %} Erreur {% endblock %}
+{% block title %}
+	Erreur
+{% endblock %}
 
 {% block content %}
-    <div class="container text-center mt-5 flex-grow-1 justify-content-center align-items-center d-flex flex-column">
-        <h1 class="display-4 text-danger font-weight-bold">Oups, une erreur s'est produite !</h1>
-        <p class="lead">Il semble que la page que vous recherchez soit introuvable ou qu'une erreur soit survenue.</p>
-        <a href="index.php" class="btn btn-primary mt-3">Retour à l'accueil</a>
-    </div>
+	<main class="flex-grow-1">
+		<div class="container text-center mt-5 justify-content-center align-items-center d-flex flex-column">
+			<h1 class="display-4 text-danger font-weight-bold">Oups, une erreur s'est produite !</h1>
+			<p class="lead">Il semble que la page que vous recherchez soit introuvable ou qu'une erreur soit survenue.</p>
+			<a href="index.php" class="btn btn-primary mt-3">Retour à l'accueil</a>
+		</div>
+	</main>
 {% endblock %}
