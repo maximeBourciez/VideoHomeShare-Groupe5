@@ -1,2 +1,5 @@
 2025-02-27 13:27:52 - Erreur: SQLSTATE[42S22]: Column not found: 1054 Champ 'placedisponible' inconnu dans where clause
 2025-03-08 16:58:54 - Erreur: SQLSTATE[23000]: Integrity constraint violation: 1048 Le champ 'nom' ne peut être vide (null)
+2025-03-11 09:21:31 - Erreur: Constant "WEBSITE_DESCRIPTION" is undefined.
+2025-03-11 09:21:40 - Erreur: Constant "WEBSITE_DESCRIPTION" is undefined.
+2025-03-11 09:22:52 - Erreur: Constant "WEBSITE_DESCRIPTION" is undefined.
