@@ -5,11 +5,6 @@
 {% endblock %}
 
 {% block content %}
-	<pre>
-    {{ dump(messagederreur) }}
-    {{ dump(messageConfirmation) }}
-</pre>
-
 	<main class="container flex-fill">
 		<a href="index.php?controller=quizz&methode=afficherPageCreerQuizz&idUtilisateur&idQuizz={{ quiz.getId() }}" class="btn btn-primary position-fixed bottom-0 end-0 me-4 mb-4 px-6 d-flex align-items-center justify-content-center" style="border-radius: 50px; white-space: nowrap; min-width: 200px; z-index: 999;"> <i class="bi bi-pencil" style="font-size: 1.3rem; margin-right: 0.2 rem;"></i>
 			<b>Créer un quizz</b>Q
@@ -51,12 +46,13 @@
 										{{ quiz.getIdUtilisateur() }}</small><br>
 								{% endif %}
 								<br>
-								{% if boutonVoirAppuye is defined or messagederreur is defined %}
+								{% if boutonVoirAppuye and quiz.getIdUtilisateur() != pseudoUtilisateur %}
 									<form action="index.php?controller=quizz&methode=jouerQuizz" method="post">
 										<input type="hidden" name="idQuizz" value="{{ quiz.getId() }}">
 										<button type="submit" class="btn btn-myprimary">Jouer</button>
 									</form>
-								{% elseif boutonGererAppuye is defined %}
+								{% endif %}
+								{% if quiz.getIdUtilisateur() == pseudoUtilisateur %}
 									<div class="row">
 										<form action="index.php?controller=quizz&methode=supprimerQuizz" method="post">
 											<input type="hidden" name="idQuizz" value="{{ quiz.getId() }}">
