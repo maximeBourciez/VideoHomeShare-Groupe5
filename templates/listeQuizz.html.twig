@@ -31,9 +31,13 @@
 				</a>
 			</div>
 			<div class="row col mb-2">
-				<a href="index.php?controller=quizz&methode=afficherOngletGerer&idUtilisateur" class="btn btn-primary">
-					<b>Gérer mes quizz</b>
-				</a>
+				{% if utilisateurConnecte != null %}
+					<a href="index.php?controller=quizz&methode=afficherOngletGerer&idUtilisateur" class="btn btn-primary">
+						<b>Gérer mes quizz</b>
+					</a>
+				{% else %}
+					<button class="btn btn-primary fw-bold" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Gérer mes quizz</button>
+				{% endif %}
 			</div>
 		</div>
 		<div class="col">
