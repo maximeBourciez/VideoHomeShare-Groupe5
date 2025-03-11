@@ -62,6 +62,13 @@ class ControllerSerie extends Controller
                 // Récupérer les personnalités
                 $personnalites = $this->serieDAO->getPersonnalitesSerie($tmdbId);
 
+                // Récupérer les watchlists pour l'utilisateur connecté
+                $watchlistDAO = new WatchlistDAO($this->getPdo());
+                $watchlists = null;
+                if (isset($_SESSION['utilisateur'])) {
+                    $watchlists = $watchlistDAO->findByUser(unserialize($_SESSION['utilisateur'])->getId());
+                }
+
                 // Afficher le template avec les données
                 echo $this->getTwig()->render('pageDuneSerie.html.twig', [
                     'serie' => $serie,
@@ -70,7 +77,8 @@ class ControllerSerie extends Controller
                     'total' => $notes['total'],
                     'commentaires' => $commentaires,
                     'themes' => $themes,
-                    'personnalites' => $personnalites
+                    'personnalites' => $personnalites,
+                    'watchlists' => $watchlists
                 ]);
                 return;
             }

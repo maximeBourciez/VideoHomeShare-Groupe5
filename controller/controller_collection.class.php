@@ -57,6 +57,13 @@ class ControllerCollection extends Controller {
                 $commentaireDAO = new CommentaireDAO($this->getPdo());
                 $notes = $commentaireDAO->getMoyenneEtTotalNotesCollection($tmdbId);
                 $commentaires = $commentaireDAO->getCommentairesCollection($tmdbId);
+
+                // Récupérer les watchlists pour l'utilisateur connecté
+                $watchlistDAO = new WatchlistDAO($this->getPdo());
+                $watchlists = null;
+                if (isset($_SESSION['utilisateur'])) {
+                    $watchlists = $watchlistDAO->findByUser(unserialize($_SESSION['utilisateur'])->getId());
+                }
                 
                 // Afficher le template avec les données
                 echo $this->getTwig()->render('pageDuneCollection.html.twig', [
@@ -65,7 +72,8 @@ class ControllerCollection extends Controller {
                     'films' => $films,
                     'moyenne' => $notes['moyenne'],
                     'total' => $notes['total'],
-                    'commentaires' => $commentaires
+                    'commentaires' => $commentaires,
+                    'watchlists' => $watchlists
                 ]);
                 return;
             }
