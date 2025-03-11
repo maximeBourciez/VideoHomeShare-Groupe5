@@ -4,16 +4,29 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="icon" href="{{ constant('WEBSITE_LOGO') }}">
+		<title>
+			{% block title %}
+				{{ constant('WEBSITE_TITLE_LONG') }}
+			{% endblock %}
+			- VHS</title>
+
+		<!-- CSS -->
 		<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
 		<link rel="stylesheet" href="CSS/style.css">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
-		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
-		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
-		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap5.min.css">
-		<script src="node_modules/tarteaucitronjs/tarteaucitron.js"></script>
-		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+		<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+		<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap5.min.css">
+
+		<style></style>
+
+		<!-- Scripts chargés de façon différée -->
+		<script src="node_modules/tarteaucitronjs/tarteaucitron.js" defer></script>
+
 		<!-- Google Tag Manager -->
 		<script>
 			(function (w, d, s, l, i) {
@@ -27,47 +40,32 @@ j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
 f.parentNode.insertBefore(j, f);
 })(window, document, 'script', 'dataLayer', 'GTM-NRC87HJ4');
 		</script>
-
-		<title>
-			{% block title %}
-				{{ constant('WEBSITE_TITLE_LONG') }}
-			{% endblock %}
-			- VHS
-		</title>
-
-		<style>
-			html,
-			body {
-				overflow-x: hidden;
-				margin: 0;
-				font-family: 'Montserrat', sans-serif;
-			}
-		</style>
 	</head>
 
 	<body
 		class="d-flex flex-column min-vh-100 bg-mylight">
 		<!-- Loader -->
 		<div class="loader-container">
-			<div class="loader"></div>
+			<div class="loader" aria-label="Chargement en cours"></div>
 		</div>
+
 		<!-- Google Tag Manager (noscript) -->
 		<noscript>
 			<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NRC87HJ4" height="0" width="0" style="display:none;visibility:hidden"></iframe>
 		</noscript>
-		<!-- End Google Tag Manager (noscript) -->
+
 		<header>
 			<nav
 				class="navbar navbar-expand-lg navbar-mydark justify-content-center">
 				<!-- Section gauche -->
 				<div class="navbar-start d-flex align-items-center">
-					<a class="navbar-brand d-none d-lg-flex align-items-center ms-lg-5" href="index.php">
+					<a class="navbar-brand d-none d-lg-flex align-items-center ms-lg-5" href="index.php" aria-label="Accueil">
 						<img src="{{ constant('WEBSITE_LOGO') }}" class="img-fluid website-logo" alt="VHS Logo">
 					</a>
-					<button class="navbar-toggler bi bi-list" type="button" data-bs-toggle="collapse" data-bs-target="#submenu" aria-expanded="false" aria-label="Toggle navigation"></button>
+					<button class="navbar-toggler bi bi-list" type="button" data-bs-toggle="collapse" data-bs-target="#submenu" aria-controls="submenu" aria-expanded="false" aria-label="Afficher/masquer le menu"></button>
 					<div class="collapse navbar-collapse" id="navbarContent">
 						<div class="d-flex align-items-center ms-lg-2">
-							<button class="btn btn-myprimary bi bi-list" type="button" data-bs-toggle="collapse" data-bs-target="#submenu" aria-expanded="false">
+							<button class="btn btn-myprimary bi bi-list" type="button" data-bs-toggle="collapse" data-bs-target="#submenu" aria-expanded="false" aria-controls="submenu">
 								Menu
 							</button>
 						</div>
@@ -77,8 +75,8 @@ f.parentNode.insertBefore(j, f);
 				<!-- Section centrale (barre de recherche) -->
 				<form class="search-form-container flex-grow-1" method="POST" action="index.php?controller=index&methode=rechercher">
 					<div class="input-group">
-						<input class="form-control fw-light" type="search" placeholder="Recherchez..." aria-label="Search" name="recherche">
-						<button class="btn bg-myprimary" type="submit">
+						<input class="form-control fw-light" type="search" placeholder="Recherchez..." aria-label="Rechercher" name="recherche">
+						<button class="btn bg-myprimary" type="submit" aria-label="Rechercher">
 							<i class="bi bi-search"></i>
 						</button>
 					</div>
@@ -94,46 +92,46 @@ f.parentNode.insertBefore(j, f);
 						<button class="btn btn-myprimary" data-bs-toggle="modal" data-bs-target="#deconnection">Deconnexion</button>
 					{% endif %}
 
-					<a class="navbar-brand d-flex align-items-center text-white mb-0" href="#">
+					<div class="navbar-brand d-flex align-items-center text-white mb-0">
 						<p class="mb-0 me-2 d-none d-lg-block">{{ constant('WEBSITE_LANGUAGE')}}</p>
-						<img src="{{ constant('WEBSITE_LOGO_FLAG')}}" height="24" alt="FR">
-					</a>
+						<img src="{{ constant('WEBSITE_LOGO_FLAG')}}" height="24" alt="Drapeau {{ constant('WEBSITE_LANGUAGE')}}">
+					</div>
 				</div>
 			</nav>
 
 			<!-- Menu secondaire -->
 			<div class="collapse" id="submenu">
 				<div class="bg-mydark border-top border-2 border-myprimary py-4">
-					<div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 gap-md-5 text-decoration-none">
-						<a href="index.php">
+					<div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 gap-md-5">
+						<a href="index.php" class="text-decoration-none">
 							<button class="btn btn-myprimary">Accueil</button>
 						</a>
-						<a href="index.php?controller=fil&methode=listerThreads">
+						<a href="index.php?controller=fil&methode=listerThreads" class="text-decoration-none">
 							<button class="btn btn-myprimary">Forum</button>
 						</a>
-						<a href="index.php?controller=quizz&methode=listeQuizz">
+						<a href="index.php?controller=quizz&methode=listeQuizz" class="text-decoration-none">
 							<button class="btn btn-myprimary">Quizz</button>
 						</a>
 						{% if utilisateurConnecte is null %}
-							<a href="index.php?controller=watchlist&methode=afficherWatchlistsPubliques">
+							<a href="index.php?controller=watchlist&methode=afficherWatchlistsPubliques" class="text-decoration-none">
 								<button class="btn btn-myprimary">WatchList</button>
 							</a>
 							<button class="btn btn-myprimary" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Watch2Gether</button>
 							<button class="btn btn-myprimary" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Profil</button>
 						{% else %}
-							<a href="index.php?controller=watchlist&methode=afficherWatchlists">
+							<a href="index.php?controller=watchlist&methode=afficherWatchlists" class="text-decoration-none">
 								<button class="btn btn-myprimary">WatchList</button>
 							</a>
-							<a href="index.php?controller=salle&methode=accueilWatch2Gether">
+							<a href="index.php?controller=salle&methode=accueilWatch2Gether" class="text-decoration-none">
 								<button class="btn btn-myprimary">Watch2Gether</button>
 							</a>
-							<a href="index.php?controller=utilisateur&methode=show">
+							<a href="index.php?controller=utilisateur&methode=show" class="text-decoration-none">
 								<button class="btn btn-myprimary">Profil</button>
 							</a>
 						{% endif %}
 
 						{% if utilisateurConnecte is not null and utilisateurConnecte.getRole().toString() == "Moderateur" %}
-							<a href="index.php?controller=dashboard&methode=afficheSignalements">
+							<a href="index.php?controller=dashboard&methode=afficheSignalements" class="text-decoration-none">
 								<button class="btn btn-myprimary">Dashboard</button>
 							</a>
 						{% endif %}
@@ -142,7 +140,9 @@ f.parentNode.insertBefore(j, f);
 			</div>
 		</header>
 
-		{% block content %}{% endblock %}
+		<main>
+			{% block content %}{% endblock %}
+		</main>
 
 		<!-- Barres de couleurs -->
 		<div class="container-fluid p-0">
@@ -159,27 +159,40 @@ f.parentNode.insertBefore(j, f);
 				<div class="row text-center">
 					<div class="col-12">
 						<div class="d-flex flex-wrap justify-content-center text-white gap-3 mb-3">
-							<a class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#aproposVHS">
-								À propos de VHS</a>
-							<a class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#afficherconditions">
-								Conditions d'utilisation</a>
-							<a class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#afficherpolitiqueconfidentialite">
-								Politique de confidentialité</a>
-							<a class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#afficherpolitiquecookies">
-								Politique de cookies</a>
-							<a class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#afficherattributiontmldb">
-								Droit d'api TMDB</a>
+							<button class="btn btn-link text-white text-decoration-none p-0" data-bs-toggle="modal" data-bs-target="#aproposVHS">
+								À propos de VHS
+							</button>
+							<button class="btn btn-link text-white text-decoration-none p-0" data-bs-toggle="modal" data-bs-target="#afficherconditions">
+								Conditions d'utilisation
+							</button>
+							<button class="btn btn-link text-white text-decoration-none p-0" data-bs-toggle="modal" data-bs-target="#afficherpolitiqueconfidentialite">
+								Politique de confidentialité
+							</button>
+							<button class="btn btn-link text-white text-decoration-none p-0" data-bs-toggle="modal" data-bs-target="#afficherpolitiquecookies">
+								Politique de cookies
+							</button>
+							<button class="btn btn-link text-white text-decoration-none p-0" data-bs-toggle="modal" data-bs-target="#afficherattributiontmldb">
+								Droit d'api TMDB
+							</button>
 						</div>
 					</div>
 					<div class="col-12">
 						<div class="d-flex justify-content-center gap-3 mb-3">
-							<a href="https://www.facebook.com/"><img src="https://img.icons8.com/ios-glyphs/30/ffffff/facebook-new.png" alt="Facebook" class="logo-facebook"/></a>
-							<a href="https://www.instagram.com/"><img src="https://img.icons8.com/ios-glyphs/30/ffffff/instagram-new.png" alt="Instagram" class="logo-instagram"/></a>
-							<a href="https://twitter.com/"><img src="https://img.icons8.com/ios-glyphs/30/ffffff/twitter--v1.png" alt="Twitter" class="logo-twitter"/></a>
+							<a href="https://www.facebook.com/" aria-label="Facebook" class="social-link">
+								<img src="https://img.icons8.com/ios-glyphs/30/ffffff/facebook-new.png" alt="Facebook" class="logo-facebook"/>
+							</a>
+							<a href="https://www.instagram.com/" aria-label="Instagram" class="social-link">
+								<img src="https://img.icons8.com/ios-glyphs/30/ffffff/instagram-new.png" alt="Instagram" class="logo-instagram"/>
+							</a>
+							<a href="https://twitter.com/" aria-label="Twitter" class="social-link">
+								<img src="https://img.icons8.com/ios-glyphs/30/ffffff/twitter--v1.png" alt="Twitter" class="logo-twitter"/>
+							</a>
 						</div>
 					</div>
 					<div class="col-12">
-						<p class="text-white mb-0">© 2024 VHS</p>
+						<p class="text-white mb-0">©
+							{{ "now"|date("Y") }}
+							VHS</p>
 					</div>
 				</div>
 			</div>
@@ -190,13 +203,18 @@ f.parentNode.insertBefore(j, f);
 		</footer>
 
 		{% block script %}
+			<!-- Scripts -->
 			<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 			<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 			<script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 			<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
 			<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 			<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
-			<script src="node_modules/tarteaucitronjs/tarteaucitron.js"></script>
+			<script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap5.min.js"></script>
+			<script src="JS/datatable.js"></script>
+			<script src="JS/loader.js" defer></script>
+
+			<!-- Configuration Tarteaucitron -->
 			<script type="text/javascript">
 				tarteaucitron.init({
 "privacyUrl": "/politique-de-confidentialite",
@@ -242,52 +260,6 @@ ga('create', 'UA-XXXXXXX-X', 'auto');
 ga('send', 'pageview');
 }
 };
-			</script>
-			<script>
-				// Gestion du loader
-$(document).ready(function () { // Cacher le loader initialement
-$('.loader-container').hide();
-
-// Afficher le loader lors des clics sur les liens et soumissions de formulaires
-$('a:not([data-bs-toggle="modal"]), button[type="submit"]:not([data-bs-toggle="modal"])').click(function (e) { // Ne pas afficher le loader pour les modals et les liens internes
-if (!$(this).closest('.modal').length && !$(this).attr('href') ?. startsWith('#')) {
-$('.loader-container').css('display', 'flex');
-}
-});
-
-// Afficher le loader lors des soumissions de formulaires valides
-$('form:not([data-modal-form])').submit(function (e) {
-if (this.checkValidity()) {
-$('.loader-container').css('display', 'flex');
-} else {
-$('.loader-container').hide();
-}
-});
-
-// Afficher le loader lors des soumissions de formulaires valides
-$('form:not([data-modal-form])').submit(function (e) {
-if (this.checkValidity()) {
-$('.loader-link').css('display', 'flex');
-} else {
-$('.loader-link').hide();
-}
-});
-
-// Cacher le loader une fois la page chargée
-$(window).on('load', function () {
-$('.loader-container').hide();
-});
-
-// S'assurer que le loader est caché après la fermeture d'un modal
-$('.modal').on('hidden.bs.modal', function () {
-$('.loader-container').hide();
-});
-
-// Ajouter un gestionnaire d'erreurs global pour cacher le loader
-$(document).ajaxError(function () {
-$('.loader-container').hide();
-});
-});
 			</script>
 		{% endblock %}
 	</body>

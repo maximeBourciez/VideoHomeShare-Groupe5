@@ -71,7 +71,14 @@ $(document).ready(function () {
         targets: 1,
         width: "60px",
         responsivePriority: 3,
-        className: "desktop", // Visible uniquement sur desktop
+        className: "desktop",
+        type: "num",
+        render: function (data, type, row) {
+          if (type === "sort") {
+            return data == "0" ? "999999" : data;
+          }
+          return data;
+        },
       },
       {
         // Épisode
