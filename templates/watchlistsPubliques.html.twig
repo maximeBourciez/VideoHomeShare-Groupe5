@@ -11,12 +11,10 @@
     <div class="container my-5">
         <div class="row" id="watchlists-container">
             {% for watchlist in watchlists %}
-                <div class="watchlist-item col-12 col-sm-6 col-md-4 col-lg-3 d-flex justify-content-center mb-4">
-                    <div class="card h-100 bg-white hover-card" style="max-width: 200px;">
-                        <div class="card-img-wrapper position-relative pt-2 px-2">
-                            {% if watchlist.contenus|length == 0 %}
-                                <img src="images/no-image.svg" class="card-img-top rounded shadow" alt="Pas d'affiche">
-                            {% else %}
+                {% if watchlist.contenus|length > 0 %}
+                    <div class="watchlist-item col-12 col-sm-6 col-md-4 col-lg-3 d-flex justify-content-center mb-4">
+                        <div class="card h-100 bg-white hover-card" style="max-width: 200px;">
+                            <div class="card-img-wrapper position-relative pt-2 px-2">
                                 <div class="container">
                                     {% if watchlist.contenus|length == 1 %}
                                         <div class="row">
@@ -46,13 +44,15 @@
                                                     <img src="{{ watchlist.contenus[0].getLienAfficheReduite() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[0].nom }}">
                                                 {% else %}
                                                     <img src="{{ watchlist.contenus[0].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[0].nom }}">
-                                                {% endif %}                                            </div>
+                                                {% endif %}                                            
+                                            </div>
                                             <div class="col my-2">
                                                 {% if watchlist.contenus[1].getClass() == "Contenu" %}
                                                     <img src="{{ watchlist.contenus[1].getLienAfficheReduite() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[1].nom }}">
                                                 {% else %}
                                                     <img src="{{ watchlist.contenus[1].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[1].nom }}">
-                                                {% endif %}                                            </div>
+                                                {% endif %}                                            
+                                            </div>
                                         </div>
                                         <div class="row">
                                             <div class="col my-2">
@@ -69,13 +69,15 @@
                                                     <img src="{{ watchlist.contenus[0].getLienAfficheReduite() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[0].nom }}">
                                                 {% else %}
                                                     <img src="{{ watchlist.contenus[0].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[0].nom }}">
-                                                {% endif %}                                            </div>
+                                                {% endif %}                                            
+                                            </div>
                                             <div class="col my-2">
                                                 {% if watchlist.contenus[1].getClass() == "Contenu" %}
                                                     <img src="{{ watchlist.contenus[1].getLienAfficheReduite() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[1].nom }}">
                                                 {% else %}
                                                     <img src="{{ watchlist.contenus[1].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[1].nom }}">
-                                                {% endif %}                                           </div>
+                                                {% endif %}                                           
+                                            </div>
                                         </div>
                                         <div class="row">
                                             <div class="col my-2">
@@ -83,7 +85,8 @@
                                                     <img src="{{ watchlist.contenus[2].getLienAfficheReduite() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[2].nom }}">
                                                 {% else %}
                                                     <img src="{{ watchlist.contenus[2].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[2].nom }}">
-                                                {% endif %}                                           </div>
+                                                {% endif %}                                           
+                                            </div>
                                             <div class="col my-2">
                                                 
                                             </div>
@@ -95,13 +98,15 @@
                                                     <img src="{{ watchlist.contenus[0].getLienAfficheReduite() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[0].nom }}">
                                                 {% else %}
                                                     <img src="{{ watchlist.contenus[0].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[0].nom }}">
-                                                {% endif %}                                            </div>
+                                                {% endif %}                                            
+                                            </div>
                                             <div class="col my-2">
                                                 {% if watchlist.contenus[1].getClass() == "Contenu" %}
                                                     <img src="{{ watchlist.contenus[1].getLienAfficheReduite() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[1].nom }}">
                                                 {% else %}
                                                     <img src="{{ watchlist.contenus[1].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[1].nom }}">
-                                                {% endif %}                                           </div>
+                                                {% endif %}                                           
+                                            </div>
                                         </div>
                                         <div class="row">
                                             <div class="col my-2">
@@ -109,128 +114,130 @@
                                                     <img src="{{ watchlist.contenus[2].getLienAfficheReduite() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[2].nom }}">
                                                 {% else %}
                                                     <img src="{{ watchlist.contenus[2].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[2].nom }}">
-                                                {% endif %}                                           </div>
+                                                {% endif %}                                           
+                                            </div>
                                             <div class="col my-2">
                                                 {% if watchlist.contenus[3].getClass() == "Contenu" %}
                                                     <img src="{{ watchlist.contenus[3].getLienAfficheReduite() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[3].nom }}">
                                                 {% else %}
                                                     <img src="{{ watchlist.contenus[3].getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ watchlist.contenus[3].nom }}">
-                                                {% endif %}                                           </div>
+                                                {% endif %}                                           
+                                            </div>
                                         </div>                                    
                                     {% endif %}
                                 </div>
-                            {% endif %}
-                        </div>
-                        <div class="card-body d-flex flex-column p-2">
-                            <h5 class="card-title fs-6 mb-2">{{ watchlist.nom }}</h5>
-                            <p class="card-text small mb-2">
-                                {% if watchlist.description %}
-                                    {{ watchlist.description|length > 50 ? watchlist.description|slice(0, 50) ~ '...' : watchlist.description }}
-                                {% else %}
-                                    <span class="text-muted">Aucune description</span>
-                                {% endif %}
-                            </p>
-                            <p class="card-text small text-muted mb-2">
-                                <i class="bi bi-arrow-right-circle"></i> Créée par {{ watchlist.idUtilisateur }}
-                                <br>
-                                <i class="bi bi-film"></i> {{ watchlist.contenus|length }} élément(s)
-                            </p>
-                            <div class="mt-auto">
-                                <button class="btn btn-plus-infos btn-sm w-100 mb-2" data-bs-toggle="modal" data-bs-target="#watchlistModal{{ watchlist.id }}">
-                                    <i class="bi bi-eye me-1"></i>Voir la watchlist
-                                </button>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Modal pour afficher la watchlist -->
-                <div class="modal fade" id="watchlistModal{{ watchlist.id }}" tabindex="-1" aria-labelledby="watchlistModalLabel{{ watchlist.id }}" aria-hidden="true">
-                    <div class="modal-dialog modal-xl max-width-90">
-                        <div class="modal-content">
-                            <div class="modal-body p-0">
-                                <div class="movie-category bg-dark text-white rounded shadow">
-                                    <div class="d-flex justify-content-between align-items-center ms-5">
-                                        <h3 class="watchlist-name mt-4">{{ watchlist.nom }}</h3>
-                                        <div class="btn-group me-5 mt-4">
-                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                    </div>
-                                    <div class="ms-5">
-                                        <h5 class="ms-2">Créée par {{ watchlist.idUtilisateur }}</h5>
-                                    </div>
-                                    {% if watchlist.description is not empty %}
-                                        <p class="watchlist-description ms-5">{{ watchlist.description }}</p>
-                                    {% endif %}
-                                    {% if watchlist.contenus is empty %}
-                                        <div class="d-flex justify-content-center">
-                                            <p class="text-center my-3">Cette watchlist est vide.</p>
-                                        </div>
-                                    {% else %}
-                                        <div class="carousel-container mt-3">
-                                            <div id="watchlistCarousel{{ watchlist.id }}" class="carousel slide" data-bs-ride="carousel" data-bs-touch="true">
-                                                <div class="carousel-inner px-4">
-                                                    {% for contenu in watchlist.contenus %}
-                                                        {% if loop.index0 % 6 == 0 %}
-                                                            <div class="carousel-item {% if loop.first %}active{% endif %}">
-                                                                <div class="row g-3">
-                                                        {% endif %}
-
-                                                        <div class="col-12 col-sm-4 col-md-3 col-lg d-flex justify-content-center">
-                                                            <div class="card h-100 bg-white hover-card" style="max-width: 200px;">
-                                                                <div class="card-img-wrapper position-relative pt-2 px-2">
-                                                                    <img src="{{ contenu.getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ contenu.nom }}">
-                                                                </div>
-                                                                <div class="card-body d-flex flex-column p-2">
-                                                                    <h5 class="card-title fs-6 mb-3">{{ contenu.getTitre() }}</h5>
-                                                                    <div class="">
-                                                                        <a href="index.php?controller={{ contenu.getClass|lower }}&methode=afficher{{ contenu.getClass }}&tmdb_id={{ contenu.getId() }}" class="btn btn-plus-infos btn-sm w-100 mb-2">
-                                                                            <i class="bi bi-info-circle me-1"></i>Plus d'informations
-                                                                        </a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                        {% if loop.index0 % 6 == 5 or loop.last %}
-                                                                </div>
-                                                            </div>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                </div>
-
-                                                <!-- Contrôles du carousel -->
-                                                {% if watchlist.contenus|length > 6 %}
-                                                    <button class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#watchlistCarousel{{ watchlist.id }}" data-bs-slide="prev">
-                                                        <i class="bi bi-chevron-left"></i>
-                                                        <span class="visually-hidden">Précédent</span>
-                                                    </button>
-                                                    <button class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#watchlistCarousel{{ watchlist.id }}" data-bs-slide="next">
-                                                        <i class="bi bi-chevron-right"></i>
-                                                        <span class="visually-hidden">Suivant</span>
-                                                    </button>
-                                                {% endif %}
-
-                                                <!-- Indicateurs -->
-                                                <div class="carousel-indicators position-relative mt-3">
-                                                    {% if watchlist.contenus|length > 6 %}
-                                                        {% for i in range(0, ((watchlist.contenus|length - 1) // 6)) %}
-                                                            <button type="button" data-bs-target="#watchlistCarousel{{ watchlist.id }}" data-bs-slide-to="{{ i }}" 
-                                                                    class="{{ i == 0 ? 'active' : '' }}" 
-                                                                    aria-current="{{ i == 0 ? 'true' : 'false' }}" 
-                                                                    aria-label="Slide {{ i + 1 }}">
-                                                            </button>
-                                                        {% endfor %}
-                                                    {% endif %}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    {% endif %}
+                            <div class="card-body d-flex flex-column p-2">
+                                <div class="mt-auto">
+                                    <h5 class="card-title fs-6 mb-2">{{ watchlist.nom }}</h5>
+                                    <p class="card-text small mb-2">
+                                        {% if watchlist.description %}
+                                            {{ watchlist.description|length > 50 ? watchlist.description|slice(0, 50) ~ '...' : watchlist.description }}
+                                        {% else %}
+                                            <span class="text-muted">Aucune description</span>
+                                        {% endif %}
+                                    </p>
+                                    <p class="card-text small text-muted mb-2">
+                                        <i class="bi bi-arrow-right-circle"></i> Créée par {{ watchlist.idUtilisateur }}
+                                        <br>
+                                        <i class="bi bi-film"></i> {{ watchlist.contenus|length }} élément(s)
+                                    </p>
+                                    <button class="btn btn-plus-infos btn-sm w-100 mb-2" data-bs-toggle="modal" data-bs-target="#watchlistModal{{ watchlist.id }}">
+                                        <i class="bi bi-eye me-1"></i>Voir la watchlist
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+
+                    <!-- Modal pour afficher la watchlist -->
+                    <div class="modal fade" id="watchlistModal{{ watchlist.id }}" tabindex="-1" aria-labelledby="watchlistModalLabel{{ watchlist.id }}" aria-hidden="true">
+                        <div class="modal-dialog modal-xl max-width-90">
+                            <div class="modal-content">
+                                <div class="modal-body p-0">
+                                    <div class="movie-category bg-dark text-white rounded shadow">
+                                        <div class="d-flex justify-content-between align-items-center ms-5">
+                                            <h3 class="watchlist-name mt-4">{{ watchlist.nom }}</h3>
+                                            <div class="btn-group me-5 mt-4">
+                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                        </div>
+                                        <div class="ms-5">
+                                            <h5 class="ms-2">Créée par {{ watchlist.idUtilisateur }}</h5>
+                                        </div>
+                                        {% if watchlist.description is not empty %}
+                                            <p class="watchlist-description ms-5">{{ watchlist.description }}</p>
+                                        {% endif %}
+                                        {% if watchlist.contenus is empty %}
+                                            <div class="d-flex justify-content-center">
+                                                <p class="text-center my-3">Cette watchlist est vide.</p>
+                                            </div>
+                                        {% else %}
+                                            <div class="carousel-container mt-3">
+                                                <div id="watchlistCarousel{{ watchlist.id }}" class="carousel slide" data-bs-ride="carousel" data-bs-touch="true">
+                                                    <div class="carousel-inner px-4">
+                                                        {% for contenu in watchlist.contenus %}
+                                                            {% if loop.index0 % 6 == 0 %}
+                                                                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                                                    <div class="row g-3">
+                                                            {% endif %}
+
+                                                            <div class="col-12 col-sm-4 col-md-3 col-lg d-flex justify-content-center">
+                                                                <div class="card h-100 bg-white hover-card" style="max-width: 200px;">
+                                                                    <div class="card-img-wrapper position-relative pt-2 px-2">
+                                                                        <img src="{{ contenu.getLienAffiche() }}" class="card-img-top rounded shadow" alt="{{ contenu.nom }}">
+                                                                    </div>
+                                                                    <div class="card-body d-flex flex-column p-2">
+                                                                        <h5 class="card-title fs-6 mb-3">{{ contenu.getTitre() }}</h5>
+                                                                        <div class="mt-auto">
+                                                                            <a href="index.php?controller={{ contenu.getClass|lower }}&methode=afficher{{ contenu.getClass }}&tmdb_id={{ contenu.getId() }}" class="btn btn-plus-infos btn-sm w-100 mb-2">
+                                                                                <i class="bi bi-info-circle me-1"></i>Plus d'informations
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            {% if loop.index0 % 6 == 5 or loop.last %}
+                                                                    </div>
+                                                                </div>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </div>
+
+                                                    <!-- Contrôles du carousel -->
+                                                    {% if watchlist.contenus|length > 6 %}
+                                                        <button class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#watchlistCarousel{{ watchlist.id }}" data-bs-slide="prev">
+                                                            <i class="bi bi-chevron-left"></i>
+                                                            <span class="visually-hidden">Précédent</span>
+                                                        </button>
+                                                        <button class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#watchlistCarousel{{ watchlist.id }}" data-bs-slide="next">
+                                                            <i class="bi bi-chevron-right"></i>
+                                                            <span class="visually-hidden">Suivant</span>
+                                                        </button>
+                                                    {% endif %}
+
+                                                    <!-- Indicateurs -->
+                                                    <div class="carousel-indicators position-relative mt-3">
+                                                        {% if watchlist.contenus|length > 6 %}
+                                                            {% for i in range(0, ((watchlist.contenus|length - 1) // 6)) %}
+                                                                <button type="button" data-bs-target="#watchlistCarousel{{ watchlist.id }}" data-bs-slide-to="{{ i }}" 
+                                                                        class="{{ i == 0 ? 'active' : '' }}" 
+                                                                        aria-current="{{ i == 0 ? 'true' : 'false' }}" 
+                                                                        aria-label="Slide {{ i + 1 }}">
+                                                                </button>
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
             {% endfor %}
         </div>
     </div>
@@ -245,4 +252,5 @@
 
 {% block script %}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {{ parent() }}
 {% endblock %}

@@ -164,7 +164,11 @@ body {
 // Optimisation des classes de boutons
 %button-shared {
   @include button-base;
-  height: 38px;
+  background-color: $primary !important;
+  color: black !important;
+  border-color: $primary !important;
+  width: 140px;
+  height: 40px;
   padding: 8px 0;
   gap: 10px;
 

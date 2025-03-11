@@ -76,31 +76,31 @@
 				<!-- Script d'initialisation -->
 				<script>
 					document.addEventListener('DOMContentLoaded', function () {
-const ratingElement = document.querySelector('#rating');
-const note = parseFloat(ratingElement.dataset.note);
-generateStarRating(note);
-});
+						const ratingElement = document.querySelector('#rating');
+						const note = parseFloat(ratingElement.dataset.note);
+						generateStarRating(note);
+					});
 				</script>
 
 				<!-- Boutons d'action -->
 				<div class="movie-actions mr-5 d-flex">
-					{% if utilisateurConnecte is not null %}
-						<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
-						<form action="index.php?controller=watchlist&methode=ajouterSerieAWatchlist" method="POST" class="me-4">
-							<input type="hidden" name="idCollection" value="{{ serie.id|escape('html_attr') }}">
-							<button type="button" class="movie-actions__watchlist-btn btn btn-myprimary fw-normal bi bi-plus" data-bs-toggle="modal" data-bs-target="#choisirWatchlist">
-								Ajouter à sa Watchlist
-							</button>
-						</form>
-					{% else %}
-						<button class="movie-actions__watchlist-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Ajouter à la Watchlist</button>
-						<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Laisser un avis</button>
-					{% endif %}
-					<a href="index.php?controller=serie&methode=afficherListeEpisodes&tmdb_id={{ serie.id }}">
-						<button class="movie-actions__watch-btn btn btn-myprimary fw-normal bi bi-list">
-							Épisodes
-						</button>
-					</a>
+          {% if utilisateurConnecte is not null %}
+            <button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
+            <form action="index.php?controller=watchlist&methode=ajouterSerieAWatchlist" method="POST" class="me-4">
+              <input type="hidden" name="idCollection" value="{{ serie.id|escape('html_attr') }}">
+              <button type="button" class="movie-actions__watchlist-btn btn btn-myprimary fw-normal bi bi-plus" data-bs-toggle="modal" data-bs-target="#choisirWatchlist">
+                Ajouter à ses Watchlists
+              </button>
+            </form>
+          {% else %}
+            <button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Laisser un avis</button>
+            <button class="movie-actions__watchlist-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Ajouter à ses Watchlists</button>
+          {% endif %}
+          <a href="index.php?controller=serie&methode=afficherListeEpisodes&tmdb_id={{ serie.id }}">
+            <button class="movie-actions__watch-btn btn btn-myprimary fw-normal bi bi-list">
+              Épisodes
+            </button>
+          </a>
 				</div>
 			</div>
 		</div>

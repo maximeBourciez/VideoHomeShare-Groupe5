@@ -11852,7 +11852,11 @@ body {
   align-items: center;
   font-weight: bold;
   transition: all 0.3s ease;
-  height: 38px;
+  background-color: #f2ac0f !important;
+  color: black !important;
+  border-color: #f2ac0f !important;
+  width: 140px;
+  height: 40px;
   padding: 8px 0;
   gap: 10px;
 }
