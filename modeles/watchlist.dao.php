@@ -70,7 +70,7 @@ class WatchlistDAO
      */
     public function findByUser(string $userId): array
     {
-        $sql = "SELECT * FROM " . DB_PREFIX . "watchlist WHERE idUtilisateur = :userId";
+        $sql = "SELECT * FROM " . DB_PREFIX . "watchlist WHERE idUtilisateur = :userId  ORDER BY idWatchlist DESC";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':userId' => $userId]);
         return $this->hydrateAll($stmt->fetchAll(PDO::FETCH_ASSOC));
@@ -86,7 +86,7 @@ class WatchlistDAO
         $contents = [];
 
         // 1.1. Récupérer les IDs de contenus liés à la watchlist
-        $sql = "SELECT idContenuTmdb, rang FROM " . DB_PREFIX . "contenirContenu WHERE idWatchlist = :watchlistId ORDER BY rang";
+        $sql = "SELECT idContenuTmdb, rang FROM " . DB_PREFIX . "contenirContenu WHERE idWatchlist = :watchlistId";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':watchlistId' => $watchlistId]);
         $contenusBd = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -283,7 +283,7 @@ class WatchlistDAO
      */
     public function getPublicWatchlists(): array
     {
-        $sql = "SELECT * FROM " . DB_PREFIX . "watchlist WHERE estPublique = true";
+        $sql = "SELECT * FROM " . DB_PREFIX . "watchlist WHERE estPublique = true  ORDER BY idWatchlist DESC";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
         return $this->hydrateAll($stmt->fetchAll(PDO::FETCH_ASSOC));
@@ -432,19 +432,6 @@ class WatchlistDAO
         ]);
         return intval($stmt->fetchColumn()) > 0;
     }
-    
-    /**
-     * @brief Méthode pour récupérer les watchlists publiques
-     * 
-     * @return array Tableau d'objets Watchlist
-     */
-    public function getWatchlistPublic(): array
-    {
-        $sql = "SELECT * FROM " . DB_PREFIX . "watchlist WHERE estPublique = 1";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute();
-        return $this->hydrateAll($stmt->fetchAll(PDO::FETCH_ASSOC));
-    }
 
     /**
      * @brief Méthode pour récupérer les partages d'une watchlist
@@ -527,7 +514,7 @@ class WatchlistDAO
      */
     public function getWatchlistsSharedWithUser(string $idUtilisateur): array
     {
-        $sql = "SELECT * FROM " . DB_PREFIX . "partager WHERE idUtilisateurP = :idUtilisateur";
+        $sql = "SELECT * FROM " . DB_PREFIX . "partager WHERE idUtilisateurP = :idUtilisateur ORDER BY idWatchlist DESC";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':idUtilisateur' => $idUtilisateur]);
         $partages = $stmt->fetchAll(PDO::FETCH_ASSOC);
