@@ -88,12 +88,12 @@
 	</div>
 
 	{% if messagederreur is defined %}
-		<div class="toast show position-fixed top-0 end-0 m-3" role="alert" aria-live="assertive" aria-atomic="true">
+		<div class="toast show position-fixed bottom-0 end-0 m-3 bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
 			<div class="toast-header bg-danger text-white">
 				<strong class="me-auto">Erreur</strong>
-				<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
 			</div>
-			<div class="toast-body">
+			<div class="toast-body text-white">
 				{{ messagederreur }}
 			</div>
 		</div>
