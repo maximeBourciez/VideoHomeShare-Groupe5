@@ -12415,6 +12415,38 @@ body {
   transition: all 0.3s ease;
 }
 
+.btn-watchlist-publiques {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  background-color: #f2ac0f !important;
+  color: black !important;
+  border-color: #f2ac0f !important;
+  width: 240px;
+  height: 40px;
+  padding: 24px 0 !important;
+  gap: 10px;
+}
+.btn-watchlist-publiques:hover {
+  transform: scale(1.05);
+}
+@media (max-width: 767.98px) {
+  .btn-watchlist-publiques {
+    width: 75px;
+    padding: 8px 0;
+    font-size: 0.6rem;
+  }
+}
+.btn-watchlist-publiques i {
+  font-size: 1.2rem;
+}
+
+.max-width-90 {
+  max-width: 90% !important;
+}
+
 /* Styles pour le loader */
 .loader-container {
   position: fixed;
