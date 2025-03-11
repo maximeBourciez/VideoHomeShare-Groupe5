@@ -8,7 +8,7 @@
 	{% endif %}
 	<main class="movie-page container d-flex flex-column justify-content-center align-items-center flex-grow-1">
 		<div
-			class="movie-content d-flex">
+			class="movie-content d-flex flex-lg-row flex-column gap-4">
 			<!-- Section Affiche -->
 			<div class="movie-poster me-5">
 				{% if contenu.lienAffiche is not empty %}
@@ -19,7 +19,7 @@
 			</div>
 			<!-- Section Informations -->
 			<div
-				class="movie-info col-6 d-flex flex-column justify-content-between">
+				class="movie-info col-lg-6 d-flex flex-column justify-content-between">
 				<!-- Titre -->
 				<h1 class="movie-info__title mt-5 fw-bolder text-center">{{ contenu.titre }}</h1>
 
