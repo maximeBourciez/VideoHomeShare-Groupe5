@@ -88,13 +88,13 @@ generateStarRating(note);
 							<form action="index.php?controller=watchlist&methode=ajouterContenuAWatchlist" method="POST" class="me-4">
 								<input type="hidden" name="idContenu" value="{{ contenu.id|escape('html_attr') }}">
 								<button type="button" class="movie-actions__watchlist-btn btn btn-myprimary fw-normal bi bi-plus" data-bs-toggle="modal" data-bs-target="#choisirWatchlist">
-									Ajouter à sa Watchlist
+									Ajouter à ses Watchlists
 								</button>
 							</form>
 
 						{% else %}
-							<button class="movie-actions__watchlist-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Ajouter à la Watchlist</button>
 							<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Laisser un avis</button>
+							<button class="movie-actions__watchlist-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Ajouter à ses Watchlists</button>
 						{% endif %}
 					</div>
 				</div>
