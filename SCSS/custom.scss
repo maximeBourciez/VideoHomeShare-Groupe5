@@ -188,7 +188,10 @@ body {
   background-color: $primary !important;
   color: black !important;
   border-color: $primary !important;
-  width: 125px;
+  width: 140px;
+  height: 40px;
+  padding: 8px 0;
+  gap: 10px;
 }
 
 .btn-delete-watchlist {
