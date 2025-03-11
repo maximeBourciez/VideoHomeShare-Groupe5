@@ -84,215 +84,156 @@ generateStarRating(note);
 
 				<!-- Boutons d'action -->
 				<div class="movie-actions mr-5">
-						{% if utilisateurConnecte is not null %}
-							<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
-							<form action="index.php?controller=watchlist&methode=ajouterSerieAWatchlist" method="POST" class="me-4">
-								<input type="hidden" name="idCollection" value="{{ serie.id|escape('html_attr') }}">
-								<button type="button" class="movie-actions__watchlist-btn btn btn-myprimary fw-normal bi bi-plus" data-bs-toggle="modal" data-bs-target="#choisirWatchlist">
-									Ajouter à sa Watchlist
-								</button>
-							</form>
-						{% else %}
-							<button class="movie-actions__watchlist-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Ajouter à la Watchlist</button>
-							<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Laisser un avis</button>
-						{% endif %}
-						<a href="index.php?controller=serie&methode=afficherListeEpisodes&tmdb_id={{ serie.id }}">
-							<button class="movie-actions__watch-btn btn btn-myprimary fw-normal bi bi-list">
-								Épisodes
-							</button>
-						</a>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<!-- Personnalités -->
-		<div class="movie-cast bg-mydark my-5 text-white w-100 rounded shadow position-relative">
-			<h2 class="movie-cast__title m-3">Personnalités :</h2>
-			{% if personnalites.acteurs is not empty or personnalites.equipe is not empty %}
-				{% set allPersonnalites = personnalites.acteurs|merge(personnalites.equipe) %}
-				{% if allPersonnalites|length > 6 %}
-					<div id="personnalitesCarousel" class="carousel slide" data-bs-ride="carousel">
-						<div class="carousel-inner">
-							{% set chunks = allPersonnalites|batch(6) %}
-							{% for chunk in chunks %}
-								<div class="carousel-item {{ loop.first ? 'active' : '' }}">
-									<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-6 g-4 justify-content-center">
-										{% for personne in chunk %}
-											<div class="card bg-mylight mx-3 mb-3" style="width: 10rem;">
-												{% if personne.photo %}
-													<img src="{{ personne.photo }}" alt="{{ personne.nom }}" class="shadow img-fluid my-1 rounded" style="width: 100%; height: 150px; object-fit: cover;">
-												{% else %}
-													<img src="images/no-image.svg" alt="{{ personne.nom }}" class="shadow img-fluid my-1 rounded" style="width: 100%; height: 150px; object-fit: cover;">
-												{% endif %}
-												<div class="card-body">
-													<p class="card-text mb-0 fw-light">{{ personne.nom }}</p>
-													<div class="spacer my-2"></div>
-													<p class="card-text">{{ personne.role }}</p>
-												</div>
-											</div>
-										{% endfor %}
-									</div>
-								</div>
-							{% endfor %}
-						</div>
-
-						<button class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#personnalitesCarousel" data-bs-slide="prev">
-							<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-							<span class="visually-hidden">Précédent</span>
-						</button>
-						<button class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#personnalitesCarousel" data-bs-slide="next">
-							<span class="carousel-control-next-icon" aria-hidden="true"></span>
-							<span class="visually-hidden">Suivant</span>
-						</button>
-					</div>
-				{% else %}
-					<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-6 g-4 justify-content-center">
-						{% for personne in allPersonnalites %}
-							<div class="card bg-mylight mx-3 mb-3" style="width: 10rem;">
-								{% if personne.photo %}
-									<img src="{{ personne.photo }}" alt="{{ personne.nom }}" class="shadow img-fluid my-1 rounded" style="width: 100%; height: 150px; object-fit: cover;">
-								{% else %}
-									<img src="images/no-image.svg" alt="{{ personne.nom }}" class="shadow img-fluid my-1 rounded" style="width: 100%; height: 150px; object-fit: cover;">
-								{% endif %}
-								<div class="card-body">
-									<p class="card-text mb-0 fw-light">{{ personne.nom }}</p>
-									<div class="spacer my-2"></div>
-									<p class="card-text">{{ personne.role }}</p>
-								</div>
-							</div>
-						{% endfor %}
-					</div>
-				{% endif %}
-			{% else %}
-				<p class="fs-6 ms-3">Aucune personnalité disponible pour cette serie.</p>
-			{% endif %}
-		</div>
-
-		<!-- Commentaires -->
-		<div class="movie-comments bg-mydark rounded text-white p-3 mb-5 w-100">
-			<h1 class="movie-comments__title mx-5">Commentaires :</h1>
-			{% if commentaires is not empty %}
-				{% for com in commentaires %}
-					<div class="movie-comment">
-						<div class="movie-comment__header d-flex align-items-center">
-							<h4 class="movie-comment__title m-3 mb-0">{{ com.titre }}</h4>
-							<p class="movie-comment__rating m-3 mb-0">
-								{{ com.note }}/5
-								<i class="ms-3 bi bi-star{% if com.estPositif == 1 %}-fill{% endif %}"></i>
-							</p>
-						</div>
-						<p class="movie-comment__text m-3">{{ com.avis }}</p>
-						<hr>
-					</div>
-				{% endfor %}
-			{% else %}
-				<div class="movie-comments__empty d-flex justify-content-center align-items-center">
-					<p class="m-3 fs-3">Aucun commentaire pour cette serie. Sois le premier à commenter 😉
-					</p>
-				</div>
-				<div class="d-flex justify-content-center">
 					{% if utilisateurConnecte is not null %}
 						<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
+						<form action="index.php?controller=watchlist&methode=ajouterSerieAWatchlist" method="POST" class="me-4">
+							<input type="hidden" name="idCollection" value="{{ serie.id|escape('html_attr') }}">
+							<button type="button" class="movie-actions__watchlist-btn btn btn-myprimary fw-normal bi bi-plus" data-bs-toggle="modal" data-bs-target="#choisirWatchlist">
+								Ajouter à sa Watchlist
+							</button>
+						</form>
 					{% else %}
+						<button class="movie-actions__watchlist-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Ajouter à la Watchlist</button>
 						<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Laisser un avis</button>
 					{% endif %}
-				</div>
-			{% endif %}
-		</div>
-	</main>
-
-	<!-- Modal Commenter serie -->
-	<div class="modal fade" id="commenterContenu" tabindex="-1" aria-labelledby="modalAvisLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content bg-mydark text-white">
-				<div class="modal-header">
-					<h5 class="modal-title" id="modalAvisLabel">Donner votre avis sur
-						{{ serie.titre }}</h5>
-					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<form id="avisForm" action="index.php?controller=commentaire&methode=createCommentaire" method="POST" novalidate>
-						<input type="hidden" name="idSerie" value="{{ serie.id }}">
-						<div class="mb-3">
-							<label for="titre" class="form-label">Titre de votre avis</label>
-							<input type="text" class="form-control" id="titre" name="titre" required placeholder="Ex : J'ai adoré cette serie !" maxlength="100" minlength="3">
-							<div class="invalid-feedback">Le titre doit contenir au moins 3 caractères.</div>
-						</div>
-						<div class="mb-3">
-							<label for="note" class="form-label">Note :
-								<span id="sliderValue">3</span>
-							</label>
-							<input type="range" class="form-range" id="note" name="note" min="1" max="5" step="1" value="3" required>
-						</div>
-						<div class="mb-3">
-							<label for="commentaire" class="form-label">Votre commentaire</label>
-							<textarea class="form-control" id="commentaire" name="commentaire" rows="4" required placeholder="Ex : Cette serie est vraiment géniale car..." maxlength="1000" minlength="10"></textarea>
-							<div class="invalid-feedback">Le commentaire doit contenir au moins 10 caractères.</div>
-						</div>
-						<div class="modal-footer border-0">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-							<button type="submit" class="btn btn-myprimary">Publier</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- Modal Veuillez vous connecter -->
-	<div class="modal fade" id="veuillezVousConnecter" tabindex="-1" aria-labelledby="modalAvisLabel" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content bg-mydark text-white">
-				<div class="modal-body text-center">
-					<p class="fs-3">Si vous voulez laisser un avis et participer à la communauté, vous devez d'abord vous connecter 😏</p>
-				</div>
-				<div class="modal-footer border-0 justify-content-center">
-					<a href="index.php?controller=utilisateur&methode=connexion">
-						<button type="button" class="btn btn-myprimary">Connexion</button>
+					<a href="index.php?controller=serie&methode=afficherListeEpisodes&tmdb_id={{ serie.id }}">
+						<button class="movie-actions__watch-btn btn btn-myprimary fw-normal bi bi-list">
+							Épisodes
+						</button>
 					</a>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<!-- Modal Choisir Watchlist -->
-	<div class="modal fade" id="choisirWatchlist" tabindex="-1" aria-labelledby="choisirWatchlistLabel" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content bg-mydark text-white">
-				<div class="modal-header">
-					<h5 class="modal-title" id="choisirWatchlistLabel">Choisissez une Watchlist</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<form action="index.php?controller=watchlist&methode=ajouterSerieAWatchlist" method="POST">
-					<div class="modal-body">
-						<input type="hidden" name="idSerie" value="{{ serie.id|escape('html_attr') }}">
-						{% if watchlists is not empty %}
-							{% for watchlist in watchlists %}
-								<div class="form-check">
-									<input class="form-check-input" {% if watchlists|length == 1 %} checked="true" {% endif %} type="checkbox" name="watchlists[]" value="{{ watchlist.id }}" id="watchlist{{ watchlist.id }}">
-									<label class="form-check-label" for="watchlist{{ watchlist.id }}">
-										{{ watchlist.nom }}
-									</label>
+	<!-- Personnalités -->
+	<div class="movie-cast bg-mydark my-5 text-white w-100 rounded shadow position-relative">
+		<h2 class="movie-cast__title m-3">Personnalités :</h2>
+		{% if personnalites.acteurs is not empty or personnalites.equipe is not empty %}
+			{% set allPersonnalites = personnalites.acteurs|merge(personnalites.equipe) %}
+			{% if allPersonnalites|length > 6 %}
+				<div id="personnalitesCarousel" class="carousel slide" data-bs-ride="carousel">
+					<div class="carousel-inner">
+						{% set chunks = allPersonnalites|batch(6) %}
+						{% for chunk in chunks %}
+							<div class="carousel-item {{ loop.first ? 'active' : '' }}">
+								<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-6 g-4 justify-content-center">
+									{% for personne in chunk %}
+										<div class="card bg-mylight mx-3 mb-3" style="width: 10rem;">
+											{% if personne.photo %}
+												<img src="{{ personne.photo }}" alt="{{ personne.nom }}" class="shadow img-fluid my-1 rounded" style="width: 100%; height: 150px; object-fit: cover;">
+											{% else %}
+												<img src="images/no-image.svg" alt="{{ personne.nom }}" class="shadow img-fluid my-1 rounded" style="width: 100%; height: 150px; object-fit: cover;">
+											{% endif %}
+											<div class="card-body">
+												<p class="card-text mb-0 fw-light">{{ personne.nom }}</p>
+												<div class="spacer my-2"></div>
+												<p class="card-text">{{ personne.role }}</p>
+											</div>
+										</div>
+									{% endfor %}
 								</div>
-							{% endfor %}
-						{% else %}
-							<p>Aucune watchlist disponible. Créez une watchlist avant de continuer.</p>
-						{% endif %}
+							</div>
+						{% endfor %}
 					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-						<button type="submit" class="btn btn-myprimary">Ajouter</button>
-					</div>
-				</form>
-			</div>
-		</div>
+
+					<button class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#personnalitesCarousel" data-bs-slide="prev">
+						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Précédent</span>
+					</button>
+					<button class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#personnalitesCarousel" data-bs-slide="next">
+						<span class="carousel-control-next-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Suivant</span>
+					</button>
+				</div>
+			{% else %}
+				<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-6 g-4 justify-content-center">
+					{% for personne in allPersonnalites %}
+						<div class="card bg-mylight mx-3 mb-3" style="width: 10rem;">
+							{% if personne.photo %}
+								<img src="{{ personne.photo }}" alt="{{ personne.nom }}" class="shadow img-fluid my-1 rounded" style="width: 100%; height: 150px; object-fit: cover;">
+							{% else %}
+								<img src="images/no-image.svg" alt="{{ personne.nom }}" class="shadow img-fluid my-1 rounded" style="width: 100%; height: 150px; object-fit: cover;">
+							{% endif %}
+							<div class="card-body">
+								<p class="card-text mb-0 fw-light">{{ personne.nom }}</p>
+								<div class="spacer my-2"></div>
+								<p class="card-text">{{ personne.role }}</p>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			{% endif %}
+		{% else %}
+			<p class="fs-6 ms-3">Aucune personnalité disponible pour cette serie.</p>
+		{% endif %}
 	</div>
 
-{% endblock %}
+	<!-- Commentaires -->
+	<div class="movie-comments bg-mydark rounded text-white p-3 mb-5 w-100">
+		<h1 class="movie-comments__title mx-5">Commentaires :</h1>
+		{% if commentaires is not empty %}
+			{% for com in commentaires %}
+				<div class="movie-comment">
+					<div class="movie-comment__header d-flex align-items-center">
+						<h4 class="movie-comment__title m-3 mb-0">{{ com.titre }}</h4>
+						<p class="movie-comment__rating m-3 mb-0">
+							{{ com.note }}/5
+							<i class="ms-3 bi bi-star{% if com.estPositif == 1 %}-fill{% endif %}"></i>
+						</p>
+					</div>
+					<p class="movie-comment__text m-3">{{ com.avis }}</p>
+					<hr>
+				</div>
+			{% endfor %}
+		{% else %}
+			<div class="movie-comments__empty d-flex justify-content-center align-items-center">
+				<p class="m-3 fs-3">Aucun commentaire pour cette serie. Sois le premier à commenter 😉
+				</p>
+			</div>
+			<div class="d-flex justify-content-center">
+				{% if utilisateurConnecte is not null %}
+					<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#commenterContenu">Laisser un avis</button>
+				{% else %}
+					<button class="movie-actions__review-btn btn btn-myprimary fw-normal me-4" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Laisser un avis</button>
+				{% endif %}
+			</div>
+		{% endif %}
+	</div>
+</main>
 
-{% block script %}
-	{{ parent() }}
-	<script type="text/javascript" src="JS/notation.js"></script>
-	<script type="text/javascript" src="JS/validationForm.js"></script>
-{% endblock %}
+<!-- Modal Choisir Watchlist -->
+<div class="modal fade" id="choisirWatchlist" tabindex="-1" aria-labelledby="choisirWatchlistLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content bg-mydark text-white">
+			<div class="modal-header">
+				<h5 class="modal-title" id="choisirWatchlistLabel">Choisissez une Watchlist</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<form action="index.php?controller=watchlist&methode=ajouterSerieAWatchlist" method="POST">
+				<div class="modal-body">
+					<input type="hidden" name="idSerie" value="{{ serie.id|escape('html_attr') }}">
+					{% if watchlists is not empty %}
+						{% for watchlist in watchlists %}
+							<div class="form-check">
+								<input class="form-check-input" {% if watchlists|length == 1 %} checked="true" {% endif %} type="checkbox" name="watchlists[]" value="{{ watchlist.id }}" id="watchlist{{ watchlist.id }}">
+								<label class="form-check-label" for="watchlist{{ watchlist.id }}">
+									{{ watchlist.nom }}
+								</label>
+							</div>
+						{% endfor %}
+					{% else %}
+						<p>Aucune watchlist disponible. Créez une watchlist avant de continuer.</p>
+					{% endif %}
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+					<button type="submit" class="btn btn-myprimary">Ajouter</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>{% endblock %}{% block script %}
+{{ parent() }}
+<script type="text/javascript" src="JS/notation.js"></script>
+<script type="text/javascript" src="JS/validationForm.js"></script>{% endblock %}

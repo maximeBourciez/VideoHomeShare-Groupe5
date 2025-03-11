@@ -16,19 +16,131 @@
 
 <!-- Modal se déconnecter -->
 <div class="modal fade" id="deconnection" tabindex="-1" aria-labelledby="modalAvisLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content bg-mydark text-white">
-            <div class="modal-body text-center">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content bg-mydark text-white">
+			<div class="modal-body text-center">
 				<img src="images\LOGO_V1.png" alt="logo" class="img-fluid" style="width: 100px;">
-                <p class="fs-3">Êtes-vous sûr de vouloir vous déconnecter ?</p>
-            </div>
-            <div class="modal-footer border-0 justify-content-center">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuler</button>
-                <a href="index.php?controller=utilisateur&methode=deconnexion" class="btn btn-primary">Déconnexion</a>
-            </div>
-        </div>
-    </div>
+				<p class="fs-3">Êtes-vous sûr de vouloir vous déconnecter ?</p>
+			</div>
+			<div class="modal-footer border-0 justify-content-center">
+				<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuler</button>
+				<a href="index.php?controller=utilisateur&methode=deconnexion" class="btn btn-primary">Déconnexion</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal Commenter serie -->
+<div class="modal fade" id="commenterContenu" tabindex="-1" aria-labelledby="modalAvisLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content bg-mydark text-white">
+			<div class="modal-header">
+				<h5 class="modal-title" id="modalAvisLabel">Donner votre avis sur
+					{{ serie.titre }}</h5>
+				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="avisForm" action="index.php?controller=commentaire&methode=createCommentaire" method="POST" novalidate>
+					<input type="hidden" name="idSerie" value="{{ serie.id }}">
+					<div class="mb-3">
+						<label for="titre" class="form-label">Titre de votre avis</label>
+						<input type="text" class="form-control" id="titre" name="titre" required placeholder="Ex : J'ai adoré cette serie !" maxlength="100" minlength="3">
+						<div class="invalid-feedback">Le titre doit contenir au moins 3 caractères.</div>
+					</div>
+					<div class="mb-3">
+						<label for="note" class="form-label">Note :
+							<span id="sliderValue">3</span>
+						</label>
+						<input type="range" class="form-range" id="note" name="note" min="1" max="5" step="1" value="3" required>
+					</div>
+					<div class="mb-3">
+						<label for="commentaire" class="form-label">Votre commentaire</label>
+						<textarea class="form-control" id="commentaire" name="commentaire" rows="4" required placeholder="Ex : Cette serie est vraiment géniale car..." maxlength="1000" minlength="10"></textarea>
+						<div class="invalid-feedback">Le commentaire doit contenir au moins 10 caractères.</div>
+					</div>
+					<div class="modal-footer border-0">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+						<button type="submit" class="btn btn-myprimary">Publier</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 </div>
 
 
+<!-- Modal Commenter Collection -->
+<div class="modal fade" id="commenterContenu" tabindex="-1" aria-labelledby="modalAvisLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content bg-mydark text-white">
+			<div class="modal-header">
+				<h5 class="modal-title" id="modalAvisLabel">Donner votre avis sur
+					{{ collection.titre }}</h5>
+				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="avisForm" action="index.php?controller=commentaire&methode=createCommentaire" method="POST">
+					<input type="hidden" name="idCollection" value="{{ collection.id }}">
+					<div class="mb-3">
+						<label for="titre" class="form-label">Titre de votre avis</label>
+						<input type="text" class="form-control" id="titre" name="titre" required placeholder="Ex : J'ai adoré cette collection !" maxlength="100">
+						<div class="invalid-feedback">Le titre doit contenir au moins 3 caractères.</div>
+					</div>
+					<div class="mb-3">
+						<label for="note" class="form-label">Note :
+							<span id="sliderValue">3</span>
+						</label>
+						<input type="range" class="form-range" id="note" name="note" min="1" max="5" step="1" value="3" required>
+					</div>
+					<div class="mb-3">
+						<label for="commentaire" class="form-label">Votre commentaire</label>
+						<textarea class="form-control" id="commentaire" name="commentaire" rows="4" required placeholder="Ex : Cette collection est vraiment géniale car..." maxlength="1000"></textarea>
+						<div class="invalid-feedback">Le commentaire doit contenir au moins 10 caractères.</div>
+					</div>
+					<div class="modal-footer border-0">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+						<button type="submit" class="btn btn-myprimary">Publier</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
 
+<!-- Modal Commenter Contenu -->
+<div class="modal fade" id="commenterContenu" tabindex="-1" aria-labelledby="modalAvisLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content bg-mydark text-white">
+			<div class="modal-header">
+				<h5 class="modal-title" id="modalAvisLabel">Donner votre avis sur
+					{{ contenu.titre }}</h5>
+				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form id="avisForm" action="index.php?controller=commentaire&methode=createCommentaire" method="POST">
+					<input type="hidden" name="idContenu" value="{{ contenu.id|escape('html_attr') }}">
+					<div class="mb-3">
+						<label for="titre" class="form-label">Titre de votre avis</label>
+						<input type="text" class="form-control" id="titre" name="titre" required placeholder="Ex : J'ai adoré ce film !" maxlength="100">
+						<div class="invalid-feedback">Le titre doit contenir au moins 3 caractères.</div>
+					</div>
+					<div class="mb-3">
+						<label for="note" class="form-label">Note :
+							<span id="sliderValue">3</span>
+						</label>
+						<input type="range" class="form-range" id="note" name="note" min="1" max="5" step="1" value="3" required>
+					</div>
+					<div class="mb-3">
+						<label for="commentaire" class="form-label">Votre commentaire</label>
+						<textarea class="form-control" id="commentaire" name="commentaire" rows="4" required placeholder="Ex : Ce film est vraiment génial car..." maxlength="1000"></textarea>
+						<div class="invalid-feedback">Le commentaire doit contenir au moins 10 caractères.</div>
+					</div>
+					<div class="modal-footer border-0">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+						<button type="submit" class="btn btn-myprimary">Publier</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

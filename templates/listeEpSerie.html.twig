@@ -39,8 +39,8 @@
 										<td>{{ episode.getNumero() }}</td>
 										<td>{{ episode.getTitre() }}</td>
 										<td>{{ episode.getDateDiffusion()|date('d/m/Y') }}</td>
-										<td>{{ episode.getDescription()|slice(0, 150) }}
-											{% if episode.getDescription()|length > 150 %}...
+										<td>{{ episode.getDescription()|slice(0, 500) }}
+											{% if episode.getDescription()|length > 500 %}...
 											{% endif %}
 										</td>
 									</tr>

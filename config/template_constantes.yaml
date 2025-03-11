@@ -2,7 +2,7 @@
 # Connexion à la base de données
 database:
   host: ""
-  name: "" 
+  name: ""
   user: ""
   password: ""
   prefix: ""
@@ -29,11 +29,11 @@ security:
 
 # Constantes utiles
 threads:
-  valeurMessageSupprime: "" 
+  valeurMessageSupprime: ""
   valeurUtilisateurMessageSupprime: null
-  nombreMessagesParPage: 
+  nombreMessagesParPage:
 
 # Constantes pour la sauvegarde de la base de données
 backup:
-  nombreSauvegardesMax: 
+  nombreSauvegardesMax:
   chemin: ""
