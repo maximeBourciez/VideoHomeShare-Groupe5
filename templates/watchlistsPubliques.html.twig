@@ -122,20 +122,20 @@
                             {% endif %}
                         </div>
                         <div class="card-body d-flex flex-column p-2">
-                            <h5 class="card-title fs-6 mb-2">{{ watchlist.nom }}</h5>
-                            <p class="card-text small mb-2">
-                                {% if watchlist.description %}
-                                    {{ watchlist.description|length > 50 ? watchlist.description|slice(0, 50) ~ '...' : watchlist.description }}
-                                {% else %}
-                                    <span class="text-muted">Aucune description</span>
-                                {% endif %}
-                            </p>
-                            <p class="card-text small text-muted mb-2">
-                                <i class="bi bi-arrow-right-circle"></i> Créée par {{ watchlist.idUtilisateur }}
-                                <br>
-                                <i class="bi bi-film"></i> {{ watchlist.contenus|length }} élément(s)
-                            </p>
                             <div class="mt-auto">
+                                <h5 class="card-title fs-6 mb-2">{{ watchlist.nom }}</h5>
+                                <p class="card-text small mb-2">
+                                    {% if watchlist.description %}
+                                        {{ watchlist.description|length > 50 ? watchlist.description|slice(0, 50) ~ '...' : watchlist.description }}
+                                    {% else %}
+                                        <span class="text-muted">Aucune description</span>
+                                    {% endif %}
+                                </p>
+                                <p class="card-text small text-muted mb-2">
+                                    <i class="bi bi-arrow-right-circle"></i> Créée par {{ watchlist.idUtilisateur }}
+                                    <br>
+                                    <i class="bi bi-film"></i> {{ watchlist.contenus|length }} élément(s)
+                                </p>
                                 <button class="btn btn-plus-infos btn-sm w-100 mb-2" data-bs-toggle="modal" data-bs-target="#watchlistModal{{ watchlist.id }}">
                                     <i class="bi bi-eye me-1"></i>Voir la watchlist
                                 </button>
@@ -183,7 +183,7 @@
                                                                 </div>
                                                                 <div class="card-body d-flex flex-column p-2">
                                                                     <h5 class="card-title fs-6 mb-3">{{ contenu.getTitre() }}</h5>
-                                                                    <div class="">
+                                                                    <div class="mt-auto">
                                                                         <a href="index.php?controller={{ contenu.getClass|lower }}&methode=afficher{{ contenu.getClass }}&tmdb_id={{ contenu.getId() }}" class="btn btn-plus-infos btn-sm w-100 mb-2">
                                                                             <i class="bi bi-info-circle me-1"></i>Plus d'informations
                                                                         </a>
