@@ -6,23 +6,11 @@
 
 {% block content %}
 	<main class="container flex-fill">
-		{# Bouton créer un quizz collé en bas à droite de la fenêtre #}
-		{# Redirige vers creationQuizz.html.twig avec l'identifiant de l'utilisateur #}
-			<a href="index.php?controller=quizz&methode=afficherPageCreerQuizz&idUtilisateur&idQuizz={{ quiz.getId() }}" class="btn btn-primary position-fixed bottom-0 end-0 me-4 mb-4 px-6 d-flex align-items-center justify-content-center" style="border-radius: 50px; white-space: nowrap; min-width: 200px; z-index: 999;"> <i class="bi bi-pencil" style="font-size: 1.3rem; margin-right: 0.2 rem;"></i>
-			<b>Créer un quizz</b>
+		<a href="index.php?controller=quizz&methode=afficherPageCreerQuizz&idUtilisateur&idQuizz={{ quiz.getId() }}" class="btn btn-primary position-fixed bottom-0 end-0 me-4 mb-4 px-6 d-flex align-items-center justify-content-center" style="border-radius: 50px; white-space: nowrap; min-width: 200px; z-index: 999;"> <i class="bi bi-pencil" style="font-size: 1.3rem; margin-right: 0.2 rem;"></i>
+			<b>Créer un quizz</b>Q
 		</a>
 		<br>
-		{% if messagederreur is defined %}
-			<div class="alert alert-danger bg-tercary mx-5 text-white" role="alert">
-				Erreur :
-				{{ messagederreur }}
-			</div>
-		{% endif %}
-		{% if messageConfirmation is defined %}
-			<div class="alert alert-success bg-secondary mx-5 text-white" role="alert">
-				{{ messageConfirmation }}
-			</div>
-		{% endif %}
+		
 		<!-- Boutons de manipulation de la page -->
 		<div class="row text-center mb-3">
 			<div class="row col mb-2 me-4">
@@ -31,9 +19,13 @@
 				</a>
 			</div>
 			<div class="row col mb-2">
-				<a href="index.php?controller=quizz&methode=afficherOngletGerer&idUtilisateur" class="btn btn-primary">
-					<b>Gérer mes quizz</b>
-				</a>
+				{% if utilisateurConnecte != null %}
+					<a href="index.php?controller=quizz&methode=afficherOngletGerer&idUtilisateur" class="btn btn-primary">
+						<b>Gérer mes quizz</b>
+					</a>
+				{% else %}
+					<button class="btn btn-primary fw-bold" data-bs-toggle="modal" data-bs-target="#veuillezVousConnecter">Gérer mes quizz</button>
+				{% endif %}
 			</div>
 		</div>
 		<div class="col">
@@ -54,12 +46,13 @@
 										{{ quiz.getIdUtilisateur() }}</small><br>
 								{% endif %}
 								<br>
-								{% if boutonVoirAppuye is defined or messagederreur is defined %}
+								{% if boutonVoirAppuye and quiz.getIdUtilisateur() != pseudoUtilisateur %}
 									<form action="index.php?controller=quizz&methode=jouerQuizz" method="post">
 										<input type="hidden" name="idQuizz" value="{{ quiz.getId() }}">
 										<button type="submit" class="btn btn-myprimary">Jouer</button>
 									</form>
-								{% elseif boutonGererAppuye is defined %}
+								{% endif %}
+								{% if quiz.getIdUtilisateur() == pseudoUtilisateur %}
 									<div class="row">
 										<form action="index.php?controller=quizz&methode=supprimerQuizz" method="post">
 											<input type="hidden" name="idQuizz" value="{{ quiz.getId() }}">
@@ -78,6 +71,39 @@
 				<h5>Vous n'avez créé aucun quizz.</h5>
 			{% endif %}
 		</div>
+
+
+		{% if messagederreur is not null %}
+			<div class="toast-container show position-fixed bottom-0 end-0 p-3">
+				<div class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+					<div class="d-flex">
+						<div class="toast-body">
+							{{ messagederreur }}
+						</div>
+						<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+					</div>
+				</div>
+			</div>
+		{% endif %}
+
+		{% if messageConfirmation is not null %}
+			<div class="toast-container position-fixed bottom-0 end-0 p-3">
+				<div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+					<div class="d-flex">
+						<div class="toast-body">
+							{{ messageConfirmation }}
+						</div>
+						<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+					</div>
+				</div>
+			</div>
+		{% endif %}
 	</main>
+
+{% endblock %}
+
+{% block script %}
+		{{ parent()}}
+		<script src="JS/toasts.js"></script>
 
 {% endblock %}

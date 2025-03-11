@@ -11,3 +11,5 @@
 2025-03-11 11:14:07 - Erreur: Unexpected "endif" tag (expecting closing tag for the "block" tag defined near line 4).
 2025-03-11 11:15:08 - Erreur: Unexpected "endif" tag (expecting closing tag for the "block" tag defined near line 4).
 2025-03-11 11:15:53 - Erreur: Unexpected "endif" tag (expecting closing tag for the "block" tag defined near line 4).
+2025-03-11 19:00:55 - Erreur: Unexpected token "name" of value "quiz" ("end of statement block" expected).
+2025-03-11 19:01:02 - Erreur: Unexpected token "name" of value "quiz" ("end of statement block" expected).

@@ -30,7 +30,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Pour les boutons
   buttons.forEach((button) => {
-    button.addEventListener("click", showLoader);
+    button.addEventListener("click", function (event) {
+      if (button.getAttribute("onclick")?.includes("confirm")) {
+        const confirmation = confirm(button.getAttribute("onclick").match(/'(.+?)'/)[1]);
+        if (!confirmation) {
+          event.preventDefault();
+          return;
+        }
+      }
+      showLoader(event);
+    });
   });
 
   // Pour les formulaires
