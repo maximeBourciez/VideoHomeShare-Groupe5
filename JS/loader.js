@@ -36,7 +36,35 @@ document.addEventListener("DOMContentLoaded", function () {
   // Pour les formulaires
   forms.forEach((form) => {
     form.addEventListener("submit", function (e) {
-      if (this.checkValidity()) {
+      // Vérification des champs textarea
+      const textareas = this.querySelectorAll("textarea[required]");
+      let isValid = true;
+
+      textareas.forEach((textarea) => {
+        const minLength = textarea.getAttribute("minlength") || 10; // Par défaut 10 caractères
+        if (textarea.value.length < minLength) {
+          isValid = false;
+          textarea.classList.add("is-invalid");
+          e.preventDefault();
+        } else {
+          textarea.classList.remove("is-invalid");
+        }
+      });
+
+      // Vérification des inputs requis
+      const inputs = this.querySelectorAll("input[required]");
+      inputs.forEach((input) => {
+        if (!input.value.trim()) {
+          isValid = false;
+          input.classList.add("is-invalid");
+          e.preventDefault();
+        } else {
+          input.classList.remove("is-invalid");
+        }
+      });
+
+      // Afficher le loader uniquement si le formulaire est valide
+      if (isValid && this.checkValidity()) {
         loader.style.display = "flex";
       } else {
         loader.style.display = "none";
