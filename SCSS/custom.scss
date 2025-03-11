@@ -661,40 +661,82 @@ body {
 				}
 			}
 
-//loader et base-template
+      // Styles de base pour les carousels
+.film-carousel-container,
+.carousel-container {
+  position: relative;
+  padding: 0 20px; // Réduit le padding sur mobile
 
-html,
-body {
-  overflow-x: hidden;
-  margin: 0;
-  font-family: 'Montserrat', sans-serif;
-}
-.loader-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  display: none;
-}
-.loader {
-  border: 5px solid #f3f3f3;
-  border-top: 5px solid var(--bs-primary, #007bff);
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  animation: spin 1s linear infinite;
-}
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
+  @media (min-width: $bp-md) {
+    padding: 0 50px;
   }
-  100% {
-    transform: rotate(360deg);
+
+  .carousel {
+    position: relative;
   }
+
+  // Style des flèches
+  .carousel-control-prev,
+  .carousel-control-next {
+    width: 30px; // Plus petit sur mobile
+    height: 30px;
+    background-color: rgba($dark, 0.7);
+    border-radius: 50%;
+    opacity: 0.8;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+
+    @media (min-width: $bp-md) {
+      width: 40px;
+      height: 40px;
+    }
+
+    &:hover {
+      opacity: 1;
+      background-color: rgba($dark, 0.9);
+    }
+
+    &.custom-carousel-control {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .carousel-control-prev {
+    left: -20px;
+
+    @media (min-width: $bp-md) {
+      left: -40px;
+    }
+  }
+  .carousel-control-next {
+    right: -20px;
+
+    @media (min-width: $bp-md) {
+      right: -40px;
+    }
+  // Style des icônes des flèches
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    width: 15px; // Plus petit sur mobile
+    height: 15px;
+
+    @media (min-width: $bp-md) {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .bi-chevron-left,
+  .bi-chevron-right {
+    color: white;
+    font-size: 1.2rem;
+
+    @media (min-width: $bp-md) {
+      font-size: 1.5rem;
+    }
+  }
+}
 }

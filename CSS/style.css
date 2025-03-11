@@ -12323,42 +12323,107 @@ body {
     transform: rotate(360deg);
   }
 }
-html,
-body {
-  overflow-x: hidden;
-  margin: 0;
-  font-family: "Montserrat", sans-serif;
+.film-carousel-container,
+.carousel-container {
+  position: relative;
+  padding: 0 20px;
 }
-
-.loader-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  display: none;
-}
-
-.loader {
-  border: 5px solid #f3f3f3;
-  border-top: 5px solid var(--bs-primary, #007bff);
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
+@media (min-width: 768px) {
+  .film-carousel-container,
+  .carousel-container {
+    padding: 0 50px;
   }
-  100% {
-    transform: rotate(360deg);
+}
+.film-carousel-container .carousel,
+.carousel-container .carousel {
+  position: relative;
+}
+.film-carousel-container .carousel-control-prev,
+.film-carousel-container .carousel-control-next,
+.carousel-container .carousel-control-prev,
+.carousel-container .carousel-control-next {
+  width: 30px;
+  height: 30px;
+  background-color: rgba(35, 27, 51, 0.7);
+  border-radius: 50%;
+  opacity: 0.8;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+@media (min-width: 768px) {
+  .film-carousel-container .carousel-control-prev,
+  .film-carousel-container .carousel-control-next,
+  .carousel-container .carousel-control-prev,
+  .carousel-container .carousel-control-next {
+    width: 40px;
+    height: 40px;
+  }
+}
+.film-carousel-container .carousel-control-prev:hover,
+.film-carousel-container .carousel-control-next:hover,
+.carousel-container .carousel-control-prev:hover,
+.carousel-container .carousel-control-next:hover {
+  opacity: 1;
+  background-color: rgba(35, 27, 51, 0.9);
+}
+.film-carousel-container .carousel-control-prev.custom-carousel-control,
+.film-carousel-container .carousel-control-next.custom-carousel-control,
+.carousel-container .carousel-control-prev.custom-carousel-control,
+.carousel-container .carousel-control-next.custom-carousel-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.film-carousel-container .carousel-control-prev,
+.carousel-container .carousel-control-prev {
+  left: -20px;
+}
+@media (min-width: 768px) {
+  .film-carousel-container .carousel-control-prev,
+  .carousel-container .carousel-control-prev {
+    left: -40px;
+  }
+}
+.film-carousel-container .carousel-control-next,
+.carousel-container .carousel-control-next {
+  right: -20px;
+}
+@media (min-width: 768px) {
+  .film-carousel-container .carousel-control-next,
+  .carousel-container .carousel-control-next {
+    right: -40px;
+  }
+}
+.film-carousel-container .carousel-control-next .carousel-control-prev-icon,
+.film-carousel-container .carousel-control-next .carousel-control-next-icon,
+.carousel-container .carousel-control-next .carousel-control-prev-icon,
+.carousel-container .carousel-control-next .carousel-control-next-icon {
+  width: 15px;
+  height: 15px;
+}
+@media (min-width: 768px) {
+  .film-carousel-container .carousel-control-next .carousel-control-prev-icon,
+  .film-carousel-container .carousel-control-next .carousel-control-next-icon,
+  .carousel-container .carousel-control-next .carousel-control-prev-icon,
+  .carousel-container .carousel-control-next .carousel-control-next-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+.film-carousel-container .carousel-control-next .bi-chevron-left,
+.film-carousel-container .carousel-control-next .bi-chevron-right,
+.carousel-container .carousel-control-next .bi-chevron-left,
+.carousel-container .carousel-control-next .bi-chevron-right {
+  color: white;
+  font-size: 1.2rem;
+}
+@media (min-width: 768px) {
+  .film-carousel-container .carousel-control-next .bi-chevron-left,
+  .film-carousel-container .carousel-control-next .bi-chevron-right,
+  .carousel-container .carousel-control-next .bi-chevron-left,
+  .carousel-container .carousel-control-next .bi-chevron-right {
+    font-size: 1.5rem;
   }
 }
 
