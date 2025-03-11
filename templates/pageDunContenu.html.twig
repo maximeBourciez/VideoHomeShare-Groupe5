@@ -8,7 +8,7 @@
 	{% endif %}
 	<main class="movie-page container d-flex flex-column justify-content-center align-items-center flex-grow-1">
 		<div
-			class="movie-content d-flex">
+			class="movie-content d-flex flex-lg-row flex-column gap-4">
 			<!-- Section Affiche -->
 			<div class="movie-poster me-5">
 				{% if contenu.lienAffiche is not empty %}
@@ -19,7 +19,7 @@
 			</div>
 			<!-- Section Informations -->
 			<div
-				class="movie-info col-6 d-flex flex-column justify-content-between">
+				class="movie-info col-lg-6 d-flex flex-column justify-content-between">
 				<!-- Titre -->
 				<h1 class="movie-info__title mt-5 fw-bolder text-center">{{ contenu.titre }}</h1>
 
@@ -241,60 +241,6 @@ fullSynopsis.style.display = 'block';
 			{% endif %}
 		</div>
 	</main>
-
-	<!-- Modal Avis -->
-	<div class="modal fade" id="commenterContenu" tabindex="-1" aria-labelledby="modalAvisLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content bg-mydark text-white">
-				<div class="modal-header">
-					<h5 class="modal-title" id="modalAvisLabel">Donner votre avis sur
-						{{ contenu.titre }}</h5>
-					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<form id="avisForm" action="index.php?controller=commentaire&methode=createCommentaire" method="POST">
-						<input type="hidden" name="idContenu" value="{{ contenu.id|escape('html_attr') }}">
-						<div class="mb-3">
-							<label for="titre" class="form-label">Titre de votre avis</label>
-							<input type="text" class="form-control" id="titre" name="titre" required placeholder="Ex : J'ai adoré ce film !" maxlength="100">
-							<div class="invalid-feedback">Le titre doit contenir au moins 3 caractères.</div>
-						</div>
-						<div class="mb-3">
-							<label for="note" class="form-label">Note :
-								<span id="sliderValue">3</span>
-							</label>
-							<input type="range" class="form-range" id="note" name="note" min="1" max="5" step="1" value="3" required>
-						</div>
-						<div class="mb-3">
-							<label for="commentaire" class="form-label">Votre commentaire</label>
-							<textarea class="form-control" id="commentaire" name="commentaire" rows="4" required placeholder="Ex : Ce film est vraiment génial car..." maxlength="1000"></textarea>
-							<div class="invalid-feedback">Le commentaire doit contenir au moins 10 caractères.</div>
-						</div>
-						<div class="modal-footer border-0">
-							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-							<button type="submit" class="btn btn-myprimary">Publier</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- Modal Veuillez vous connecter -->
-	<div class="modal fade" id="veuillezVousConnecter" tabindex="-1" aria-labelledby="modalAvisLabel" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content bg-mydark text-white">
-				<div class="modal-body text-center">
-					<p class="fs-3">Si vous voulez laisser un avis et participer à la communauté, vous devez d'abord vous connecter 😏</p>
-				</div>
-				<div class="modal-footer border-0 justify-content-center">
-					<a href="index.php?controller=utilisateur&methode=connexion">
-						<button type="button" class="btn btn-myprimary">Connexion</button>
-					</a>
-				</div>
-			</div>
-		</div>
-	</div>
 
 	<!-- Modal Choisir Watchlist -->
 	<div class="modal fade" id="choisirWatchlist" tabindex="-1" aria-labelledby="choisirWatchlistLabel" aria-hidden="true">

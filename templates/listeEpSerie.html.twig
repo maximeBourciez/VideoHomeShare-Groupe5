@@ -39,8 +39,8 @@
 										<td>{{ episode.getNumero() }}</td>
 										<td>{{ episode.getTitre() }}</td>
 										<td>{{ episode.getDateDiffusion()|date('d/m/Y') }}</td>
-										<td>{{ episode.getDescription()|slice(0, 150) }}
-											{% if episode.getDescription()|length > 150 %}...
+										<td>{{ episode.getDescription()|slice(0, 500) }}
+											{% if episode.getDescription()|length > 500 %}...
 											{% endif %}
 										</td>
 									</tr>
@@ -55,6 +55,39 @@
 {% endblock %}
 {% block script %}
 	{{ parent() }}
-	<script src="js/datatable.js"></script>
-
+	<script>
+		// Attendez que tous les scripts soient chargés
+window.addEventListener('load', function () {
+if ($.fn.DataTable.isDataTable('#episodesTable')) {
+$('#episodesTable').DataTable().destroy();
+}
+// Initialisation de votre DataTable
+$('#episodesTable').DataTable({
+responsive: true,
+language: {
+url: "https://cdn.datatables.net/plug-ins/1.11.5/i18n/fr-FR.json"
+},
+order: [
+[
+1, "asc"
+],
+[
+2, "asc"
+],
+],
+columnDefs: [
+{
+targets: 1,
+type: 'num',
+render: function (data, type, row) {
+if (type === 'sort') {
+return data == '0' ? '999999' : data;
+}
+return data;
+}
+}
+]
+});
+});
+	</script>
 {% endblock %}
