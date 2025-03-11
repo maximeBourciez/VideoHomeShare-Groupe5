@@ -36,7 +36,7 @@ Video Home Share (VHS) est une application web interactive conçue pour rassembl
 - Créez des quiz pour mettre au défi la communauté.<br>
 
 # Diagramme de classes
-![Diagramme de classes](images/diagrammeClasses.png)
+![Diagramme de classes](images/diagrammeClasses.svg)
 <br>
 <br>
 # ⚙️ Architecture technique
