@@ -11846,32 +11846,46 @@ body {
   box-shadow: none !important;
 }
 
-.btn-myprimary {
+.btn-delete-watchlist, .btn-myprimary {
   display: flex;
   justify-content: center;
   align-items: center;
   font-weight: bold;
   transition: all 0.3s ease;
-  background-color: #f2ac0f !important;
-  color: black !important;
-  border-color: #f2ac0f !important;
-  width: 125px;
   height: 38px;
   padding: 8px 0;
   gap: 10px;
 }
-.btn-myprimary:hover {
+.btn-delete-watchlist:hover, .btn-myprimary:hover {
   transform: scale(1.05);
 }
-@media (max-width: 767.98px) {
-  .btn-myprimary {
+.btn-delete-watchlist i, .btn-myprimary i {
+  font-size: 1.2rem;
+}
+@media (max-width: 768px) {
+  .btn-delete-watchlist, .btn-myprimary {
     width: 75px;
     padding: 8px 0;
     font-size: 0.6rem;
   }
 }
-.btn-myprimary i {
-  font-size: 1.2rem;
+
+.btn-myprimary {
+  background-color: #f2ac0f !important;
+  color: black !important;
+  border-color: #f2ac0f !important;
+  width: 125px;
+}
+
+.btn-delete-watchlist {
+  background-color: #de0918 !important;
+  color: white !important;
+  border-color: #de0918 !important;
+  width: 75px;
+}
+.btn-delete-watchlist:hover {
+  background-color: rgb(172.987012987, 7.012987013, 18.7012987013) !important;
+  border-color: rgb(172.987012987, 7.012987013, 18.7012987013) !important;
 }
 
 .search-form-container {
@@ -12122,179 +12136,6 @@ body {
   border: none;
   padding: 0;
   margin: 0;
-}
-
-.film-carousel-container,
-.carousel-container {
-  position: relative;
-  padding: 0 20px;
-}
-@media (min-width: 768px) {
-  .film-carousel-container,
-  .carousel-container {
-    padding: 0 50px;
-  }
-}
-.film-carousel-container .carousel,
-.carousel-container .carousel {
-  position: relative;
-}
-.film-carousel-container .carousel-control-prev,
-.film-carousel-container .carousel-control-next,
-.carousel-container .carousel-control-prev,
-.carousel-container .carousel-control-next {
-  width: 30px;
-  height: 30px;
-  background-color: rgba(35, 27, 51, 0.7);
-  border-radius: 50%;
-  opacity: 0.8;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-}
-@media (min-width: 768px) {
-  .film-carousel-container .carousel-control-prev,
-  .film-carousel-container .carousel-control-next,
-  .carousel-container .carousel-control-prev,
-  .carousel-container .carousel-control-next {
-    width: 40px;
-    height: 40px;
-  }
-}
-.film-carousel-container .carousel-control-prev:hover,
-.film-carousel-container .carousel-control-next:hover,
-.carousel-container .carousel-control-prev:hover,
-.carousel-container .carousel-control-next:hover {
-  opacity: 1;
-  background-color: rgba(35, 27, 51, 0.9);
-}
-.film-carousel-container .carousel-control-prev.custom-carousel-control,
-.film-carousel-container .carousel-control-next.custom-carousel-control,
-.carousel-container .carousel-control-prev.custom-carousel-control,
-.carousel-container .carousel-control-next.custom-carousel-control {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.film-carousel-container .carousel-control-prev,
-.carousel-container .carousel-control-prev {
-  left: -20px;
-}
-@media (min-width: 768px) {
-  .film-carousel-container .carousel-control-prev,
-  .carousel-container .carousel-control-prev {
-    left: -40px;
-  }
-}
-.film-carousel-container .carousel-control-next,
-.carousel-container .carousel-control-next {
-  right: -20px;
-}
-@media (min-width: 768px) {
-  .film-carousel-container .carousel-control-next,
-  .carousel-container .carousel-control-next {
-    right: -40px;
-  }
-}
-.film-carousel-container .carousel-control-next .carousel-control-prev-icon,
-.film-carousel-container .carousel-control-next .carousel-control-next-icon,
-.carousel-container .carousel-control-next .carousel-control-prev-icon,
-.carousel-container .carousel-control-next .carousel-control-next-icon {
-  width: 15px;
-  height: 15px;
-}
-@media (min-width: 768px) {
-  .film-carousel-container .carousel-control-next .carousel-control-prev-icon,
-  .film-carousel-container .carousel-control-next .carousel-control-next-icon,
-  .carousel-container .carousel-control-next .carousel-control-prev-icon,
-  .carousel-container .carousel-control-next .carousel-control-next-icon {
-    width: 20px;
-    height: 20px;
-  }
-}
-.film-carousel-container .carousel-control-next .bi-chevron-left,
-.film-carousel-container .carousel-control-next .bi-chevron-right,
-.carousel-container .carousel-control-next .bi-chevron-left,
-.carousel-container .carousel-control-next .bi-chevron-right {
-  color: white;
-  font-size: 1.2rem;
-}
-@media (min-width: 768px) {
-  .film-carousel-container .carousel-control-next .bi-chevron-left,
-  .film-carousel-container .carousel-control-next .bi-chevron-right,
-  .carousel-container .carousel-control-next .bi-chevron-left,
-  .carousel-container .carousel-control-next .bi-chevron-right {
-    font-size: 1.5rem;
-  }
-}
-
-.card.h-100 {
-  width: 100%; /* Permet aux cartes de s'étendre */
-  max-width: 200px; /* Garde une limite si besoin */
-  margin: auto; /* Centre la carte si elle est seule */
-}
-
-.bouton-card {
-  font-size: 0.9rem;
-}
-@media (min-width: 768px) {
-  .bouton-card {
-    font-size: 1rem;
-  }
-}
-
-.thread-card {
-  margin-bottom: 1rem;
-}
-.thread-card .card-header {
-  padding: 0.5rem;
-}
-@media (min-width: 768px) {
-  .thread-card .card-header {
-    padding: 1rem;
-  }
-}
-.thread-card .card-header img {
-  width: 25px;
-  height: 25px;
-}
-@media (min-width: 768px) {
-  .thread-card .card-header img {
-    width: 30px;
-    height: 30px;
-  }
-}
-
-.btn-delete-watchlist {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: bold;
-  transition: all 0.3s ease;
-  background-color: #de0918 !important;
-  color: white !important;
-  border-color: #de0918 !important;
-  width: 75px;
-  height: 38px;
-  padding: 8px 0;
-  gap: 10px;
-}
-.btn-delete-watchlist:hover {
-  transform: scale(1.05);
-}
-@media (max-width: 767.98px) {
-  .btn-delete-watchlist {
-    width: 75px;
-    padding: 8px 0;
-    font-size: 0.6rem;
-  }
-}
-.btn-delete-watchlist i {
-  font-size: 1.2rem;
-}
-.btn-delete-watchlist:hover {
-  background-color: rgb(172.987012987, 7.012987013, 18.7012987013) !important;
-  border-color: rgb(172.987012987, 7.012987013, 18.7012987013) !important;
 }
 
 .btn-delete-watchlist2 {
