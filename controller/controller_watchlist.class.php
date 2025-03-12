@@ -59,7 +59,9 @@ class ControllerWatchlist extends Controller {
         $contenuId = filter_var($_POST['idContenu'], FILTER_VALIDATE_INT);
         if ($contenuId === false) {
             // throw new Exception("ID de contenu invalide");
-            $this->afficherWatchlists();
+            // $this->afficherWatchlists();
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+            exit();
         }
     
         $watchlists = array_map('intval', (array)$_POST['watchlists']); // Convertit les valeurs en entiers dans un tableau
@@ -70,7 +72,9 @@ class ControllerWatchlist extends Controller {
             }
         }
     
-        $this->afficherWatchlists();
+        // $this->afficherWatchlists();
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit();
     }
 
     /**
@@ -88,7 +92,9 @@ class ControllerWatchlist extends Controller {
         $collectionId = filter_var($_POST['idCollection'], FILTER_VALIDATE_INT);
         if ($collectionId === false) {
             // throw new Exception("ID de collection invalide");
-            $this->afficherWatchlists();
+            // $this->afficherWatchlists();
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+            exit();
         }
     
         $watchlists = array_map('intval', (array)$_POST['watchlists']); // Convertit les valeurs en entiers dans un tableau
@@ -99,7 +105,9 @@ class ControllerWatchlist extends Controller {
             }
         }
         
-        $this->afficherWatchlists();
+        // $this->afficherWatchlists();
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit();
     }
 
     /**
@@ -117,7 +125,9 @@ class ControllerWatchlist extends Controller {
         $serieId = filter_var($_POST['idSerie'], FILTER_VALIDATE_INT);
         if ($serieId === false) {
             // throw new Exception("ID de série invalide");
-            $this->afficherWatchlists();
+            // $this->afficherWatchlists();
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+            exit();
         }
     
         $watchlists = array_map('intval', (array)$_POST['watchlists']); // Convertit les valeurs en entiers dans un tableau
@@ -128,7 +138,9 @@ class ControllerWatchlist extends Controller {
             }
         }
         
-        $this->afficherWatchlists();
+        // $this->afficherWatchlists();
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit();
     }
 
     /**
