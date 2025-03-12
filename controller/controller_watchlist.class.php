@@ -54,25 +54,46 @@ class ControllerWatchlist extends Controller {
             return;
         }
     
+        if (!isset($_SESSION['toastsWatclist'])) {
+            $toastsWatchlist = [];
+        }
+        else {
+            $toastsWatchlist = $_SESSION['toastsWatchlist'];
+        }
+    
         $watchlistDAO = new WatchlistDAO($this->getPdo());
     
         $contenuId = filter_var($_POST['idContenu'], FILTER_VALIDATE_INT);
+
         if ($contenuId === false) {
-            // throw new Exception("ID de contenu invalide");
-            // $this->afficherWatchlists();
-            header('Location: ' . $_SERVER['HTTP_REFERER']);
-            exit();
+
+            array_push($toastsWatchlist, [
+                'indiqueSuccessWatchlist' => false,
+                'messageInfosWatchlist' => "Erreur : le contenu n'existe pas."
+            ]);
         }
+        else {
+            $watchlists = array_map('intval', (array)$_POST['watchlists']); // Convertit les valeurs en entiers dans un tableau
     
-        $watchlists = array_map('intval', (array)$_POST['watchlists']); // Convertit les valeurs en entiers dans un tableau
-    
-        foreach ($watchlists as $watchlistId) {
-            if (!$watchlistDAO->isContenuInWatchlist($watchlistId, $contenuId)) { // Vérifie pour chaque watchlist individuellement
-                $watchlistDAO->addContenuToWatchlist($watchlistId, $contenuId);
+            foreach ($watchlists as $watchlistId) {
+
+                if (!$watchlistDAO->isContenuInWatchlist($watchlistId, $contenuId)) { // Vérifie pour chaque watchlist individuellement
+                    $watchlistDAO->addContenuToWatchlist($watchlistId, $contenuId);
+                    array_push($toastsWatchlist, [
+                        'indiqueSuccessWatchlist' => true,
+                        'messageInfosWatchlist' => "Le contenu a bien été ajoutée à " . $watchlistDAO->findById($watchlistId)->getNom() . "."
+                    ]);
+                }
+                else {
+                    array_push($toastsWatchlist, [
+                        'indiqueSuccessWatchlist' => false,
+                        'messageInfosWatchlist' => "Le contenu est déjà dans " . $watchlistDAO->findById($watchlistId)->getNom() . "."
+                    ]);
+                }
             }
         }
-    
-        // $this->afficherWatchlists();
+
+        $_SESSION['toastsWatchlist'] = $toastsWatchlist;
         header('Location: ' . $_SERVER['HTTP_REFERER']);
         exit();
     }
@@ -86,26 +107,48 @@ class ControllerWatchlist extends Controller {
             $managerUtilisateur->connexion();
             return;
         }
+
+        if (!isset($_SESSION['toastsWatclist'])) {
+            $toastsWatchlist = [];
+        }
+        else {
+            $toastsWatchlist = $_SESSION['toastsWatchlist'];
+        }
     
         $watchlistDAO = new WatchlistDAO($this->getPdo());
-    
+        
         $collectionId = filter_var($_POST['idCollection'], FILTER_VALIDATE_INT);
-        if ($collectionId === false) {
-            // throw new Exception("ID de collection invalide");
-            // $this->afficherWatchlists();
-            header('Location: ' . $_SERVER['HTTP_REFERER']);
-            exit();
-        }
-    
-        $watchlists = array_map('intval', (array)$_POST['watchlists']); // Convertit les valeurs en entiers dans un tableau
 
-        foreach ($watchlists as $watchlistId) {
-            if (!$watchlistDAO->isCollectionInWatchlist($watchlistId, $collectionId)) { // Vérifie pour chaque watchlist individuellement
-                $watchlistDAO->addCollectionToWatchlist($watchlistId, $collectionId);
+        if ($collectionId === false) {
+
+            array_push($toastsWatchlist, [
+                'indiqueSuccessWatchlist' => false,
+                'messageInfosWatchlist' => "Erreur : la collection n'existe pas."
+            ]);
+        }
+        else {
+
+            $watchlists = array_map('intval', (array)$_POST['watchlists']); // Convertit les valeurs en entiers dans un tableau
+
+            foreach ($watchlists as $watchlistId) {
+
+                if (!$watchlistDAO->isCollectionInWatchlist($watchlistId, $collectionId)) { // Vérifie pour chaque watchlist individuellement
+                    $watchlistDAO->addCollectionToWatchlist($watchlistId, $collectionId);
+                    array_push($toastsWatchlist, [
+                        'indiqueSuccessWatchlist' => true,
+                        'messageInfosWatchlist' => "La collection a bien été ajoutée à " . $watchlistDAO->findById($watchlistId)->getNom() . "."
+                    ]);
+                }
+                else {
+                    array_push($toastsWatchlist, [
+                        'indiqueSuccessWatchlist' => false,
+                        'messageInfosWatchlist' => "La collection est déjà dans " . $watchlistDAO->findById($watchlistId)->getNom() . "."
+                    ]);
+                }
             }
         }
-        
-        // $this->afficherWatchlists();
+
+        $_SESSION['toastsWatchlist'] = $toastsWatchlist;
         header('Location: ' . $_SERVER['HTTP_REFERER']);
         exit();
     }
@@ -119,28 +162,59 @@ class ControllerWatchlist extends Controller {
             $managerUtilisateur->connexion();
             return;
         }
+
+        if (!isset($_SESSION['toastsWatclist'])) {
+            $toastsWatchlist = [];
+        }
+        else {
+            $toastsWatchlist = $_SESSION['toastsWatchlist'];
+        }
     
         $watchlistDAO = new WatchlistDAO($this->getPdo());
     
         $serieId = filter_var($_POST['idSerie'], FILTER_VALIDATE_INT);
-        if ($serieId === false) {
-            // throw new Exception("ID de série invalide");
-            // $this->afficherWatchlists();
-            header('Location: ' . $_SERVER['HTTP_REFERER']);
-            exit();
-        }
-    
-        $watchlists = array_map('intval', (array)$_POST['watchlists']); // Convertit les valeurs en entiers dans un tableau
 
-        foreach ($watchlists as $watchlistId) {
-            if (!$watchlistDAO->isSerieInWatchlist($watchlistId, $serieId)) { // Vérifie pour chaque watchlist individuellement
-                $watchlistDAO->addSerieToWatchlist($watchlistId, $serieId);
+        if ($serieId === false) {
+                
+            $toastsWatchlist = [];
+
+            array_push($toastsWatchlist, [
+                'indiqueSuccessWatchlist' => false,
+                'messageInfosWatchlist' => "Erreur : la série n'existe pas."
+            ]);
+
+            array_push($toastsWatchlist, $toastsWatchlist);
+        }
+        else {
+
+            $watchlists = array_map('intval', (array)$_POST['watchlists']); // Convertit les valeurs en entiers dans un tableau
+
+            foreach ($watchlists as $watchlistId) {
+
+                $toastsWatchlist = [];
+
+                if (!$watchlistDAO->isSerieInWatchlist($watchlistId, $serieId)) { // Vérifie pour chaque watchlist individuellement
+                    $watchlistDAO->addSerieToWatchlist($watchlistId, $serieId);
+                    array_push($toastsWatchlist, [
+                        'indiqueSuccessWatchlist' => true,
+                        'messageInfosWatchlist' => "La série a bien été ajoutée à " . $watchlistDAO->findById($watchlistId)->getNom() . "."
+                    ]);
+                }
+                else {
+                    array_push($toastsWatchlist, [
+                        'indiqueSuccessWatchlist' => false,
+                        'messageInfosWatchlist' => "La série est déjà dans " . $watchlistDAO->findById($watchlistId)->getNom() . "."
+                    ]);
+                }
+
+                array_push($toastsWatchlist, $toastsWatchlist);
             }
         }
-        
-        // $this->afficherWatchlists();
+    
+        $_SESSION['toastsWatchlist'] = $toastsWatchlist;
         header('Location: ' . $_SERVER['HTTP_REFERER']);
         exit();
+
     }
 
     /**

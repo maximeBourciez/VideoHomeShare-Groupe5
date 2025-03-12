@@ -64,6 +64,13 @@ class ControllerCollection extends Controller {
                 if (isset($_SESSION['utilisateur'])) {
                     $watchlists = $watchlistDAO->findByUser(unserialize($_SESSION['utilisateur'])->getId());
                 }
+
+                // Récupération des toasts
+                $toastsWatchlist = null;
+                if (isset($_SESSION['toastsWatchlist'])) {
+                    $toastsWatchlist = $_SESSION['toastsWatchlist'];
+                    unset($_SESSION['toastsWatchlist']);
+                }
                 
                 // Afficher le template avec les données
                 echo $this->getTwig()->render('pageDuneCollection.html.twig', [
@@ -73,7 +80,8 @@ class ControllerCollection extends Controller {
                     'moyenne' => $notes['moyenne'],
                     'total' => $notes['total'],
                     'commentaires' => $commentaires,
-                    'watchlists' => $watchlists
+                    'watchlists' => $watchlists,
+                    'toastsWatchlist' => $toastsWatchlist
                 ]);
                 return;
             }

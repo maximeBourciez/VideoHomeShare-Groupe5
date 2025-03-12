@@ -69,6 +69,13 @@ class ControllerSerie extends Controller
                     $watchlists = $watchlistDAO->findByUser(unserialize($_SESSION['utilisateur'])->getId());
                 }
 
+                // Récupération des toasts
+                $toastsWatchlist = null;
+                if (isset($_SESSION['toastsWatchlist'])) {
+                    $toastsWatchlist = $_SESSION['toastsWatchlist'];
+                    unset($_SESSION['toastsWatchlist']);
+                }
+
                 // Afficher le template avec les données
                 echo $this->getTwig()->render('pageDuneSerie.html.twig', [
                     'serie' => $serie,
