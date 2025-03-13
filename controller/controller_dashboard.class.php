@@ -313,7 +313,7 @@ class ControllerDashboard extends Controller
         $dossier = "backupsBD/";
         $fichiers = scandir($dossier);
         foreach ($fichiers as $fichier) {
-            if ($fichier != "." && $fichier != "..") { // On entre dans les fichiers 
+            if ($fichier != "." && $fichier != ".." && !str_starts_with($fichier, '.')) { // On entre dans les fichiers 
 
                 // Récupérer les données qui nous intéressent (nom du fichier, date de création, taille)
                 $infosFichier = stat($dossier . $fichier);
