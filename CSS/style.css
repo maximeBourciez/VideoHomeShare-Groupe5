@@ -12430,4 +12430,15 @@ body {
   }
 }
 
+.toast-container {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px; /* Espacement entre les toasts */
+  padding: 20px;
+}
+
 /*# sourceMappingURL=style.css.map */

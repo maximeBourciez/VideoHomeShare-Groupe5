@@ -150,10 +150,10 @@ generateStarRating(note);
 			{% endif %}
 		</div>
 		<!-- Messages d'erreur -->
-		{% for toastWatchlist in toastsWatchlist %}
-			<div class="toast-container position-fixed bottom-0 end-0 p-3">
+		<div class="toast-container position-fixed bottom-0 end-0 p-3">
+			{% for toastWatchlist in toastsWatchlist %}
 				<div class="toast align-items-center
-						{% if toastWatchlist['indiqueSuccessWatchlist'] == false %}
+						{% if toastWatchlist.indiqueSuccessWatchlist == false %}
 							text-bg-danger
 						{% else %}
 							text-bg-success
@@ -161,13 +161,13 @@ generateStarRating(note);
 							border-0" role="alert" aria-live="assertive" aria-atomic="true">
 					<div class="d-flex">
 						<div class="toast-body">
-							{{ toastWatchlist['messageInfosWatchlist'] }}
+							{{ toastWatchlist.messageInfosWatchlist }}
 						</div>
 						<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
 					</div>
 				</div>
-			</div>
-		{% endfor %}
+			{% endfor %}
+		</div>
 	</main>
 
 

@@ -72,8 +72,6 @@ class ControllerContenu extends Controller {
                     unset($_SESSION['toastsWatchlist']);
                 }
 
-                var_dump($toastsWatchlist);
-
                 // Afficher le template avec les données
                 echo $this->getTwig()->render('pageDunContenu.html.twig', [
                     'contenu' => $contenu,

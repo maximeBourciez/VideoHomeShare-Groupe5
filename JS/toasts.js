@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
-    var toastEl = document.querySelector(".toast");
-    if (toastEl) {
+    var toastEls = document.querySelectorAll(".toast");
+
+    toastEls.forEach(toastEl => {
         var toast = new bootstrap.Toast(toastEl);
         toast.show();
-    }
+    });
 });
