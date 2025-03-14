@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
     gererImage();
 
     // Gérer l'intitulé de la question
-    gererIntituleQuestion();
+    gererIntituleQuestion(MAX_CARACTERES_QUESTION_REPONSES);
 });
 
 /**
@@ -230,7 +230,7 @@ function gererReponses(MAX_BONNES_REPONSES) {
  * 
  * @returns {void}
  */
-function gererIntituleQuestion() {
+function gererIntituleQuestion(MAX_CARACTERES_QUESTION_REPONSES) {
     let intitule = document.getElementById('titreQuestion');
     let spanDanger = document.getElementById('erreurTitre');
     let btnValider = document.getElementById('validerReponses');
@@ -251,10 +251,10 @@ function gererIntituleQuestion() {
                 btnValider.disabled = true;
             }
             // Si on a trop de caractères
-            else if(longueurEntrée > 50) {
+            else if(longueurEntrée > MAX_CARACTERES_QUESTION_REPONSES) {
                 // Afficher le message d'erreur
                 spanDanger.classList.remove('d-none');
-                spanDanger.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i> L\'intitulé doit contenir au plus 50 caractères';
+                spanDanger.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i> L\'intitulé doit contenir au plus ' + MAX_CARACTERES_QUESTION_REPONSES + ' caractères';
 
                 // Désactiver le bouton
                 btnValider.disabled = true;
