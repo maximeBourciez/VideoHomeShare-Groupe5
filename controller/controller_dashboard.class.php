@@ -132,7 +132,7 @@ class ControllerDashboard extends Controller
         if($this->utilisateurEstModerateur()){
             // Récupérer l'id de l'utilisateur à bannir
             $idUtilisateur = htmlspecialchars($_POST['idUtilisateur']);
-            if ($idUtilisateur == $utilisateur->getId()) { // Vérifier que le modo ne se ban pas tout seul 
+            if ($idUtilisateur == unserialize($_SESSION["utilisateur"])->getId()) { // Vérifier que le modo ne se ban pas tout seul 
                 $this->afficherUtilisateurs("Vous ne pouvez pas vous bannir vous même", false);
                 exit();
             }
@@ -313,7 +313,7 @@ class ControllerDashboard extends Controller
         $dossier = "backupsBD/";
         $fichiers = scandir($dossier);
         foreach ($fichiers as $fichier) {
-            if ($fichier != "." && $fichier != "..") { // On entre dans les fichiers 
+            if ($fichier != "." && $fichier != ".." && !str_starts_with($fichier, '.')) { // On entre dans les fichiers 
 
                 // Récupérer les données qui nous intéressent (nom du fichier, date de création, taille)
                 $infosFichier = stat($dossier . $fichier);
