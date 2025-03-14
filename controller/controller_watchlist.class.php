@@ -175,23 +175,17 @@ class ControllerWatchlist extends Controller {
         $serieId = filter_var($_POST['idSerie'], FILTER_VALIDATE_INT);
 
         if ($serieId === false) {
-                
-            $toastsWatchlist = [];
 
             array_push($toastsWatchlist, [
                 'indiqueSuccessWatchlist' => false,
                 'messageInfosWatchlist' => "Erreur : la série n'existe pas."
             ]);
-
-            array_push($toastsWatchlist, $toastsWatchlist);
         }
         else {
 
             $watchlists = array_map('intval', (array)$_POST['watchlists']); // Convertit les valeurs en entiers dans un tableau
 
             foreach ($watchlists as $watchlistId) {
-
-                $toastsWatchlist = [];
 
                 if (!$watchlistDAO->isSerieInWatchlist($watchlistId, $serieId)) { // Vérifie pour chaque watchlist individuellement
                     $watchlistDAO->addSerieToWatchlist($watchlistId, $serieId);
@@ -206,8 +200,6 @@ class ControllerWatchlist extends Controller {
                         'messageInfosWatchlist' => "La série est déjà dans " . $watchlistDAO->findById($watchlistId)->getNom() . "."
                     ]);
                 }
-
-                array_push($toastsWatchlist, $toastsWatchlist);
             }
         }
     

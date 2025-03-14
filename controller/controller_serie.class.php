@@ -85,7 +85,8 @@ class ControllerSerie extends Controller
                     'commentaires' => $commentaires,
                     'themes' => $themes,
                     'personnalites' => $personnalites,
-                    'watchlists' => $watchlists
+                    'watchlists' => $watchlists,
+                    'toastsWatchlist' => $toastsWatchlist
                 ]);
                 return;
             }
