@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-    console.log("JS QUIZZ")
     // Variables nécessaires
     const MAX_BONNES_REPONSES = 2;
     const MAX_CARACTERES_TITRE = 50;
@@ -235,10 +234,6 @@ function gererIntituleQuestion(MAX_CARACTERES_QUESTION_REPONSES) {
     let intitule = document.getElementById('titreQuestion');
     let spanDanger = document.getElementById('erreurTitre');
     let btnValider = document.getElementById('validerReponses');
-
-    console.log(intitule);
-    console.log(spanDanger);
-    console.log(btnValider);
 
     // Ajouter l'écouteur d'évènements
     if (intitule != null){
