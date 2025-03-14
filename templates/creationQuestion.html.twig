@@ -36,7 +36,7 @@
                 <!-- Champ Titre -->
                 <div class="row d-flex justify-content-center align-items-center">
                     <label for="titre_{{ numQuestion }}" class="col-form-label col-md-11" id="intitule">Entrez la question (*)</label>
-                    <textarea name="titre_{{ numQuestion }}" id="titreQuestion" class="rounded col-md-11" placeholder="Saisir la question..." required></textarea>
+                    <textarea name="titre_{{ numQuestion }}" id="titreQuestion" class="rounded col-md-11" placeholder="Saisir la question..." maxlength=125 required></textarea>
                     <small id="containerDecompteQuest" class="col-md-11">125 caractères restants</small>
                     <span id="erreurTitre" class="col-md-11 alert alert-danger bg-tercary mx-5 text-white d-none mt-2 d-block fs-5"></span>
                 </div>
@@ -78,6 +78,6 @@
     <p>* : Champs obligatoires</p>	
 </main>
 
-<script src="js/quizz.js"></script>
+<script src="JS/quizz.js"></script>
 
 {% endblock %}
