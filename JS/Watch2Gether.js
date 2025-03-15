@@ -293,10 +293,45 @@
         console.log(raison);
         
 
-        let valeur = callController('salle', 'signalevideo', [["id", id],["raison", raison]]);
+         try {
+            // Supposons que callController soit une fonction asynchrone
+            let valeur =  callController('salle', 'signalevideo', [["id", id], ["raison", raison]]);
+            console.log(valeur);
+    
+            // Créer le toast
+            var toastEl = document.createElement("div");
+            toastEl.className = "toast-container position-fixed bottom-0 end-0 p-3";
+            toastEl.innerHTML = `
+                <div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            La vidéo a été signalée
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            `;
+            
 
-        callController('salle', 'envoyerMessage', [["id", id],["message", "la vidéo a été signalé"]]);
-        console.log(valeur);
+            document.getElementsByTagName("main")[0].appendChild(toastEl);
+            console.log(toastEl);
+    
+            // Fermer la modal
+            $("#signalerVideo").modal('hide');
+    
+            // Initialiser et afficher le toast
+            var toast = new bootstrap.Toast(toastEl.querySelector('.toast'));
+
+            toast.show();
+            
+            toastEl.querySelector('.toast').addEventListener('hidden.bs.toast', function () {
+                toastEl.remove();
+            });
+        } catch (error) {
+            console.error("Erreur lors de l'envoi du signalement :", error);
+            // Vous pouvez également afficher un toast d'erreur ici si nécessaire
+        }
+        
 
     }
 
