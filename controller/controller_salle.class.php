@@ -376,6 +376,42 @@ class ControllerSalle extends Controller
         $managersalle->ajouterVideo($salle->getIdSalle(),$url);
 
     }
+
+    /**
+     * 
+     */
+    public function signalevideo(){
+        
+        $id = isset($_GET['id']) ?  htmlspecialchars($_GET['id']) : null;
+        $raison = isset($_GET['raison']) ?  htmlspecialchars($_GET['raison']) : null;
+
+        
+        $client = new Google_Client();
+        $client->setDeveloperKey(YOUTUBE_API_KEY); 
+
+        // Créer un service YouTube
+        $youtube = new Google_Service_YouTube($client);
+
+
+        try {
+            // Création d'une requête de signalement
+            $videoAbuseReport = new Google_Service_YouTube_VideoAbuseReport();
+            $videoAbuseReport->setVideoId($id);
+            $videoAbuseReport->setReasonId($raison); // Raison principale
+            
+
+            // Effectuer l'appel API pour signaler la vidéo
+            $youtube->videos->reportAbuse($videoAbuseReport);
+            echo 'La vidéo a été signalée avec succès.'; 
+        } catch (Google_Service_Exception $e) {
+            echo 'Erreur lors de l\'appel API : ' . $e->getMessage();
+        } catch (Exception $e) {
+            echo 'Erreur générique : ' . $e->getMessage();
+        }
+
+
+
+    }
     
 
 }

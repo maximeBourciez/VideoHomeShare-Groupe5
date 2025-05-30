@@ -30,6 +30,7 @@
     function onPlayerReady(event, id) { // Vous pouvez maintenant utiliser les fonctions de l'API pour contrôler le lecteur
         event.target.playVideo(); // Joue la vidéo
         // execute la fonction majVideo toutes les secondes
+        
         setInterval(function(){majVideo(id, event.target)},1000);
         if (hote == true){
             // execute la fonction majVideo toutes les secondes
@@ -73,10 +74,11 @@
      * @param  player  le lecteur de la vidéo
      */
     function majdescription(player) {
-
+        console.log(player.getVideoData().video_id);
         document.getElementById("dureeVideo").innerHTML = "duree : "+ Math.floor(player.getDuration() / 60) + "min " + Math.round(player.getDuration() % 60);
         document.getElementById("titreVideo").innerHTML = "titre : "+player.videoTitle;
         document.getElementById("lienVideo").innerHTML = "lien video : "+player.getVideoUrl();
+        document.getElementById("idvideo").value = player.getVideoData().video_id;
 
     }
 
@@ -281,8 +283,56 @@
        let url = player.getVideoUrl();
     
        let cc = url.replace("&", "\\");
+       if(player.getVideoData().video_id  != "watch") {
        let test = callController('salle', 'envoyerinfoVideo', [["id", id],["temps", player.getCurrentTime()],["etat", player.getPlayerState()],["url", cc]]);
-       
+       }
+    }
+
+    function envoyerSignalement(id , raison){
+        console.log(id);
+        console.log(raison);
+        
+
+         try {
+            // Supposons que callController soit une fonction asynchrone
+            let valeur =  callController('salle', 'signalevideo', [["id", id], ["raison", raison]]);
+            console.log(valeur);
+    
+            // Créer le toast
+            var toastEl = document.createElement("div");
+            toastEl.className = "toast-container position-fixed bottom-0 end-0 p-3";
+            toastEl.innerHTML = `
+                <div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            La vidéo a été signalée
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            `;
+            
+
+            document.getElementsByTagName("main")[0].appendChild(toastEl);
+            console.log(toastEl);
+    
+            // Fermer la modal
+            $("#signalerVideo").modal('hide');
+    
+            // Initialiser et afficher le toast
+            var toast = new bootstrap.Toast(toastEl.querySelector('.toast'));
+
+            toast.show();
+            
+            toastEl.querySelector('.toast').addEventListener('hidden.bs.toast', function () {
+                toastEl.remove();
+            });
+        } catch (error) {
+            console.error("Erreur lors de l'envoi du signalement :", error);
+            // Vous pouvez également afficher un toast d'erreur ici si nécessaire
+        }
+        
+
     }
 
 
